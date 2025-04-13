@@ -98,30 +98,8 @@ export default function Website() {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+      <div>
         <h2 className="text-2xl font-semibold">Configuração do Site</h2>
-        <div>
-          <button 
-            className={`bg-indigo-600 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-indigo-700 transition flex items-center
-              ${saveConfigMutation.isPending ? 'opacity-70 cursor-not-allowed' : ''}`}
-            onClick={handleSave}
-            disabled={saveConfigMutation.isPending}
-          >
-            {saveConfigMutation.isPending ? (
-              <>
-                <div className="mr-2 w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                Salvando...
-              </>
-            ) : (
-              <>
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
-                </svg>
-                Salvar Alterações
-              </>
-            )}
-          </button>
-        </div>
       </div>
       
       {isLoading ? (
@@ -129,13 +107,38 @@ export default function Website() {
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
         </div>
       ) : (
-        <ConfigTabs 
-          activeTab={activeTab} 
-          onTabChange={setActiveTab} 
-          config={config}
-          onConfigChange={handleConfigChange}
-          configData={configData}
-        />
+        <>
+          <ConfigTabs 
+            activeTab={activeTab} 
+            onTabChange={setActiveTab} 
+            config={config}
+            onConfigChange={handleConfigChange}
+            configData={configData}
+          />
+          
+          <div className="mt-6 flex justify-end">
+            <button 
+              className={`bg-indigo-600 text-white px-6 py-3 rounded-full font-medium hover:bg-indigo-700 transition flex items-center
+                ${saveConfigMutation.isPending ? 'opacity-70 cursor-not-allowed' : ''}`}
+              onClick={handleSave}
+              disabled={saveConfigMutation.isPending}
+            >
+              {saveConfigMutation.isPending ? (
+                <>
+                  <div className="mr-2 w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  Salvando...
+                </>
+              ) : (
+                <>
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+                  </svg>
+                  Salvar Alterações
+                </>
+              )}
+            </button>
+          </div>
+        </>
       )}
     </div>
   );
