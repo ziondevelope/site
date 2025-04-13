@@ -5,7 +5,7 @@ import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "@/lib/queryClient";
 import { apiRequest } from "@/lib/queryClient";
 import { Lead } from "@shared/schema";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 
 interface KanbanBoardProps {
@@ -23,11 +23,32 @@ export default function KanbanBoard({
 }: KanbanBoardProps) {
   const { toast } = useToast();
   const [localLeads, setLocalLeads] = useState({
-    new: newLeads,
-    contacted: contactedLeads,
-    visit: visitLeads,
-    proposal: proposalLeads
+    new: newLeads || [],
+    contacted: contactedLeads || [],
+    visit: visitLeads || [],
+    proposal: proposalLeads || []
   });
+  
+  // Estado para controlar se o componente está montado
+  const [isMounted, setIsMounted] = useState(false);
+  
+  // Inicializa o componente
+  useEffect(() => {
+    setIsMounted(true);
+    return () => setIsMounted(false);
+  }, []);
+  
+  // Atualiza os dados locais quando as props forem alteradas
+  useEffect(() => {
+    if (isMounted) {
+      setLocalLeads({
+        new: newLeads || [],
+        contacted: contactedLeads || [],
+        visit: visitLeads || [],
+        proposal: proposalLeads || []
+      });
+    }
+  }, [newLeads, contactedLeads, visitLeads, proposalLeads, isMounted]);
 
   // Update lead status mutation
   const updateLeadStatusMutation = useMutation({
@@ -96,7 +117,9 @@ export default function KanbanBoard({
     return interestType === "purchase" ? "Compra" : "Aluguel";
   };
   
-  const getFormattedDate = (dateString: string) => {
+  const getFormattedDate = (dateString: string | Date | null) => {
+    if (!dateString) return "Data desconhecida";
+    
     const date = new Date(dateString);
     const now = new Date();
     const diffInDays = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
@@ -136,6 +159,27 @@ export default function KanbanBoard({
       leads: localLeads.proposal 
     }
   ];
+
+  // Se o componente não estiver montado, mostre apenas o esqueleto
+  if (!isMounted) {
+    return (
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        {[1, 2, 3, 4].map((colIndex) => (
+          <Card key={colIndex} className="p-4 rounded-xl shadow-sm">
+            <div className="h-6 w-2/3 bg-gray-200 animate-pulse rounded mb-4"></div>
+            <div className="space-y-3 min-h-[400px]">
+              {[1, 2, 3].map((itemIndex) => (
+                <div 
+                  key={itemIndex} 
+                  className="bg-gray-100 border border-gray-200 p-3 rounded-lg animate-pulse h-24"
+                ></div>
+              ))}
+            </div>
+          </Card>
+        ))}
+      </div>
+    );
+  }
 
   return (
     <DragDropContext onDragEnd={handleDragEnd}>
@@ -185,7 +229,7 @@ export default function KanbanBoard({
                               {getInterestTypeLabel(lead.interestType)}
                             </span>
                           </div>
-                          <p className="text-sm text-gray-600 mt-1">{lead.message}</p>
+                          <p className="text-sm text-gray-600 mt-1">{lead.message || ""}</p>
                           <p className="text-xs text-gray-500 mt-2">
                             Via {lead.source} - {getFormattedDate(lead.createdAt)}
                           </p>
