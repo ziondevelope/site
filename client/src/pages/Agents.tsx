@@ -79,8 +79,7 @@ export default function Agents() {
 
   return (
     <div className="space-y-8 max-w-5xl mx-auto">
-      <div className="flex justify-between items-center border-b border-gray-100 pb-4">
-        <h2 className="text-2xl font-light text-gray-700">Corretores</h2>
+      <div className="flex justify-end border-b border-gray-100 pb-4">
         <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
           <DialogTrigger asChild>
             <Button className="bg-indigo-600 hover:bg-indigo-700 rounded-full px-5">
