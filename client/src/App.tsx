@@ -12,18 +12,28 @@ import AppLayout from "@/components/layout/AppLayout";
 import { queryClient } from "./lib/queryClient";
 
 function AdminRouter() {
+  // Usando useLocation para determinar a rota atual
   const [location] = useLocation();
+  
+  // Componente padrão é Dashboard
+  let CurrentComponent = Dashboard;
+  
+  // Seleciona o componente baseado na URL atual
+  if (location.includes("/admin/imoveis")) {
+    CurrentComponent = Properties;
+  } else if (location.includes("/admin/crm")) {
+    CurrentComponent = CRM;
+  } else if (location.includes("/admin/corretores")) {
+    CurrentComponent = Agents;
+  } else if (location.includes("/admin/site")) {
+    CurrentComponent = Website;
+  } else if (location !== "/admin") {
+    CurrentComponent = NotFound;
+  }
   
   return (
     <AppLayout>
-      <Switch>
-        <Route path="/admin" component={Dashboard} />
-        <Route path="/admin/imoveis" component={Properties} />
-        <Route path="/admin/crm" component={CRM} />
-        <Route path="/admin/corretores" component={Agents} />
-        <Route path="/admin/site" component={Website} />
-        <Route path="/admin/*" component={NotFound} />
-      </Switch>
+      <CurrentComponent />
     </AppLayout>
   );
 }
@@ -32,7 +42,8 @@ function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
-      <Route path="/admin/*" component={AdminRouter} />
+      <Route path="/admin" component={AdminRouter} />
+      <Route path="/admin/:path*" component={AdminRouter} />
       <Route component={NotFound} />
     </Switch>
   );
