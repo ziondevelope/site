@@ -2,6 +2,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { ImageUpload } from "@/components/ui/image-upload";
 import { WebsiteConfig, UpdateWebsiteConfig } from "@shared/schema";
 
 interface GeneralSettingsProps {
@@ -90,31 +91,20 @@ export default function GeneralSettings({ config, configData, onConfigChange }: 
             Logo
           </Label>
           <div className="flex items-center space-x-4">
-            <div className="w-32 h-32 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden border-2 border-dashed border-gray-300">
-              {logo ? (
-                <img src={logo} alt="Logo Preview" className="max-w-full max-h-full" />
-              ) : (
-                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"></rect><circle cx="9" cy="9" r="2"></circle><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path></svg>
-              )}
-            </div>
-            <div>
-              <Button 
-                variant="outline" 
-                className="mb-2 w-full rounded-full"
-                onClick={addDemoLogo}
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1"><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7"></path><line x1="16" x2="22" y1="5" y2="5"></line><line x1="19" x2="19" y1="2" y2="8"></line><circle cx="9" cy="9" r="2"></circle><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path></svg>
-                Demo Logo
-              </Button>
-              <Button 
-                variant="ghost" 
-                className="text-gray-500 text-sm w-full rounded-full"
-                onClick={removeLogo}
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
-                Remover
-              </Button>
-            </div>
+            <ImageUpload
+              currentImage={logo}
+              onImageChange={handleLogoChange}
+              onRemoveImage={removeLogo}
+              label="Upload Logo"
+            />
+            <Button 
+              variant="outline" 
+              className="rounded-full"
+              onClick={addDemoLogo}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1"><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7"></path><line x1="16" x2="22" y1="5" y2="5"></line><line x1="19" x2="19" y1="2" y2="8"></line><circle cx="9" cy="9" r="2"></circle><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path></svg>
+              Demo Logo
+            </Button>
           </div>
         </div>
         
@@ -123,31 +113,21 @@ export default function GeneralSettings({ config, configData, onConfigChange }: 
             Background do Banner
           </Label>
           <div className="flex items-center space-x-4">
-            <div className="w-32 h-32 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden border-2 border-dashed border-gray-300">
-              {bannerBg ? (
-                <img src={bannerBg} alt="Banner Preview" className="max-w-full max-h-full" />
-              ) : (
-                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400"><path d="M2 9a7 7 0 0 1 12-5"></path><path d="M15 9a7 7 0 0 1 4.798 12"></path><path d="m9 16 3.293 3.293a1 1 0 0 0 1.414 0L17 16"></path><path d="m9 20 3.293 3.293a1 1 0 0 0 1.414 0L17 20"></path><path d="M6 9v12"></path><path d="M18 9v12"></path></svg>
-              )}
-            </div>
-            <div>
-              <Button 
-                variant="outline" 
-                className="mb-2 w-full rounded-full"
-                onClick={addDemoBanner}
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1"><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7"></path><line x1="16" x2="22" y1="5" y2="5"></line><line x1="19" x2="19" y1="2" y2="8"></line><circle cx="9" cy="9" r="2"></circle><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path></svg>
-                Demo Banner
-              </Button>
-              <Button 
-                variant="ghost" 
-                className="text-gray-500 text-sm w-full rounded-full"
-                onClick={removeBanner}
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
-                Remover
-              </Button>
-            </div>
+            <ImageUpload
+              currentImage={bannerBg}
+              onImageChange={handleBannerBgChange}
+              onRemoveImage={removeBanner}
+              previewClassName="w-32 h-32"
+              label="Upload Banner"
+            />
+            <Button 
+              variant="outline" 
+              className="rounded-full"
+              onClick={addDemoBanner}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1"><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7"></path><line x1="16" x2="22" y1="5" y2="5"></line><line x1="19" x2="19" y1="2" y2="8"></line><circle cx="9" cy="9" r="2"></circle><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path></svg>
+              Demo Banner
+            </Button>
           </div>
         </div>
       </div>

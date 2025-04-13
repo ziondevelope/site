@@ -1,68 +1,126 @@
-import { ChangeEvent, useState } from "react";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useState, ChangeEvent, useRef } from "react";
+import { Button } from "./button";
 
 interface ImageUploadProps {
-  onChange: (base64: string) => void;
-  value?: string;
+  currentImage?: string | null;
+  onImageChange: (imageBase64: string) => void;
+  onRemoveImage: () => void;
+  previewClassName?: string;
   label?: string;
-  disabled?: boolean;
 }
 
-export const ImageUpload = ({
-  onChange,
-  value,
-  label,
-  disabled
-}: ImageUploadProps) => {
-  const [preview, setPreview] = useState<string | null>(value || null);
+export function ImageUpload({ 
+  currentImage, 
+  onImageChange, 
+  onRemoveImage,
+  previewClassName = "w-32 h-32",
+  label = "Selecionar Imagem"
+}: ImageUploadProps) {
+  const [isLoading, setIsLoading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      const base64 = reader.result as string;
-      setPreview(base64);
-      onChange(base64);
-    };
-    reader.readAsDataURL(file);
+    // Validar o tipo do arquivo
+    if (!file.type.startsWith('image/')) {
+      alert('Por favor, selecione um arquivo de imagem válido.');
+      return;
+    }
+
+    // Validar o tamanho do arquivo (limite de 2MB)
+    if (file.size > 2 * 1024 * 1024) {
+      alert('A imagem deve ter menos de 2MB.');
+      return;
+    }
+
+    setIsLoading(true);
+    
+    try {
+      const base64 = await convertToBase64(file);
+      onImageChange(base64);
+    } catch (error) {
+      console.error('Erro ao processar a imagem:', error);
+      alert('Ocorreu um erro ao processar a imagem. Tente novamente.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const convertToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = (error) => reject(error);
+    });
+  };
+
+  const triggerFileInput = () => {
+    fileInputRef.current?.click();
   };
 
   return (
-    <div className="space-y-4 w-full flex flex-col items-center justify-center">
-      {label && <Label className="text-center">{label}</Label>}
-      <div className="relative w-32 h-32 mx-auto">
-        <Avatar className="w-32 h-32 border-2 border-gray-200">
-          <AvatarImage src={preview || ''} alt="Preview" className="object-cover" />
-          <AvatarFallback className="bg-gray-100 text-gray-400 text-3xl">
-            <i className="ri-user-3-line"></i>
-          </AvatarFallback>
-        </Avatar>
-        <Button 
-          type="button"
-          variant="outline" 
-          size="icon"
-          disabled={disabled}
-          className="absolute bottom-0 right-0 rounded-full bg-white h-8 w-8 shadow-md hover:bg-gray-50"
-          onClick={() => document.getElementById('photo-upload')?.click()}
-        >
-          <i className="ri-camera-line text-gray-600"></i>
-        </Button>
+    <div className="flex flex-col items-center space-y-4">
+      <div 
+        className={`${previewClassName} bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden border-2 border-dashed border-gray-300 relative`}
+      >
+        {isLoading ? (
+          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-indigo-600"></div>
+        ) : currentImage ? (
+          <img src={currentImage} alt="Preview" className="max-w-full max-h-full object-contain" />
+        ) : (
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400">
+            <rect width="18" height="18" x="3" y="3" rx="2" ry="2"></rect>
+            <circle cx="9" cy="9" r="2"></circle>
+            <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path>
+          </svg>
+        )}
       </div>
-      <input
-        id="photo-upload"
-        type="file"
-        accept="image/*"
-        onChange={handleChange}
-        className="hidden"
-        disabled={disabled}
-      />
-      <p className="text-xs text-center text-gray-500 mt-2">
-        Clique para adicionar uma foto
-      </p>
+      
+      <div className="flex space-x-2">
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleFileChange}
+          ref={fileInputRef}
+          className="hidden"
+        />
+        
+        <Button 
+          type="button" 
+          variant="outline" 
+          onClick={triggerFileInput}
+          disabled={isLoading}
+          className="rounded-full"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1">
+            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7"></path>
+            <line x1="16" x2="22" y1="5" y2="5"></line>
+            <line x1="19" x2="19" y1="2" y2="8"></line>
+            <circle cx="9" cy="9" r="2"></circle>
+            <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path>
+          </svg>
+          {label}
+        </Button>
+        
+        {currentImage && (
+          <Button 
+            type="button" 
+            variant="ghost" 
+            onClick={onRemoveImage}
+            className="text-gray-500 text-sm rounded-full"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1">
+              <path d="M3 6h18"></path>
+              <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+              <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+            </svg>
+            Remover
+          </Button>
+        )}
+      </div>
     </div>
   );
-};
+}
