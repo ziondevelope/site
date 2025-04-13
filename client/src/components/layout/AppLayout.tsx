@@ -100,7 +100,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
             )}
           </div>
           
-          <div className="bg-white rounded-lg">
+          <div>
             {children}
           </div>
         </div>
