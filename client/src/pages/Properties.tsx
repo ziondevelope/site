@@ -262,8 +262,10 @@ export default function Properties() {
   // Add property mutation
   const addPropertyMutation = useMutation({
     mutationFn: async (data: PropertyFormValues) => {
-      const response = await apiRequest("POST", "/api/properties", data);
-      return response.json();
+      return apiRequest("/api/properties", {
+        method: "POST",
+        body: JSON.stringify(data)
+      });
     },
     onSuccess: () => {
       setIsAddDialogOpen(false);
@@ -287,8 +289,10 @@ export default function Properties() {
   const updatePropertyMutation = useMutation({
     mutationFn: async (data: PropertyFormValues & { id: number }) => {
       const { id, ...propertyData } = data;
-      const response = await apiRequest("PATCH", `/api/properties/${id}`, propertyData);
-      return response.json();
+      return apiRequest(`/api/properties/${id}`, {
+        method: "PATCH",
+        body: JSON.stringify(propertyData)
+      });
     },
     onSuccess: () => {
       setIsEditDialogOpen(false);
@@ -312,8 +316,9 @@ export default function Properties() {
   // Delete property mutation
   const deletePropertyMutation = useMutation({
     mutationFn: async (id: number) => {
-      const response = await apiRequest("DELETE", `/api/properties/${id}`);
-      return response.ok;
+      return apiRequest(`/api/properties/${id}`, {
+        method: "DELETE"
+      });
     },
     onSuccess: () => {
       setIsDeleteAlertOpen(false);

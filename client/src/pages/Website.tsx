@@ -37,9 +37,9 @@ export default function Website() {
   // Mutation to save configuration
   const saveConfigMutation = useMutation({
     mutationFn: async (data: UpdateWebsiteConfig) => {
-      return apiRequest('/api/website/config', {
+      return apiRequest<WebsiteConfig>('/api/website/config', {
         method: 'PUT',
-        body: JSON.stringify(data),
+        body: JSON.stringify(data)
       });
     },
     onSuccess: () => {
