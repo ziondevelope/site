@@ -1071,6 +1071,26 @@ export default function Properties() {
                           <FormLabel>Endereço</FormLabel>
                           <FormControl>
                             <Input placeholder="Rua Exemplo, 123" {...field} />
+                            </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </TabsContent>
+                  
+                  <TabsContent value="images" className="space-y-4">
+                    <FormField
+                      control={editForm.control}
+                      name="images"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Upload de Imagens</FormLabel>
+                          <FormControl>
+                            <MultipleImageUpload 
+                              value={field.value}
+                              onChange={field.onChange}
+                              maxFiles={10}
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -1081,17 +1101,7 @@ export default function Properties() {
                       control={editForm.control}
                       name="images"
                       render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Imagens</FormLabel>
-                          <FormControl>
-                            <MultipleImageUpload 
-                              value={field.value}
-                              onChange={field.onChange}
-                              maxFiles={10}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
+                        <FeaturedCheckbox field={field} />
                       )}
                     />
                   </TabsContent>
