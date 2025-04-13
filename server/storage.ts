@@ -522,9 +522,10 @@ export class FirebaseStorage implements IStorage {
   // Website configuration
   async getWebsiteConfig(): Promise<WebsiteConfig | undefined> {
     try {
-      const configDoc = await db.collection('websiteConfig').doc('config').get();
+      const configRef = doc(db, 'websiteConfig', 'config');
+      const configDoc = await getDoc(configRef);
       
-      if (!configDoc.exists) {
+      if (!configDoc.exists()) {
         // Create default config if it doesn't exist
         const defaultConfig: WebsiteConfig = {
           id: 1,
@@ -545,7 +546,7 @@ export class FirebaseStorage implements IStorage {
           updatedAt: new Date().toISOString(),
         };
         
-        await db.collection('websiteConfig').doc('config').set(defaultConfig);
+        await setDoc(configRef, defaultConfig);
         return defaultConfig;
       }
       
@@ -558,18 +559,18 @@ export class FirebaseStorage implements IStorage {
 
   async updateWebsiteConfig(config: UpdateWebsiteConfig): Promise<WebsiteConfig> {
     try {
-      const configRef = db.collection('websiteConfig').doc('config');
-      const configDoc = await configRef.get();
+      const configRef = doc(db, 'websiteConfig', 'config');
+      const configDoc = await getDoc(configRef);
       
       let updatedConfig: WebsiteConfig;
       
-      if (!configDoc.exists) {
+      if (!configDoc.exists()) {
         // Create new config
         updatedConfig = {
           ...config,
           id: 1,
           updatedAt: new Date().toISOString(),
-        };
+        } as WebsiteConfig;
       } else {
         // Update existing config
         updatedConfig = {
@@ -579,7 +580,7 @@ export class FirebaseStorage implements IStorage {
         } as WebsiteConfig;
       }
       
-      await configRef.set(updatedConfig);
+      await setDoc(configRef, updatedConfig);
       return updatedConfig;
     } catch (error) {
       console.error('Error updating website config:', error);
