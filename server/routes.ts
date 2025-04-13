@@ -68,9 +68,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  apiRouter.put("/properties/:id", async (req, res) => {
+  apiRouter.patch("/properties/:id", async (req, res) => {
     try {
-      const validatedData = insertPropertySchema.parse(req.body);
+      const validatedData = insertPropertySchema.partial().parse(req.body);
       const property = await storageInstance.updateProperty(parseInt(req.params.id), validatedData);
       if (!property) {
         return res.status(404).json({ message: "Property not found" });

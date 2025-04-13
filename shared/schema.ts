@@ -31,6 +31,8 @@ export const properties = pgTable("properties", {
   area: integer("area").notNull(),
   bedrooms: integer("bedrooms"),
   bathrooms: integer("bathrooms"),
+  suites: integer("suites"),
+  parkingSpots: integer("parking_spots"),
   address: text("address").notNull(),
   city: text("city").notNull(),
   neighborhood: text("neighborhood").notNull(),
