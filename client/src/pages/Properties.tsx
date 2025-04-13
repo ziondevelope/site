@@ -41,6 +41,44 @@ const propertyFormSchema = insertPropertySchema.extend({
 
 type PropertyFormValues = z.infer<typeof propertyFormSchema>;
 
+// Função utilitária para obter a imagem de destaque do imóvel
+const getFeaturedImage = (property: Property): string | undefined => {
+  // Se tiver array de imagens com formato { url, isFeatured }
+  if (property.images && Array.isArray(property.images) && property.images.length > 0) {
+    // Procura por uma imagem marcada como destaque
+    const featuredImage = property.images.find(img => 
+      typeof img === 'object' && 'isFeatured' in img && img.isFeatured
+    );
+    
+    // Se encontrou imagem de destaque, retorna sua URL
+    if (featuredImage && typeof featuredImage === 'object' && 'url' in featuredImage) {
+      return featuredImage.url;
+    }
+    
+    // Caso não encontre, retorna a primeira imagem
+    if (property.images[0] && typeof property.images[0] === 'object' && 'url' in property.images[0]) {
+      return property.images[0].url;
+    }
+    
+    // Caso seja um array de strings (formato antigo)
+    if (typeof property.images[0] === 'string') {
+      return property.images[0];
+    }
+  }
+  
+  // Compatibilidade com o campo featuredImage (formato antigo)
+  if (property.featuredImage) {
+    return property.featuredImage;
+  }
+  
+  // Compatibilidade com o campo imageUrl (formato mais antigo)
+  if (property.imageUrl) {
+    return property.imageUrl;
+  }
+  
+  return undefined;
+};
+
 export default function Properties() {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
@@ -1082,9 +1120,26 @@ export default function Properties() {
               <TableBody>
                 {properties.map((property) => (
                   <TableRow key={property.id} className="hover:bg-gray-50">
-                    <TableCell className="py-4 whitespace-nowrap">
-                      <div className="font-medium text-gray-900">{property.title}</div>
-                      <div className="text-xs text-gray-500">{property.address}, {property.neighborhood}</div>
+                    <TableCell className="py-2 whitespace-nowrap">
+                      <div className="flex items-center gap-3">
+                        <div className="w-16 h-12 rounded overflow-hidden flex-shrink-0 border border-gray-200">
+                          {getFeaturedImage(property) ? (
+                            <img 
+                              src={getFeaturedImage(property)} 
+                              alt={property.title}
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center bg-gray-100">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400"><path d="M21 9v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h10"/><circle cx="17" cy="7" r="1"/><polyline points="14 3 21 3 21 10"/></svg>
+                            </div>
+                          )}
+                        </div>
+                        <div>
+                          <div className="font-medium text-gray-900">{property.title}</div>
+                          <div className="text-xs text-gray-500">{property.address}, {property.neighborhood}</div>
+                        </div>
+                      </div>
                     </TableCell>
                     <TableCell className="py-4 whitespace-nowrap">
                       {property.type === "apartment" && "Apartamento"}
