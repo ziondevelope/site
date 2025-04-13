@@ -1106,8 +1106,8 @@ export default function Properties() {
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
           </div>
         ) : properties && properties.length > 0 ? (
-          <div className="overflow-hidden rounded-lg border border-gray-100 bg-white">
-            <Table className="min-w-full divide-y divide-gray-100 bg-white">
+          <div className="overflow-hidden rounded-lg border border-gray-100">
+            <Table className="min-w-full divide-y divide-gray-100">
               <TableHeader>
                 <TableRow>
                   <TableHead className="py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Título</TableHead>
@@ -1123,12 +1123,12 @@ export default function Properties() {
                   <TableRow key={property.id} className="hover:bg-gray-50/30">
                     <TableCell className="py-2 whitespace-nowrap bg-white">
                       <div className="flex items-center gap-3.5 pl-1">
-                        <div className="w-16 h-12 rounded overflow-hidden flex-shrink-0 border-0 bg-white shadow-sm">
+                        <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0 border-0 bg-white shadow-sm">
                           {getFeaturedImage(property) ? (
                             <img 
                               src={getFeaturedImage(property)} 
                               alt={property.title}
-                              className="w-full h-full object-cover rounded-sm"
+                              className="w-full h-full object-cover"
                             />
                           ) : (
                             <div className="w-full h-full flex items-center justify-center bg-gray-100">
@@ -1191,7 +1191,7 @@ export default function Properties() {
             </Table>
           </div>
         ) : (
-          <div className="text-center py-10 bg-white rounded-lg border border-gray-100">
+          <div className="text-center py-10 rounded-lg border border-gray-100">
             <div className="text-5xl text-gray-300 mb-4">
               <i className="ri-building-line"></i>
             </div>
