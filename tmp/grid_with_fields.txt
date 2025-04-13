@@ -1,0 +1,118 @@
+                  <TabsContent value="details" className="space-y-4">
+                    <div className="grid grid-cols-3 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="area"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Área (m²)</FormLabel>
+                            <FormControl>
+                              <Input 
+                                type="number" 
+                                placeholder="120"
+                                {...field}
+                                onChange={(e) => field.onChange(Number(e.target.value))}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="bedrooms"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Quartos</FormLabel>
+                            <FormControl>
+                              <Input 
+                                type="number" 
+                                placeholder="3"
+                                {...field}
+                                onChange={(e) => field.onChange(Number(e.target.value))}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="bathrooms"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Banheiros</FormLabel>
+                            <FormControl>
+                              <Input 
+                                type="number" 
+                                placeholder="2"
+                                {...field}
+                                onChange={(e) => field.onChange(Number(e.target.value))}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="suites"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Suítes</FormLabel>
+                            <FormControl>
+                              <Input 
+                                type="number" 
+                                placeholder="1"
+                                {...field}
+                                value={field.value || 0}
+                                onChange={(e) => field.onChange(Number(e.target.value))}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="parkingSpots"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Vagas de Garagem</FormLabel>
+                            <FormControl>
+                              <Input 
+                                type="number" 
+                                placeholder="1"
+                                {...field}
+                                value={field.value || 0}
+                                onChange={(e) => field.onChange(Number(e.target.value))}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="isFeatured"
+                        render={({ field }) => (
+                          <FormItem className="flex flex-row items-start space-x-3 space-y-0 pt-6">
+                            <FormControl>
+                              <input
+                                type="checkbox"
+                                checked={field.value}
+                                onChange={field.onChange}
+                                className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                              />
+                            </FormControl>
+                            <div className="space-y-1 leading-none">
+                              <FormLabel>Destacar na página inicial</FormLabel>
+                            </div>
+                          </FormItem>
+                        )}
+                      />
