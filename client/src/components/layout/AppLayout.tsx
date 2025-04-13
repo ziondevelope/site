@@ -89,8 +89,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
           </div>
         </header>
         
-        <div className="p-6 pb-16">
-          <div className="flex justify-between items-center mb-6">
+        <div className="p-4 pb-16">
+          <div className="flex justify-between items-center mb-4">
             <h1 className="text-2xl font-semibold text-gray-800">{getPageTitle()}</h1>
             
             {location.includes('/crm') && (
@@ -100,7 +100,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
             )}
           </div>
           
-          <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
+          <div className="bg-white rounded-lg">
             {children}
           </div>
         </div>

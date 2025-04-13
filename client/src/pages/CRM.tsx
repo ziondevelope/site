@@ -92,7 +92,7 @@ export default function CRM() {
   
   return (
     <div className="space-y-2">
-      <div className="bg-white p-6 rounded-t-lg border-b">
+      <div className="bg-white p-6">
         <div className="flex justify-between items-center mb-6">
           <div>
             <p className="text-sm text-gray-500 mb-1">Cadastre aqui leads, clientes potenciais, ou pessoas interessadas no seu produto/serviço. No CRM você poderá gerenciar seus leads de forma eficiente.</p>
