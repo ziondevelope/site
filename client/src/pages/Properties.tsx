@@ -14,7 +14,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { insertPropertySchema, type Property } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
-import { ImageUpload } from "@/components/ui/image-upload";
 import { MultipleImageUpload } from "@/components/ui/multiple-image-upload";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
@@ -590,15 +589,17 @@ export default function Properties() {
                     
                     <FormField
                       control={form.control}
-                      name="imageUrl"
+                      name="images"
                       render={({ field }) => (
-                        <FormItem className="w-full flex flex-col items-center mt-4">
-                          <FormLabel className="text-center mb-2 text-gray-700">Imagem Principal</FormLabel>
+                        <FormItem className="w-full">
+                          <FormLabel className="mb-2 text-gray-700">Galeria de Imagens</FormLabel>
                           <FormControl>
-                            <ImageUpload 
+                            <MultipleImageUpload 
                               onChange={field.onChange}
                               value={field.value}
                               disabled={addPropertyMutation.isPending}
+                              label="Adicione imagens do imóvel"
+                              maxImages={8}
                             />
                           </FormControl>
                           <FormMessage />
@@ -968,15 +969,17 @@ export default function Properties() {
                     
                     <FormField
                       control={form.control}
-                      name="imageUrl"
+                      name="images"
                       render={({ field }) => (
-                        <FormItem className="w-full flex flex-col items-center mt-4">
-                          <FormLabel className="text-center mb-2 text-gray-700">Imagem Principal</FormLabel>
+                        <FormItem className="w-full">
+                          <FormLabel className="mb-2 text-gray-700">Galeria de Imagens</FormLabel>
                           <FormControl>
-                            <ImageUpload 
+                            <MultipleImageUpload 
                               onChange={field.onChange}
                               value={field.value}
                               disabled={updatePropertyMutation.isPending}
+                              label="Adicione imagens do imóvel"
+                              maxImages={8}
                             />
                           </FormControl>
                           <FormMessage />
