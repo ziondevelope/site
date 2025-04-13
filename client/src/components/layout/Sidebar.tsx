@@ -16,7 +16,7 @@ const navItems: NavItem[] = [
   { id: "agents", href: "/admin/corretores", label: "Corretores", icon: "ri-team-line" },
   { id: "settings", href: "/admin/configuracoes", label: "Configurações", icon: "ri-settings-line" },
   { id: "owners", href: "/admin/proprietarios", label: "Proprietários", icon: "ri-user-star-line" },
-  { id: "users", href: "/admin/site", label: "Usuários", icon: "ri-user-line" },
+  { id: "website", href: "/admin/site", label: "Site", icon: "ri-global-line" },
   { id: "back", href: "/", label: "Voltar ao Site", icon: "ri-arrow-left-line" },
 ];
 
