@@ -159,6 +159,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Error fetching agents" });
     }
   });
+  
+  apiRouter.patch("/agents/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const updatedAgent = await storageInstance.updateUser(id, req.body);
+      if (!updatedAgent) {
+        return res.status(404).json({ message: "Agent not found" });
+      }
+      res.json(updatedAgent);
+    } catch (error) {
+      res.status(500).json({ message: "Error updating agent" });
+    }
+  });
+  
+  apiRouter.delete("/agents/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const success = await storageInstance.deleteUser(id);
+      if (!success) {
+        return res.status(404).json({ message: "Agent not found" });
+      }
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error deleting agent:", error);
+      res.status(500).json({ message: "Error deleting agent" });
+    }
+  });
 
   apiRouter.get("/agents/:id", async (req, res) => {
     try {
