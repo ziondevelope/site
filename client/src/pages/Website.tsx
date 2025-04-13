@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
@@ -12,27 +12,30 @@ export default function Website() {
   
   // Fetch website configuration
   const { data: config, isLoading } = useQuery<WebsiteConfig>({
-    queryKey: ['/api/website/config'],
-    onSuccess: (data: WebsiteConfig) => {
-      // Pre-initialize configData with current values
+    queryKey: ['/api/website/config']
+  });
+
+  // Quando os dados de configuração forem carregados, inicialize o estado local
+  useEffect(() => {
+    if (config) {
       setConfigData({
-        logo: data.logo,
-        bannerBackground: data.bannerBackground,
-        mainFont: data.mainFont,
-        primaryColor: data.primaryColor,
-        secondaryColor: data.secondaryColor,
-        footerInfo: data.footerInfo,
-        showSearchBar: data.showSearchBar,
-        showFeaturedProperties: data.showFeaturedProperties,
-        showSaleProperties: data.showSaleProperties,
-        showRentProperties: data.showRentProperties,
-        showTestimonials: data.showTestimonials,
-        seoTitle: data.seoTitle,
-        seoDescription: data.seoDescription,
-        seoKeywords: data.seoKeywords,
+        logo: config.logo,
+        bannerBackground: config.bannerBackground,
+        mainFont: config.mainFont,
+        primaryColor: config.primaryColor,
+        secondaryColor: config.secondaryColor,
+        footerInfo: config.footerInfo,
+        showSearchBar: config.showSearchBar,
+        showFeaturedProperties: config.showFeaturedProperties,
+        showSaleProperties: config.showSaleProperties,
+        showRentProperties: config.showRentProperties,
+        showTestimonials: config.showTestimonials,
+        seoTitle: config.seoTitle,
+        seoDescription: config.seoDescription,
+        seoKeywords: config.seoKeywords,
       });
     }
-  });
+  }, [config]);
 
   // Mutation to save configuration
   const saveConfigMutation = useMutation({
