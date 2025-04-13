@@ -1121,14 +1121,14 @@ export default function Properties() {
               <TableBody>
                 {properties.map((property) => (
                   <TableRow key={property.id} className="hover:bg-gray-50">
-                    <TableCell className="py-2 whitespace-nowrap">
-                      <div className="flex items-center gap-3">
-                        <div className="w-16 h-12 rounded overflow-hidden flex-shrink-0 border-0">
+                    <TableCell className="py-2 whitespace-nowrap bg-white">
+                      <div className="flex items-center gap-3.5 pl-1">
+                        <div className="w-16 h-12 rounded overflow-hidden flex-shrink-0 border-0 bg-white shadow-sm">
                           {getFeaturedImage(property) ? (
                             <img 
                               src={getFeaturedImage(property)} 
                               alt={property.title}
-                              className="w-full h-full object-cover"
+                              className="w-full h-full object-cover rounded-sm"
                             />
                           ) : (
                             <div className="w-full h-full flex items-center justify-center bg-gray-100">
