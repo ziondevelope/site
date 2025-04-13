@@ -85,23 +85,23 @@ export default function Agents() {
   return (
     <div className="space-y-8 max-w-5xl mx-auto">
       <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-        <DialogContent className="sm:max-w-[800px] p-0 overflow-hidden">
-          <DialogHeader className="p-6 border-b border-gray-100">
-            <DialogTitle className="text-xl font-light text-gray-700">Adicionar Novo Corretor</DialogTitle>
+        <DialogContent className="sm:max-w-[600px] p-0 max-h-[90vh] overflow-hidden">
+          <DialogHeader className="p-4 border-b border-gray-100 sticky top-0 bg-white z-10">
+            <DialogTitle className="text-lg font-light text-gray-700">Adicionar Novo Corretor</DialogTitle>
             <DialogDescription className="text-sm text-gray-500 mt-1">
               Preencha os dados abaixo para cadastrar um novo profissional
             </DialogDescription>
           </DialogHeader>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="p-6">
-              <Tabs defaultValue="info" className="w-full">
-                <TabsList className="grid grid-cols-2 mb-6">
-                  <TabsTrigger value="info">Informações Básicas</TabsTrigger>
-                  <TabsTrigger value="photo">Foto e Perfil</TabsTrigger>
-                </TabsList>
-                
-                <TabsContent value="info" className="space-y-5">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="overflow-y-auto max-h-[calc(90vh-130px)]">
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="p-4">
+                <Tabs defaultValue="info" className="w-full">
+                  <TabsList className="grid grid-cols-2 mb-4 sticky top-0">
+                    <TabsTrigger value="info">Informações Básicas</TabsTrigger>
+                    <TabsTrigger value="photo">Foto e Perfil</TabsTrigger>
+                  </TabsList>
+                  
+                  <TabsContent value="info" className="space-y-4">
                     <FormField
                       control={form.control}
                       name="displayName"
@@ -129,9 +129,7 @@ export default function Agents() {
                         </FormItem>
                       )}
                     />
-                  </div>
                   
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <FormField
                       control={form.control}
                       name="email"
@@ -159,109 +157,109 @@ export default function Agents() {
                         </FormItem>
                       )}
                     />
-                  </div>
                   
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <FormField
-                      control={form.control}
-                      name="password"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Senha</FormLabel>
-                          <FormControl>
-                            <Input type="password" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="password"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Senha</FormLabel>
+                            <FormControl>
+                              <Input type="password" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="confirmPassword"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Confirmar Senha</FormLabel>
+                            <FormControl>
+                              <Input type="password" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
                     
                     <FormField
                       control={form.control}
-                      name="confirmPassword"
+                      name="role"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Confirmar Senha</FormLabel>
+                          <FormLabel>Função</FormLabel>
+                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Selecione a função" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="agent">Corretor</SelectItem>
+                              <SelectItem value="admin">Administrador</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </TabsContent>
+                  
+                  <TabsContent value="photo" className="flex flex-col items-center justify-center py-4">
+                    <FormField
+                      control={form.control}
+                      name="avatar"
+                      render={({ field }) => (
+                        <FormItem className="w-full flex flex-col items-center">
+                          <FormLabel className="text-center mb-2 text-gray-700">Foto do Perfil</FormLabel>
                           <FormControl>
-                            <Input type="password" {...field} />
+                            <ImageUpload 
+                              onChange={field.onChange}
+                              value={field.value}
+                              disabled={addAgentMutation.isPending}
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
-                  </div>
-                  
-                  <FormField
-                    control={form.control}
-                    name="role"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Função</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Selecione a função" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            <SelectItem value="agent">Corretor</SelectItem>
-                            <SelectItem value="admin">Administrador</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </TabsContent>
-                
-                <TabsContent value="photo" className="flex flex-col items-center justify-center py-4">
-                  <FormField
-                    control={form.control}
-                    name="avatar"
-                    render={({ field }) => (
-                      <FormItem className="w-full flex flex-col items-center">
-                        <FormLabel className="text-center mb-4 text-gray-700">Foto do Perfil</FormLabel>
-                        <FormControl>
-                          <ImageUpload 
-                            onChange={field.onChange}
-                            value={field.value}
-                            disabled={addAgentMutation.isPending}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <p className="text-sm text-gray-500 max-w-md text-center mt-6">
-                    Adicione uma foto profissional do corretor. Fotos de perfil ajudam a criar confiança com os clientes.
-                  </p>
-                </TabsContent>
-              </Tabs>
-              
-              <div className="flex justify-end space-x-3 border-t border-gray-100 pt-5 mt-8">
-                <Button 
-                  variant="outline" 
-                  type="button" 
-                  onClick={() => setIsAddDialogOpen(false)}
-                  className="rounded-full px-5"
-                >
-                  Cancelar
-                </Button>
-                <Button 
-                  type="submit" 
-                  disabled={addAgentMutation.isPending}
-                  className="bg-indigo-600 hover:bg-indigo-700 rounded-full px-5"
-                >
-                  {addAgentMutation.isPending ? (
-                    <>
-                      <div className="animate-spin mr-2 h-4 w-4 border-2 border-b-transparent border-white rounded-full"></div>
-                      Salvando...
-                    </>
-                  ) : "Salvar Corretor"}
-                </Button>
-              </div>
-            </form>
-          </Form>
+                    <p className="text-xs text-gray-500 max-w-md text-center mt-4">
+                      Adicione uma foto profissional do corretor. Fotos de perfil ajudam a criar confiança com os clientes.
+                    </p>
+                  </TabsContent>
+                </Tabs>
+              </form>
+            </Form>
+          </div>
+          <div className="flex justify-end space-x-3 border-t border-gray-100 p-4 sticky bottom-0 bg-white z-10">
+            <Button 
+              variant="outline" 
+              type="button" 
+              onClick={() => setIsAddDialogOpen(false)}
+              className="rounded-full px-5"
+            >
+              Cancelar
+            </Button>
+            <Button 
+              type="button" 
+              onClick={form.handleSubmit(onSubmit)}
+              disabled={addAgentMutation.isPending}
+              className="bg-indigo-600 hover:bg-indigo-700 rounded-full px-5"
+            >
+              {addAgentMutation.isPending ? (
+                <>
+                  <div className="animate-spin mr-2 h-4 w-4 border-2 border-b-transparent border-white rounded-full"></div>
+                  Salvando...
+                </>
+              ) : "Salvar Corretor"}
+            </Button>
+          </div>
         </DialogContent>
       </Dialog>
       
