@@ -21,21 +21,8 @@ const navItems: NavItem[] = [
       { id: "reports", href: "/admin/reports", label: "Relatórios", icon: "ri-file-chart-line" }
     ]
   },
-  { id: "bi", href: "/admin/b", label: "Novo B.I.", icon: "ri-radar-line" },
   { id: "leads", href: "/admin/crm", label: "Leads", icon: "ri-user-heart-line" },
   { id: "properties", href: "/admin/imoveis", label: "Imóveis", icon: "ri-building-line" },
-  { id: "proposal", href: "/admin/corretores", label: "Proposta", icon: "ri-file-list-line" },
-  { 
-    id: "projects",
-    href: "#", 
-    label: "Empreendimentos", 
-    icon: "ri-community-line",
-    children: [
-      { id: "new_projects", href: "/admin/empreendimentos/novos", label: "Novos", icon: "ri-building-2-line" },
-      { id: "ongoing_projects", href: "/admin/empreendimentos/andamento", label: "Em andamento", icon: "ri-building-3-line" }
-    ]
-  },
-  { id: "documents", href: "/admin/documentos", label: "Documentos", icon: "ri-file-text-line" },
   { id: "settings", href: "/admin/configuracoes", label: "Configurações", icon: "ri-settings-line" },
   { id: "owners", href: "/admin/proprietarios", label: "Proprietários", icon: "ri-user-star-line" },
   { id: "users", href: "/admin/site", label: "Usuários", icon: "ri-user-line" },
