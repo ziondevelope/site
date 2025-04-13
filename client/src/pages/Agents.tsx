@@ -79,28 +79,51 @@ export default function Agents() {
 
   return (
     <div className="space-y-8 max-w-5xl mx-auto">
-      <div className="flex justify-end border-b border-gray-100 pb-4">
-        <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-          <DialogTrigger asChild>
-            <Button className="bg-indigo-600 hover:bg-indigo-700 rounded-full px-5">
-              <i className="ri-add-line mr-1"></i> Adicionar Corretor
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[600px] p-0 overflow-hidden">
-            <DialogHeader className="p-6 border-b border-gray-100">
-              <DialogTitle className="text-xl font-light text-gray-700">Adicionar Novo Corretor</DialogTitle>
-              <p className="text-sm text-gray-500 mt-1">Preencha os dados abaixo para cadastrar um novo profissional</p>
-            </DialogHeader>
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="p-6 space-y-5">
+      <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+        <DialogContent className="sm:max-w-[600px] p-0 overflow-hidden">
+          <DialogHeader className="p-6 border-b border-gray-100">
+            <DialogTitle className="text-xl font-light text-gray-700">Adicionar Novo Corretor</DialogTitle>
+            <p className="text-sm text-gray-500 mt-1">Preencha os dados abaixo para cadastrar um novo profissional</p>
+          </DialogHeader>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="p-6 space-y-5">
+              <FormField
+                control={form.control}
+                name="displayName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Nome Completo</FormLabel>
+                    <FormControl>
+                      <Input placeholder="João Silva" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <FormField
+                control={form.control}
+                name="username"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Usuário</FormLabel>
+                    <FormControl>
+                      <Input placeholder="joaosilva" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <FormField
                   control={form.control}
-                  name="displayName"
+                  name="password"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Nome Completo</FormLabel>
+                      <FormLabel>Senha</FormLabel>
                       <FormControl>
-                        <Input placeholder="João Silva" {...field} />
+                        <Input type="password" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -109,131 +132,105 @@ export default function Agents() {
                 
                 <FormField
                   control={form.control}
-                  name="username"
+                  name="confirmPassword"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Usuário</FormLabel>
+                      <FormLabel>Confirmar Senha</FormLabel>
                       <FormControl>
-                        <Input placeholder="joaosilva" {...field} />
+                        <Input type="password" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email</FormLabel>
+                      <FormControl>
+                        <Input type="email" placeholder="joao@exemplo.com" {...field} value={field.value || ""} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="password"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Senha</FormLabel>
-                        <FormControl>
-                          <Input type="password" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  
-                  <FormField
-                    control={form.control}
-                    name="confirmPassword"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Confirmar Senha</FormLabel>
-                        <FormControl>
-                          <Input type="password" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Email</FormLabel>
-                        <FormControl>
-                          <Input type="email" placeholder="joao@exemplo.com" {...field} value={field.value || ""} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  
-                  <FormField
-                    control={form.control}
-                    name="phone"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Telefone</FormLabel>
-                        <FormControl>
-                          <Input placeholder="(11) 99999-9999" {...field} value={field.value || ""} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                
                 <FormField
                   control={form.control}
-                  name="role"
+                  name="phone"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Função</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Selecione a função" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="agent">Corretor</SelectItem>
-                          <SelectItem value="admin">Administrador</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      <FormLabel>Telefone</FormLabel>
+                      <FormControl>
+                        <Input placeholder="(11) 99999-9999" {...field} value={field.value || ""} />
+                      </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-                
-                <div className="flex justify-end space-x-3 border-t border-gray-100 pt-5 mt-6">
-                  <Button 
-                    variant="outline" 
-                    type="button" 
-                    onClick={() => setIsAddDialogOpen(false)}
-                    className="rounded-full px-5"
-                  >
-                    Cancelar
-                  </Button>
-                  <Button 
-                    type="submit" 
-                    disabled={addAgentMutation.isPending}
-                    className="bg-indigo-600 hover:bg-indigo-700 rounded-full px-5"
-                  >
-                    {addAgentMutation.isPending ? (
-                      <>
-                        <div className="animate-spin mr-2 h-4 w-4 border-2 border-b-transparent border-white rounded-full"></div>
-                        Salvando...
-                      </>
-                    ) : "Salvar Corretor"}
-                  </Button>
-                </div>
-              </form>
-            </Form>
-          </DialogContent>
-        </Dialog>
-      </div>
+              </div>
+              
+              <FormField
+                control={form.control}
+                name="role"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Função</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecione a função" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="agent">Corretor</SelectItem>
+                        <SelectItem value="admin">Administrador</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <div className="flex justify-end space-x-3 border-t border-gray-100 pt-5 mt-6">
+                <Button 
+                  variant="outline" 
+                  type="button" 
+                  onClick={() => setIsAddDialogOpen(false)}
+                  className="rounded-full px-5"
+                >
+                  Cancelar
+                </Button>
+                <Button 
+                  type="submit" 
+                  disabled={addAgentMutation.isPending}
+                  className="bg-indigo-600 hover:bg-indigo-700 rounded-full px-5"
+                >
+                  {addAgentMutation.isPending ? (
+                    <>
+                      <div className="animate-spin mr-2 h-4 w-4 border-2 border-b-transparent border-white rounded-full"></div>
+                      Salvando...
+                    </>
+                  ) : "Salvar Corretor"}
+                </Button>
+              </div>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
       
       <div className="mt-4">
         <div className="flex items-center justify-between mb-6">
-          <h3 className="text-lg font-light text-gray-600">Profissionais cadastrados</h3>
+          <Button 
+            onClick={() => setIsAddDialogOpen(true)}
+            className="bg-indigo-600 hover:bg-indigo-700 rounded-full px-5">
+            <i className="ri-add-line mr-1"></i> Adicionar Corretor
+          </Button>
           <div className="flex space-x-4 items-center">
             <div className="relative">
               <i className="ri-search-line absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
