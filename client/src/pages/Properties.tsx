@@ -589,8 +589,9 @@ export default function Properties() {
                           </FormItem>
                         )}
                       />
+                    </div>
 
-
+                    <div className="grid grid-cols-1 gap-4">
                     <FormField
                       control={form.control}
                       name="features"
@@ -962,6 +963,7 @@ export default function Properties() {
                       />
                     </div>
 
+                    <div className="grid grid-cols-1 gap-4">
                     <FormField
                       control={form.control}
                       name="features"
@@ -972,6 +974,7 @@ export default function Properties() {
                         />
                       )}
                     />
+                    </div>
                   </TabsContent>
                   
                   <TabsContent value="location" className="space-y-4">
