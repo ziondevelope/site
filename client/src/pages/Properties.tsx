@@ -1123,16 +1123,16 @@ export default function Properties() {
                   <TableRow key={property.id} className="hover:bg-gray-50/30">
                     <TableCell className="py-2 whitespace-nowrap bg-white">
                       <div className="flex items-center gap-3.5 pl-1">
-                        <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0 border-0 bg-white shadow-sm">
+                        <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0 border-0 bg-white shadow-sm flex items-center justify-center">
                           {getFeaturedImage(property) ? (
                             <img 
                               src={getFeaturedImage(property)} 
                               alt={property.title}
-                              className="w-full h-full object-cover"
+                              className="w-full h-full object-cover rounded-full"
                             />
                           ) : (
-                            <div className="w-full h-full flex items-center justify-center bg-gray-100">
-                              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400"><path d="M21 9v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h10"/><circle cx="17" cy="7" r="1"/><polyline points="14 3 21 3 21 10"/></svg>
+                            <div className="w-full h-full flex items-center justify-center bg-gray-100 rounded-full">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
                             </div>
                           )}
                         </div>
