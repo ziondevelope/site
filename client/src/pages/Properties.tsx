@@ -1167,8 +1167,8 @@ export default function Properties() {
       </div>
       
       {isLoading ? (
-        <div className="flex justify-center items-center py-20">
-          <div className="animate-spin h-8 w-8 border-2 border-indigo-500 rounded-full border-t-transparent"></div>
+        <div className="flex justify-center p-8">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
         </div>
       ) : !properties || properties.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-16 border border-dashed border-gray-200 rounded-lg">
@@ -1178,6 +1178,7 @@ export default function Properties() {
           <Button
             onClick={handleAddClick}
             size="sm"
+            className="rounded-full"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
             Adicionar Imóvel
@@ -1196,25 +1197,26 @@ export default function Properties() {
             }}
             size="sm"
             variant="outline"
+            className="rounded-full"
           >
             Limpar filtros
           </Button>
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-lg bg-white">
-          <Table>
+        <div className="overflow-hidden rounded-lg border border-gray-100">
+          <Table className="min-w-full divide-y divide-gray-100">
             <TableHeader>
               <TableRow className="bg-gray-50">
-                <TableHead className="w-[200px] font-semibold text-gray-600">Imóvel</TableHead>
-                <TableHead className="font-semibold text-gray-600">Tipo</TableHead>
-                <TableHead className="font-semibold text-gray-600">Finalidade</TableHead>
-                <TableHead className="font-semibold text-gray-600">Preço</TableHead>
-                <TableHead className="font-semibold text-gray-600">Status</TableHead>
-                <TableHead className="font-semibold text-gray-600">Destaque</TableHead>
-                <TableHead className="text-right font-semibold text-gray-600">Ações</TableHead>
+                <TableHead className="py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Imóvel</TableHead>
+                <TableHead className="py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Tipo</TableHead>
+                <TableHead className="py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Finalidade</TableHead>
+                <TableHead className="py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Preço</TableHead>
+                <TableHead className="py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Status</TableHead>
+                <TableHead className="py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Destaque</TableHead>
+                <TableHead className="py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-right">Ações</TableHead>
               </TableRow>
             </TableHeader>
-            <TableBody className="bg-white">
+            <TableBody className="bg-white divide-y divide-gray-100">
               {filteredProperties.map((property) => (
                 <TableRow key={property.id} className="bg-white hover:bg-gray-50">
                   <TableCell className="flex items-center space-x-3 py-3">
