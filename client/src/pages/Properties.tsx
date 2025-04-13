@@ -15,6 +15,7 @@ import { z } from "zod";
 import { insertPropertySchema, type Property } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
 import { MultipleImageUpload } from "@/components/ui/multiple-image-upload";
+import { CepInput } from "@/components/ui/cep-input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   AlertDialog,
@@ -108,11 +109,42 @@ function FeaturedCheckbox({ field }) {
   );
 }
 
+// Função para buscar dados do CEP
+async function fetchAddressByCep(cep: string) {
+  try {
+    cep = cep.replace(/\D/g, ''); // Remove caracteres não numéricos
+    if (cep.length !== 8) {
+      return null;
+    }
+    
+    const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+    if (!response.ok) {
+      throw new Error('Erro ao buscar CEP');
+    }
+    
+    const data = await response.json();
+    
+    if (data.erro) {
+      return null;
+    }
+    
+    return {
+      neighborhood: data.bairro,
+      city: data.localidade,
+      address: `${data.logradouro}${data.complemento ? ', ' + data.complemento : ''}`
+    };
+  } catch (error) {
+    console.error('Erro ao buscar CEP:', error);
+    return null;
+  }
+}
+
 export default function Properties() {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
+  const [isLoadingCep, setIsLoadingCep] = useState(false);
   const { toast } = useToast();
   
   // Fetch properties
