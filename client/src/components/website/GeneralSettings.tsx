@@ -1,21 +1,86 @@
-import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { WebsiteConfig } from "@shared/schema";
+import { WebsiteConfig, UpdateWebsiteConfig } from "@shared/schema";
 
 interface GeneralSettingsProps {
   config?: WebsiteConfig;
+  configData: Partial<UpdateWebsiteConfig>;
+  onConfigChange: (data: Partial<UpdateWebsiteConfig>) => void;
 }
 
-export default function GeneralSettings({ config }: GeneralSettingsProps) {
-  const [logo, setLogo] = useState<string | null>(config?.logo || null);
-  const [bannerBg, setBannerBg] = useState<string | null>(config?.bannerBackground || null);
-  const [mainFont, setMainFont] = useState(config?.mainFont || "Inter");
-  const [primaryColor, setPrimaryColor] = useState(config?.primaryColor || "#3B82F6");
-  const [secondaryColor, setSecondaryColor] = useState(config?.secondaryColor || "#10B981");
-  const [footerInfo, setFooterInfo] = useState(config?.footerInfo || "");
+export default function GeneralSettings({ config, configData, onConfigChange }: GeneralSettingsProps) {
+  // These are derived values that reflect either the current editing state (configData)
+  // or fallback to the saved values (config) if no edits have been made
+  const logo = configData.logo !== undefined 
+    ? configData.logo 
+    : config?.logo || '';
+    
+  const bannerBg = configData.bannerBackground !== undefined 
+    ? configData.bannerBackground 
+    : config?.bannerBackground || '';
+    
+  const mainFont = configData.mainFont !== undefined 
+    ? configData.mainFont 
+    : config?.mainFont || 'Inter';
+    
+  const primaryColor = configData.primaryColor !== undefined 
+    ? configData.primaryColor 
+    : config?.primaryColor || '#3B82F6';
+    
+  const secondaryColor = configData.secondaryColor !== undefined 
+    ? configData.secondaryColor 
+    : config?.secondaryColor || '#10B981';
+    
+  const footerInfo = configData.footerInfo !== undefined 
+    ? configData.footerInfo 
+    : config?.footerInfo || '';
+
+  // Handle change functions
+  const handleLogoChange = (newValue: string) => {
+    onConfigChange({ logo: newValue });
+  };
+
+  const handleBannerBgChange = (newValue: string) => {
+    onConfigChange({ bannerBackground: newValue });
+  };
+
+  const handleMainFontChange = (newValue: string) => {
+    onConfigChange({ mainFont: newValue });
+  };
+
+  const handlePrimaryColorChange = (newValue: string) => {
+    onConfigChange({ primaryColor: newValue });
+  };
+
+  const handleSecondaryColorChange = (newValue: string) => {
+    onConfigChange({ secondaryColor: newValue });
+  };
+
+  const handleFooterInfoChange = (newValue: string) => {
+    onConfigChange({ footerInfo: newValue });
+  };
+
+  // Placeholder URL for demo purposes
+  const demoLogoUrl = 'https://placehold.co/200x100/3B82F6/FFFFFF?text=Logo';
+  const demoBannerUrl = 'https://placehold.co/800x400/10B981/FFFFFF?text=Banner';
+  
+  const addDemoLogo = () => {
+    handleLogoChange(demoLogoUrl);
+  };
+  
+  const addDemoBanner = () => {
+    handleBannerBgChange(demoBannerUrl);
+  };
+  
+  const removeLogo = () => {
+    handleLogoChange('');
+  };
+  
+  const removeBanner = () => {
+    handleBannerBgChange('');
+  };
 
   return (
     <div className="space-y-6">
@@ -29,15 +94,25 @@ export default function GeneralSettings({ config }: GeneralSettingsProps) {
               {logo ? (
                 <img src={logo} alt="Logo Preview" className="max-w-full max-h-full" />
               ) : (
-                <i className="ri-image-line text-3xl text-gray-400"></i>
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"></rect><circle cx="9" cy="9" r="2"></circle><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path></svg>
               )}
             </div>
             <div>
-              <Button variant="outline" className="mb-2 w-full">
-                <i className="ri-upload-line mr-1"></i> Upload Logo
+              <Button 
+                variant="outline" 
+                className="mb-2 w-full rounded-full"
+                onClick={addDemoLogo}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1"><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7"></path><line x1="16" x2="22" y1="5" y2="5"></line><line x1="19" x2="19" y1="2" y2="8"></line><circle cx="9" cy="9" r="2"></circle><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path></svg>
+                Demo Logo
               </Button>
-              <Button variant="ghost" className="text-gray-500 text-sm w-full">
-                <i className="ri-delete-bin-line mr-1"></i> Remover
+              <Button 
+                variant="ghost" 
+                className="text-gray-500 text-sm w-full rounded-full"
+                onClick={removeLogo}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
+                Remover
               </Button>
             </div>
           </div>
@@ -52,15 +127,25 @@ export default function GeneralSettings({ config }: GeneralSettingsProps) {
               {bannerBg ? (
                 <img src={bannerBg} alt="Banner Preview" className="max-w-full max-h-full" />
               ) : (
-                <i className="ri-landscape-line text-3xl text-gray-400"></i>
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400"><path d="M2 9a7 7 0 0 1 12-5"></path><path d="M15 9a7 7 0 0 1 4.798 12"></path><path d="m9 16 3.293 3.293a1 1 0 0 0 1.414 0L17 16"></path><path d="m9 20 3.293 3.293a1 1 0 0 0 1.414 0L17 20"></path><path d="M6 9v12"></path><path d="M18 9v12"></path></svg>
               )}
             </div>
             <div>
-              <Button variant="outline" className="mb-2 w-full">
-                <i className="ri-upload-line mr-1"></i> Upload Background
+              <Button 
+                variant="outline" 
+                className="mb-2 w-full rounded-full"
+                onClick={addDemoBanner}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1"><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7"></path><line x1="16" x2="22" y1="5" y2="5"></line><line x1="19" x2="19" y1="2" y2="8"></line><circle cx="9" cy="9" r="2"></circle><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path></svg>
+                Demo Banner
               </Button>
-              <Button variant="ghost" className="text-gray-500 text-sm w-full">
-                <i className="ri-delete-bin-line mr-1"></i> Remover
+              <Button 
+                variant="ghost" 
+                className="text-gray-500 text-sm w-full rounded-full"
+                onClick={removeBanner}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
+                Remover
               </Button>
             </div>
           </div>
@@ -73,9 +158,9 @@ export default function GeneralSettings({ config }: GeneralSettingsProps) {
             Fonte Principal
           </Label>
           <select 
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+            className="w-full border border-gray-200 rounded-full px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-transparent"
             value={mainFont}
-            onChange={(e) => setMainFont(e.target.value)}
+            onChange={(e) => handleMainFontChange(e.target.value)}
           >
             <option value="Inter">Inter</option>
             <option value="Roboto">Roboto</option>
@@ -93,14 +178,14 @@ export default function GeneralSettings({ config }: GeneralSettingsProps) {
             <Input 
               type="color" 
               value={primaryColor} 
-              onChange={(e) => setPrimaryColor(e.target.value)}
+              onChange={(e) => handlePrimaryColorChange(e.target.value)}
               className="h-10 w-10 border-0 rounded-l-lg p-0"
             />
             <Input 
               type="text" 
               value={primaryColor} 
-              onChange={(e) => setPrimaryColor(e.target.value)}
-              className="border border-l-0 border-gray-300 rounded-r-lg px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+              onChange={(e) => handlePrimaryColorChange(e.target.value)}
+              className="border border-l-0 border-gray-200 rounded-r-full px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-transparent"
             />
           </div>
         </div>
@@ -113,14 +198,14 @@ export default function GeneralSettings({ config }: GeneralSettingsProps) {
             <Input 
               type="color" 
               value={secondaryColor}
-              onChange={(e) => setSecondaryColor(e.target.value)}
+              onChange={(e) => handleSecondaryColorChange(e.target.value)}
               className="h-10 w-10 border-0 rounded-l-lg p-0"
             />
             <Input 
               type="text" 
               value={secondaryColor} 
-              onChange={(e) => setSecondaryColor(e.target.value)}
-              className="border border-l-0 border-gray-300 rounded-r-lg px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+              onChange={(e) => handleSecondaryColorChange(e.target.value)}
+              className="border border-l-0 border-gray-200 rounded-r-full px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-transparent"
             />
           </div>
         </div>
@@ -132,10 +217,10 @@ export default function GeneralSettings({ config }: GeneralSettingsProps) {
         </Label>
         <Textarea 
           rows={4} 
-          className="w-full"
+          className="w-full rounded-xl"
           placeholder="Endereço, contato, horário de funcionamento..."
           value={footerInfo}
-          onChange={(e) => setFooterInfo(e.target.value)}
+          onChange={(e) => handleFooterInfoChange(e.target.value)}
         />
       </div>
     </div>

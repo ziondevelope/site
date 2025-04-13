@@ -11,35 +11,33 @@ export default function Website() {
   const { toast } = useToast();
   
   // Fetch website configuration
-  const { data: config, isLoading } = useQuery({
+  const { data: config, isLoading } = useQuery<WebsiteConfig>({
     queryKey: ['/api/website/config'],
-    onSuccess: (data) => {
-      if (data) {
-        // Pre-initialize configData with current values
-        setConfigData({
-          logo: data.logo,
-          bannerBackground: data.bannerBackground,
-          mainFont: data.mainFont,
-          primaryColor: data.primaryColor,
-          secondaryColor: data.secondaryColor,
-          footerInfo: data.footerInfo,
-          showSearchBar: data.showSearchBar,
-          showFeaturedProperties: data.showFeaturedProperties,
-          showSaleProperties: data.showSaleProperties,
-          showRentProperties: data.showRentProperties,
-          showTestimonials: data.showTestimonials,
-          seoTitle: data.seoTitle,
-          seoDescription: data.seoDescription,
-          seoKeywords: data.seoKeywords,
-        });
-      }
+    onSuccess: (data: WebsiteConfig) => {
+      // Pre-initialize configData with current values
+      setConfigData({
+        logo: data.logo,
+        bannerBackground: data.bannerBackground,
+        mainFont: data.mainFont,
+        primaryColor: data.primaryColor,
+        secondaryColor: data.secondaryColor,
+        footerInfo: data.footerInfo,
+        showSearchBar: data.showSearchBar,
+        showFeaturedProperties: data.showFeaturedProperties,
+        showSaleProperties: data.showSaleProperties,
+        showRentProperties: data.showRentProperties,
+        showTestimonials: data.showTestimonials,
+        seoTitle: data.seoTitle,
+        seoDescription: data.seoDescription,
+        seoKeywords: data.seoKeywords,
+      });
     }
   });
 
   // Mutation to save configuration
   const saveConfigMutation = useMutation({
     mutationFn: async (data: UpdateWebsiteConfig) => {
-      return apiRequest<WebsiteConfig>('/api/website/config', {
+      return apiRequest('/api/website/config', {
         method: 'PUT',
         body: JSON.stringify(data),
       });
@@ -50,7 +48,6 @@ export default function Website() {
       toast({
         title: "Configurações salvas",
         description: "As configurações do site foram atualizadas com sucesso.",
-        variant: "success",
       });
     },
     onError: (error) => {
@@ -73,22 +70,24 @@ export default function Website() {
 
   // Handle save button click
   const handleSave = () => {
+    if (!config) return;
+    
     // Create a full config object ensuring all properties have values
     const fullConfig: UpdateWebsiteConfig = {
-      logo: configData.logo ?? config?.logo ?? '',
-      bannerBackground: configData.bannerBackground ?? config?.bannerBackground ?? '',
-      mainFont: configData.mainFont ?? config?.mainFont ?? 'Inter',
-      primaryColor: configData.primaryColor ?? config?.primaryColor ?? '#3B82F6',
-      secondaryColor: configData.secondaryColor ?? config?.secondaryColor ?? '#10B981',
-      footerInfo: configData.footerInfo ?? config?.footerInfo ?? '',
-      showSearchBar: configData.showSearchBar ?? config?.showSearchBar ?? true,
-      showFeaturedProperties: configData.showFeaturedProperties ?? config?.showFeaturedProperties ?? true,
-      showSaleProperties: configData.showSaleProperties ?? config?.showSaleProperties ?? true,
-      showRentProperties: configData.showRentProperties ?? config?.showRentProperties ?? true,
-      showTestimonials: configData.showTestimonials ?? config?.showTestimonials ?? true,
-      seoTitle: configData.seoTitle ?? config?.seoTitle ?? '',
-      seoDescription: configData.seoDescription ?? config?.seoDescription ?? '',
-      seoKeywords: configData.seoKeywords ?? config?.seoKeywords ?? '',
+      logo: configData.logo ?? config.logo ?? '',
+      bannerBackground: configData.bannerBackground ?? config.bannerBackground ?? '',
+      mainFont: configData.mainFont ?? config.mainFont ?? 'Inter',
+      primaryColor: configData.primaryColor ?? config.primaryColor ?? '#3B82F6',
+      secondaryColor: configData.secondaryColor ?? config.secondaryColor ?? '#10B981',
+      footerInfo: configData.footerInfo ?? config.footerInfo ?? '',
+      showSearchBar: configData.showSearchBar ?? config.showSearchBar ?? true,
+      showFeaturedProperties: configData.showFeaturedProperties ?? config.showFeaturedProperties ?? true,
+      showSaleProperties: configData.showSaleProperties ?? config.showSaleProperties ?? true,
+      showRentProperties: configData.showRentProperties ?? config.showRentProperties ?? true,
+      showTestimonials: configData.showTestimonials ?? config.showTestimonials ?? true,
+      seoTitle: configData.seoTitle ?? config.seoTitle ?? '',
+      seoDescription: configData.seoDescription ?? config.seoDescription ?? '',
+      seoKeywords: configData.seoKeywords ?? config.seoKeywords ?? '',
     };
     
     saveConfigMutation.mutate(fullConfig);
