@@ -10,16 +10,32 @@ import { getStorage } from 'firebase-admin/storage';
 
 // Initialize Firebase if not already initialized
 let firebaseApp;
+
+const projectId = process.env.VITE_FIREBASE_PROJECT_ID;
+const appId = process.env.VITE_FIREBASE_APP_ID;
+const apiKey = process.env.VITE_FIREBASE_API_KEY;
+
+console.log(`Tentando inicializar Firebase com Project ID: ${projectId}`);
+
 try {
   // Check if already initialized
   firebaseApp = initializeApp();
 } catch (error) {
-  // Initialize with project ID from environment variable
-  const projectId = process.env.VITE_FIREBASE_PROJECT_ID || "your-project-id";
-  firebaseApp = initializeApp({
-    projectId,
-    storageBucket: `${projectId}.appspot.com`
-  });
+  // Por padrão, usamos o método sem service account para o Replit
+  // Esta abordagem usa as credenciais de ambiente da máquina
+  try {
+    firebaseApp = initializeApp({
+      apiKey,
+      projectId,
+      appId,
+      storageBucket: `${projectId}.appspot.com`,
+    }, 'realestate-app');
+
+    console.log('Firebase Admin inicializado com o projectId:', projectId);
+  } catch (err) {
+    console.error('Erro ao inicializar Firebase Admin:', err);
+    throw new Error('Falha ao inicializar Firebase Admin');
+  }
 }
 
 const db = getFirestore();
