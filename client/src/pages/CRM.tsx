@@ -63,10 +63,7 @@ export default function CRM() {
 
   const createLeadMutation = useMutation({
     mutationFn: async (data: LeadFormValues) => {
-      return apiRequest('/api/leads', {
-        method: 'POST',
-        body: JSON.stringify(data),
-      });
+      return apiRequest('POST', '/api/leads', data);
     },
     onSuccess: () => {
       // Invalidate leads queries to update the UI

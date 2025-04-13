@@ -293,7 +293,9 @@ export class FirebaseStorage implements IStorage {
   // Leads collection
   async getLead(id: number): Promise<Lead | undefined> {
     try {
-      const leadSnapshot = await db.collection('leads').where('id', '==', id).limit(1).get();
+      const leadsRef = collection(db, 'leads');
+      const q = query(leadsRef, where('id', '==', id), limit(1));
+      const leadSnapshot = await getDocs(q);
       
       if (leadSnapshot.empty) {
         return undefined;
@@ -308,7 +310,9 @@ export class FirebaseStorage implements IStorage {
 
   async getAllLeads(): Promise<Lead[]> {
     try {
-      const leadsSnapshot = await db.collection('leads').orderBy('createdAt', 'desc').get();
+      const leadsRef = collection(db, 'leads');
+      const q = query(leadsRef, orderBy('createdAt', 'desc'));
+      const leadsSnapshot = await getDocs(q);
       return leadsSnapshot.docs.map(doc => doc.data() as Lead);
     } catch (error) {
       console.error('Error fetching all leads:', error);
@@ -318,7 +322,9 @@ export class FirebaseStorage implements IStorage {
 
   async getLeadsByStatus(status: string): Promise<Lead[]> {
     try {
-      const leadsSnapshot = await db.collection('leads').where('status', '==', status).orderBy('createdAt', 'desc').get();
+      const leadsRef = collection(db, 'leads');
+      const q = query(leadsRef, where('status', '==', status), orderBy('createdAt', 'desc'));
+      const leadsSnapshot = await getDocs(q);
       return leadsSnapshot.docs.map(doc => doc.data() as Lead);
     } catch (error) {
       console.error(`Error fetching leads with status ${status}:`, error);
@@ -328,9 +334,20 @@ export class FirebaseStorage implements IStorage {
 
   async createLead(lead: InsertLead): Promise<Lead> {
     try {
+      console.log('Criando lead:', lead);
+      
       // Find the highest ID to increment
-      const leadsSnapshot = await db.collection('leads').orderBy('id', 'desc').limit(1).get();
-      const highestId = leadsSnapshot.empty ? 0 : leadsSnapshot.docs[0].data().id;
+      const leadsRef = collection(db, 'leads');
+      const q = query(leadsRef, orderBy('id', 'desc'), limit(1));
+      const leadsSnapshot = await getDocs(q);
+      
+      let highestId = 0;
+      if (!leadsSnapshot.empty) {
+        const data = leadsSnapshot.docs[0].data();
+        highestId = data.id || 0;
+      }
+      
+      console.log('ID mais alto encontrado:', highestId);
       
       const now = new Date().toISOString();
       const newLead: Lead = {
@@ -341,7 +358,13 @@ export class FirebaseStorage implements IStorage {
         updatedAt: now,
       };
       
-      await db.collection('leads').doc(newLead.id.toString()).set(newLead);
+      console.log('Novo lead para salvar:', newLead);
+      
+      // Salvar no Firestore
+      const leadDocRef = doc(db, 'leads', newLead.id.toString());
+      await setDoc(leadDocRef, newLead);
+      
+      console.log('Lead salvo com sucesso!');
       return newLead;
     } catch (error) {
       console.error('Error creating lead:', error);
@@ -351,21 +374,23 @@ export class FirebaseStorage implements IStorage {
 
   async updateLeadStatus(id: number, status: string): Promise<Lead | undefined> {
     try {
-      const leadRef = db.collection('leads').doc(id.toString());
-      const leadDoc = await leadRef.get();
+      // Primeiro obtém o lead para verificar se existe
+      const leadDocRef = doc(db, 'leads', id.toString());
+      const leadDoc = await getDoc(leadDocRef);
       
-      if (!leadDoc.exists) {
+      if (!leadDoc.exists()) {
         return undefined;
       }
       
+      const leadData = leadDoc.data() as Lead;
       const updatedLead = {
-        ...leadDoc.data(),
+        ...leadData,
         status,
         updatedAt: new Date().toISOString(),
       };
       
-      await leadRef.update(updatedLead);
-      return updatedLead as Lead;
+      await updateDoc(leadDocRef, updatedLead);
+      return updatedLead;
     } catch (error) {
       console.error('Error updating lead status:', error);
       return undefined;
