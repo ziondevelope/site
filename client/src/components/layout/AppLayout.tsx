@@ -11,7 +11,8 @@ interface AppLayoutProps {
 export default function AppLayout({ children }: AppLayoutProps) {
   const [location] = useLocation();
   
-  // Extrair o nome da página atual da URL
+  /* 
+  // Extrair o nome da página atual da URL (não está sendo usado)
   const getPageTitle = () => {
     const path = location.split('/').filter(Boolean);
     if (path.length <= 1) return "Dashboard";
@@ -25,6 +26,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
     
     return pageMap[path[1]] || path[1].charAt(0).toUpperCase() + path[1].slice(1);
   };
+  */
   
   const getBreadcrumbs = () => {
     const path = location.split('/').filter(Boolean);
@@ -90,11 +92,9 @@ export default function AppLayout({ children }: AppLayoutProps) {
         </header>
         
         <div className="p-4 pb-16">
-          <div className="flex justify-between items-center mb-4">
-            <h1 className="text-2xl font-semibold text-gray-800">{getPageTitle()}</h1>
-            
+          <div className="flex justify-end mb-4">
             {location.includes('/crm') && (
-              <Button className="bg-indigo-600 hover:bg-indigo-700">
+              <Button className="bg-indigo-600 hover:bg-indigo-700 rounded-full px-5">
                 <i className="ri-add-line mr-1"></i> Cadastrar usuário
               </Button>
             )}
