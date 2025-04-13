@@ -32,15 +32,15 @@ export default function Sidebar() {
           {navItems.map((item) => (
             <li key={item.href}>
               <Link href={item.href}>
-                <a className={cn(
-                  "flex items-center space-x-3 p-3 rounded-lg transition",
+                <div className={cn(
+                  "flex items-center space-x-3 p-3 rounded-lg transition cursor-pointer",
                   location === item.href
                     ? "bg-primary text-white"
                     : "hover:bg-gray-700 text-white"
                 )}>
                   <i className={cn(item.icon, "text-xl")}></i>
                   <span>{item.label}</span>
-                </a>
+                </div>
               </Link>
             </li>
           ))}
