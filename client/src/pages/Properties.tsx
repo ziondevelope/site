@@ -1203,22 +1203,22 @@ export default function Properties() {
           </Button>
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-lg">
+        <div className="overflow-x-auto rounded-lg bg-white">
           <Table>
             <TableHeader>
-              <TableRow>
-                <TableHead className="w-[200px]">Imóvel</TableHead>
-                <TableHead>Tipo</TableHead>
-                <TableHead>Finalidade</TableHead>
-                <TableHead>Preço</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Destaque</TableHead>
-                <TableHead className="text-right">Ações</TableHead>
+              <TableRow className="bg-gray-50">
+                <TableHead className="w-[200px] font-semibold text-gray-600">Imóvel</TableHead>
+                <TableHead className="font-semibold text-gray-600">Tipo</TableHead>
+                <TableHead className="font-semibold text-gray-600">Finalidade</TableHead>
+                <TableHead className="font-semibold text-gray-600">Preço</TableHead>
+                <TableHead className="font-semibold text-gray-600">Status</TableHead>
+                <TableHead className="font-semibold text-gray-600">Destaque</TableHead>
+                <TableHead className="text-right font-semibold text-gray-600">Ações</TableHead>
               </TableRow>
             </TableHeader>
-            <TableBody>
+            <TableBody className="bg-white">
               {filteredProperties.map((property) => (
-                <TableRow key={property.id} className="hover:bg-gray-50">
+                <TableRow key={property.id} className="bg-white hover:bg-gray-50">
                   <TableCell className="flex items-center space-x-3 py-3">
                     <div className="w-12 h-12 rounded-full overflow-hidden shadow-sm border border-gray-100 bg-white flex-shrink-0">
                       {getFeaturedImage(property) ? (
