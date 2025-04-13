@@ -17,12 +17,22 @@ import { apiRequest } from "@/lib/queryClient";
 import { ImageUpload } from "@/components/ui/image-upload";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { 
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 const agentFormSchema = insertUserSchema.extend({
-  password: z.string().min(6, "A senha deve ter pelo menos 6 caracteres"),
-  confirmPassword: z.string(),
+  password: z.string().min(6, "A senha deve ter pelo menos 6 caracteres").optional(),
+  confirmPassword: z.string().optional(),
   avatar: z.string().optional(),
-}).refine((data) => data.password === data.confirmPassword, {
+}).refine((data) => !data.password || !data.confirmPassword || data.password === data.confirmPassword, {
   message: "As senhas não coincidem",
   path: ["confirmPassword"],
 });
@@ -31,6 +41,9 @@ type AgentFormValues = z.infer<typeof agentFormSchema>;
 
 export default function Agents() {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
+  const [selectedAgent, setSelectedAgent] = useState<User | null>(null);
   const { toast } = useToast();
   
   // Fetch agents
@@ -52,6 +65,33 @@ export default function Agents() {
       avatar: "",
     },
   });
+
+  // Initialize edit form with agent data
+  const initEditForm = (agent: User) => {
+    setSelectedAgent(agent);
+    form.reset({
+      username: agent.username,
+      password: "",
+      confirmPassword: "",
+      displayName: agent.displayName || "",
+      role: agent.role || "agent",
+      phone: agent.phone || "",
+      email: agent.email || "",
+      avatar: agent.avatar || "",
+    });
+    setIsEditDialogOpen(true);
+  };
+
+  // Handle edit button click
+  const handleEditClick = (agent: User) => {
+    initEditForm(agent);
+  };
+
+  // Handle delete button click
+  const handleDeleteClick = (agent: User) => {
+    setSelectedAgent(agent);
+    setIsDeleteAlertOpen(true);
+  };
 
   // Add agent mutation
   const addAgentMutation = useMutation({
@@ -78,8 +118,78 @@ export default function Agents() {
     },
   });
 
+  // Update agent mutation
+  const updateAgentMutation = useMutation({
+    mutationFn: async (data: AgentFormValues & { id: number }) => {
+      const { confirmPassword, id, ...agentData } = data;
+      // Remove password if empty
+      const finalData = agentData.password 
+        ? agentData 
+        : { ...agentData, password: undefined };
+      
+      const response = await apiRequest("PATCH", `/api/agents/${id}`, finalData);
+      return response.json();
+    },
+    onSuccess: () => {
+      setIsEditDialogOpen(false);
+      setSelectedAgent(null);
+      form.reset();
+      queryClient.invalidateQueries({ queryKey: ['/api/agents'] });
+      toast({
+        title: "Corretor atualizado",
+        description: "As informações do corretor foram atualizadas com sucesso.",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Erro ao atualizar corretor",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+
+  // Delete agent mutation
+  const deleteAgentMutation = useMutation({
+    mutationFn: async (id: number) => {
+      const response = await apiRequest("DELETE", `/api/agents/${id}`);
+      return response.ok;
+    },
+    onSuccess: () => {
+      setIsDeleteAlertOpen(false);
+      setSelectedAgent(null);
+      queryClient.invalidateQueries({ queryKey: ['/api/agents'] });
+      toast({
+        title: "Corretor excluído",
+        description: "O corretor foi excluído com sucesso.",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Erro ao excluir corretor",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+
   function onSubmit(data: AgentFormValues) {
-    addAgentMutation.mutate(data);
+    if (selectedAgent && isEditDialogOpen) {
+      // Update existing agent
+      updateAgentMutation.mutate({
+        ...data,
+        id: selectedAgent.id
+      });
+    } else {
+      // Add new agent
+      addAgentMutation.mutate(data);
+    }
+  }
+
+  function handleDeleteConfirm() {
+    if (selectedAgent) {
+      deleteAgentMutation.mutate(selectedAgent.id);
+    }
   }
 
   return (
@@ -326,10 +436,20 @@ export default function Agents() {
                       </span>
                     </TableCell>
                     <TableCell className="text-right">
-                      <Button variant="ghost" size="sm" className="h-8 w-8 p-0 rounded-full hover:bg-gray-100">
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="h-8 w-8 p-0 rounded-full hover:bg-gray-100"
+                        onClick={() => handleEditClick(agent)}
+                      >
                         <i className="ri-edit-line text-gray-500"></i>
                       </Button>
-                      <Button variant="ghost" size="sm" className="h-8 w-8 p-0 rounded-full hover:bg-red-50">
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="h-8 w-8 p-0 rounded-full hover:bg-red-50"
+                        onClick={() => handleDeleteClick(agent)}
+                      >
                         <i className="ri-delete-bin-line text-red-500"></i>
                       </Button>
                     </TableCell>
@@ -356,6 +476,221 @@ export default function Agents() {
           </div>
         )}
       </div>
+
+      {/* Edit Agent Dialog */}
+      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+        <DialogContent className="sm:max-w-[600px] p-0 max-h-[90vh] overflow-hidden">
+          <DialogHeader className="p-4 border-b border-gray-100 sticky top-0 bg-white z-10">
+            <DialogTitle className="text-lg font-light text-gray-700">Editar Corretor</DialogTitle>
+            <DialogDescription className="text-sm text-gray-500 mt-1">
+              Altere as informações do corretor conforme necessário
+            </DialogDescription>
+          </DialogHeader>
+          <div className="overflow-y-auto max-h-[calc(90vh-130px)]">
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="p-4">
+                <Tabs defaultValue="info" className="w-full">
+                  <TabsList className="grid grid-cols-2 mb-4 sticky top-0">
+                    <TabsTrigger value="info">Informações Básicas</TabsTrigger>
+                    <TabsTrigger value="photo">Foto e Perfil</TabsTrigger>
+                  </TabsList>
+                  
+                  <TabsContent value="info" className="space-y-4">
+                    <FormField
+                      control={form.control}
+                      name="displayName"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Nome Completo</FormLabel>
+                          <FormControl>
+                            <Input placeholder="João Silva" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={form.control}
+                      name="username"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Usuário</FormLabel>
+                          <FormControl>
+                            <Input placeholder="joaosilva" {...field} disabled />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  
+                    <FormField
+                      control={form.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Email</FormLabel>
+                          <FormControl>
+                            <Input type="email" placeholder="joao@exemplo.com" {...field} value={field.value || ""} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={form.control}
+                      name="phone"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Telefone</FormLabel>
+                          <FormControl>
+                            <Input placeholder="(11) 99999-9999" {...field} value={field.value || ""} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="password"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Nova Senha (opcional)</FormLabel>
+                            <FormControl>
+                              <Input type="password" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="confirmPassword"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Confirmar Nova Senha</FormLabel>
+                            <FormControl>
+                              <Input type="password" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    
+                    <FormField
+                      control={form.control}
+                      name="role"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Função</FormLabel>
+                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Selecione a função" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="agent">Corretor</SelectItem>
+                              <SelectItem value="admin">Administrador</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </TabsContent>
+                  
+                  <TabsContent value="photo" className="flex flex-col items-center justify-center py-4">
+                    <FormField
+                      control={form.control}
+                      name="avatar"
+                      render={({ field }) => (
+                        <FormItem className="w-full flex flex-col items-center">
+                          <FormLabel className="text-center mb-2 text-gray-700">Foto do Perfil</FormLabel>
+                          <FormControl>
+                            <ImageUpload 
+                              onChange={field.onChange}
+                              value={field.value}
+                              disabled={updateAgentMutation.isPending}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <p className="text-xs text-gray-500 max-w-md text-center mt-4">
+                      Adicione uma foto profissional do corretor. Fotos de perfil ajudam a criar confiança com os clientes.
+                    </p>
+                  </TabsContent>
+                </Tabs>
+              </form>
+            </Form>
+          </div>
+          <div className="flex justify-end space-x-3 border-t border-gray-100 p-4 sticky bottom-0 bg-white z-10">
+            <Button 
+              variant="outline" 
+              type="button" 
+              onClick={() => setIsEditDialogOpen(false)}
+              className="rounded-full px-5"
+            >
+              Cancelar
+            </Button>
+            <Button 
+              type="button" 
+              onClick={form.handleSubmit(onSubmit)}
+              disabled={updateAgentMutation.isPending}
+              className="bg-indigo-600 hover:bg-indigo-700 rounded-full px-5"
+            >
+              {updateAgentMutation.isPending ? (
+                <>
+                  <div className="animate-spin mr-2 h-4 w-4 border-2 border-b-transparent border-white rounded-full"></div>
+                  Salvando...
+                </>
+              ) : "Salvar Alterações"}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Confirmation Alert */}
+      <AlertDialog open={isDeleteAlertOpen} onOpenChange={setIsDeleteAlertOpen}>
+        <AlertDialogContent className="max-w-[400px]">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-lg font-semibold text-gray-800">
+              Confirmar exclusão
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-gray-600">
+              Você realmente deseja excluir o corretor {selectedAgent?.displayName}? 
+              Esta ação não pode ser desfeita.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="mt-6">
+            <AlertDialogCancel 
+              className="rounded-full"
+              disabled={deleteAgentMutation.isPending}
+            >
+              Cancelar
+            </AlertDialogCancel>
+            <AlertDialogAction 
+              className="bg-red-600 hover:bg-red-700 rounded-full"
+              onClick={handleDeleteConfirm}
+              disabled={deleteAgentMutation.isPending}
+            >
+              {deleteAgentMutation.isPending ? (
+                <>
+                  <div className="animate-spin mr-2 h-4 w-4 border-2 border-b-transparent border-white rounded-full"></div>
+                  Excluindo...
+                </>
+              ) : "Excluir Corretor"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
