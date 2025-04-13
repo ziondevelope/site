@@ -9,11 +9,12 @@ type NavItem = {
 };
 
 const navItems: NavItem[] = [
-  { href: "/", label: "Dashboard", icon: "ri-dashboard-line" },
-  { href: "/imoveis", label: "Imóveis", icon: "ri-building-line" },
-  { href: "/crm", label: "CRM", icon: "ri-customer-service-line" },
-  { href: "/corretores", label: "Corretores", icon: "ri-user-line" },
-  { href: "/site", label: "Site", icon: "ri-global-line" },
+  { href: "/admin", label: "Dashboard", icon: "ri-dashboard-line" },
+  { href: "/admin/imoveis", label: "Imóveis", icon: "ri-building-line" },
+  { href: "/admin/crm", label: "CRM", icon: "ri-customer-service-line" },
+  { href: "/admin/corretores", label: "Corretores", icon: "ri-user-line" },
+  { href: "/admin/site", label: "Site", icon: "ri-global-line" },
+  { href: "/", label: "Voltar ao Site", icon: "ri-arrow-left-line" },
 ];
 
 export default function MobileMenu() {
@@ -55,9 +56,9 @@ export default function MobileMenu() {
             {navItems.map((item) => (
               <li key={item.href}>
                 <Link href={item.href}>
-                  <a 
+                  <div 
                     className={cn(
-                      "flex items-center space-x-3 p-3 rounded-lg transition",
+                      "flex items-center space-x-3 p-3 rounded-lg transition cursor-pointer",
                       location === item.href
                         ? "bg-primary text-white"
                         : "hover:bg-gray-700 text-white"
@@ -66,7 +67,7 @@ export default function MobileMenu() {
                   >
                     <i className={cn(item.icon, "text-xl")}></i>
                     <span>{item.label}</span>
-                  </a>
+                  </div>
                 </Link>
               </li>
             ))}
