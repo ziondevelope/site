@@ -11,16 +11,16 @@ export default function Home() {
   const { data: config, isLoading: isLoadingConfig } = useQuery<any>({
     queryKey: ['/api/website/config'],
     queryFn: async () => {
-      const response = await apiRequest('/api/website/config');
-      return response;
+      const response = await apiRequest('GET', '/api/website/config');
+      return response.json();
     },
   });
 
   const { data: properties, isLoading: isLoadingProperties } = useQuery<any[]>({
     queryKey: ['/api/properties'],
     queryFn: async () => {
-      const response = await apiRequest('/api/properties');
-      return response;
+      const response = await apiRequest('GET', '/api/properties');
+      return response.json();
     },
   });
 
