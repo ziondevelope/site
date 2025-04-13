@@ -1106,21 +1106,21 @@ export default function Properties() {
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
           </div>
         ) : properties && properties.length > 0 ? (
-          <div className="overflow-hidden rounded-lg border border-gray-100">
-            <Table className="min-w-full divide-y divide-gray-100">
+          <div className="overflow-hidden rounded-lg border border-gray-100 bg-white">
+            <Table className="min-w-full divide-y divide-gray-100 bg-white">
               <TableHeader>
-                <TableRow className="bg-gray-50">
-                  <TableHead className="py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Título</TableHead>
-                  <TableHead className="py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Tipo</TableHead>
-                  <TableHead className="py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Finalidade</TableHead>
-                  <TableHead className="py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Preço</TableHead>
-                  <TableHead className="py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Status</TableHead>
-                  <TableHead className="py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-right">Ações</TableHead>
+                <TableRow className="bg-white">
+                  <TableHead className="py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-white">Título</TableHead>
+                  <TableHead className="py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-white">Tipo</TableHead>
+                  <TableHead className="py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-white">Finalidade</TableHead>
+                  <TableHead className="py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-white">Preço</TableHead>
+                  <TableHead className="py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-white">Status</TableHead>
+                  <TableHead className="py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-right bg-white">Ações</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {properties.map((property) => (
-                  <TableRow key={property.id} className="hover:bg-gray-50">
+                  <TableRow key={property.id} className="hover:bg-gray-50/30">
                     <TableCell className="py-2 whitespace-nowrap bg-white">
                       <div className="flex items-center gap-3.5 pl-1">
                         <div className="w-16 h-12 rounded overflow-hidden flex-shrink-0 border-0 bg-white shadow-sm">
@@ -1142,22 +1142,22 @@ export default function Properties() {
                         </div>
                       </div>
                     </TableCell>
-                    <TableCell className="py-4 whitespace-nowrap">
+                    <TableCell className="py-4 whitespace-nowrap bg-white">
                       {property.type === "apartment" && "Apartamento"}
                       {property.type === "house" && "Casa"}
                       {property.type === "commercial" && "Comercial"}
                       {property.type === "land" && "Terreno"}
                     </TableCell>
-                    <TableCell className="py-4 whitespace-nowrap">
+                    <TableCell className="py-4 whitespace-nowrap bg-white">
                       {property.purpose === "sale" ? "Venda" : "Aluguel"}
                     </TableCell>
-                    <TableCell className="py-4 whitespace-nowrap font-medium">
+                    <TableCell className="py-4 whitespace-nowrap font-medium bg-white">
                       {new Intl.NumberFormat('pt-BR', {
                         style: 'currency',
                         currency: 'BRL'
                       }).format(property.price)}
                     </TableCell>
-                    <TableCell className="py-4 whitespace-nowrap">
+                    <TableCell className="py-4 whitespace-nowrap bg-white">
                       <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
                         property.status === "available" ? "bg-green-100 text-green-800" :
                         property.status === "sold" ? "bg-blue-100 text-blue-800" :
@@ -1167,7 +1167,7 @@ export default function Properties() {
                          property.status === "sold" ? "Vendido" : "Alugado"}
                       </span>
                     </TableCell>
-                    <TableCell className="py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <TableCell className="py-4 whitespace-nowrap text-right text-sm font-medium bg-white">
                       <Button 
                         variant="ghost" 
                         size="sm" 
