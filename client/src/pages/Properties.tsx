@@ -16,6 +16,7 @@ import { insertPropertySchema, type Property } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
 import { MultipleImageUpload } from "@/components/ui/multiple-image-upload";
 import { CepInput } from "@/components/ui/cep-input";
+import { PropertyFeatures } from "@/components/ui/property-features";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   AlertDialog,
