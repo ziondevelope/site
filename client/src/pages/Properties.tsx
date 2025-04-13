@@ -605,6 +605,14 @@ export default function Properties() {
                   </TabsContent>
                   
                   <TabsContent value="location" className="space-y-4">
+                    <FormField
+                      control={form.control}
+                      name="zipCode"
+                      render={({ field }) => (
+                        <CepInput form={form} field={field} />
+                      )}
+                    />
+                    
                     <div className="grid grid-cols-2 gap-4">
                       <FormField
                         control={form.control}
@@ -648,15 +656,6 @@ export default function Properties() {
                         </FormItem>
                       )}
                     />
-                    
-                    <FormField
-                      control={form.control}
-                      name="zipCode"
-                      render={({ field }) => (
-                        <CepInput form={form} field={field} />
-                      )}
-                    />
-                    
                     <FormField
                       control={form.control}
                       name="images"
@@ -976,6 +975,14 @@ export default function Properties() {
                   </TabsContent>
                   
                   <TabsContent value="location" className="space-y-4">
+                    <FormField
+                      control={form.control}
+                      name="zipCode"
+                      render={({ field }) => (
+                        <CepInput form={form} field={field} />
+                      )}
+                    />
+                    
                     <div className="grid grid-cols-2 gap-4">
                       <FormField
                         control={form.control}
@@ -1017,14 +1024,6 @@ export default function Properties() {
                           </FormControl>
                           <FormMessage />
                         </FormItem>
-                      )}
-                    />
-                    
-                    <FormField
-                      control={form.control}
-                      name="zipCode"
-                      render={({ field }) => (
-                        <CepInput form={form} field={field} />
                       )}
                     />
                     
