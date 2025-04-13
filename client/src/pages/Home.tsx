@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
-import { apiRequest } from "../lib/queryClient";
+import { apiRequest } from "@/lib/queryClient";
 
 export default function Home() {
   const [location, setLocation] = useLocation();
@@ -11,16 +11,14 @@ export default function Home() {
   const { data: config, isLoading: isLoadingConfig } = useQuery<any>({
     queryKey: ['/api/website/config'],
     queryFn: async () => {
-      const response = await apiRequest('GET', '/api/website/config');
-      return response.json();
+      return apiRequest<any>('/api/website/config');
     },
   });
 
   const { data: properties, isLoading: isLoadingProperties } = useQuery<any[]>({
     queryKey: ['/api/properties'],
     queryFn: async () => {
-      const response = await apiRequest('GET', '/api/properties');
-      return response.json();
+      return apiRequest<any[]>('/api/properties');
     },
   });
 
@@ -30,12 +28,22 @@ export default function Home() {
     <div className="min-h-screen flex flex-col">
       {/* Header */}
       <header className="bg-white shadow">
-        <div className="container mx-auto px-4 py-6 flex justify-between items-center">
+        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <div className="flex items-center space-x-3">
-            <div className="h-10 w-10 rounded bg-primary flex items-center justify-center text-white">
-              <i className="ri-home-line text-xl"></i>
-            </div>
-            <h1 className="text-2xl font-bold text-gray-800">{isLoadingConfig ? "Imobiliária" : config?.mainFont || "Imobiliária"}</h1>
+            {config?.logo ? (
+              <img 
+                src={config.logo} 
+                alt="Logo da Imobiliária" 
+                className="h-12 object-contain" 
+              />
+            ) : (
+              <>
+                <div className="h-10 w-10 rounded bg-primary flex items-center justify-center text-white">
+                  <i className="ri-home-line text-xl"></i>
+                </div>
+                <h1 className="text-2xl font-bold text-gray-800">{isLoadingConfig ? "Imobiliária" : config?.mainFont || "Imobiliária"}</h1>
+              </>
+            )}
           </div>
           <nav className="hidden md:flex space-x-8">
             <a href="#home" className="text-gray-700 hover:text-primary">Início</a>
@@ -290,10 +298,20 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
               <div className="flex items-center space-x-3 mb-6">
-                <div className="h-10 w-10 rounded bg-primary flex items-center justify-center text-white">
-                  <i className="ri-home-line text-xl"></i>
-                </div>
-                <h1 className="text-2xl font-bold">Imobiliária</h1>
+                {config?.logo ? (
+                  <img 
+                    src={config.logo} 
+                    alt="Logo da Imobiliária" 
+                    className="h-10 object-contain" 
+                  />
+                ) : (
+                  <>
+                    <div className="h-10 w-10 rounded bg-primary flex items-center justify-center text-white">
+                      <i className="ri-home-line text-xl"></i>
+                    </div>
+                    <h1 className="text-2xl font-bold">Imobiliária</h1>
+                  </>
+                )}
               </div>
               <p className="text-gray-400 mb-6">
                 Soluções imobiliárias completas para você encontrar o imóvel dos seus sonhos.
