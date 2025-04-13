@@ -82,6 +82,22 @@ export default function Agents() {
     setIsEditDialogOpen(true);
   };
 
+  // Handle adding a new agent
+  const handleAddClick = () => {
+    // Reset form to default values
+    form.reset({
+      username: "",
+      password: "",
+      confirmPassword: "",
+      displayName: "",
+      role: "agent",
+      phone: "",
+      email: "",
+      avatar: "",
+    });
+    setIsAddDialogOpen(true);
+  };
+
   // Handle edit button click
   const handleEditClick = (agent: User) => {
     initEditForm(agent);
@@ -376,7 +392,7 @@ export default function Agents() {
       <div className="mt-4">
         <div className="flex items-center justify-between mb-6">
           <Button 
-            onClick={() => setIsAddDialogOpen(true)}
+            onClick={handleAddClick}
             className="bg-indigo-600 hover:bg-indigo-700 rounded-full px-5">
             <i className="ri-add-line mr-1"></i> Adicionar Corretor
           </Button>
@@ -469,7 +485,7 @@ export default function Agents() {
             </p>
             <Button 
               className="mt-2 bg-indigo-600 hover:bg-indigo-700 rounded-full px-6" 
-              onClick={() => setIsAddDialogOpen(true)}
+              onClick={handleAddClick}
             >
               <i className="ri-add-line mr-1"></i> Adicionar Primeiro Corretor
             </Button>
