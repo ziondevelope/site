@@ -109,42 +109,11 @@ function FeaturedCheckbox({ field }) {
   );
 }
 
-// Função para buscar dados do CEP
-async function fetchAddressByCep(cep: string) {
-  try {
-    cep = cep.replace(/\D/g, ''); // Remove caracteres não numéricos
-    if (cep.length !== 8) {
-      return null;
-    }
-    
-    const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
-    if (!response.ok) {
-      throw new Error('Erro ao buscar CEP');
-    }
-    
-    const data = await response.json();
-    
-    if (data.erro) {
-      return null;
-    }
-    
-    return {
-      neighborhood: data.bairro,
-      city: data.localidade,
-      address: `${data.logradouro}${data.complemento ? ', ' + data.complemento : ''}`
-    };
-  } catch (error) {
-    console.error('Erro ao buscar CEP:', error);
-    return null;
-  }
-}
-
 export default function Properties() {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
-  const [isLoadingCep, setIsLoadingCep] = useState(false);
   const { toast } = useToast();
   
   // Fetch properties
@@ -556,7 +525,7 @@ export default function Properties() {
                           </FormItem>
                         )}
                       />
-                      
+
                       <FormField
                         control={form.control}
                         name="bathrooms"
@@ -566,7 +535,7 @@ export default function Properties() {
                             <FormControl>
                               <Input 
                                 type="number" 
-                                placeholder="2"
+                                placeholder="1"
                                 {...field}
                                 onChange={(e) => field.onChange(Number(e.target.value))}
                               />
@@ -575,7 +544,9 @@ export default function Properties() {
                           </FormItem>
                         )}
                       />
-
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-4">
                       <FormField
                         control={form.control}
                         name="suites"
@@ -585,7 +556,7 @@ export default function Properties() {
                             <FormControl>
                               <Input 
                                 type="number" 
-                                placeholder="1"
+                                placeholder="0"
                                 {...field}
                                 onChange={(e) => field.onChange(Number(e.target.value))}
                               />
@@ -617,35 +588,7 @@ export default function Properties() {
                   </TabsContent>
                   
                   <TabsContent value="location" className="space-y-4">
-                    <FormField
-                      control={form.control}
-                      name="address"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Endereço</FormLabel>
-                          <FormControl>
-                            <Input placeholder="Rua das Flores, 123" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    
-                    <div className="grid grid-cols-3 gap-4">
-                      <FormField
-                        control={form.control}
-                        name="neighborhood"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Bairro</FormLabel>
-                            <FormControl>
-                              <Input placeholder="Centro" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      
+                    <div className="grid grid-cols-2 gap-4">
                       <FormField
                         control={form.control}
                         name="city"
@@ -662,12 +605,12 @@ export default function Properties() {
                       
                       <FormField
                         control={form.control}
-                        name="zipCode"
+                        name="neighborhood"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>CEP</FormLabel>
+                            <FormLabel>Bairro</FormLabel>
                             <FormControl>
-                              <Input placeholder="00000-000" {...field} />
+                              <Input placeholder="Centro" {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -677,12 +620,34 @@ export default function Properties() {
                     
                     <FormField
                       control={form.control}
+                      name="address"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Endereço</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Rua Exemplo, 123" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={form.control}
+                      name="zipCode"
+                      render={({ field }) => (
+                        <CepInput form={form} field={field} />
+                      )}
+                    />
+                    
+                    <FormField
+                      control={form.control}
                       name="images"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Imagens</FormLabel>
                           <FormControl>
-                            <MultipleImageUpload
+                            <MultipleImageUpload 
                               value={field.value}
                               onChange={field.onChange}
                               maxFiles={10}
@@ -705,11 +670,10 @@ export default function Properties() {
                     Cancelar
                   </Button>
                   <Button 
-                    type="submit" 
-                    className="bg-indigo-600 hover:bg-indigo-700"
+                    type="submit"
                     disabled={addPropertyMutation.isPending}
                   >
-                    {addPropertyMutation.isPending ? 'Adicionando...' : 'Adicionar Imóvel'}
+                    {addPropertyMutation.isPending ? "Salvando..." : "Salvar Imóvel"}
                   </Button>
                 </div>
               </form>
@@ -717,16 +681,17 @@ export default function Properties() {
           </div>
         </DialogContent>
       </Dialog>
-
+      
       {/* Edit Property Dialog */}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
         <DialogContent className="sm:max-w-[600px] p-0 max-h-[90vh] overflow-hidden">
           <DialogHeader className="p-4 border-b border-gray-100 sticky top-0 bg-white z-10">
             <DialogTitle className="text-lg font-light text-gray-700">Editar Imóvel</DialogTitle>
             <DialogDescription className="text-sm text-gray-500 mt-1">
-              Atualize as informações do imóvel
+              Modifique os dados do imóvel
             </DialogDescription>
           </DialogHeader>
+          
           <div className="overflow-y-auto max-h-[calc(90vh-130px)]">
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="p-4">
@@ -853,7 +818,7 @@ export default function Properties() {
                           <FormLabel className="font-medium">Status do Imóvel</FormLabel>
                           <Select 
                             onValueChange={field.onChange} 
-                            value={field.value} 
+                            value={field.value}
                             defaultValue={field.value}
                           >
                             <FormControl>
@@ -920,7 +885,7 @@ export default function Properties() {
                           </FormItem>
                         )}
                       />
-                      
+
                       <FormField
                         control={form.control}
                         name="bathrooms"
@@ -930,7 +895,7 @@ export default function Properties() {
                             <FormControl>
                               <Input 
                                 type="number" 
-                                placeholder="2"
+                                placeholder="1"
                                 {...field}
                                 onChange={(e) => field.onChange(Number(e.target.value))}
                               />
@@ -939,7 +904,9 @@ export default function Properties() {
                           </FormItem>
                         )}
                       />
-
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-4">
                       <FormField
                         control={form.control}
                         name="suites"
@@ -949,7 +916,7 @@ export default function Properties() {
                             <FormControl>
                               <Input 
                                 type="number" 
-                                placeholder="1"
+                                placeholder="0"
                                 {...field}
                                 onChange={(e) => field.onChange(Number(e.target.value))}
                               />
@@ -981,35 +948,7 @@ export default function Properties() {
                   </TabsContent>
                   
                   <TabsContent value="location" className="space-y-4">
-                    <FormField
-                      control={form.control}
-                      name="address"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Endereço</FormLabel>
-                          <FormControl>
-                            <Input placeholder="Rua das Flores, 123" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    
-                    <div className="grid grid-cols-3 gap-4">
-                      <FormField
-                        control={form.control}
-                        name="neighborhood"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Bairro</FormLabel>
-                            <FormControl>
-                              <Input placeholder="Centro" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      
+                    <div className="grid grid-cols-2 gap-4">
                       <FormField
                         control={form.control}
                         name="city"
@@ -1026,12 +965,12 @@ export default function Properties() {
                       
                       <FormField
                         control={form.control}
-                        name="zipCode"
+                        name="neighborhood"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>CEP</FormLabel>
+                            <FormLabel>Bairro</FormLabel>
                             <FormControl>
-                              <Input placeholder="00000-000" {...field} />
+                              <Input placeholder="Centro" {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -1041,12 +980,34 @@ export default function Properties() {
                     
                     <FormField
                       control={form.control}
+                      name="address"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Endereço</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Rua Exemplo, 123" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={form.control}
+                      name="zipCode"
+                      render={({ field }) => (
+                        <CepInput form={form} field={field} />
+                      )}
+                    />
+                    
+                    <FormField
+                      control={form.control}
                       name="images"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Imagens</FormLabel>
                           <FormControl>
-                            <MultipleImageUpload
+                            <MultipleImageUpload 
                               value={field.value}
                               onChange={field.onChange}
                               maxFiles={10}
@@ -1069,11 +1030,10 @@ export default function Properties() {
                     Cancelar
                   </Button>
                   <Button 
-                    type="submit" 
-                    className="bg-indigo-600 hover:bg-indigo-700"
+                    type="submit"
                     disabled={updatePropertyMutation.isPending}
                   >
-                    {updatePropertyMutation.isPending ? 'Salvando...' : 'Salvar Alterações'}
+                    {updatePropertyMutation.isPending ? "Salvando..." : "Salvar Alterações"}
                   </Button>
                 </div>
               </form>
@@ -1081,143 +1041,167 @@ export default function Properties() {
           </div>
         </DialogContent>
       </Dialog>
-
-      {/* Delete Confirmation Alert */}
+      
+      {/* Delete Property Alert */}
       <AlertDialog open={isDeleteAlertOpen} onOpenChange={setIsDeleteAlertOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Você tem certeza?</AlertDialogTitle>
+            <AlertDialogTitle>Confirmar exclusão</AlertDialogTitle>
             <AlertDialogDescription>
-              Esta ação não pode ser desfeita. Isso excluirá permanentemente este imóvel
-              e removerá seus dados do servidor.
+              Tem certeza que deseja excluir este imóvel? Esta ação não pode ser desfeita.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction 
+            <AlertDialogCancel onClick={() => setIsDeleteAlertOpen(false)}>
+              Cancelar
+            </AlertDialogCancel>
+            <AlertDialogAction
               onClick={handleDeleteConfirm}
-              className="bg-red-600 hover:bg-red-700"
+              className="bg-red-500 hover:bg-red-600"
+              disabled={deletePropertyMutation.isPending}
             >
-              {deletePropertyMutation.isPending ? 'Excluindo...' : 'Excluir'}
+              {deletePropertyMutation.isPending ? "Excluindo..." : "Excluir Imóvel"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-medium text-gray-800">Imóveis</h1>
-        <Button 
-          onClick={handleAddClick}
-          className="bg-indigo-600 hover:bg-indigo-700 rounded-full"
-        >
+      
+      {/* Property Listing */}
+      <div className="flex justify-between items-center">
+        <h1 className="text-2xl font-light text-gray-800">
+          Gerenciamento de Imóveis
+        </h1>
+        <Button onClick={handleAddClick}>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
           Adicionar Imóvel
         </Button>
       </div>
       
-      <div className="bg-white rounded-lg shadow-sm border border-gray-100">
-        {isLoading ? (
-          <div className="flex justify-center p-8">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
-          </div>
-        ) : properties && properties.length > 0 ? (
-          <div className="overflow-hidden rounded-lg border border-gray-100">
-            <Table className="min-w-full divide-y divide-gray-100">
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Título</TableHead>
-                  <TableHead className="py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Tipo</TableHead>
-                  <TableHead className="py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Finalidade</TableHead>
-                  <TableHead className="py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Preço</TableHead>
-                  <TableHead className="py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Status</TableHead>
-                  <TableHead className="py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-right">Ações</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {properties.map((property) => (
-                  <TableRow key={property.id} className="hover:bg-gray-50/30">
-                    <TableCell className="py-2 whitespace-nowrap bg-white">
-                      <div className="flex items-center gap-3.5 pl-1">
-                        <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0 border-0 bg-white shadow-sm flex items-center justify-center">
-                          {getFeaturedImage(property) ? (
-                            <img 
-                              src={getFeaturedImage(property)} 
-                              alt={property.title}
-                              className="w-full h-full object-cover rounded-full"
-                            />
-                          ) : (
-                            <div className="w-full h-full flex items-center justify-center bg-gray-100 rounded-full">
-                              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-                            </div>
-                          )}
+      {isLoading ? (
+        <div className="flex justify-center items-center py-20">
+          <div className="animate-spin h-8 w-8 border-2 border-indigo-500 rounded-full border-t-transparent"></div>
+        </div>
+      ) : !properties || properties.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-16 border border-dashed border-gray-200 rounded-lg">
+          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="text-gray-300 mb-4"><path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2z"></path><path d="M7 10h10"></path><path d="M7 14h10"></path><path d="M7 18h10"></path></svg>
+          <h3 className="text-lg font-medium text-gray-400 mb-2">Nenhum imóvel cadastrado</h3>
+          <p className="text-gray-500 mb-4 text-center max-w-md">Adicione imóveis para exibi-los em seu site e gerenciá-los de forma eficiente.</p>
+          <Button
+            onClick={handleAddClick}
+            size="sm"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+            Adicionar Imóvel
+          </Button>
+        </div>
+      ) : (
+        <div className="overflow-x-auto rounded-lg">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-[200px]">Imóvel</TableHead>
+                <TableHead>Tipo</TableHead>
+                <TableHead>Finalidade</TableHead>
+                <TableHead>Preço</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Destaque</TableHead>
+                <TableHead className="text-right">Ações</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {properties.map((property) => (
+                <TableRow key={property.id} className="hover:bg-gray-50">
+                  <TableCell className="flex items-center space-x-3 py-3">
+                    <div className="w-12 h-12 rounded-full overflow-hidden shadow-sm border border-gray-100 bg-white flex-shrink-0">
+                      {getFeaturedImage(property) ? (
+                        <img 
+                          src={getFeaturedImage(property)}
+                          alt={property.title} 
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400"><path d="M5 7h14"/><path d="M5 12h14"/><path d="M5 17h14"/></svg>
                         </div>
-                        <div>
-                          <div className="font-medium text-gray-900">{property.title}</div>
-                          <div className="text-xs text-gray-500">{property.address}, {property.neighborhood}</div>
-                        </div>
+                      )}
+                    </div>
+                    <div>
+                      <div className="font-medium">{property.title}</div>
+                      <div className="text-xs text-gray-500 mt-0.5">{property.address || 'Sem endereço'}</div>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <span className="capitalize">
+                      {property.type === 'apartment' ? 'Apartamento' :
+                       property.type === 'house' ? 'Casa' :
+                       property.type === 'commercial' ? 'Comercial' :
+                       property.type === 'land' ? 'Terreno' :
+                       property.type}
+                    </span>
+                  </TableCell>
+                  <TableCell>
+                    <span className="capitalize">
+                      {property.purpose === 'sale' ? 'Venda' :
+                       property.purpose === 'rent' ? 'Aluguel' :
+                       property.purpose}
+                    </span>
+                  </TableCell>
+                  <TableCell className="font-medium">
+                    {property.price?.toLocaleString('pt-BR', {
+                      style: 'currency',
+                      currency: 'BRL',
+                      minimumFractionDigits: 0,
+                      maximumFractionDigits: 0,
+                    })}
+                  </TableCell>
+                  <TableCell>
+                    <div className={`text-xs font-medium rounded-full px-2.5 py-1 inline-flex items-center justify-center w-24
+                      ${property.status === 'available' ? 'bg-green-50 text-green-700' : 
+                        property.status === 'sold' ? 'bg-blue-50 text-blue-700' : 
+                        property.status === 'rented' ? 'bg-purple-50 text-purple-700' : 
+                        'bg-gray-50 text-gray-700'}`}
+                    >
+                      {property.status === 'available' ? 'Disponível' : 
+                       property.status === 'sold' ? 'Vendido' :
+                       property.status === 'rented' ? 'Alugado' :
+                       property.status}
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    {property.isFeatured ? (
+                      <div className="text-indigo-500 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1.5"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+                        <span className="text-sm">Destaque</span>
                       </div>
-                    </TableCell>
-                    <TableCell className="py-4 whitespace-nowrap bg-white">
-                      {property.type === "apartment" && "Apartamento"}
-                      {property.type === "house" && "Casa"}
-                      {property.type === "commercial" && "Comercial"}
-                      {property.type === "land" && "Terreno"}
-                    </TableCell>
-                    <TableCell className="py-4 whitespace-nowrap bg-white">
-                      {property.purpose === "sale" ? "Venda" : "Aluguel"}
-                    </TableCell>
-                    <TableCell className="py-4 whitespace-nowrap font-medium bg-white">
-                      {new Intl.NumberFormat('pt-BR', {
-                        style: 'currency',
-                        currency: 'BRL'
-                      }).format(property.price)}
-                    </TableCell>
-                    <TableCell className="py-4 whitespace-nowrap bg-white">
-                      <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                        property.status === "available" ? "bg-green-100 text-green-800" :
-                        property.status === "sold" ? "bg-blue-100 text-blue-800" :
-                        "bg-yellow-100 text-yellow-800"
-                      }`}>
-                        {property.status === "available" ? "Disponível" :
-                         property.status === "sold" ? "Vendido" : "Alugado"}
-                      </span>
-                    </TableCell>
-                    <TableCell className="py-4 whitespace-nowrap text-right text-sm font-medium bg-white">
+                    ) : (
+                      <span className="text-gray-400 text-sm">-</span>
+                    )}
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <div className="flex items-center justify-end space-x-2">
                       <Button 
-                        variant="ghost" 
-                        size="sm" 
-                        className="h-8 w-8 p-0 text-gray-400 hover:text-indigo-600"
-                        onClick={() => handleEditClick(property)}
+                        onClick={() => handleEditClick(property)} 
+                        size="sm"
+                        variant="ghost"
                       >
-                        <i className="ri-edit-line text-lg"></i>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
                       </Button>
                       <Button 
-                        variant="ghost" 
-                        size="sm" 
-                        className="h-8 w-8 p-0 text-gray-400 hover:text-red-600"
-                        onClick={() => handleDeleteClick(property)}
+                        onClick={() => handleDeleteClick(property)} 
+                        size="sm"
+                        variant="ghost"
+                        className="text-red-500 hover:text-red-700 hover:bg-red-50"
                       >
-                        <i className="ri-delete-bin-line text-lg"></i>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
                       </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
-        ) : (
-          <div className="text-center py-10 rounded-lg border border-gray-100">
-            <div className="text-5xl text-gray-300 mb-4">
-              <i className="ri-building-line"></i>
-            </div>
-            <p className="text-gray-500 mb-4">Nenhum imóvel cadastrado.</p>
-            <Button 
-              onClick={handleAddClick}
-              className="bg-indigo-600 hover:bg-indigo-700 rounded-full px-5">
-              Adicionar Imóvel
-            </Button>
-          </div>
-        )}
-      </div>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      )}
     </div>
   );
 }
