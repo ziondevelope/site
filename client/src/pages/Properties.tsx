@@ -424,14 +424,15 @@ export default function Properties() {
                       control={form.control}
                       name="status"
                       render={({ field }) => (
-                        <FormItem className="mb-4">
-                          <FormLabel>Status</FormLabel>
+                        <FormItem className="mb-6">
+                          <FormLabel className="font-medium">Status do Imóvel</FormLabel>
                           <Select 
                             onValueChange={field.onChange} 
-                            value={field.value} defaultValue={field.value}
+                            value={field.value} 
+                            defaultValue={field.value}
                           >
                             <FormControl>
-                              <SelectTrigger className="bg-white border-gray-300">
+                              <SelectTrigger className="bg-white border border-gray-300 shadow-sm">
                                 <SelectValue placeholder="Selecione o status" />
                               </SelectTrigger>
                             </FormControl>
@@ -804,8 +805,8 @@ export default function Properties() {
                       control={form.control}
                       name="status"
                       render={({ field }) => (
-                        <FormItem className="mb-4">
-                          <FormLabel>Status</FormLabel>
+                        <FormItem className="mb-6">
+                          <FormLabel className="font-medium">Status do Imóvel</FormLabel>
                           <Select 
                             onValueChange={field.onChange} 
                             value={field.value} defaultValue={field.value}
