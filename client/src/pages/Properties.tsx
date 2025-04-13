@@ -67,6 +67,8 @@ export default function Properties() {
       isFeatured: false,
       status: "available",
       imageUrl: "",
+      parkingSpots: 0,
+      suites: 0,
     },
   });
 
@@ -89,6 +91,8 @@ export default function Properties() {
       isFeatured: property.isFeatured || false,
       status: property.status || "available",
       imageUrl: property.imageUrl || "",
+      parkingSpots: property.parkingSpots || 0,
+      suites: property.suites || 0,
     });
     setIsEditDialogOpen(true);
   };
@@ -112,6 +116,8 @@ export default function Properties() {
       isFeatured: false,
       status: "available",
       imageUrl: "",
+      parkingSpots: 0,
+      suites: 0,
     });
     setIsAddDialogOpen(true);
   };
