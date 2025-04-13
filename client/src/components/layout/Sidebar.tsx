@@ -11,16 +11,6 @@ type NavItem = {
 
 const navItems: NavItem[] = [
   { id: "home", href: "/admin", label: "Página Inicial", icon: "ri-home-line" },
-  { 
-    id: "intel",
-    href: "#", 
-    label: "Inteligência MH+", 
-    icon: "ri-bar-chart-line",
-    children: [
-      { id: "stats", href: "/admin/stats", label: "Estatísticas", icon: "ri-pie-chart-line" },
-      { id: "reports", href: "/admin/reports", label: "Relatórios", icon: "ri-file-chart-line" }
-    ]
-  },
   { id: "leads", href: "/admin/crm", label: "Leads", icon: "ri-user-heart-line" },
   { id: "properties", href: "/admin/imoveis", label: "Imóveis", icon: "ri-building-line" },
   { id: "settings", href: "/admin/configuracoes", label: "Configurações", icon: "ri-settings-line" },
