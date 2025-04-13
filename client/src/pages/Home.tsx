@@ -66,9 +66,11 @@ export default function Home() {
         id="home" 
         className="py-20 text-white"
         style={{
-          background: config?.primaryColor 
-            ? `linear-gradient(to right, ${config.primaryColor}DD, ${config.primaryColor})` 
-            : 'linear-gradient(to right, #3b82f6, var(--primary))'
+          background: config?.bannerBackground 
+            ? `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${config.bannerBackground}) center/cover no-repeat`
+            : config?.primaryColor 
+              ? `linear-gradient(to right, ${config.primaryColor}DD, ${config.primaryColor})` 
+              : 'linear-gradient(to right, #3b82f6, var(--primary))'
         }}
       >
         <div className="container mx-auto px-4">
