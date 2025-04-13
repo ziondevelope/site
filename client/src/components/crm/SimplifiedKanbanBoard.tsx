@@ -174,118 +174,149 @@ export default function SimplifiedKanbanBoard({
   }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+    <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
       {columns.map((column) => (
-        <Card key={column.id} className="p-4 rounded-xl shadow-sm">
+        <div key={column.id} className="rounded-lg">
           <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-semibold flex items-center">
-              <div className={`w-3 h-3 rounded-full ${column.color} mr-2`}></div>
+            <h3 className="text-sm font-medium flex items-center text-indigo-700">
               {column.title}
               <span className="ml-2 text-gray-500 text-sm font-normal">
                 ({column.leads.length})
               </span>
             </h3>
-            <Button variant="ghost" size="sm" className="text-gray-500 hover:text-gray-700 h-8 w-8 p-0">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="text-indigo-700 hover:text-indigo-800 h-8 w-8 p-0 rounded-full bg-indigo-50"
+            >
               <i className="ri-add-line"></i>
             </Button>
           </div>
           
           <div className="space-y-3 min-h-[400px]">
-            {column.leads.map((lead) => (
-              <div
-                key={lead.id}
-                className="bg-white border border-gray-200 p-3 rounded-lg shadow-sm hover:shadow-md transition"
-              >
-                <div className="flex justify-between items-start">
-                  <h4 className="font-medium">{lead.name}</h4>
-                  <span className={`${
-                    lead.interestType === "purchase" 
-                      ? "bg-blue-100 text-blue-800" 
-                      : "bg-purple-100 text-purple-800"
-                  } text-xs px-2 py-1 rounded-full`}>
-                    {getInterestTypeLabel(lead.interestType)}
-                  </span>
-                </div>
-                <p className="text-sm text-gray-600 mt-1">{lead.message || ""}</p>
-                <p className="text-xs text-gray-500 mt-2">
-                  Via {lead.source} - {getFormattedDate(lead.createdAt)}
-                </p>
-                
-                <div className="flex justify-between items-center mt-3">
-                  <div className="flex items-center">
-                    {lead.agentId ? (
-                      <div className="h-6 w-6 rounded-full bg-primary flex items-center justify-center text-white text-xs">
-                        A
-                      </div>
-                    ) : (
-                      <div className="h-6 w-6"></div>
+            {column.leads.length === 0 ? (
+              <div className="bg-gray-50 border border-gray-200 p-6 rounded-lg flex flex-col items-center justify-center h-32">
+                <p className="text-gray-400 text-sm">Nenhum lead neste estágio</p>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="text-indigo-600 hover:text-indigo-700 mt-2"
+                >
+                  <i className="ri-add-line mr-1"></i> Adicionar lead
+                </Button>
+              </div>
+            ) : (
+              column.leads.map((lead) => (
+                <div
+                  key={lead.id}
+                  className="bg-white border border-gray-200 p-4 rounded-lg hover:shadow-md transition"
+                >
+                  <div className="flex justify-between items-center mb-2">
+                    <h4 className="font-medium text-gray-800">{lead.name}</h4>
+                    <div className="flex items-center space-x-1">
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="h-7 w-7 p-0 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-full"
+                      >
+                        <i className="ri-pencil-line"></i>
+                      </Button>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="h-7 w-7 p-0 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-full"
+                      >
+                        <i className="ri-more-2-line"></i>
+                      </Button>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center text-sm text-gray-500 mb-3">
+                    <i className="ri-phone-line mr-1"></i>
+                    <span>{lead.phone || "Sem telefone"}</span>
+                    
+                    {lead.email && (
+                      <>
+                        <span className="mx-2">•</span>
+                        <i className="ri-mail-line mr-1"></i>
+                        <span className="truncate max-w-[100px]">{lead.email}</span>
+                      </>
                     )}
                   </div>
                   
-                  {/* Botões para mover o lead para outras colunas */}
-                  <div className="flex items-center space-x-1">
-                    {lead.status !== "new" && (
-                      <Button 
-                        size="sm" 
-                        variant="outline" 
-                        className="text-xs px-2 py-1 h-7" 
-                        onClick={() => moveLead(lead.id, lead.status, "new")}
-                      >
-                        Novo
-                      </Button>
-                    )}
-                    {lead.status !== "contacted" && (
-                      <Button 
-                        size="sm" 
-                        variant="outline" 
-                        className="text-xs px-2 py-1 h-7" 
-                        onClick={() => moveLead(lead.id, lead.status, "contacted")}
-                      >
-                        Contato
-                      </Button>
-                    )}
-                    {lead.status !== "visit" && (
-                      <Button 
-                        size="sm" 
-                        variant="outline" 
-                        className="text-xs px-2 py-1 h-7" 
-                        onClick={() => moveLead(lead.id, lead.status, "visit")}
-                      >
-                        Visita
-                      </Button>
-                    )}
-                    {lead.status !== "proposal" && (
-                      <Button 
-                        size="sm" 
-                        variant="outline" 
-                        className="text-xs px-2 py-1 h-7" 
-                        onClick={() => moveLead(lead.id, lead.status, "proposal")}
-                      >
-                        Proposta
-                      </Button>
+                  <div className="flex flex-wrap gap-2 mb-3">
+                    <span className={`${
+                      lead.interestType === "purchase" 
+                        ? "bg-blue-50 text-blue-600" 
+                        : "bg-purple-50 text-purple-600"
+                    } text-xs px-2 py-1 rounded-md inline-flex items-center`}>
+                      <i className={lead.interestType === "purchase" ? "ri-home-4-line mr-1" : "ri-key-line mr-1"}></i>
+                      {getInterestTypeLabel(lead.interestType)}
+                    </span>
+                    
+                    <span className="bg-gray-50 text-gray-600 text-xs px-2 py-1 rounded-md inline-flex items-center">
+                      <i className="ri-time-line mr-1"></i>
+                      {getFormattedDate(lead.createdAt)}
+                    </span>
+                    
+                    {lead.budget && (
+                      <span className="bg-green-50 text-green-600 text-xs px-2 py-1 rounded-md inline-flex items-center">
+                        <i className="ri-money-dollar-circle-line mr-1"></i>
+                        R$ {lead.budget.toLocaleString('pt-BR')}
+                      </span>
                     )}
                   </div>
-                </div>
-                
-                <div className="flex justify-end space-x-1 mt-2">
-                  {lead.phone && (
-                    <Button variant="ghost" size="sm" className="h-6 w-6 p-0 text-gray-500 hover:text-primary">
-                      <i className="ri-phone-line"></i>
-                    </Button>
+                  
+                  {lead.message && (
+                    <p className="text-sm text-gray-600 border-t border-gray-100 pt-2">
+                      {lead.message.length > 100 ? lead.message.substring(0, 100) + '...' : lead.message}
+                    </p>
                   )}
-                  {lead.email && (
-                    <Button variant="ghost" size="sm" className="h-6 w-6 p-0 text-gray-500 hover:text-primary">
-                      <i className="ri-mail-line"></i>
-                    </Button>
-                  )}
-                  <Button variant="ghost" size="sm" className="h-6 w-6 p-0 text-gray-500 hover:text-primary">
-                    <i className="ri-more-2-line"></i>
-                  </Button>
+                  
+                  <div className="flex justify-between items-center mt-3 pt-2 border-t border-gray-100">
+                    <div className="flex items-center text-xs text-gray-500">
+                      <i className="ri-user-line mr-1"></i>
+                      <span>Fonte: {lead.source}</span>
+                    </div>
+                    
+                    <div className="flex">
+                      {column.id !== "new" && (
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          className="text-gray-400 hover:text-indigo-600 text-xs rounded-full"
+                          onClick={() => moveLead(lead.id, lead.status, "new")}
+                          title="Mover para Novos"
+                        >
+                          <i className="ri-arrow-left-line"></i>
+                        </Button>
+                      )}
+                      
+                      {column.id !== "proposal" && (
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          className="text-gray-400 hover:text-indigo-600 text-xs rounded-full"
+                          onClick={() => {
+                            // Determinar próximo estágio
+                            const stages = ["new", "contacted", "visit", "proposal"];
+                            const currentIndex = stages.indexOf(column.id);
+                            const nextStage = stages[currentIndex + 1];
+                            moveLead(lead.id, lead.status, nextStage);
+                          }}
+                          title="Avançar para próximo estágio"
+                        >
+                          <i className="ri-arrow-right-line"></i>
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                  
                 </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
-        </Card>
+        </div>
       ))}
     </div>
   );
