@@ -305,9 +305,13 @@ export default function Agents() {
                   <TableRow key={agent.id} className="hover:bg-gray-50 transition-colors">
                     <TableCell>
                       <div className="flex items-center space-x-3">
-                        <Avatar className="h-8 w-8">
-                          <AvatarImage src={agent.avatar || ''} alt={agent.displayName} />
-                          <AvatarFallback className="bg-gray-100 text-gray-500 text-xs">
+                        <Avatar className="h-10 w-10 border border-gray-200">
+                          <AvatarImage 
+                            src={agent.avatar || ''} 
+                            alt={agent.displayName} 
+                            className="object-cover"
+                          />
+                          <AvatarFallback className="bg-gray-100 text-gray-500 text-xs font-medium">
                             {agent.displayName?.split(' ').map(name => name[0]).join('').substring(0, 2).toUpperCase()}
                           </AvatarFallback>
                         </Avatar>
