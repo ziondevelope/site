@@ -1,18 +1,57 @@
-import { useState } from "react";
+import { useEffect } from "react";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
-import { WebsiteConfig } from "@shared/schema";
+import { WebsiteConfig, UpdateWebsiteConfig } from "@shared/schema";
 
 interface HomepageSettingsProps {
   config?: WebsiteConfig;
+  configData: Partial<UpdateWebsiteConfig>;
+  onConfigChange: (data: Partial<UpdateWebsiteConfig>) => void;
 }
 
-export default function HomepageSettings({ config }: HomepageSettingsProps) {
-  const [showSearchBar, setShowSearchBar] = useState(config?.showSearchBar ?? true);
-  const [showFeaturedProperties, setShowFeaturedProperties] = useState(config?.showFeaturedProperties ?? true);
-  const [showSaleProperties, setShowSaleProperties] = useState(config?.showSaleProperties ?? true);
-  const [showRentProperties, setShowRentProperties] = useState(config?.showRentProperties ?? true);
-  const [showTestimonials, setShowTestimonials] = useState(config?.showTestimonials ?? false);
+export default function HomepageSettings({ config, configData, onConfigChange }: HomepageSettingsProps) {
+  // These are derived values that reflect either the current editing state (configData)
+  // or fallback to the saved values (config) if no edits have been made
+  const showSearchBar = configData.showSearchBar !== undefined 
+    ? configData.showSearchBar 
+    : config?.showSearchBar ?? true;
+    
+  const showFeaturedProperties = configData.showFeaturedProperties !== undefined 
+    ? configData.showFeaturedProperties 
+    : config?.showFeaturedProperties ?? true;
+    
+  const showSaleProperties = configData.showSaleProperties !== undefined 
+    ? configData.showSaleProperties 
+    : config?.showSaleProperties ?? true;
+    
+  const showRentProperties = configData.showRentProperties !== undefined 
+    ? configData.showRentProperties 
+    : config?.showRentProperties ?? true;
+    
+  const showTestimonials = configData.showTestimonials !== undefined 
+    ? configData.showTestimonials 
+    : config?.showTestimonials ?? true;
+
+  // Handle change functions
+  const handleShowSearchBarChange = (checked: boolean) => {
+    onConfigChange({ showSearchBar: checked });
+  };
+
+  const handleShowFeaturedPropertiesChange = (checked: boolean) => {
+    onConfigChange({ showFeaturedProperties: checked });
+  };
+
+  const handleShowSalePropertiesChange = (checked: boolean) => {
+    onConfigChange({ showSaleProperties: checked });
+  };
+
+  const handleShowRentPropertiesChange = (checked: boolean) => {
+    onConfigChange({ showRentProperties: checked });
+  };
+
+  const handleShowTestimonialsChange = (checked: boolean) => {
+    onConfigChange({ showTestimonials: checked });
+  };
 
   return (
     <div className="space-y-4">
@@ -25,8 +64,8 @@ export default function HomepageSettings({ config }: HomepageSettingsProps) {
         </div>
         <Switch 
           checked={showSearchBar} 
-          onCheckedChange={setShowSearchBar} 
-          className="data-[state=checked]:bg-primary"
+          onCheckedChange={handleShowSearchBarChange} 
+          className="data-[state=checked]:bg-indigo-600"
         />
       </div>
       
@@ -37,8 +76,8 @@ export default function HomepageSettings({ config }: HomepageSettingsProps) {
         </div>
         <Switch 
           checked={showFeaturedProperties} 
-          onCheckedChange={setShowFeaturedProperties} 
-          className="data-[state=checked]:bg-primary"
+          onCheckedChange={handleShowFeaturedPropertiesChange} 
+          className="data-[state=checked]:bg-indigo-600"
         />
       </div>
       
@@ -49,8 +88,8 @@ export default function HomepageSettings({ config }: HomepageSettingsProps) {
         </div>
         <Switch 
           checked={showSaleProperties} 
-          onCheckedChange={setShowSaleProperties} 
-          className="data-[state=checked]:bg-primary"
+          onCheckedChange={handleShowSalePropertiesChange} 
+          className="data-[state=checked]:bg-indigo-600"
         />
       </div>
       
@@ -61,8 +100,8 @@ export default function HomepageSettings({ config }: HomepageSettingsProps) {
         </div>
         <Switch 
           checked={showRentProperties} 
-          onCheckedChange={setShowRentProperties} 
-          className="data-[state=checked]:bg-primary"
+          onCheckedChange={handleShowRentPropertiesChange} 
+          className="data-[state=checked]:bg-indigo-600"
         />
       </div>
       
@@ -73,13 +112,19 @@ export default function HomepageSettings({ config }: HomepageSettingsProps) {
         </div>
         <Switch 
           checked={showTestimonials} 
-          onCheckedChange={setShowTestimonials}
-          className="data-[state=checked]:bg-primary"
+          onCheckedChange={handleShowTestimonialsChange}
+          className="data-[state=checked]:bg-indigo-600"
         />
       </div>
       
       <div className="pt-4">
-        <Button>
+        <Button 
+          className="rounded-full px-4 bg-indigo-50 text-indigo-600 hover:bg-indigo-100"
+          variant="outline"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+          </svg>
           Visualizar Prévia
         </Button>
       </div>
