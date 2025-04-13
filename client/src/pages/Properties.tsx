@@ -29,116 +29,87 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
-// Form para validação
-const propertyFormSchema = insertPropertySchema
-  .extend({
-    images: z.array(
-      z.object({
-        url: z.string().min(1, "URL da imagem é obrigatória"),
-        isFeatured: z.boolean().optional(),
-      })
-    ).optional(),
-    suites: z.coerce.number().min(0).optional().nullable(),
-    parkingSpots: z.coerce.number().min(0).optional().nullable(),
-    bedrooms: z.coerce.number().min(0).optional().nullable(),
-    bathrooms: z.coerce.number().min(0).optional().nullable(),
-    features: z.array(z.string()).optional(),
-    agentId: z.coerce.number().optional(),
-  });
+const propertyFormSchema = insertPropertySchema.extend({
+  // Add additional validation as needed
+  images: z.array(
+    z.object({
+      url: z.string(),
+      isFeatured: z.boolean().optional().default(false)
+    })
+  ).optional().default([]),
+  parkingSpots: z.number().min(0).default(0),
+  suites: z.number().min(0).default(0),
+  features: z.array(z.string()).optional().default([]),
+});
 
-// Componente para imagem em destaque
+type PropertyFormValues = z.infer<typeof propertyFormSchema>;
+
+// Função utilitária para obter a imagem de destaque do imóvel
+const getFeaturedImage = (property: Property): string | undefined => {
+  // Se tiver array de imagens com formato { url, isFeatured }
+  if (property.images && Array.isArray(property.images) && property.images.length > 0) {
+    // Procura por uma imagem marcada como destaque
+    const featuredImage = property.images.find(img => 
+      typeof img === 'object' && 'isFeatured' in img && img.isFeatured
+    );
+    
+    // Se encontrou imagem de destaque, retorna sua URL
+    if (featuredImage && typeof featuredImage === 'object' && 'url' in featuredImage) {
+      return featuredImage.url;
+    }
+    
+    // Caso não encontre, retorna a primeira imagem
+    if (property.images[0] && typeof property.images[0] === 'object' && 'url' in property.images[0]) {
+      return property.images[0].url;
+    }
+    
+    // Caso seja um array de strings (formato antigo)
+    if (typeof property.images[0] === 'string') {
+      return property.images[0];
+    }
+  }
+  
+  // Compatibilidade com o campo featuredImage (formato antigo)
+  if (property.featuredImage) {
+    return property.featuredImage;
+  }
+  
+  // Compatibilidade com o campo imageUrl (formato mais antigo)
+  if (property.imageUrl) {
+    return property.imageUrl;
+  }
+  
+  return undefined;
+};
+
+// Componente de destaque personalizado
 function FeaturedCheckbox({ field }) {
-  const [isFeatured, setIsFeatured] = useState(
-    field.value ? field.value.some((img: any) => img.isFeatured) : false
-  );
-
-  const handleFeaturedChange = (index: number) => {
-    const newValue = [...field.value];
-    
-    // Remove featured from any existing image
-    newValue.forEach((img, i) => {
-      if (i === index) {
-        img.isFeatured = true;
-      } else {
-        img.isFeatured = false;
-      }
-    });
-    
-    field.onChange(newValue);
-    setIsFeatured(true);
-  };
-
   return (
-    <FormItem>
-      <FormLabel className="flex items-center space-x-2 text-gray-500">
-        <span>Imagem em destaque</span>
-        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-      </FormLabel>
-      
-      {field.value && field.value.length > 0 ? (
-        <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
-          {field.value.map((image, index) => (
-            <div 
-              key={index} 
-              className={`
-                relative group aspect-square border rounded-md overflow-hidden 
-                ${image.isFeatured ? 'ring-2 ring-indigo-500 ring-offset-2' : 'hover:ring-1 hover:ring-gray-200'}
-              `}
-            >
-              <img 
-                src={typeof image === 'string' ? image : image.url} 
-                alt={`Imagem ${index + 1}`}
-                className="object-cover w-full h-full"
-              />
-              <button
-                type="button"
-                onClick={() => handleFeaturedChange(index)}
-                className={`
-                  absolute inset-0 flex flex-col items-center justify-center bg-black/50
-                  ${image.isFeatured ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}
-                  transition-opacity
-                `}
-              >
-                <svg 
-                  xmlns="http://www.w3.org/2000/svg" 
-                  width="24" 
-                  height="24" 
-                  viewBox="0 0 24 24" 
-                  fill={image.isFeatured ? "#ffffff" : "none"} 
-                  stroke="#ffffff" 
-                  strokeWidth="2" 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round" 
-                  className="mb-1"
-                >
-                  <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>
-                </svg>
-                <span className="text-xs text-white font-medium">
-                  {image.isFeatured ? 'Destaque' : 'Definir como destaque'}
-                </span>
-              </button>
+    <FormItem className="pt-6">
+      <div className={`border rounded-lg p-4 ${field.value ? 'bg-indigo-50 border-indigo-200' : 'border-gray-200'} transition-colors duration-200`}>
+        <div className="flex items-center">
+          <FormControl>
+            <input
+              type="checkbox"
+              checked={field.value}
+              onChange={field.onChange}
+              className="h-5 w-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+            />
+          </FormControl>
+          <div className="ml-3">
+            <FormLabel className="text-base font-medium flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1.5 text-indigo-500"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+              Destacar na página inicial
+            </FormLabel>
+            <div className="text-sm text-gray-500 mt-1">
+              Este imóvel será exibido em destaque na página inicial do site e terá maior visibilidade.
             </div>
-          ))}
+          </div>
         </div>
-      ) : (
-        <div className="text-gray-500 text-sm">
-          Faça upload de imagens e em seguida selecione uma como destaque
-        </div>
-      )}
-      <FormMessage />
+      </div>
     </FormItem>
   );
 }
-
-// Componente para preview da imagem destacada
-const getFeaturedImage = (property: Property): string | undefined => {
-  if (!property.images || property.images.length === 0) {
-    return undefined;
-  }
-  
-  const featuredImage = property.images.find(img => img.isFeatured);
-  return featuredImage ? featuredImage.url : property.images[0].url;
-};
 
 export default function Properties() {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
@@ -147,14 +118,13 @@ export default function Properties() {
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
   const { toast } = useToast();
   
-  // Consulta para obter a lista de imóveis
-  const { data: properties, isLoading } = useQuery({
+  // Fetch properties
+  const { data: properties, isLoading } = useQuery<Property[]>({
     queryKey: ['/api/properties'],
-    enabled: true,
   });
 
-  // Formulário para adicionar imóvel
-  const form = useForm<z.infer<typeof propertyFormSchema>>({
+  // Form for adding/editing property
+  const form = useForm<PropertyFormValues>({
     resolver: zodResolver(propertyFormSchema),
     defaultValues: {
       title: "",
@@ -165,147 +135,165 @@ export default function Properties() {
       area: 0,
       bedrooms: 0,
       bathrooms: 0,
-      suites: 0,
-      parkingSpots: 0,
       address: "",
       city: "",
       neighborhood: "",
       zipCode: "",
       isFeatured: false,
       status: "available",
-      features: [],
       images: [],
-    },
-  });
-
-  // Formulário para editar imóvel
-  const editForm = useForm<z.infer<typeof propertyFormSchema>>({
-    resolver: zodResolver(propertyFormSchema),
-    defaultValues: {
-      title: "",
-      description: "",
-      type: "apartment",
-      purpose: "sale",
-      price: 0,
-      area: 0,
-      bedrooms: 0,
-      bathrooms: 0,
-      suites: 0,
       parkingSpots: 0,
-      address: "",
-      city: "",
-      neighborhood: "",
-      zipCode: "",
-      isFeatured: false,
-      status: "available",
+      suites: 0,
       features: [],
-      images: [],
     },
   });
 
-  // Handlers
-  const handleAddClick = () => {
-    form.reset();
-    setIsAddDialogOpen(true);
-  };
-
+  // Initialize edit form with property data
   const initEditForm = (property: Property) => {
-    // Formatando as imagens se elas existirem
+    setSelectedProperty(property);
+    
+    // Converter as imagens para o formato correto se necessário
     let formattedImages = [];
-    if (property.images && Array.isArray(property.images)) {
-      formattedImages = property.images.map(img => {
-        if (typeof img === 'string') {
-          return { url: img, isFeatured: false };
-        }
-        return img;
-      });
-      
-      // Se nenhuma imagem estiver marcada como destaque, marca a primeira
-      if (!formattedImages.some(img => img.isFeatured) && formattedImages.length > 0) {
-        formattedImages[0].isFeatured = true;
+    if (property.images) {
+      // Se já estiver no formato { url, isFeatured }
+      if (typeof property.images[0] === 'object' && 'url' in property.images[0]) {
+        formattedImages = property.images as {url: string, isFeatured?: boolean}[];
+      } 
+      // Se for um array de strings (formato antigo)
+      else if (Array.isArray(property.images)) {
+        formattedImages = property.images.map((url: string, index: number) => ({
+          url,
+          isFeatured: index === 0 // primeira imagem como destaque
+        }));
       }
     }
-
-    editForm.reset({
-      ...property,
+    // Se tiver featuredImage e não tiver imagens, usar como imagem de destaque
+    else if (property.featuredImage) {
+      formattedImages = [{
+        url: property.featuredImage,
+        isFeatured: true
+      }];
+    }
+    
+    form.reset({
+      title: property.title || "",
+      description: property.description || "",
+      type: property.type || "apartment",
+      purpose: property.purpose || "sale",
+      price: property.price || 0,
+      area: property.area || 0,
+      bedrooms: property.bedrooms || 0,
+      bathrooms: property.bathrooms || 0,
+      address: property.address || "",
+      city: property.city || "",
+      neighborhood: property.neighborhood || "",
+      zipCode: property.zipCode || "",
+      isFeatured: property.isFeatured || false,
+      status: property.status || "available",
       images: formattedImages,
+      parkingSpots: property.parkingSpots || 0,
+      suites: property.suites || 0,
+      features: property.features || [],
     });
-  };
-
-  const handleEditClick = (property: Property) => {
-    setSelectedProperty(property);
-    initEditForm(property);
     setIsEditDialogOpen(true);
   };
 
+  // Handle adding a new property
+  const handleAddClick = () => {
+    // Reset form to default values
+    form.reset({
+      title: "",
+      description: "",
+      type: "apartment",
+      purpose: "sale",
+      price: 0,
+      area: 0,
+      bedrooms: 0,
+      bathrooms: 0,
+      address: "",
+      city: "",
+      neighborhood: "",
+      zipCode: "",
+      isFeatured: false,
+      status: "available",
+      images: [],
+      parkingSpots: 0,
+      suites: 0,
+      features: [],
+    });
+    setIsAddDialogOpen(true);
+  };
+
+  // Handle edit button click
+  const handleEditClick = (property: Property) => {
+    initEditForm(property);
+  };
+
+  // Handle delete button click
   const handleDeleteClick = (property: Property) => {
     setSelectedProperty(property);
     setIsDeleteAlertOpen(true);
   };
 
-  // Mutations
-  const createPropertyMutation = useMutation({
-    mutationFn: async (data: z.infer<typeof propertyFormSchema>) => {
-      return apiRequest('/api/properties', {
-        method: 'POST',
-        body: JSON.stringify(data),
-      });
+  // Add property mutation
+  const addPropertyMutation = useMutation({
+    mutationFn: async (data: PropertyFormValues) => {
+      const response = await apiRequest("POST", "/api/properties", data);
+      return response.json();
     },
     onSuccess: () => {
-      form.reset();
       setIsAddDialogOpen(false);
+      form.reset();
       queryClient.invalidateQueries({ queryKey: ['/api/properties'] });
       toast({
         title: "Imóvel adicionado",
-        description: "O imóvel foi cadastrado com sucesso.",
+        description: "O imóvel foi adicionado com sucesso.",
       });
     },
     onError: (error) => {
-      console.error('Erro ao adicionar imóvel:', error);
       toast({
+        title: "Erro ao adicionar imóvel",
+        description: error.message,
         variant: "destructive",
-        title: "Erro",
-        description: "Não foi possível adicionar o imóvel. Tente novamente.",
-      });
-    }
-  });
-
-  const updatePropertyMutation = useMutation({
-    mutationFn: async (data: z.infer<typeof propertyFormSchema>) => {
-      if (!selectedProperty) return;
-      return apiRequest(`/api/properties/${selectedProperty.id}`, {
-        method: 'PATCH',
-        body: JSON.stringify(data),
       });
     },
+  });
+
+  // Update property mutation
+  const updatePropertyMutation = useMutation({
+    mutationFn: async (data: PropertyFormValues & { id: number }) => {
+      const { id, ...propertyData } = data;
+      const response = await apiRequest("PATCH", `/api/properties/${id}`, propertyData);
+      return response.json();
+    },
     onSuccess: () => {
-      editForm.reset();
       setIsEditDialogOpen(false);
+      setSelectedProperty(null);
+      form.reset();
       queryClient.invalidateQueries({ queryKey: ['/api/properties'] });
       toast({
         title: "Imóvel atualizado",
-        description: "As alterações foram salvas com sucesso.",
+        description: "As informações do imóvel foram atualizadas com sucesso.",
       });
     },
     onError: (error) => {
-      console.error('Erro ao atualizar imóvel:', error);
       toast({
+        title: "Erro ao atualizar imóvel",
+        description: error.message,
         variant: "destructive",
-        title: "Erro",
-        description: "Não foi possível atualizar o imóvel. Tente novamente.",
       });
-    }
+    },
   });
 
+  // Delete property mutation
   const deletePropertyMutation = useMutation({
-    mutationFn: async () => {
-      if (!selectedProperty) return;
-      return apiRequest(`/api/properties/${selectedProperty.id}`, {
-        method: 'DELETE',
-      });
+    mutationFn: async (id: number) => {
+      const response = await apiRequest("DELETE", `/api/properties/${id}`);
+      return response.ok;
     },
     onSuccess: () => {
       setIsDeleteAlertOpen(false);
+      setSelectedProperty(null);
       queryClient.invalidateQueries({ queryKey: ['/api/properties'] });
       toast({
         title: "Imóvel excluído",
@@ -313,26 +301,31 @@ export default function Properties() {
       });
     },
     onError: (error) => {
-      console.error('Erro ao excluir imóvel:', error);
       toast({
+        title: "Erro ao excluir imóvel",
+        description: error.message,
         variant: "destructive",
-        title: "Erro",
-        description: "Não foi possível excluir o imóvel. Tente novamente.",
       });
-    }
+    },
   });
 
-  // Submit handlers
-  function onSubmit(data: z.infer<typeof propertyFormSchema>) {
-    createPropertyMutation.mutate(data);
-  }
-
-  function handleEditSubmit(data: z.infer<typeof propertyFormSchema>) {
-    updatePropertyMutation.mutate(data);
+  function onSubmit(data: PropertyFormValues) {
+    if (selectedProperty && isEditDialogOpen) {
+      // Update existing property
+      updatePropertyMutation.mutate({
+        ...data,
+        id: selectedProperty.id
+      });
+    } else {
+      // Add new property
+      addPropertyMutation.mutate(data);
+    }
   }
 
   function handleDeleteConfirm() {
-    deletePropertyMutation.mutate();
+    if (selectedProperty) {
+      deletePropertyMutation.mutate(selectedProperty.id);
+    }
   }
 
   return (
@@ -346,19 +339,17 @@ export default function Properties() {
               Preencha os dados abaixo para cadastrar um novo imóvel
             </DialogDescription>
           </DialogHeader>
-          
-          <div className="p-4 overflow-y-auto max-h-[calc(90vh-6rem)]">
+          <div className="overflow-y-auto max-h-[calc(90vh-130px)]">
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                <Tabs defaultValue="basic" className="w-full">
-                  <TabsList className="grid grid-cols-4 mb-4">
-                    <TabsTrigger value="basic">Informações Básicas</TabsTrigger>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="p-4">
+                <Tabs defaultValue="info" className="w-full">
+                  <TabsList className="grid grid-cols-3 mb-4 sticky top-0">
+                    <TabsTrigger value="info">Informações Básicas</TabsTrigger>
                     <TabsTrigger value="details">Detalhes</TabsTrigger>
-                    <TabsTrigger value="location">Localização</TabsTrigger>
-                    <TabsTrigger value="images">Imagens</TabsTrigger>
+                    <TabsTrigger value="location">Localização e Imagem</TabsTrigger>
                   </TabsList>
                   
-                  <TabsContent value="basic" className="space-y-4">
+                  <TabsContent value="info" className="space-y-4">
                     <FormField
                       control={form.control}
                       name="title"
@@ -366,7 +357,7 @@ export default function Properties() {
                         <FormItem>
                           <FormLabel>Título</FormLabel>
                           <FormControl>
-                            <Input placeholder="Apartamento 3 Quartos" {...field} />
+                            <Input placeholder="Apartamento 3 quartos" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -381,8 +372,8 @@ export default function Properties() {
                           <FormLabel>Descrição</FormLabel>
                           <FormControl>
                             <Textarea 
-                              placeholder="Descreva as características do imóvel..." 
-                              className="min-h-[100px]"
+                              placeholder="Descreva o imóvel" 
+                              className="min-h-[120px]" 
                               {...field} 
                             />
                           </FormControl>
@@ -391,101 +382,54 @@ export default function Properties() {
                       )}
                     />
                     
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-3 gap-4">
                       <FormField
                         control={form.control}
                         name="type"
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Tipo</FormLabel>
-                            <FormControl>
-                              <Select 
-                                value={field.value}
-                                onValueChange={field.onChange}
-                              >
+                            <Select 
+                              onValueChange={field.onChange} 
+                              defaultValue={field.value}
+                            >
+                              <FormControl>
                                 <SelectTrigger>
                                   <SelectValue placeholder="Selecione o tipo" />
                                 </SelectTrigger>
-                                <SelectContent>
-                                  <SelectItem value="apartment">Apartamento</SelectItem>
-                                  <SelectItem value="house">Casa</SelectItem>
-                                  <SelectItem value="commercial">Comercial</SelectItem>
-                                  <SelectItem value="land">Terreno</SelectItem>
-                                </SelectContent>
-                              </Select>
-                            </FormControl>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectItem value="apartment">Apartamento</SelectItem>
+                                <SelectItem value="house">Casa</SelectItem>
+                                <SelectItem value="commercial">Comercial</SelectItem>
+                                <SelectItem value="land">Terreno</SelectItem>
+                              </SelectContent>
+                            </Select>
                             <FormMessage />
                           </FormItem>
                         )}
                       />
-                      
+
                       <FormField
                         control={form.control}
                         name="purpose"
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Finalidade</FormLabel>
-                            <FormControl>
-                              <Select 
-                                value={field.value}
-                                onValueChange={field.onChange}
-                              >
+                            <Select 
+                              onValueChange={field.onChange} 
+                              defaultValue={field.value}
+                            >
+                              <FormControl>
                                 <SelectTrigger>
                                   <SelectValue placeholder="Selecione a finalidade" />
                                 </SelectTrigger>
-                                <SelectContent>
-                                  <SelectItem value="sale">Venda</SelectItem>
-                                  <SelectItem value="rent">Aluguel</SelectItem>
-                                </SelectContent>
-                              </Select>
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-                    
-                    <div className="grid grid-cols-2 gap-4">
-                      <FormField
-                        control={form.control}
-                        name="price"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Preço</FormLabel>
-                            <FormControl>
-                              <Input 
-                                type="number" 
-                                placeholder="250000"
-                                {...field}
-                                onChange={(e) => field.onChange(Number(e.target.value))}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      
-                      <FormField
-                        control={form.control}
-                        name="status"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Status</FormLabel>
-                            <FormControl>
-                              <Select 
-                                value={field.value}
-                                onValueChange={field.onChange}
-                              >
-                                <SelectTrigger>
-                                  <SelectValue placeholder="Selecione o status" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  <SelectItem value="available">Disponível</SelectItem>
-                                  <SelectItem value="sold">Vendido</SelectItem>
-                                  <SelectItem value="rented">Alugado</SelectItem>
-                                </SelectContent>
-                              </Select>
-                            </FormControl>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectItem value="sale">Venda</SelectItem>
+                                <SelectItem value="rent">Aluguel</SelectItem>
+                              </SelectContent>
+                            </Select>
                             <FormMessage />
                           </FormItem>
                         )}
@@ -494,24 +438,55 @@ export default function Properties() {
                     
                     <FormField
                       control={form.control}
-                      name="isFeatured"
+                      name="price"
                       render={({ field }) => (
-                        <FormItem className="flex flex-row items-center space-x-2 space-y-0">
+                        <FormItem>
+                          <FormLabel>Preço (R$)</FormLabel>
                           <FormControl>
-                            <input
-                              type="checkbox"
-                              checked={field.value}
-                              onChange={field.onChange}
-                              className="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500 focus:ring-2"
+                            <Input 
+                              type="number" 
+                              placeholder="350000"
+                              {...field}
+                              onChange={(e) => field.onChange(Number(e.target.value))}
                             />
                           </FormControl>
-                          <div className="space-y-1 leading-none">
-                            <FormLabel>Destacar na página inicial</FormLabel>
-                            <p className="text-gray-500 text-xs">
-                              Imóveis destacados aparecem em seções especiais do site
-                            </p>
-                          </div>
+                          <FormMessage />
                         </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={form.control}
+                      name="status"
+                      render={({ field }) => (
+                        <FormItem className="mb-6">
+                          <FormLabel className="font-medium">Status do Imóvel</FormLabel>
+                          <Select 
+                            onValueChange={field.onChange} 
+                            value={field.value} 
+                            defaultValue={field.value}
+                          >
+                            <FormControl>
+                              <SelectTrigger className="bg-white border border-gray-300 shadow-sm">
+                                <SelectValue placeholder="Selecione o status" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="available">Disponível</SelectItem>
+                              <SelectItem value="sold">Vendido</SelectItem>
+                              <SelectItem value="rented">Alugado</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={form.control}
+                      name="isFeatured"
+                      render={({ field }) => (
+                        <FeaturedCheckbox field={field} />
                       )}
                     />
                   </TabsContent>
@@ -526,7 +501,7 @@ export default function Properties() {
                           <FormControl>
                             <Input 
                               type="number" 
-                              placeholder="60"
+                              placeholder="80"
                               {...field}
                               onChange={(e) => field.onChange(Number(e.target.value))}
                             />
@@ -555,7 +530,7 @@ export default function Properties() {
                           </FormItem>
                         )}
                       />
-                      
+
                       <FormField
                         control={form.control}
                         name="bathrooms"
@@ -586,7 +561,7 @@ export default function Properties() {
                             <FormControl>
                               <Input 
                                 type="number" 
-                                placeholder="1"
+                                placeholder="0"
                                 {...field}
                                 onChange={(e) => field.onChange(Number(e.target.value))}
                               />
@@ -595,7 +570,7 @@ export default function Properties() {
                           </FormItem>
                         )}
                       />
-                      
+
                       <FormField
                         control={form.control}
                         name="parkingSpots"
@@ -614,7 +589,7 @@ export default function Properties() {
                           </FormItem>
                         )}
                       />
-                    </div>
+
 
                     <FormField
                       control={form.control}
@@ -626,17 +601,10 @@ export default function Properties() {
                         />
                       )}
                     />
+                    </div>
                   </TabsContent>
                   
                   <TabsContent value="location" className="space-y-4">
-                    <FormField
-                      control={form.control}
-                      name="zipCode"
-                      render={({ field }) => (
-                        <CepInput form={form} field={field} />
-                      )}
-                    />
-                    
                     <div className="grid grid-cols-2 gap-4">
                       <FormField
                         control={form.control}
@@ -680,15 +648,21 @@ export default function Properties() {
                         </FormItem>
                       )}
                     />
-                  </TabsContent>
-                  
-                  <TabsContent value="images" className="space-y-4">
+                    
+                    <FormField
+                      control={form.control}
+                      name="zipCode"
+                      render={({ field }) => (
+                        <CepInput form={form} field={field} />
+                      )}
+                    />
+                    
                     <FormField
                       control={form.control}
                       name="images"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Upload de Imagens</FormLabel>
+                          <FormLabel>Imagens</FormLabel>
                           <FormControl>
                             <MultipleImageUpload 
                               value={field.value}
@@ -698,14 +672,6 @@ export default function Properties() {
                           </FormControl>
                           <FormMessage />
                         </FormItem>
-                      )}
-                    />
-                    
-                    <FormField
-                      control={form.control}
-                      name="images"
-                      render={({ field }) => (
-                        <FeaturedCheckbox field={field} />
                       )}
                     />
                   </TabsContent>
@@ -722,9 +688,9 @@ export default function Properties() {
                   </Button>
                   <Button 
                     type="submit"
-                    disabled={createPropertyMutation.isPending}
+                    disabled={addPropertyMutation.isPending}
                   >
-                    {createPropertyMutation.isPending ? "Adicionando..." : "Adicionar Imóvel"}
+                    {addPropertyMutation.isPending ? "Salvando..." : "Salvar Imóvel"}
                   </Button>
                 </div>
               </form>
@@ -739,30 +705,29 @@ export default function Properties() {
           <DialogHeader className="p-4 border-b border-gray-100 sticky top-0 bg-white z-10">
             <DialogTitle className="text-lg font-light text-gray-700">Editar Imóvel</DialogTitle>
             <DialogDescription className="text-sm text-gray-500 mt-1">
-              Altere os dados do imóvel conforme necessário
+              Modifique os dados do imóvel
             </DialogDescription>
           </DialogHeader>
           
-          <div className="p-4 overflow-y-auto max-h-[calc(90vh-6rem)]">
-            <Form {...editForm}>
-              <form onSubmit={editForm.handleSubmit(handleEditSubmit)} className="space-y-4">
-                <Tabs defaultValue="basic" className="w-full">
-                  <TabsList className="grid grid-cols-4 mb-4">
-                    <TabsTrigger value="basic">Informações Básicas</TabsTrigger>
+          <div className="overflow-y-auto max-h-[calc(90vh-130px)]">
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="p-4">
+                <Tabs defaultValue="info" className="w-full">
+                  <TabsList className="grid grid-cols-3 mb-4 sticky top-0">
+                    <TabsTrigger value="info">Informações Básicas</TabsTrigger>
                     <TabsTrigger value="details">Detalhes</TabsTrigger>
-                    <TabsTrigger value="location">Localização</TabsTrigger>
-                    <TabsTrigger value="images">Imagens</TabsTrigger>
+                    <TabsTrigger value="location">Localização e Imagem</TabsTrigger>
                   </TabsList>
                   
-                  <TabsContent value="basic" className="space-y-4">
+                  <TabsContent value="info" className="space-y-4">
                     <FormField
-                      control={editForm.control}
+                      control={form.control}
                       name="title"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Título</FormLabel>
                           <FormControl>
-                            <Input placeholder="Apartamento 3 Quartos" {...field} />
+                            <Input placeholder="Apartamento 3 quartos" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -770,15 +735,15 @@ export default function Properties() {
                     />
                     
                     <FormField
-                      control={editForm.control}
+                      control={form.control}
                       name="description"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Descrição</FormLabel>
                           <FormControl>
                             <Textarea 
-                              placeholder="Descreva as características do imóvel..." 
-                              className="min-h-[100px]"
+                              placeholder="Descreva o imóvel" 
+                              className="min-h-[120px]" 
                               {...field} 
                             />
                           </FormControl>
@@ -787,101 +752,56 @@ export default function Properties() {
                       )}
                     />
                     
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-3 gap-4">
                       <FormField
-                        control={editForm.control}
+                        control={form.control}
                         name="type"
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Tipo</FormLabel>
-                            <FormControl>
-                              <Select 
-                                value={field.value}
-                                onValueChange={field.onChange}
-                              >
+                            <Select 
+                              onValueChange={field.onChange} 
+                              defaultValue={field.value}
+                              value={field.value}
+                            >
+                              <FormControl>
                                 <SelectTrigger>
                                   <SelectValue placeholder="Selecione o tipo" />
                                 </SelectTrigger>
-                                <SelectContent>
-                                  <SelectItem value="apartment">Apartamento</SelectItem>
-                                  <SelectItem value="house">Casa</SelectItem>
-                                  <SelectItem value="commercial">Comercial</SelectItem>
-                                  <SelectItem value="land">Terreno</SelectItem>
-                                </SelectContent>
-                              </Select>
-                            </FormControl>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectItem value="apartment">Apartamento</SelectItem>
+                                <SelectItem value="house">Casa</SelectItem>
+                                <SelectItem value="commercial">Comercial</SelectItem>
+                                <SelectItem value="land">Terreno</SelectItem>
+                              </SelectContent>
+                            </Select>
                             <FormMessage />
                           </FormItem>
                         )}
                       />
-                      
+
                       <FormField
-                        control={editForm.control}
+                        control={form.control}
                         name="purpose"
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Finalidade</FormLabel>
-                            <FormControl>
-                              <Select 
-                                value={field.value}
-                                onValueChange={field.onChange}
-                              >
+                            <Select 
+                              onValueChange={field.onChange} 
+                              defaultValue={field.value}
+                              value={field.value}
+                            >
+                              <FormControl>
                                 <SelectTrigger>
                                   <SelectValue placeholder="Selecione a finalidade" />
                                 </SelectTrigger>
-                                <SelectContent>
-                                  <SelectItem value="sale">Venda</SelectItem>
-                                  <SelectItem value="rent">Aluguel</SelectItem>
-                                </SelectContent>
-                              </Select>
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-                    
-                    <div className="grid grid-cols-2 gap-4">
-                      <FormField
-                        control={editForm.control}
-                        name="price"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Preço</FormLabel>
-                            <FormControl>
-                              <Input 
-                                type="number" 
-                                placeholder="250000"
-                                {...field}
-                                onChange={(e) => field.onChange(Number(e.target.value))}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      
-                      <FormField
-                        control={editForm.control}
-                        name="status"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Status</FormLabel>
-                            <FormControl>
-                              <Select 
-                                value={field.value}
-                                onValueChange={field.onChange}
-                              >
-                                <SelectTrigger>
-                                  <SelectValue placeholder="Selecione o status" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  <SelectItem value="available">Disponível</SelectItem>
-                                  <SelectItem value="sold">Vendido</SelectItem>
-                                  <SelectItem value="rented">Alugado</SelectItem>
-                                </SelectContent>
-                              </Select>
-                            </FormControl>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectItem value="sale">Venda</SelectItem>
+                                <SelectItem value="rent">Aluguel</SelectItem>
+                              </SelectContent>
+                            </Select>
                             <FormMessage />
                           </FormItem>
                         )}
@@ -889,32 +809,63 @@ export default function Properties() {
                     </div>
                     
                     <FormField
-                      control={editForm.control}
-                      name="isFeatured"
+                      control={form.control}
+                      name="price"
                       render={({ field }) => (
-                        <FormItem className="flex flex-row items-center space-x-2 space-y-0">
+                        <FormItem>
+                          <FormLabel>Preço (R$)</FormLabel>
                           <FormControl>
-                            <input
-                              type="checkbox"
-                              checked={field.value}
-                              onChange={field.onChange}
-                              className="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500 focus:ring-2"
+                            <Input 
+                              type="number" 
+                              placeholder="350000"
+                              {...field}
+                              onChange={(e) => field.onChange(Number(e.target.value))}
                             />
                           </FormControl>
-                          <div className="space-y-1 leading-none">
-                            <FormLabel>Destacar na página inicial</FormLabel>
-                            <p className="text-gray-500 text-xs">
-                              Imóveis destacados aparecem em seções especiais do site
-                            </p>
-                          </div>
+                          <FormMessage />
                         </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={form.control}
+                      name="status"
+                      render={({ field }) => (
+                        <FormItem className="mb-6">
+                          <FormLabel className="font-medium">Status do Imóvel</FormLabel>
+                          <Select 
+                            onValueChange={field.onChange} 
+                            value={field.value}
+                            defaultValue={field.value}
+                          >
+                            <FormControl>
+                              <SelectTrigger className="bg-white border border-gray-300 shadow-sm">
+                                <SelectValue placeholder="Selecione o status" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="available">Disponível</SelectItem>
+                              <SelectItem value="sold">Vendido</SelectItem>
+                              <SelectItem value="rented">Alugado</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={form.control}
+                      name="isFeatured"
+                      render={({ field }) => (
+                        <FeaturedCheckbox field={field} />
                       )}
                     />
                   </TabsContent>
                   
                   <TabsContent value="details" className="space-y-4">
                     <FormField
-                      control={editForm.control}
+                      control={form.control}
                       name="area"
                       render={({ field }) => (
                         <FormItem>
@@ -922,7 +873,7 @@ export default function Properties() {
                           <FormControl>
                             <Input 
                               type="number" 
-                              placeholder="60"
+                              placeholder="80"
                               {...field}
                               onChange={(e) => field.onChange(Number(e.target.value))}
                             />
@@ -934,7 +885,7 @@ export default function Properties() {
                     
                     <div className="grid grid-cols-2 gap-4">
                       <FormField
-                        control={editForm.control}
+                        control={form.control}
                         name="bedrooms"
                         render={({ field }) => (
                           <FormItem>
@@ -951,9 +902,9 @@ export default function Properties() {
                           </FormItem>
                         )}
                       />
-                      
+
                       <FormField
-                        control={editForm.control}
+                        control={form.control}
                         name="bathrooms"
                         render={({ field }) => (
                           <FormItem>
@@ -974,7 +925,7 @@ export default function Properties() {
                     
                     <div className="grid grid-cols-2 gap-4">
                       <FormField
-                        control={editForm.control}
+                        control={form.control}
                         name="suites"
                         render={({ field }) => (
                           <FormItem>
@@ -982,7 +933,7 @@ export default function Properties() {
                             <FormControl>
                               <Input 
                                 type="number" 
-                                placeholder="1"
+                                placeholder="0"
                                 {...field}
                                 onChange={(e) => field.onChange(Number(e.target.value))}
                               />
@@ -991,9 +942,9 @@ export default function Properties() {
                           </FormItem>
                         )}
                       />
-                      
+
                       <FormField
-                        control={editForm.control}
+                        control={form.control}
                         name="parkingSpots"
                         render={({ field }) => (
                           <FormItem>
@@ -1013,7 +964,7 @@ export default function Properties() {
                     </div>
 
                     <FormField
-                      control={editForm.control}
+                      control={form.control}
                       name="features"
                       render={({ field }) => (
                         <PropertyFeatures
@@ -1025,17 +976,9 @@ export default function Properties() {
                   </TabsContent>
                   
                   <TabsContent value="location" className="space-y-4">
-                    <FormField
-                      control={editForm.control}
-                      name="zipCode"
-                      render={({ field }) => (
-                        <CepInput form={editForm} field={field} />
-                      )}
-                    />
-                    
                     <div className="grid grid-cols-2 gap-4">
                       <FormField
-                        control={editForm.control}
+                        control={form.control}
                         name="city"
                         render={({ field }) => (
                           <FormItem>
@@ -1049,7 +992,7 @@ export default function Properties() {
                       />
                       
                       <FormField
-                        control={editForm.control}
+                        control={form.control}
                         name="neighborhood"
                         render={({ field }) => (
                           <FormItem>
@@ -1064,7 +1007,7 @@ export default function Properties() {
                     </div>
                     
                     <FormField
-                      control={editForm.control}
+                      control={form.control}
                       name="address"
                       render={({ field }) => (
                         <FormItem>
@@ -1078,7 +1021,15 @@ export default function Properties() {
                     />
                     
                     <FormField
-                      control={editForm.control}
+                      control={form.control}
+                      name="zipCode"
+                      render={({ field }) => (
+                        <CepInput form={form} field={field} />
+                      )}
+                    />
+                    
+                    <FormField
+                      control={form.control}
                       name="images"
                       render={({ field }) => (
                         <FormItem>
