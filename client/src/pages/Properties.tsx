@@ -280,7 +280,7 @@ export default function Properties() {
                       )}
                     />
                     
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-3 gap-4">
                       <FormField
                         control={form.control}
                         name="type"
@@ -381,7 +381,7 @@ export default function Properties() {
                   </TabsContent>
                   
                   <TabsContent value="details" className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-3 gap-4">
                       <FormField
                         control={form.control}
                         name="area"
@@ -438,6 +438,44 @@ export default function Properties() {
                           </FormItem>
                         )}
                       />
+                      <FormField
+                        control={form.control}
+                        name="parkingSpots"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Vagas de Garagem</FormLabel>
+                            <FormControl>
+                              <Input 
+                                type="number" 
+                                placeholder="1"
+                                {...field}
+                                value={field.value || 0}
+                                onChange={(e) => field.onChange(Number(e.target.value))}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="suites"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Suítes</FormLabel>
+                            <FormControl>
+                              <Input 
+                                type="number" 
+                                placeholder="1"
+                                {...field}
+                                value={field.value || 0}
+                                onChange={(e) => field.onChange(Number(e.target.value))}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
                       
                       <FormField
                         control={form.control}
@@ -462,7 +500,7 @@ export default function Properties() {
                   </TabsContent>
                   
                   <TabsContent value="location" className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-3 gap-4">
                       <FormField
                         control={form.control}
                         name="address"
@@ -620,7 +658,7 @@ export default function Properties() {
                       )}
                     />
                     
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-3 gap-4">
                       <FormField
                         control={form.control}
                         name="type"
@@ -721,7 +759,7 @@ export default function Properties() {
                   </TabsContent>
                   
                   <TabsContent value="details" className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-3 gap-4">
                       <FormField
                         control={form.control}
                         name="area"
@@ -802,7 +840,7 @@ export default function Properties() {
                   </TabsContent>
                   
                   <TabsContent value="location" className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-3 gap-4">
                       <FormField
                         control={form.control}
                         name="address"
