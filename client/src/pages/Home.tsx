@@ -74,9 +74,82 @@ export default function Home() {
         }}
       >
         <div className="container mx-auto px-4">
-          <div className="max-w-3xl">
+          <div className={`${config?.showSearchBar ? 'max-w-5xl' : 'max-w-3xl'}`}>
             <h1 className="text-4xl md:text-5xl font-bold mb-4">Encontre o imóvel dos seus sonhos</h1>
             <p className="text-lg mb-8">Oferecemos as melhores opções de imóveis para compra e aluguel com atendimento personalizado.</p>
+            
+            {/* Barra de Filtro */}
+            {config?.showSearchBar && (
+              <div className="bg-white rounded-lg p-4 shadow-lg mb-8">
+                <form className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                  <div>
+                    <label className="block text-gray-700 text-sm font-medium mb-2">Tipo de imóvel</label>
+                    <select 
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      defaultValue=""
+                    >
+                      <option value="" disabled>Selecione</option>
+                      <option value="apartment">Apartamento</option>
+                      <option value="house">Casa</option>
+                      <option value="commercial">Comercial</option>
+                      <option value="land">Terreno</option>
+                    </select>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-gray-700 text-sm font-medium mb-2">Finalidade</label>
+                    <div className="grid grid-cols-2 gap-2">
+                      <div className="flex items-center">
+                        <input 
+                          type="radio" 
+                          id="buy" 
+                          name="purpose" 
+                          className="mr-2 h-4 w-4" 
+                          defaultChecked 
+                        />
+                        <label htmlFor="buy" className="text-gray-700">Comprar</label>
+                      </div>
+                      <div className="flex items-center">
+                        <input 
+                          type="radio" 
+                          id="rent" 
+                          name="purpose" 
+                          className="mr-2 h-4 w-4" 
+                        />
+                        <label htmlFor="rent" className="text-gray-700">Alugar</label>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-gray-700 text-sm font-medium mb-2">Valor máximo</label>
+                    <select 
+                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      defaultValue=""
+                    >
+                      <option value="" disabled>Selecione</option>
+                      <option value="100000">Até R$ 100.000</option>
+                      <option value="300000">Até R$ 300.000</option>
+                      <option value="500000">Até R$ 500.000</option>
+                      <option value="1000000">Até R$ 1.000.000</option>
+                      <option value="2000000">Até R$ 2.000.000</option>
+                      <option value="5000000">Acima de R$ 2.000.000</option>
+                    </select>
+                  </div>
+                  
+                  <div className="flex items-end">
+                    <button 
+                      type="submit"
+                      className="w-full rounded-lg py-2 px-4 text-white font-medium transition-colors"
+                      style={{ backgroundColor: config?.primaryColor || 'var(--primary)' }}
+                    >
+                      Buscar Imóveis
+                    </button>
+                  </div>
+                </form>
+              </div>
+            )}
+            
             <div className="flex flex-wrap gap-4">
               <Button 
                 variant="default" 
