@@ -40,7 +40,7 @@ export const properties = pgTable("properties", {
   latitude: doublePrecision("latitude"),
   longitude: doublePrecision("longitude"),
   featuredImage: text("featured_image"),
-  images: json("images").$type<string[]>(),
+  images: json("images").$type<{url: string, isFeatured?: boolean}[]>(),
   features: json("features").$type<string[]>(),
   isFeatured: boolean("is_featured").default(false),
   status: text("status").notNull().default("available"), // available, sold, rented
