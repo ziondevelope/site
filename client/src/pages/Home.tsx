@@ -62,16 +62,38 @@ export default function Home() {
       </header>
 
       {/* Hero Section */}
-      <section id="home" className="bg-gradient-to-r from-blue-600 to-primary py-20 text-white">
+      <section 
+        id="home" 
+        className="py-20 text-white"
+        style={{
+          background: config?.primaryColor 
+            ? `linear-gradient(to right, ${config.primaryColor}DD, ${config.primaryColor})` 
+            : 'linear-gradient(to right, #3b82f6, var(--primary))'
+        }}
+      >
         <div className="container mx-auto px-4">
           <div className="max-w-3xl">
             <h1 className="text-4xl md:text-5xl font-bold mb-4">Encontre o imóvel dos seus sonhos</h1>
             <p className="text-lg mb-8">Oferecemos as melhores opções de imóveis para compra e aluguel com atendimento personalizado.</p>
             <div className="flex flex-wrap gap-4">
-              <Button variant="default" size="lg" className="bg-white text-primary hover:bg-gray-100">
+              <Button 
+                variant="default" 
+                size="lg" 
+                className="bg-white hover:bg-gray-100"
+                style={{ color: config?.primaryColor || 'var(--primary)' }}
+              >
                 Ver imóveis
               </Button>
-              <Button variant="outline" size="lg" className="border-white text-white hover:bg-white hover:text-primary">
+              <Button 
+                variant="outline" 
+                size="lg" 
+                className="border-white text-white hover:bg-white"
+                style={{ 
+                  '--hover-text-color': config?.primaryColor || 'var(--primary)'
+                } as React.CSSProperties}
+                onMouseOver={(e) => e.currentTarget.style.color = config?.primaryColor || 'var(--primary)'}
+                onMouseOut={(e) => e.currentTarget.style.color = 'white'}
+              >
                 Agendar visita
               </Button>
             </div>
@@ -103,7 +125,12 @@ export default function Home() {
                 <div key={property.id} className="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:scale-105">
                   {/* Property Image */}
                   <div className="h-48 bg-gray-200 relative">
-                    <div className="absolute bottom-0 left-0 bg-primary text-white px-3 py-1 rounded-tr-lg">
+                    <div 
+                      className="absolute bottom-0 left-0 text-white px-3 py-1 rounded-tr-lg"
+                      style={{
+                        backgroundColor: config?.primaryColor || 'var(--primary)'
+                      }}
+                    >
                       {property.purpose === 'sale' ? 'Venda' : 'Aluguel'}
                     </div>
                   </div>
@@ -128,7 +155,10 @@ export default function Home() {
                     </div>
                     
                     <div className="flex justify-between items-center">
-                      <div className="text-2xl font-bold text-primary">
+                      <div 
+                        className="text-2xl font-bold"
+                        style={{ color: config?.primaryColor || 'var(--primary)' }}
+                      >
                         R$ {property.price.toLocaleString('pt-BR')}
                         {property.purpose === 'rent' && <span className="text-sm font-normal text-gray-500">/mês</span>}
                       </div>
@@ -168,19 +198,31 @@ export default function Home() {
               </p>
               <ul className="space-y-3 mb-8">
                 <li className="flex items-start">
-                  <i className="ri-check-line text-primary text-xl mr-2"></i>
+                  <i 
+                    className="ri-check-line text-xl mr-2"
+                    style={{ color: config?.primaryColor || 'var(--primary)' }}
+                  ></i>
                   <span>Atendimento personalizado</span>
                 </li>
                 <li className="flex items-start">
-                  <i className="ri-check-line text-primary text-xl mr-2"></i>
+                  <i 
+                    className="ri-check-line text-xl mr-2"
+                    style={{ color: config?.primaryColor || 'var(--primary)' }}
+                  ></i>
                   <span>Assessoria jurídica completa</span>
                 </li>
                 <li className="flex items-start">
-                  <i className="ri-check-line text-primary text-xl mr-2"></i>
+                  <i 
+                    className="ri-check-line text-xl mr-2"
+                    style={{ color: config?.primaryColor || 'var(--primary)' }}
+                  ></i>
                   <span>Corretores experientes</span>
                 </li>
                 <li className="flex items-start">
-                  <i className="ri-check-line text-primary text-xl mr-2"></i>
+                  <i 
+                    className="ri-check-line text-xl mr-2"
+                    style={{ color: config?.primaryColor || 'var(--primary)' }}
+                  ></i>
                   <span>Parceria com os principais bancos</span>
                 </li>
               </ul>
@@ -239,28 +281,40 @@ export default function Home() {
                 <h3 className="text-xl font-semibold mb-4">Informações de contato</h3>
                 <ul className="space-y-4">
                   <li className="flex items-start">
-                    <i className="ri-map-pin-line text-primary text-xl mr-3 mt-1"></i>
+                    <i 
+                      className="ri-map-pin-line text-xl mr-3 mt-1"
+                      style={{ color: config?.primaryColor || 'var(--primary)' }}
+                    ></i>
                     <div>
                       <p className="font-medium">Endereço</p>
                       <p className="text-gray-600">Av. Paulista, 1000 - São Paulo, SP</p>
                     </div>
                   </li>
                   <li className="flex items-start">
-                    <i className="ri-phone-line text-primary text-xl mr-3 mt-1"></i>
+                    <i 
+                      className="ri-phone-line text-xl mr-3 mt-1"
+                      style={{ color: config?.primaryColor || 'var(--primary)' }}
+                    ></i>
                     <div>
                       <p className="font-medium">Telefone</p>
                       <p className="text-gray-600">(11) 3333-4444</p>
                     </div>
                   </li>
                   <li className="flex items-start">
-                    <i className="ri-mail-line text-primary text-xl mr-3 mt-1"></i>
+                    <i 
+                      className="ri-mail-line text-xl mr-3 mt-1"
+                      style={{ color: config?.primaryColor || 'var(--primary)' }}
+                    ></i>
                     <div>
                       <p className="font-medium">Email</p>
                       <p className="text-gray-600">contato@imobiliaria.com.br</p>
                     </div>
                   </li>
                   <li className="flex items-start">
-                    <i className="ri-time-line text-primary text-xl mr-3 mt-1"></i>
+                    <i 
+                      className="ri-time-line text-xl mr-3 mt-1"
+                      style={{ color: config?.primaryColor || 'var(--primary)' }}
+                    ></i>
                     <div>
                       <p className="font-medium">Horário de funcionamento</p>
                       <p className="text-gray-600">Segunda a Sexta: 9h às 18h</p>
@@ -358,15 +412,24 @@ export default function Home() {
               <h3 className="text-lg font-semibold mb-6">Contato</h3>
               <ul className="space-y-3">
                 <li className="flex items-start">
-                  <i className="ri-map-pin-line text-primary mr-3 mt-1"></i>
+                  <i 
+                    className="ri-map-pin-line mr-3 mt-1"
+                    style={{ color: config?.primaryColor || 'var(--primary)' }}
+                  ></i>
                   <span className="text-gray-400">Av. Paulista, 1000 - São Paulo, SP</span>
                 </li>
                 <li className="flex items-start">
-                  <i className="ri-phone-line text-primary mr-3 mt-1"></i>
+                  <i 
+                    className="ri-phone-line mr-3 mt-1"
+                    style={{ color: config?.primaryColor || 'var(--primary)' }}
+                  ></i>
                   <span className="text-gray-400">(11) 3333-4444</span>
                 </li>
                 <li className="flex items-start">
-                  <i className="ri-mail-line text-primary mr-3 mt-1"></i>
+                  <i 
+                    className="ri-mail-line mr-3 mt-1"
+                    style={{ color: config?.primaryColor || 'var(--primary)' }}
+                  ></i>
                   <span className="text-gray-400">contato@imobiliaria.com.br</span>
                 </li>
               </ul>
