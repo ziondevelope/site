@@ -83,7 +83,7 @@ export default function Agents() {
         <h2 className="text-2xl font-semibold">Corretores</h2>
         <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
           <DialogTrigger asChild>
-            <Button>
+            <Button className="bg-indigo-600 hover:bg-indigo-700">
               <i className="ri-add-line mr-1"></i> Adicionar Corretor
             </Button>
           </DialogTrigger>
@@ -159,7 +159,7 @@ export default function Agents() {
                       <FormItem>
                         <FormLabel>Email</FormLabel>
                         <FormControl>
-                          <Input type="email" placeholder="joao@exemplo.com" {...field} />
+                          <Input type="email" placeholder="joao@exemplo.com" {...field} value={field.value || ""} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -173,7 +173,7 @@ export default function Agents() {
                       <FormItem>
                         <FormLabel>Telefone</FormLabel>
                         <FormControl>
-                          <Input placeholder="(11) 99999-9999" {...field} />
+                          <Input placeholder="(11) 99999-9999" {...field} value={field.value || ""} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -217,57 +217,53 @@ export default function Agents() {
         </Dialog>
       </div>
       
-      <Card>
-        <CardHeader>
-          <CardTitle>Lista de Corretores</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {isLoading ? (
-            <div className="flex justify-center p-4">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-            </div>
-          ) : agents && agents.length > 0 ? (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Nome</TableHead>
-                  <TableHead>Email</TableHead>
-                  <TableHead>Telefone</TableHead>
-                  <TableHead>Função</TableHead>
-                  <TableHead className="text-right">Ações</TableHead>
+      <div className="mt-4">
+        <h3 className="text-lg font-medium mb-4">Lista de Corretores</h3>
+        {isLoading ? (
+          <div className="flex justify-center p-4">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+          </div>
+        ) : agents && agents.length > 0 ? (
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Nome</TableHead>
+                <TableHead>Email</TableHead>
+                <TableHead>Telefone</TableHead>
+                <TableHead>Função</TableHead>
+                <TableHead className="text-right">Ações</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {agents.map((agent) => (
+                <TableRow key={agent.id}>
+                  <TableCell className="font-medium">{agent.displayName}</TableCell>
+                  <TableCell>{agent.email}</TableCell>
+                  <TableCell>{agent.phone}</TableCell>
+                  <TableCell>
+                    {agent.role === "admin" ? "Administrador" : "Corretor"}
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                      <i className="ri-edit-line"></i>
+                    </Button>
+                    <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-red-500">
+                      <i className="ri-delete-bin-line"></i>
+                    </Button>
+                  </TableCell>
                 </TableRow>
-              </TableHeader>
-              <TableBody>
-                {agents.map((agent) => (
-                  <TableRow key={agent.id}>
-                    <TableCell className="font-medium">{agent.displayName}</TableCell>
-                    <TableCell>{agent.email}</TableCell>
-                    <TableCell>{agent.phone}</TableCell>
-                    <TableCell>
-                      {agent.role === "admin" ? "Administrador" : "Corretor"}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                        <i className="ri-edit-line"></i>
-                      </Button>
-                      <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-red-500">
-                        <i className="ri-delete-bin-line"></i>
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          ) : (
-            <div className="text-center py-8">
-              <p className="text-gray-500">Nenhum corretor cadastrado.</p>
-              <Button className="mt-4" onClick={() => setIsAddDialogOpen(true)}>
-                Adicionar Corretor
-              </Button>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+              ))}
+            </TableBody>
+          </Table>
+        ) : (
+          <div className="text-center py-8">
+            <p className="text-gray-500">Nenhum corretor cadastrado.</p>
+            <Button className="mt-4 bg-indigo-600 hover:bg-indigo-700" onClick={() => setIsAddDialogOpen(true)}>
+              Adicionar Corretor
+            </Button>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
