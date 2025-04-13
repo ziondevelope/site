@@ -1109,13 +1109,13 @@ export default function Properties() {
           <div className="overflow-hidden rounded-lg border border-gray-100 bg-white">
             <Table className="min-w-full divide-y divide-gray-100 bg-white">
               <TableHeader>
-                <TableRow className="bg-white">
-                  <TableHead className="py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-white">Título</TableHead>
-                  <TableHead className="py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-white">Tipo</TableHead>
-                  <TableHead className="py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-white">Finalidade</TableHead>
-                  <TableHead className="py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-white">Preço</TableHead>
-                  <TableHead className="py-3 text-xs font-medium text-gray-500 uppercase tracking-wider bg-white">Status</TableHead>
-                  <TableHead className="py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-right bg-white">Ações</TableHead>
+                <TableRow>
+                  <TableHead className="py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Título</TableHead>
+                  <TableHead className="py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Tipo</TableHead>
+                  <TableHead className="py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Finalidade</TableHead>
+                  <TableHead className="py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Preço</TableHead>
+                  <TableHead className="py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Status</TableHead>
+                  <TableHead className="py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-right">Ações</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
