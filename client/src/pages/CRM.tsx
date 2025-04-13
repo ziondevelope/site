@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import KanbanBoard from "@/components/crm/KanbanBoard";
+import SimplifiedKanbanBoard from "@/components/crm/SimplifiedKanbanBoard";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Lead } from "@shared/schema";
@@ -61,7 +61,7 @@ export default function CRM() {
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
         </div>
       ) : (
-        <KanbanBoard 
+        <SimplifiedKanbanBoard 
           newLeads={newLeads || []}
           contactedLeads={contactedLeads || []}
           visitLeads={visitLeads || []}

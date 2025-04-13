@@ -14,7 +14,7 @@ interface KanbanBoardProps {
   proposalLeads: Lead[];
 }
 
-export default function KanbanBoard({ 
+export default function SimplifiedKanbanBoard({ 
   newLeads, 
   contactedLeads, 
   visitLeads, 
@@ -28,6 +28,9 @@ export default function KanbanBoard({
     proposal: proposalLeads || []
   });
   
+  // Renderizando o esqueleto enquanto os dados carregam
+  const [isLoading, setIsLoading] = useState(true);
+  
   // Atualiza os dados locais quando as props forem alteradas
   useEffect(() => {
     setLocalLeads({
@@ -37,6 +40,15 @@ export default function KanbanBoard({
       proposal: proposalLeads || []
     });
   }, [newLeads, contactedLeads, visitLeads, proposalLeads]);
+  
+  // Simula o carregamento para dar tempo dos dados chegarem
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 500);
+    
+    return () => clearTimeout(timer);
+  }, []);
 
   // Update lead status mutation
   const updateLeadStatusMutation = useMutation({
@@ -141,18 +153,6 @@ export default function KanbanBoard({
     }
   ];
 
-  // Renderizando o esqueleto enquanto os dados carregam
-  const [isLoading, setIsLoading] = useState(true);
-  
-  useEffect(() => {
-    // Simula o carregamento para dar tempo dos dados chegarem
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 500);
-    
-    return () => clearTimeout(timer);
-  }, []);
-  
   if (isLoading) {
     return (
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
