@@ -4,42 +4,30 @@ import { leads, type Lead, type InsertLead } from "@shared/schema";
 import { tasks, type Task, type InsertTask } from "@shared/schema";
 import { websiteConfig, type WebsiteConfig, type UpdateWebsiteConfig } from "@shared/schema";
 import { testimonials, type Testimonial, type InsertTestimonial } from "@shared/schema";
-import { initializeApp, cert } from 'firebase-admin/app';
-import { getFirestore, Timestamp, FieldValue } from 'firebase-admin/firestore';
-import { getStorage } from 'firebase-admin/storage';
+import { initializeApp } from "firebase/app";
+import { getFirestore, collection, doc, getDocs, getDoc, setDoc, updateDoc, deleteDoc, query, where, orderBy, limit } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
 
-// Initialize Firebase if not already initialized
-let firebaseApp;
+// Initialize Firebase - usando o SDK cliente
+const firebaseConfig = {
+  apiKey: process.env.VITE_FIREBASE_API_KEY,
+  authDomain: `${process.env.VITE_FIREBASE_PROJECT_ID}.firebaseapp.com`,
+  projectId: process.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: `${process.env.VITE_FIREBASE_PROJECT_ID}.appspot.com`,
+  appId: process.env.VITE_FIREBASE_APP_ID
+};
 
-const projectId = process.env.VITE_FIREBASE_PROJECT_ID;
-const appId = process.env.VITE_FIREBASE_APP_ID;
-const apiKey = process.env.VITE_FIREBASE_API_KEY;
-
-console.log(`Tentando inicializar Firebase com Project ID: ${projectId}`);
-
-try {
-  // Check if already initialized
-  firebaseApp = initializeApp();
-} catch (error) {
-  // Por padrão, usamos o método sem service account para o Replit
-  // Esta abordagem usa as credenciais de ambiente da máquina
-  try {
-    firebaseApp = initializeApp({
-      apiKey,
-      projectId,
-      appId,
-      storageBucket: `${projectId}.appspot.com`,
-    }, 'realestate-app');
-
-    console.log('Firebase Admin inicializado com o projectId:', projectId);
-  } catch (err) {
-    console.error('Erro ao inicializar Firebase Admin:', err);
-    throw new Error('Falha ao inicializar Firebase Admin');
+console.log('Inicializando Firebase com:', 
+  {
+    projectId: firebaseConfig.projectId,
+    hasApiKey: !!firebaseConfig.apiKey,
+    hasAppId: !!firebaseConfig.appId
   }
-}
+);
 
-const db = getFirestore();
-const fbStorage = getStorage();
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const fbStorage = getStorage(app);
 
 export interface IStorage {
   // User methods
@@ -88,7 +76,9 @@ export class FirebaseStorage implements IStorage {
   // Users collection
   async getUser(id: number): Promise<User | undefined> {
     try {
-      const userSnapshot = await db.collection('users').where('id', '==', id).limit(1).get();
+      const usersRef = collection(db, 'users');
+      const q = query(usersRef, where('id', '==', id), limit(1));
+      const userSnapshot = await getDocs(q);
       
       if (userSnapshot.empty) {
         return undefined;
@@ -103,7 +93,9 @@ export class FirebaseStorage implements IStorage {
 
   async getUserByUsername(username: string): Promise<User | undefined> {
     try {
-      const userSnapshot = await db.collection('users').where('username', '==', username).limit(1).get();
+      const usersRef = collection(db, 'users');
+      const q = query(usersRef, where('username', '==', username), limit(1));
+      const userSnapshot = await getDocs(q);
       
       if (userSnapshot.empty) {
         return undefined;
@@ -119,7 +111,9 @@ export class FirebaseStorage implements IStorage {
   async createUser(user: InsertUser): Promise<User> {
     try {
       // Find the highest ID to increment
-      const usersSnapshot = await db.collection('users').orderBy('id', 'desc').limit(1).get();
+      const usersRef = collection(db, 'users');
+      const q = query(usersRef, orderBy('id', 'desc'), limit(1));
+      const usersSnapshot = await getDocs(q);
       const highestId = usersSnapshot.empty ? 0 : usersSnapshot.docs[0].data().id;
       
       const newUser: User = {
@@ -128,7 +122,7 @@ export class FirebaseStorage implements IStorage {
         createdAt: new Date().toISOString(),
       };
       
-      await db.collection('users').doc(newUser.id.toString()).set(newUser);
+      await setDoc(doc(db, 'users', newUser.id.toString()), newUser);
       return newUser;
     } catch (error) {
       console.error('Error creating user:', error);
@@ -138,7 +132,9 @@ export class FirebaseStorage implements IStorage {
 
   async getAllUsers(): Promise<User[]> {
     try {
-      const usersSnapshot = await db.collection('users').orderBy('createdAt', 'desc').get();
+      const usersRef = collection(db, 'users');
+      const q = query(usersRef, orderBy('createdAt', 'desc'));
+      const usersSnapshot = await getDocs(q);
       return usersSnapshot.docs.map(doc => doc.data() as User);
     } catch (error) {
       console.error('Error fetching all users:', error);
@@ -148,10 +144,10 @@ export class FirebaseStorage implements IStorage {
 
   async updateUser(id: number, userData: Partial<InsertUser>): Promise<User | undefined> {
     try {
-      const userRef = db.collection('users').doc(id.toString());
-      const userDoc = await userRef.get();
+      const userRef = doc(db, 'users', id.toString());
+      const userDoc = await getDoc(userRef);
       
-      if (!userDoc.exists) {
+      if (!userDoc.exists()) {
         return undefined;
       }
       
@@ -160,7 +156,7 @@ export class FirebaseStorage implements IStorage {
         ...userData,
       };
       
-      await userRef.update(updatedUser);
+      await updateDoc(userRef, updatedUser);
       return updatedUser as User;
     } catch (error) {
       console.error('Error updating user:', error);
@@ -170,14 +166,14 @@ export class FirebaseStorage implements IStorage {
 
   async deleteUser(id: number): Promise<boolean> {
     try {
-      const userRef = db.collection('users').doc(id.toString());
-      const userDoc = await userRef.get();
+      const userRef = doc(db, 'users', id.toString());
+      const userDoc = await getDoc(userRef);
       
-      if (!userDoc.exists) {
+      if (!userDoc.exists()) {
         return false;
       }
       
-      await userRef.delete();
+      await deleteDoc(userRef);
       return true;
     } catch (error) {
       console.error('Error deleting user:', error);
@@ -188,7 +184,9 @@ export class FirebaseStorage implements IStorage {
   // Properties collection
   async getProperty(id: number): Promise<Property | undefined> {
     try {
-      const propertySnapshot = await db.collection('properties').where('id', '==', id).limit(1).get();
+      const propertiesRef = collection(db, 'properties');
+      const q = query(propertiesRef, where('id', '==', id), limit(1));
+      const propertySnapshot = await getDocs(q);
       
       if (propertySnapshot.empty) {
         return undefined;
@@ -203,7 +201,9 @@ export class FirebaseStorage implements IStorage {
 
   async getAllProperties(): Promise<Property[]> {
     try {
-      const propertiesSnapshot = await db.collection('properties').orderBy('createdAt', 'desc').get();
+      const propertiesRef = collection(db, 'properties');
+      const q = query(propertiesRef, orderBy('createdAt', 'desc'));
+      const propertiesSnapshot = await getDocs(q);
       return propertiesSnapshot.docs.map(doc => doc.data() as Property);
     } catch (error) {
       console.error('Error fetching all properties:', error);
@@ -213,9 +213,20 @@ export class FirebaseStorage implements IStorage {
 
   async createProperty(property: InsertProperty): Promise<Property> {
     try {
+      console.log('Criando propriedade:', property);
+      
       // Find the highest ID to increment
-      const propertiesSnapshot = await db.collection('properties').orderBy('id', 'desc').limit(1).get();
-      const highestId = propertiesSnapshot.empty ? 0 : propertiesSnapshot.docs[0].data().id;
+      const propertiesRef = collection(db, 'properties');
+      const q = query(propertiesRef, orderBy('id', 'desc'), limit(1));
+      const propertiesSnapshot = await getDocs(q);
+      
+      let highestId = 0;
+      if (!propertiesSnapshot.empty) {
+        const data = propertiesSnapshot.docs[0].data();
+        highestId = data.id || 0;
+      }
+      
+      console.log('ID mais alto encontrado:', highestId);
       
       const now = new Date().toISOString();
       const newProperty: Property = {
@@ -225,7 +236,13 @@ export class FirebaseStorage implements IStorage {
         updatedAt: now,
       };
       
-      await db.collection('properties').doc(newProperty.id.toString()).set(newProperty);
+      console.log('Nova propriedade para salvar:', newProperty);
+      
+      // Salvar no Firestore
+      const propertyDocRef = doc(db, 'properties', newProperty.id.toString());
+      await setDoc(propertyDocRef, newProperty);
+      
+      console.log('Propriedade salva com sucesso!');
       return newProperty;
     } catch (error) {
       console.error('Error creating property:', error);
@@ -235,10 +252,10 @@ export class FirebaseStorage implements IStorage {
 
   async updateProperty(id: number, propertyData: Partial<InsertProperty>): Promise<Property | undefined> {
     try {
-      const propertyRef = db.collection('properties').doc(id.toString());
-      const propertyDoc = await propertyRef.get();
+      const propertyRef = doc(db, 'properties', id.toString());
+      const propertyDoc = await getDoc(propertyRef);
       
-      if (!propertyDoc.exists) {
+      if (!propertyDoc.exists()) {
         return undefined;
       }
       
@@ -248,7 +265,7 @@ export class FirebaseStorage implements IStorage {
         updatedAt: new Date().toISOString(),
       };
       
-      await propertyRef.update(updatedProperty);
+      await updateDoc(propertyRef, updatedProperty);
       return updatedProperty as Property;
     } catch (error) {
       console.error('Error updating property:', error);
@@ -258,14 +275,14 @@ export class FirebaseStorage implements IStorage {
 
   async deleteProperty(id: number): Promise<boolean> {
     try {
-      const propertyRef = db.collection('properties').doc(id.toString());
-      const propertyDoc = await propertyRef.get();
+      const propertyRef = doc(db, 'properties', id.toString());
+      const propertyDoc = await getDoc(propertyRef);
       
-      if (!propertyDoc.exists) {
+      if (!propertyDoc.exists()) {
         return false;
       }
       
-      await propertyRef.delete();
+      await deleteDoc(propertyRef);
       return true;
     } catch (error) {
       console.error('Error deleting property:', error);
