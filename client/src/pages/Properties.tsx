@@ -797,6 +797,44 @@ export default function Properties() {
                           </FormItem>
                         )}
                       />
+                      <FormField
+                        control={form.control}
+                        name="parkingSpots"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Vagas de Garagem</FormLabel>
+                            <FormControl>
+                              <Input 
+                                type="number" 
+                                placeholder="1"
+                                {...field}
+                                value={field.value || 0}
+                                onChange={(e) => field.onChange(Number(e.target.value))}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="suites"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Suítes</FormLabel>
+                            <FormControl>
+                              <Input 
+                                type="number" 
+                                placeholder="1"
+                                {...field}
+                                value={field.value || 0}
+                                onChange={(e) => field.onChange(Number(e.target.value))}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
                       
                       <FormField
                         control={form.control}
