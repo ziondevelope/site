@@ -38,6 +38,7 @@ const propertyFormSchema = insertPropertySchema.extend({
   ).optional().default([]),
   parkingSpots: z.number().min(0).default(0),
   suites: z.number().min(0).default(0),
+  features: z.array(z.string()).optional().default([]),
 });
 
 type PropertyFormValues = z.infer<typeof propertyFormSchema>;
@@ -142,6 +143,7 @@ export default function Properties() {
       images: [],
       parkingSpots: 0,
       suites: 0,
+      features: [],
     },
   });
 
@@ -190,6 +192,7 @@ export default function Properties() {
       images: formattedImages,
       parkingSpots: property.parkingSpots || 0,
       suites: property.suites || 0,
+      features: property.features || [],
     });
     setIsEditDialogOpen(true);
   };
@@ -215,6 +218,7 @@ export default function Properties() {
       images: [],
       parkingSpots: 0,
       suites: 0,
+      features: [],
     });
     setIsAddDialogOpen(true);
   };
