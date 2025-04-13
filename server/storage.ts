@@ -1093,8 +1093,5 @@ export class MemStorage implements IStorage {
   }
 }
 
-// Use Firebase storage in production, memory storage in development
-// Use env variable to determine if we're in production
-export const storageInstance = process.env.NODE_ENV === 'production'
-  ? new FirebaseStorage()
-  : new MemStorage();
+// Always use Firebase storage for persistence
+export const storageInstance = new FirebaseStorage();
