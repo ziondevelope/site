@@ -21,32 +21,32 @@ export default function ConfigTabs({
   onConfigChange 
 }: ConfigTabsProps) {
   return (
-    <Card>
+    <div className="border border-gray-200 rounded-md overflow-hidden">
       <Tabs defaultValue={activeTab} onValueChange={onTabChange}>
-        <div className="border-b border-gray-200">
-          <TabsList className="h-auto">
+        <div className="border-b border-gray-200 bg-gray-50">
+          <TabsList className="h-auto bg-transparent">
             <TabsTrigger 
               value="general" 
-              className="px-6 py-4 data-[state=active]:border-b-2 data-[state=active]:border-indigo-600 rounded-none"
+              className="px-6 py-4 data-[state=active]:border-b-2 data-[state=active]:border-indigo-600 rounded-none data-[state=active]:bg-white"
             >
               Configurações Gerais
             </TabsTrigger>
             <TabsTrigger 
               value="homepage" 
-              className="px-6 py-4 data-[state=active]:border-b-2 data-[state=active]:border-indigo-600 rounded-none"
+              className="px-6 py-4 data-[state=active]:border-b-2 data-[state=active]:border-indigo-600 rounded-none data-[state=active]:bg-white"
             >
               Página Inicial
             </TabsTrigger>
             <TabsTrigger 
               value="seo" 
-              className="px-6 py-4 data-[state=active]:border-b-2 data-[state=active]:border-indigo-600 rounded-none"
+              className="px-6 py-4 data-[state=active]:border-b-2 data-[state=active]:border-indigo-600 rounded-none data-[state=active]:bg-white"
             >
               SEO
             </TabsTrigger>
           </TabsList>
         </div>
         
-        <TabsContent value="general" className="p-6">
+        <TabsContent value="general" className="p-6 bg-white">
           <GeneralSettings 
             config={config} 
             configData={configData}
@@ -54,7 +54,7 @@ export default function ConfigTabs({
           />
         </TabsContent>
         
-        <TabsContent value="homepage" className="p-6">
+        <TabsContent value="homepage" className="p-6 bg-white">
           <HomepageSettings 
             config={config} 
             configData={configData}
@@ -62,7 +62,7 @@ export default function ConfigTabs({
           />
         </TabsContent>
         
-        <TabsContent value="seo" className="p-6">
+        <TabsContent value="seo" className="p-6 bg-white">
           <SeoSettings 
             config={config} 
             configData={configData}
@@ -70,6 +70,6 @@ export default function ConfigTabs({
           />
         </TabsContent>
       </Tabs>
-    </Card>
+    </div>
   );
 }
