@@ -1,0 +1,159 @@
+import { pgTable, text, serial, integer, boolean, timestamp, json, doublePrecision } from "drizzle-orm/pg-core";
+import { createInsertSchema } from "drizzle-zod";
+import { z } from "zod";
+
+// User schema for authentication and admin access
+export const users = pgTable("users", {
+  id: serial("id").primaryKey(),
+  username: text("username").notNull().unique(),
+  password: text("password").notNull(),
+  displayName: text("display_name").notNull(),
+  role: text("role").notNull().default("agent"),
+  phone: text("phone"),
+  email: text("email"),
+  avatar: text("avatar"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const insertUserSchema = createInsertSchema(users).omit({ 
+  id: true,
+  createdAt: true
+});
+
+// Properties schema
+export const properties = pgTable("properties", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  description: text("description").notNull(),
+  type: text("type").notNull(), // apartment, house, commercial, land
+  purpose: text("purpose").notNull(), // sale, rent
+  price: integer("price").notNull(),
+  area: integer("area").notNull(),
+  bedrooms: integer("bedrooms"),
+  bathrooms: integer("bathrooms"),
+  address: text("address").notNull(),
+  city: text("city").notNull(),
+  neighborhood: text("neighborhood").notNull(),
+  zipCode: text("zip_code"),
+  latitude: doublePrecision("latitude"),
+  longitude: doublePrecision("longitude"),
+  featuredImage: text("featured_image"),
+  images: json("images").$type<string[]>(),
+  features: json("features").$type<string[]>(),
+  isFeatured: boolean("is_featured").default(false),
+  status: text("status").notNull().default("available"), // available, sold, rented
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+  agentId: integer("agent_id"),
+});
+
+export const insertPropertySchema = createInsertSchema(properties).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true
+});
+
+// Leads schema
+export const leads = pgTable("leads", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  email: text("email"),
+  phone: text("phone"),
+  message: text("message"),
+  propertyId: integer("property_id"),
+  status: text("status").notNull().default("new"), // new, contacted, visit, proposal, closed
+  source: text("source").notNull().default("website"), // website, whatsapp, instagram, etc.
+  interestType: text("interest_type"), // purchase, rent
+  budget: integer("budget"),
+  notes: text("notes"),
+  agentId: integer("agent_id"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const insertLeadSchema = createInsertSchema(leads).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true
+});
+
+// Tasks schema
+export const tasks = pgTable("tasks", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  description: text("description"),
+  date: timestamp("date").notNull(),
+  type: text("type").notNull(), // visit, call, meeting, etc.
+  status: text("status").notNull().default("pending"), // pending, completed, cancelled
+  leadId: integer("lead_id"),
+  propertyId: integer("property_id"),
+  agentId: integer("agent_id"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const insertTaskSchema = createInsertSchema(tasks).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true
+});
+
+// Website configuration schema
+export const websiteConfig = pgTable("website_config", {
+  id: serial("id").primaryKey(),
+  logo: text("logo"),
+  bannerBackground: text("banner_background"),
+  mainFont: text("main_font").default("Inter"),
+  primaryColor: text("primary_color").default("#3B82F6"),
+  secondaryColor: text("secondary_color").default("#10B981"),
+  footerInfo: text("footer_info"),
+  showSearchBar: boolean("show_search_bar").default(true),
+  showFeaturedProperties: boolean("show_featured_properties").default(true),
+  showSaleProperties: boolean("show_sale_properties").default(true),
+  showRentProperties: boolean("show_rent_properties").default(true),
+  showTestimonials: boolean("show_testimonials").default(false),
+  seoTitle: text("seo_title"),
+  seoDescription: text("seo_description"),
+  seoKeywords: text("seo_keywords"),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const updateWebsiteConfigSchema = createInsertSchema(websiteConfig).omit({
+  id: true,
+  updatedAt: true
+});
+
+// Testimonials schema
+export const testimonials = pgTable("testimonials", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  role: text("role"),
+  content: text("content").notNull(),
+  avatar: text("avatar"),
+  featured: boolean("featured").default(false),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const insertTestimonialSchema = createInsertSchema(testimonials).omit({
+  id: true,
+  createdAt: true
+});
+
+// Define types from schemas
+export type InsertUser = z.infer<typeof insertUserSchema>;
+export type User = typeof users.$inferSelect;
+
+export type InsertProperty = z.infer<typeof insertPropertySchema>;
+export type Property = typeof properties.$inferSelect;
+
+export type InsertLead = z.infer<typeof insertLeadSchema>;
+export type Lead = typeof leads.$inferSelect;
+
+export type InsertTask = z.infer<typeof insertTaskSchema>;
+export type Task = typeof tasks.$inferSelect;
+
+export type UpdateWebsiteConfig = z.infer<typeof updateWebsiteConfigSchema>;
+export type WebsiteConfig = typeof websiteConfig.$inferSelect;
+
+export type InsertTestimonial = z.infer<typeof insertTestimonialSchema>;
+export type Testimonial = typeof testimonials.$inferSelect;
