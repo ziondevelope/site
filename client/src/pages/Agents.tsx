@@ -78,21 +78,22 @@ export default function Agents() {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-semibold">Corretores</h2>
+    <div className="space-y-8 max-w-5xl mx-auto">
+      <div className="flex justify-between items-center border-b border-gray-100 pb-4">
+        <h2 className="text-2xl font-light text-gray-700">Corretores</h2>
         <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
           <DialogTrigger asChild>
-            <Button className="bg-indigo-600 hover:bg-indigo-700">
+            <Button className="bg-indigo-600 hover:bg-indigo-700 rounded-full px-5">
               <i className="ri-add-line mr-1"></i> Adicionar Corretor
             </Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-[500px]">
-            <DialogHeader>
-              <DialogTitle>Adicionar Novo Corretor</DialogTitle>
+          <DialogContent className="sm:max-w-[600px] p-0 overflow-hidden">
+            <DialogHeader className="p-6 border-b border-gray-100">
+              <DialogTitle className="text-xl font-light text-gray-700">Adicionar Novo Corretor</DialogTitle>
+              <p className="text-sm text-gray-500 mt-1">Preencha os dados abaixo para cadastrar um novo profissional</p>
             </DialogHeader>
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <form onSubmit={form.handleSubmit(onSubmit)} className="p-6 space-y-5">
                 <FormField
                   control={form.control}
                   name="displayName"
@@ -203,12 +204,26 @@ export default function Agents() {
                   )}
                 />
                 
-                <div className="flex justify-end space-x-2">
-                  <Button variant="outline" type="button" onClick={() => setIsAddDialogOpen(false)}>
+                <div className="flex justify-end space-x-3 border-t border-gray-100 pt-5 mt-6">
+                  <Button 
+                    variant="outline" 
+                    type="button" 
+                    onClick={() => setIsAddDialogOpen(false)}
+                    className="rounded-full px-5"
+                  >
                     Cancelar
                   </Button>
-                  <Button type="submit" disabled={addAgentMutation.isPending}>
-                    {addAgentMutation.isPending ? "Salvando..." : "Salvar"}
+                  <Button 
+                    type="submit" 
+                    disabled={addAgentMutation.isPending}
+                    className="bg-indigo-600 hover:bg-indigo-700 rounded-full px-5"
+                  >
+                    {addAgentMutation.isPending ? (
+                      <>
+                        <div className="animate-spin mr-2 h-4 w-4 border-2 border-b-transparent border-white rounded-full"></div>
+                        Salvando...
+                      </>
+                    ) : "Salvar Corretor"}
                   </Button>
                 </div>
               </form>
@@ -218,48 +233,76 @@ export default function Agents() {
       </div>
       
       <div className="mt-4">
-        <h3 className="text-lg font-medium mb-4">Lista de Corretores</h3>
+        <div className="flex items-center justify-between mb-6">
+          <h3 className="text-lg font-light text-gray-600">Profissionais cadastrados</h3>
+          <div className="flex space-x-4 items-center">
+            <div className="relative">
+              <i className="ri-search-line absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+              <input 
+                type="text" 
+                placeholder="Buscar por nome"
+                className="pl-9 pr-4 py-2 rounded-full border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-200"
+              />
+            </div>
+          </div>
+        </div>
+        
         {isLoading ? (
-          <div className="flex justify-center p-4">
+          <div className="flex justify-center p-8">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
           </div>
         ) : agents && agents.length > 0 ? (
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Nome</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>Telefone</TableHead>
-                <TableHead>Função</TableHead>
-                <TableHead className="text-right">Ações</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {agents.map((agent) => (
-                <TableRow key={agent.id}>
-                  <TableCell className="font-medium">{agent.displayName}</TableCell>
-                  <TableCell>{agent.email}</TableCell>
-                  <TableCell>{agent.phone}</TableCell>
-                  <TableCell>
-                    {agent.role === "admin" ? "Administrador" : "Corretor"}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                      <i className="ri-edit-line"></i>
-                    </Button>
-                    <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-red-500">
-                      <i className="ri-delete-bin-line"></i>
-                    </Button>
-                  </TableCell>
+          <div className="overflow-hidden rounded-lg border border-gray-100">
+            <Table className="min-w-full divide-y divide-gray-100">
+              <TableHeader>
+                <TableRow className="bg-gray-50">
+                  <TableHead className="py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Nome</TableHead>
+                  <TableHead className="py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Email</TableHead>
+                  <TableHead className="py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Telefone</TableHead>
+                  <TableHead className="py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Função</TableHead>
+                  <TableHead className="py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-right">Ações</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody className="bg-white divide-y divide-gray-100">
+                {agents.map((agent) => (
+                  <TableRow key={agent.id} className="hover:bg-gray-50 transition-colors">
+                    <TableCell className="font-medium text-gray-700">{agent.displayName}</TableCell>
+                    <TableCell className="text-gray-600">{agent.email}</TableCell>
+                    <TableCell className="text-gray-600">{agent.phone}</TableCell>
+                    <TableCell>
+                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                        agent.role === "admin" ? "bg-purple-100 text-purple-800" : "bg-blue-100 text-blue-800"
+                      }`}>
+                        {agent.role === "admin" ? "Administrador" : "Corretor"}
+                      </span>
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <Button variant="ghost" size="sm" className="h-8 w-8 p-0 rounded-full hover:bg-gray-100">
+                        <i className="ri-edit-line text-gray-500"></i>
+                      </Button>
+                      <Button variant="ghost" size="sm" className="h-8 w-8 p-0 rounded-full hover:bg-red-50">
+                        <i className="ri-delete-bin-line text-red-500"></i>
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         ) : (
-          <div className="text-center py-8">
-            <p className="text-gray-500">Nenhum corretor cadastrado.</p>
-            <Button className="mt-4 bg-indigo-600 hover:bg-indigo-700" onClick={() => setIsAddDialogOpen(true)}>
-              Adicionar Corretor
+          <div className="text-center py-12 border border-dashed border-gray-200 rounded-lg bg-gray-50">
+            <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
+              <i className="ri-user-add-line text-gray-400 text-2xl"></i>
+            </div>
+            <h3 className="text-lg font-medium text-gray-700 mb-2">Nenhum corretor cadastrado</h3>
+            <p className="text-gray-500 max-w-md mx-auto mb-6">
+              Cadastre os corretores que fazem parte da sua equipe para gerenciar suas atividades e imóveis.
+            </p>
+            <Button 
+              className="mt-2 bg-indigo-600 hover:bg-indigo-700 rounded-full px-6" 
+              onClick={() => setIsAddDialogOpen(true)}
+            >
+              <i className="ri-add-line mr-1"></i> Adicionar Primeiro Corretor
             </Button>
           </div>
         )}
