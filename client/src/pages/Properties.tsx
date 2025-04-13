@@ -15,6 +15,7 @@ import { z } from "zod";
 import { insertPropertySchema, type Property } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
 import { ImageUpload } from "@/components/ui/image-upload";
+import { MultipleImageUpload } from "@/components/ui/multiple-image-upload";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   AlertDialog,
@@ -29,7 +30,12 @@ import {
 
 const propertyFormSchema = insertPropertySchema.extend({
   // Add additional validation as needed
-  imageUrl: z.string().optional(),
+  images: z.array(
+    z.object({
+      url: z.string(),
+      isFeatured: z.boolean().optional().default(false)
+    })
+  ).optional().default([]),
   parkingSpots: z.number().min(0).default(0),
   suites: z.number().min(0).default(0),
 });
@@ -66,7 +72,7 @@ export default function Properties() {
       zipCode: "",
       isFeatured: false,
       status: "available",
-      imageUrl: "",
+      images: [],
       parkingSpots: 0,
       suites: 0,
     },
@@ -75,6 +81,30 @@ export default function Properties() {
   // Initialize edit form with property data
   const initEditForm = (property: Property) => {
     setSelectedProperty(property);
+    
+    // Converter as imagens para o formato correto se necessário
+    let formattedImages = [];
+    if (property.images) {
+      // Se já estiver no formato { url, isFeatured }
+      if (typeof property.images[0] === 'object' && 'url' in property.images[0]) {
+        formattedImages = property.images as {url: string, isFeatured?: boolean}[];
+      } 
+      // Se for um array de strings (formato antigo)
+      else if (Array.isArray(property.images)) {
+        formattedImages = property.images.map((url: string, index: number) => ({
+          url,
+          isFeatured: index === 0 // primeira imagem como destaque
+        }));
+      }
+    }
+    // Se tiver featuredImage e não tiver imagens, usar como imagem de destaque
+    else if (property.featuredImage) {
+      formattedImages = [{
+        url: property.featuredImage,
+        isFeatured: true
+      }];
+    }
+    
     form.reset({
       title: property.title || "",
       description: property.description || "",
@@ -90,7 +120,7 @@ export default function Properties() {
       zipCode: property.zipCode || "",
       isFeatured: property.isFeatured || false,
       status: property.status || "available",
-      imageUrl: property.imageUrl || "",
+      images: formattedImages,
       parkingSpots: property.parkingSpots || 0,
       suites: property.suites || 0,
     });
@@ -115,7 +145,7 @@ export default function Properties() {
       zipCode: "",
       isFeatured: false,
       status: "available",
-      imageUrl: "",
+      images: [],
       parkingSpots: 0,
       suites: 0,
     });
