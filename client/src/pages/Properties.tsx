@@ -962,6 +962,17 @@ export default function Properties() {
                         )}
                       />
                     </div>
+
+                    <FormField
+                      control={form.control}
+                      name="features"
+                      render={({ field }) => (
+                        <PropertyFeatures
+                          features={field.value || []}
+                          onChange={field.onChange}
+                        />
+                      )}
+                    />
                   </TabsContent>
                   
                   <TabsContent value="location" className="space-y-4">
