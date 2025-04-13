@@ -7,23 +7,34 @@ import Properties from "@/pages/Properties";
 import CRM from "@/pages/CRM";
 import Agents from "@/pages/Agents";
 import Website from "@/pages/Website";
+import Home from "@/pages/Home";
 import AppLayout from "@/components/layout/AppLayout";
 import { queryClient } from "./lib/queryClient";
 
-function Router() {
+function AdminRouter() {
   const [location] = useLocation();
   
   return (
     <AppLayout>
       <Switch>
-        <Route path="/" component={Dashboard} />
-        <Route path="/imoveis" component={Properties} />
-        <Route path="/crm" component={CRM} />
-        <Route path="/corretores" component={Agents} />
-        <Route path="/site" component={Website} />
-        <Route component={NotFound} />
+        <Route path="/admin" component={Dashboard} />
+        <Route path="/admin/imoveis" component={Properties} />
+        <Route path="/admin/crm" component={CRM} />
+        <Route path="/admin/corretores" component={Agents} />
+        <Route path="/admin/site" component={Website} />
+        <Route path="/admin/*" component={NotFound} />
       </Switch>
     </AppLayout>
+  );
+}
+
+function Router() {
+  return (
+    <Switch>
+      <Route path="/" component={Home} />
+      <Route path="/admin/*" component={AdminRouter} />
+      <Route component={NotFound} />
+    </Switch>
   );
 }
 

@@ -8,11 +8,12 @@ type NavItem = {
 };
 
 const navItems: NavItem[] = [
-  { href: "/", label: "Dashboard", icon: "ri-dashboard-line" },
-  { href: "/imoveis", label: "Imóveis", icon: "ri-building-line" },
-  { href: "/crm", label: "CRM", icon: "ri-customer-service-line" },
-  { href: "/corretores", label: "Corretores", icon: "ri-user-line" },
-  { href: "/site", label: "Site", icon: "ri-global-line" },
+  { href: "/admin", label: "Dashboard", icon: "ri-dashboard-line" },
+  { href: "/admin/imoveis", label: "Imóveis", icon: "ri-building-line" },
+  { href: "/admin/crm", label: "CRM", icon: "ri-customer-service-line" },
+  { href: "/admin/corretores", label: "Corretores", icon: "ri-user-line" },
+  { href: "/admin/site", label: "Site", icon: "ri-global-line" },
+  { href: "/", label: "Voltar ao Site", icon: "ri-arrow-left-line" },
 ];
 
 export default function Sidebar() {
