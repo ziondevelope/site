@@ -60,13 +60,6 @@ export function ImageUpload({
   const triggerFileInput = () => {
     fileInputRef.current?.click();
   };
-  
-  // Função para adicionar uma logo demo
-  const addDemoLogo = () => {
-    // Logo simples com "Imobiliária" em SVG
-    const demoLogoBase64 = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMTAwIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iIzFmNGRiZSIgcng9IjEwIiByeT0iMTAiLz48dGV4dCB4PSI0MCIgeT0iNjUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIzNiIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IndoaXRlIj5JbW9iaWxpw6FyaWE8L3RleHQ+PC9zdmc+";
-    onImageChange(demoLogoBase64);
-  };
 
   return (
     <div className="flex flex-col items-center space-y-4">
@@ -86,7 +79,7 @@ export function ImageUpload({
         )}
       </div>
       
-      <div className="flex space-x-2">
+      <div className="flex flex-col space-y-2">
         <input
           type="file"
           accept="image/*"
@@ -95,53 +88,38 @@ export function ImageUpload({
           className="hidden"
         />
         
-        <div className="flex space-x-2">
+        <Button 
+          type="button" 
+          variant="outline" 
+          onClick={triggerFileInput}
+          disabled={isLoading}
+          className="rounded-full w-10 h-10 p-0 flex items-center justify-center"
+          title="Upload Imagem"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7"></path>
+            <line x1="16" x2="22" y1="5" y2="5"></line>
+            <line x1="19" x2="19" y1="2" y2="8"></line>
+            <circle cx="9" cy="9" r="2"></circle>
+            <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path>
+          </svg>
+        </Button>
+        
+        {currentImage && (
           <Button 
             type="button" 
             variant="outline" 
-            onClick={triggerFileInput}
-            disabled={isLoading}
-            className="rounded-full w-10 h-10 p-0 flex items-center justify-center"
-            title="Upload Imagem"
+            onClick={onRemoveImage}
+            className="rounded-full w-10 h-10 p-0 flex items-center justify-center border-red-200 text-red-500 hover:bg-red-50 hover:text-red-600"
+            title="Remover Imagem"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7"></path>
-              <line x1="16" x2="22" y1="5" y2="5"></line>
-              <line x1="19" x2="19" y1="2" y2="8"></line>
-              <circle cx="9" cy="9" r="2"></circle>
-              <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path>
+              <path d="M3 6h18"></path>
+              <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+              <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
             </svg>
           </Button>
-          
-          <Button 
-            type="button" 
-            variant="outline" 
-            onClick={addDemoLogo}
-            className="rounded-full w-10 h-10 p-0 flex items-center justify-center"
-            title="Usar Logo Demo"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path>
-              <line x1="4" x2="4" y1="22" y2="15"></line>
-            </svg>
-          </Button>
-          
-          {currentImage && (
-            <Button 
-              type="button" 
-              variant="outline" 
-              onClick={onRemoveImage}
-              className="rounded-full w-10 h-10 p-0 flex items-center justify-center border-red-200 text-red-500 hover:bg-red-50 hover:text-red-600"
-              title="Remover Imagem"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M3 6h18"></path>
-                <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
-                <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
-              </svg>
-            </Button>
-          )}
-        </div>
+        )}
       </div>
     </div>
   );

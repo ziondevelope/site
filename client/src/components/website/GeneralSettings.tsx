@@ -90,21 +90,13 @@ export default function GeneralSettings({ config, configData, onConfigChange }: 
           <Label className="block text-sm font-medium text-gray-700 mb-2">
             Logo
           </Label>
-          <div className="flex items-center space-x-4">
+          <div className="flex items-start">
             <ImageUpload
               currentImage={logo}
               onImageChange={handleLogoChange}
               onRemoveImage={removeLogo}
               label="Upload Logo"
             />
-            <Button 
-              variant="outline" 
-              className="rounded-full"
-              onClick={addDemoLogo}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1"><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7"></path><line x1="16" x2="22" y1="5" y2="5"></line><line x1="19" x2="19" y1="2" y2="8"></line><circle cx="9" cy="9" r="2"></circle><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path></svg>
-              Demo Logo
-            </Button>
           </div>
         </div>
         
@@ -112,7 +104,7 @@ export default function GeneralSettings({ config, configData, onConfigChange }: 
           <Label className="block text-sm font-medium text-gray-700 mb-2">
             Background do Banner
           </Label>
-          <div className="flex items-center space-x-4">
+          <div className="flex items-start">
             <ImageUpload
               currentImage={bannerBg}
               onImageChange={handleBannerBgChange}
@@ -120,14 +112,6 @@ export default function GeneralSettings({ config, configData, onConfigChange }: 
               previewClassName="w-32 h-32"
               label="Upload Banner"
             />
-            <Button 
-              variant="outline" 
-              className="rounded-full"
-              onClick={addDemoBanner}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1"><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7"></path><line x1="16" x2="22" y1="5" y2="5"></line><line x1="19" x2="19" y1="2" y2="8"></line><circle cx="9" cy="9" r="2"></circle><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path></svg>
-              Demo Banner
-            </Button>
           </div>
         </div>
       </div>
@@ -139,7 +123,7 @@ export default function GeneralSettings({ config, configData, onConfigChange }: 
           </Label>
           <select 
             className="w-full border border-gray-200 rounded-full px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-transparent"
-            value={mainFont}
+            value={mainFont || ""}
             onChange={(e) => handleMainFontChange(e.target.value)}
           >
             <option value="Inter">Inter</option>
@@ -157,13 +141,13 @@ export default function GeneralSettings({ config, configData, onConfigChange }: 
           <div className="flex">
             <Input 
               type="color" 
-              value={primaryColor} 
+              value={primaryColor || '#1f4dbe'} 
               onChange={(e) => handlePrimaryColorChange(e.target.value)}
               className="h-10 w-10 border-0 rounded-l-lg p-0"
             />
             <Input 
               type="text" 
-              value={primaryColor} 
+              value={primaryColor || '#1f4dbe'} 
               onChange={(e) => handlePrimaryColorChange(e.target.value)}
               className="border border-l-0 border-gray-200 rounded-r-full px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-transparent"
             />
@@ -177,13 +161,13 @@ export default function GeneralSettings({ config, configData, onConfigChange }: 
           <div className="flex">
             <Input 
               type="color" 
-              value={secondaryColor}
+              value={secondaryColor || '#3e63dd'}
               onChange={(e) => handleSecondaryColorChange(e.target.value)}
               className="h-10 w-10 border-0 rounded-l-lg p-0"
             />
             <Input 
               type="text" 
-              value={secondaryColor} 
+              value={secondaryColor || '#3e63dd'} 
               onChange={(e) => handleSecondaryColorChange(e.target.value)}
               className="border border-l-0 border-gray-200 rounded-r-full px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-transparent"
             />
@@ -199,7 +183,7 @@ export default function GeneralSettings({ config, configData, onConfigChange }: 
           rows={4} 
           className="w-full rounded-xl"
           placeholder="Endereço, contato, horário de funcionamento..."
-          value={footerInfo}
+          value={footerInfo || ''}
           onChange={(e) => handleFooterInfoChange(e.target.value)}
         />
       </div>
