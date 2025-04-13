@@ -15,6 +15,7 @@ import { z } from "zod";
 import { insertPropertySchema, type Property } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
 import { MultipleImageUpload } from "@/components/ui/multiple-image-upload";
+import { FeaturedCheckbox } from "@/components/ui/featured-checkbox";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   AlertDialog,
