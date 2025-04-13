@@ -1122,7 +1122,7 @@ export default function Properties() {
                   <TableRow key={property.id} className="hover:bg-gray-50">
                     <TableCell className="py-2 whitespace-nowrap">
                       <div className="flex items-center gap-3">
-                        <div className="w-16 h-12 rounded overflow-hidden flex-shrink-0 border border-gray-200">
+                        <div className="w-16 h-12 rounded overflow-hidden flex-shrink-0 border-0">
                           {getFeaturedImage(property) ? (
                             <img 
                               src={getFeaturedImage(property)} 
