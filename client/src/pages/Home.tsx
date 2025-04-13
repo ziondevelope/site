@@ -24,9 +24,7 @@ export default function Home() {
     },
   });
 
-  const handleAdminLogin = () => {
-    setLocation("/admin");
-  };
+  // A navegação agora é feita diretamente pelo Link em vez da função handleAdminLogin
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -46,9 +44,11 @@ export default function Home() {
             <a href="#contact" className="text-gray-700 hover:text-primary">Contato</a>
           </nav>
           <div>
-            <Button onClick={handleAdminLogin} variant="outline" className="ml-4">
-              Área do Admin
-            </Button>
+            <Link href="/admin">
+              <Button variant="outline" className="ml-4">
+                Área do Admin
+              </Button>
+            </Link>
           </div>
         </div>
       </header>
