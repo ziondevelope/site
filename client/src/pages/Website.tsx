@@ -98,9 +98,6 @@ export default function Website() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-semibold">Configuração do Site</h2>
-      </div>
       
       {isLoading ? (
         <div className="flex justify-center items-center h-64">
