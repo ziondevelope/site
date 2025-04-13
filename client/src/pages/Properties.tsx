@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 import { Button } from "@/components/ui/button";
@@ -128,7 +128,7 @@ export default function Properties() {
   });
   
   // Filtered properties
-  const filteredProperties = React.useMemo(() => {
+  const filteredProperties = useMemo(() => {
     if (!properties) return [];
     
     return properties.filter(property => {
@@ -1185,6 +1185,23 @@ export default function Properties() {
             Adicionar Imóvel
           </Button>
         </div>
+      ) : filteredProperties.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-12 border border-dashed border-gray-200 rounded-lg">
+          <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="text-gray-300 mb-3"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+          <h3 className="text-lg font-medium text-gray-400 mb-2">Nenhum resultado encontrado</h3>
+          <p className="text-gray-500 mb-3 text-center max-w-md">Tente ajustar seus filtros para encontrar o que está procurando.</p>
+          <Button
+            onClick={() => {
+              setSearchQuery("");
+              setTypeFilter("");
+              setStatusFilter("");
+            }}
+            size="sm"
+            variant="outline"
+          >
+            Limpar filtros
+          </Button>
+        </div>
       ) : (
         <div className="overflow-x-auto rounded-lg">
           <Table>
@@ -1200,7 +1217,7 @@ export default function Properties() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {properties.map((property) => (
+              {filteredProperties.map((property) => (
                 <TableRow key={property.id} className="hover:bg-gray-50">
                   <TableCell className="flex items-center space-x-3 py-3">
                     <div className="w-12 h-12 rounded-full overflow-hidden shadow-sm border border-gray-100 bg-white flex-shrink-0">
