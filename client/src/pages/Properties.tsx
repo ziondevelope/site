@@ -76,43 +76,49 @@ function FeaturedCheckbox({ field }) {
       </FormLabel>
       
       {field.value && field.value.length > 0 ? (
-        <div className="space-y-2 mt-2">
-          <p className="text-sm text-gray-600">Selecione a imagem que será exibida como destaque do imóvel:</p>
-          <div className="flex flex-wrap gap-3">
-            {field.value.map((image, index) => (
-              <div 
-                key={index} 
+        <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
+          {field.value.map((image, index) => (
+            <div 
+              key={index} 
+              className={`
+                relative group aspect-square border rounded-md overflow-hidden 
+                ${image.isFeatured ? 'ring-2 ring-indigo-500 ring-offset-2' : 'hover:ring-1 hover:ring-gray-200'}
+              `}
+            >
+              <img 
+                src={typeof image === 'string' ? image : image.url} 
+                alt={`Imagem ${index + 1}`}
+                className="object-cover w-full h-full"
+              />
+              <button
+                type="button"
                 onClick={() => handleFeaturedChange(index)}
                 className={`
-                  relative cursor-pointer w-16 h-16 border rounded-md overflow-hidden
-                  ${image.isFeatured ? 'ring-2 ring-indigo-500 ring-offset-1' : 'hover:ring-1 hover:ring-gray-200'}
+                  absolute inset-0 flex flex-col items-center justify-center bg-black/50
+                  ${image.isFeatured ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}
+                  transition-opacity
                 `}
               >
-                <img 
-                  src={typeof image === 'string' ? image : image.url} 
-                  alt={`Imagem ${index + 1}`}
-                  className="object-cover w-full h-full"
-                />
-                {image.isFeatured && (
-                  <div className="absolute inset-0 bg-indigo-500/20 flex items-center justify-center">
-                    <svg 
-                      xmlns="http://www.w3.org/2000/svg" 
-                      width="20" 
-                      height="20" 
-                      viewBox="0 0 24 24" 
-                      fill="#4f46e5" 
-                      stroke="#ffffff" 
-                      strokeWidth="2" 
-                      strokeLinecap="round" 
-                      strokeLinejoin="round"
-                    >
-                      <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>
-                    </svg>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
+                <svg 
+                  xmlns="http://www.w3.org/2000/svg" 
+                  width="24" 
+                  height="24" 
+                  viewBox="0 0 24 24" 
+                  fill={image.isFeatured ? "#ffffff" : "none"} 
+                  stroke="#ffffff" 
+                  strokeWidth="2" 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" 
+                  className="mb-1"
+                >
+                  <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>
+                </svg>
+                <span className="text-xs text-white font-medium">
+                  {image.isFeatured ? 'Destaque' : 'Definir como destaque'}
+                </span>
+              </button>
+            </div>
+          ))}
         </div>
       ) : (
         <div className="text-gray-500 text-sm">
@@ -1065,26 +1071,6 @@ export default function Properties() {
                           <FormLabel>Endereço</FormLabel>
                           <FormControl>
                             <Input placeholder="Rua Exemplo, 123" {...field} />
-                            </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </TabsContent>
-                  
-                  <TabsContent value="images" className="space-y-4">
-                    <FormField
-                      control={editForm.control}
-                      name="images"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Upload de Imagens</FormLabel>
-                          <FormControl>
-                            <MultipleImageUpload 
-                              value={field.value}
-                              onChange={field.onChange}
-                              maxFiles={10}
-                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -1095,7 +1081,17 @@ export default function Properties() {
                       control={editForm.control}
                       name="images"
                       render={({ field }) => (
-                        <FeaturedCheckbox field={field} />
+                        <FormItem>
+                          <FormLabel>Imagens</FormLabel>
+                          <FormControl>
+                            <MultipleImageUpload 
+                              value={field.value}
+                              onChange={field.onChange}
+                              maxFiles={10}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
                       )}
                     />
                   </TabsContent>
