@@ -1,5 +1,4 @@
 import { useState, ChangeEvent, useRef } from "react";
-import { Button } from "./button";
 
 interface ImageUploadProps {
   currentImage?: string | null;
@@ -17,6 +16,7 @@ export function ImageUpload({
   label = "Selecionar Imagem"
 }: ImageUploadProps) {
   const [isLoading, setIsLoading] = useState(false);
+  const [isHovering, setIsHovering] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
@@ -64,22 +64,13 @@ export function ImageUpload({
   return (
     <div className="flex flex-col items-center space-y-4">
       <div 
-        className={`${previewClassName} bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden border-2 border-dashed border-gray-300 relative`}
+        className={`${previewClassName} bg-gray-100 rounded-lg flex items-center justify-center 
+          overflow-hidden border-2 border-dashed border-gray-300 relative cursor-pointer
+          transition-all duration-200 hover:opacity-90 hover:border-indigo-400`}
+        onClick={triggerFileInput}
+        onMouseEnter={() => setIsHovering(true)}
+        onMouseLeave={() => setIsHovering(false)}
       >
-        {isLoading ? (
-          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-indigo-600"></div>
-        ) : currentImage ? (
-          <img src={currentImage} alt="Preview" className="max-w-full max-h-full object-contain" />
-        ) : (
-          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400">
-            <rect width="18" height="18" x="3" y="3" rx="2" ry="2"></rect>
-            <circle cx="9" cy="9" r="2"></circle>
-            <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path>
-          </svg>
-        )}
-      </div>
-      
-      <div className="flex flex-col space-y-2">
         <input
           type="file"
           accept="image/*"
@@ -88,37 +79,46 @@ export function ImageUpload({
           className="hidden"
         />
         
-        <Button 
-          type="button" 
-          variant="outline" 
-          onClick={triggerFileInput}
-          disabled={isLoading}
-          className="rounded-full w-10 h-10 p-0 flex items-center justify-center"
-          title="Upload Imagem"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7"></path>
-            <line x1="16" x2="22" y1="5" y2="5"></line>
-            <line x1="19" x2="19" y1="2" y2="8"></line>
-            <circle cx="9" cy="9" r="2"></circle>
-            <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path>
-          </svg>
-        </Button>
-        
-        {currentImage && (
-          <Button 
-            type="button" 
-            variant="outline" 
-            onClick={onRemoveImage}
-            className="rounded-full w-10 h-10 p-0 flex items-center justify-center border-red-200 text-red-500 hover:bg-red-50 hover:text-red-600"
-            title="Remover Imagem"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M3 6h18"></path>
-              <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
-              <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+        {isLoading ? (
+          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-indigo-600"></div>
+        ) : currentImage ? (
+          <>
+            <img src={currentImage} alt="Preview" className="max-w-full max-h-full object-contain" />
+            {isHovering && (
+              <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center transition-opacity duration-200">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7"></path>
+                  <line x1="16" x2="22" y1="5" y2="5"></line>
+                  <line x1="19" x2="19" y1="2" y2="8"></line>
+                  <circle cx="9" cy="9" r="2"></circle>
+                  <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path>
+                </svg>
+              </div>
+            )}
+            <button 
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onRemoveImage();
+              }}
+              className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center shadow hover:bg-red-600 transition-colors"
+              aria-label="Remover imagem"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </>
+        ) : (
+          <div className="flex flex-col items-center space-y-2 text-gray-500">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400">
+              <rect width="18" height="18" x="3" y="3" rx="2" ry="2"></rect>
+              <circle cx="9" cy="9" r="2"></circle>
+              <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path>
             </svg>
-          </Button>
+            <span className="text-xs">{label}</span>
+          </div>
         )}
       </div>
     </div>
