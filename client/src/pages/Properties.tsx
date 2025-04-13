@@ -30,6 +30,8 @@ import {
 const propertyFormSchema = insertPropertySchema.extend({
   // Add additional validation as needed
   imageUrl: z.string().optional(),
+  parkingSpots: z.number().min(0).default(0),
+  suites: z.number().min(0).default(0),
 });
 
 type PropertyFormValues = z.infer<typeof propertyFormSchema>;
