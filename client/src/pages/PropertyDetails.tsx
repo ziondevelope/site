@@ -532,31 +532,35 @@ export default function PropertyDetails() {
                       
                       {/* Botão de Financiamento */}
                       <button 
-                        className="w-full py-4 px-4 rounded-md font-medium text-white mb-3"
+                        className="w-full py-4 px-4 rounded-md font-medium text-white mb-0"
                         style={{ backgroundColor: '#00c18d' }}
                       >
                         SIMULE O FINANCIAMENTO
                       </button>
                       
-                      {/* Botões de compartilhamento */}
-                      <div className="w-full">
-                        <p className="text-center text-gray-500 text-sm mb-3">
+                      {/* Área com fundo da cor primária */}
+                      <div 
+                        className="w-full p-4 rounded-b-lg mt-0 text-white"
+                        style={{ backgroundColor: primaryColor }}
+                      >
+                        {/* Botões de compartilhamento */}
+                        <p className="text-center text-white text-sm mb-3">
                           COMPARTILHAR
                         </p>
                         <div className="flex justify-center space-x-3">
-                          <a href="#" className="w-10 h-10 rounded-full bg-teal-500 flex items-center justify-center text-white hover:bg-teal-600 transition-colors">
+                          <a href="#" className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-teal-500 hover:bg-gray-100 transition-colors">
                             <i className="ri-whatsapp-line"></i>
                           </a>
-                          <a href="#" className="w-10 h-10 rounded-full bg-teal-500 flex items-center justify-center text-white hover:bg-teal-600 transition-colors">
+                          <a href="#" className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-teal-500 hover:bg-gray-100 transition-colors">
                             <i className="ri-facebook-fill"></i>
                           </a>
-                          <a href="#" className="w-10 h-10 rounded-full bg-teal-500 flex items-center justify-center text-white hover:bg-teal-600 transition-colors">
+                          <a href="#" className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-teal-500 hover:bg-gray-100 transition-colors">
                             <i className="ri-twitter-x-fill"></i>
                           </a>
-                          <a href="#" className="w-10 h-10 rounded-full bg-teal-500 flex items-center justify-center text-white hover:bg-teal-600 transition-colors">
+                          <a href="#" className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-teal-500 hover:bg-gray-100 transition-colors">
                             <i className="ri-mail-line"></i>
                           </a>
-                          <a href="#" className="w-10 h-10 rounded-full bg-teal-500 flex items-center justify-center text-white hover:bg-teal-600 transition-colors">
+                          <a href="#" className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-teal-500 hover:bg-gray-100 transition-colors">
                             <i className="ri-printer-line"></i>
                           </a>
                         </div>
