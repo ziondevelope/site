@@ -3,6 +3,7 @@ import { Property, WebsiteConfig } from '@shared/schema';
 import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { X } from 'lucide-react';
+import './scrollbar.css';
 
 interface PropertyDetailsModalProps {
   propertyId: number;
@@ -115,7 +116,12 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
     <div className="fixed inset-0 z-50 bg-black">
       <div 
         ref={modalRef}
-        className="bg-white w-full md:w-[70%] lg:w-[60%] xl:w-[50%] 2xl:w-[45%] h-full overflow-y-auto mx-auto"
+        className="bg-white w-full md:w-[70%] lg:w-[60%] xl:w-[50%] 2xl:w-[45%] h-full overflow-y-auto mx-auto modal-custom-scrollbar"
+        style={{ 
+          scrollbarColor: `${primaryColor} #f1f1f1`,
+          scrollbarWidth: 'thin',
+          '--primary': primaryColor
+        } as React.CSSProperties}
       >
         {/* Close button */}
         <button 
