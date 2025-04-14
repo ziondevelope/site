@@ -92,8 +92,8 @@ export default function Home() {
               rel="noopener noreferrer"
               className="inline-flex items-center px-4 py-2 rounded-full border border-green-500 bg-green-500 text-white hover:bg-green-600 transition-colors"
             >
-              <i className="ri-whatsapp-line mr-2 text-lg"></i>
-              {config?.phone || ""}
+              {config?.phone && <span className="mr-2">{config.phone}</span>}
+              <i className="ri-whatsapp-line text-lg"></i>
             </a>
           </div>
         </div>
