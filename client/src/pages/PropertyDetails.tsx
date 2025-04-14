@@ -183,28 +183,6 @@ export default function PropertyDetails() {
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* Coluna da esquerda - Conteúdo principal */}
                 <div className="lg:col-span-2">
-                  {/* Endereço e compartilhar */}
-                  <div className="flex flex-wrap justify-between mb-6">
-                    <div className="flex items-center text-gray-600 mb-2 md:mb-0">
-                      <i className="ri-map-pin-line mr-2 text-lg" style={{ color: primaryColor }}></i>
-                      <span>{currentProperty.address}</span>
-                    </div>
-                    
-                    <div className="flex space-x-4">
-                      <div className="flex items-center">
-                        <div className="px-3 py-1 text-white text-sm font-medium rounded-md" 
-                          style={{ backgroundColor: primaryColor }}>
-                          {currentProperty.purpose === 'sale' ? 'Venda' : 'Aluguel'}
-                        </div>
-                      </div>
-                      
-                      <button className="flex items-center text-gray-500 hover:text-primary">
-                        <i className="ri-share-line mr-1"></i>
-                        <span className="text-sm">Compartilhar</span>
-                      </button>
-                    </div>
-                  </div>
-                  
                   {/* Imagem Principal */}
                   <div 
                     className="w-full h-[500px] rounded-xl mb-2 overflow-hidden relative bg-cover bg-center"
@@ -257,7 +235,28 @@ export default function PropertyDetails() {
                       </div>
                     </div>
                     <div className="px-6 py-4 bg-gray-50">
-                      <div className="flex items-center text-sm text-gray-500">
+                      <div className="flex flex-wrap justify-between items-center">
+                        <div className="flex items-center text-sm text-gray-600 mb-2 md:mb-0">
+                          <i className="ri-map-pin-line mr-2 text-lg" style={{ color: primaryColor }}></i>
+                          <span>{currentProperty.address}</span>
+                        </div>
+                        
+                        <div className="flex space-x-4">
+                          <div className="flex items-center">
+                            <div className="px-3 py-1 text-white text-sm font-medium rounded-md" 
+                              style={{ backgroundColor: primaryColor }}>
+                              {currentProperty.purpose === 'sale' ? 'Venda' : 'Aluguel'}
+                            </div>
+                          </div>
+                          
+                          <button className="flex items-center text-gray-500 hover:text-primary">
+                            <i className="ri-share-line mr-1"></i>
+                            <span className="text-sm">Compartilhar</span>
+                          </button>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center text-sm text-gray-500 mt-3 pt-3 border-t border-gray-200">
                         <span className="inline-flex items-center mr-3">
                           <i className="ri-home-4-line mr-1"></i>
                           <span>{currentProperty.type && currentProperty.type.charAt(0).toUpperCase() + currentProperty.type.slice(1)}</span>
