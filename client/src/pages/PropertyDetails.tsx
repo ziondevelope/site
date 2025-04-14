@@ -107,7 +107,7 @@ export default function PropertyDetails() {
           </div>
         ) : property ? (
           <div className="container mx-auto px-4 py-8">
-            <div className="flex flex-wrap items-center justify-between mb-6">
+            <div className="flex flex-wrap items-center justify-between mb-3">
               <h1 className="text-3xl md:text-4xl font-bold text-gray-800">{property.title}</h1>
               <div 
                 className="text-3xl font-bold mt-2 md:mt-0"
@@ -119,9 +119,36 @@ export default function PropertyDetails() {
             </div>
             
             {/* Endereço */}
-            <div className="flex items-center mb-8 text-gray-600">
+            <div className="flex items-center mb-6 text-gray-600">
               <i className="ri-map-pin-line mr-2 text-lg"></i>
               <span>{property.address}</span>
+              {'city' in property && 'state' in property && property.city && property.state && (
+                <span>, {property.city}, {property.state}</span>
+              )}
+            </div>
+            
+            <div className="flex justify-between items-center mb-4">
+              <div className="flex items-center space-x-6">
+                <div className="flex items-center text-gray-500">
+                  <i className="ri-price-tag-3-line mr-2"></i>
+                  <span>Cód: {property.id}</span>
+                </div>
+                {property.purpose === 'sale' ? (
+                  <div className="px-3 py-1 text-white text-sm font-medium rounded-sm" style={{ backgroundColor: config?.primaryColor || 'var(--primary)' }}>
+                    Venda
+                  </div>
+                ) : (
+                  <div className="px-3 py-1 text-white text-sm font-medium rounded-sm" style={{ backgroundColor: config?.primaryColor || 'var(--primary)' }}>
+                    Aluguel
+                  </div>
+                )}
+              </div>
+              <div className="flex items-center">
+                <button className="flex items-center text-gray-500 hover:text-primary">
+                  <i className="ri-share-line mr-1"></i>
+                  <span className="text-sm">Compartilhar</span>
+                </button>
+              </div>
             </div>
             
             {/* Galeria de Imagens - Ocupa toda a largura */}
@@ -134,13 +161,6 @@ export default function PropertyDetails() {
                   backgroundPosition: 'center'
                 }}
               >
-                {/* Tag de propósito (venda/aluguel) */}
-                <div 
-                  className="absolute top-4 left-4 px-4 py-2 text-white rounded-md font-medium text-sm"
-                  style={{ backgroundColor: config?.primaryColor || 'var(--primary)' }}
-                >
-                  {property.purpose === 'sale' ? 'Venda' : 'Aluguel'}
-                </div>
               </div>
               
               {/* Miniaturas */}
