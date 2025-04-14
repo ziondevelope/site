@@ -9,7 +9,7 @@
 }
 
 .modal-custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: var(--primary, #00374a);
+  background-color: var(--primary);
   border-radius: 4px;
 }
 
