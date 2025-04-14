@@ -96,7 +96,7 @@ export default function Home() {
               rel="noopener noreferrer"
               className="inline-flex items-center px-4 py-2 rounded-full border border-solid text-primary transition-colors hover:bg-gray-50"
               style={{ 
-                borderColor: config?.primaryColor ? `${config.primaryColor}80` : 'var(--primary-80)',
+                borderColor: config?.primaryColor ? `${config.primaryColor}33` : 'var(--primary-33)',
                 color: config?.primaryColor || 'var(--primary)'
               }}
             >
