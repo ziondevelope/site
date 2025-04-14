@@ -173,158 +173,206 @@ export default function AllProperties() {
         <div className="container mx-auto px-4">
           <h1 className="text-3xl font-bold mb-8">Todos os Imóveis</h1>
           
-          {/* Filtros - Estilo Horizontal */}
-          <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 mb-8">
-            {/* Barra de busca principal com finalidade */}
-            <div className="flex flex-col md:flex-row gap-4 mb-4">
-              <div className="flex-grow">
-                <div className="relative">
-                  <i className="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-                  <Input
-                    id="search"
-                    className="pl-10 py-6 text-lg"
-                    placeholder="Busque por endereço, bairro ou cidade"
-                    value={filters.search}
-                    onChange={(e) => setFilters({...filters, search: e.target.value})}
-                  />
+          {/* Filtros - Estilo Aprimorado */}
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-8 overflow-hidden">
+            {/* Barra de busca principal com finalidade - Seção destacada */}
+            <div className="bg-gray-50 p-5 border-b border-gray-200">
+              <div className="flex flex-col lg:flex-row gap-4">
+                <div className="flex-grow">
+                  <div className="relative">
+                    <i className="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    <Input
+                      id="search"
+                      className="pl-12 py-6 text-lg border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                      placeholder="Busque por endereço, bairro ou cidade"
+                      value={filters.search}
+                      onChange={(e) => setFilters({...filters, search: e.target.value})}
+                    />
+                  </div>
                 </div>
-              </div>
-              
-              <div className="w-full md:w-48">
-                <Select 
-                  value={filters.purpose} 
-                  onValueChange={(value) => setFilters({...filters, purpose: value})}
+                
+                {/* Finalidade com design destacado */}
+                <div className="w-full lg:w-52">
+                  <Select 
+                    value={filters.purpose} 
+                    onValueChange={(value) => setFilters({...filters, purpose: value})}
+                  >
+                    <SelectTrigger id="purpose" className="h-14 text-base border-gray-300 rounded-lg">
+                      <div className="flex items-center">
+                        <i className="fas fa-home mr-2 text-gray-500"></i>
+                        <SelectValue placeholder="Finalidade" />
+                      </div>
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all-purposes">Comprar ou Alugar</SelectItem>
+                      <SelectItem value="sale">Comprar</SelectItem>
+                      <SelectItem value="rent">Alugar</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                
+                {/* Botão de busca */}
+                <Button 
+                  className="h-14 px-6 text-base"
+                  onClick={() => {}}
+                  style={{ 
+                    backgroundColor: config?.primaryColor || 'var(--primary)',
+                  }}
                 >
-                  <SelectTrigger id="purpose" className="h-12">
-                    <SelectValue placeholder="Finalidade" />
+                  <i className="fas fa-search mr-2"></i>
+                  Buscar
+                </Button>
+              </div>
+            </div>
+            
+            {/* Filtros rápidos em linha */}
+            <div className="p-4 flex flex-wrap items-center gap-3">
+              {/* Tipo de imóvel */}
+              <div className="filter-item">
+                <div className="text-xs font-medium text-gray-500 mb-1 ml-1">Tipo</div>
+                <Select 
+                  value={filters.propertyType} 
+                  onValueChange={(value) => setFilters({...filters, propertyType: value})}
+                >
+                  <SelectTrigger id="propertyType" className="h-10 w-auto min-w-[140px] border-gray-300 rounded-lg">
+                    <div className="flex items-center">
+                      <i className="fas fa-building mr-2 text-gray-400 text-sm"></i>
+                      <SelectValue placeholder="Tipo de imóvel" />
+                    </div>
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all-purposes">Comprar ou Alugar</SelectItem>
-                    <SelectItem value="sale">Comprar</SelectItem>
-                    <SelectItem value="rent">Alugar</SelectItem>
+                    <SelectItem value="all">Todos os tipos</SelectItem>
+                    <SelectItem value="house">Casa</SelectItem>
+                    <SelectItem value="apartment">Apartamento</SelectItem>
+                    <SelectItem value="condo">Condomínio</SelectItem>
+                    <SelectItem value="land">Terreno</SelectItem>
+                    <SelectItem value="commercial">Comercial</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               
-              <Button 
-                className="h-12"
-                onClick={() => {}}
-                style={{ 
-                  backgroundColor: config?.primaryColor || 'var(--primary)',
-                }}
-              >
-                <i className="fas fa-sliders-h mr-2"></i>
-                Mais filtros
-              </Button>
-            </div>
-            
-            {/* Filtros em linha */}
-            <div className="flex flex-wrap gap-2 mb-2">
-              <Select 
-                value={filters.propertyType} 
-                onValueChange={(value) => setFilters({...filters, propertyType: value})}
-              >
-                <SelectTrigger id="propertyType" className="h-10 w-auto min-w-[140px]">
-                  <SelectValue placeholder="Tipo de imóvel" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Todos os tipos</SelectItem>
-                  <SelectItem value="house">Casa</SelectItem>
-                  <SelectItem value="apartment">Apartamento</SelectItem>
-                  <SelectItem value="condo">Condomínio</SelectItem>
-                  <SelectItem value="land">Terreno</SelectItem>
-                  <SelectItem value="commercial">Comercial</SelectItem>
-                </SelectContent>
-              </Select>
-              
-              <Select 
-                value={filters.bedrooms} 
-                onValueChange={(value) => setFilters({...filters, bedrooms: value})}
-              >
-                <SelectTrigger id="bedrooms" className="h-10 w-auto min-w-[120px]">
-                  <SelectValue placeholder="Quartos" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="any-bedrooms">Quartos</SelectItem>
-                  <SelectItem value="1">1+ quartos</SelectItem>
-                  <SelectItem value="2">2+ quartos</SelectItem>
-                  <SelectItem value="3">3+ quartos</SelectItem>
-                  <SelectItem value="4+">4+ quartos</SelectItem>
-                </SelectContent>
-              </Select>
-              
-              <Select 
-                value={filters.bathrooms} 
-                onValueChange={(value) => setFilters({...filters, bathrooms: value})}
-              >
-                <SelectTrigger id="bathrooms" className="h-10 w-auto min-w-[120px]">
-                  <SelectValue placeholder="Banheiros" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="any-bathrooms">Banheiros</SelectItem>
-                  <SelectItem value="1">1+ banheiros</SelectItem>
-                  <SelectItem value="2">2+ banheiros</SelectItem>
-                  <SelectItem value="3">3+ banheiros</SelectItem>
-                  <SelectItem value="4+">4+ banheiros</SelectItem>
-                </SelectContent>
-              </Select>
-              
-              <Select 
-                value={filters.area} 
-                onValueChange={(value) => setFilters({...filters, area: value})}
-              >
-                <SelectTrigger id="area" className="h-10 w-auto min-w-[120px]">
-                  <SelectValue placeholder="Área" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="any-area">Qualquer área</SelectItem>
-                  <SelectItem value="0-50">Até 50m²</SelectItem>
-                  <SelectItem value="50-100">50-100m²</SelectItem>
-                  <SelectItem value="100-150">100-150m²</SelectItem>
-                  <SelectItem value="150-200">150-200m²</SelectItem>
-                  <SelectItem value="200+">Acima de 200m²</SelectItem>
-                </SelectContent>
-              </Select>
-              
-              <div className="flex items-center space-x-2 h-10 bg-gray-100 rounded-md px-3">
-                <span className="text-sm text-gray-500">Preço:</span>
-                <span className="text-sm font-medium">{formatPrice(filters.minPrice)} - {formatPrice(filters.maxPrice)}</span>
+              {/* Quartos */}
+              <div className="filter-item">
+                <div className="text-xs font-medium text-gray-500 mb-1 ml-1">Quartos</div>
+                <Select 
+                  value={filters.bedrooms} 
+                  onValueChange={(value) => setFilters({...filters, bedrooms: value})}
+                >
+                  <SelectTrigger id="bedrooms" className="h-10 w-auto min-w-[120px] border-gray-300 rounded-lg">
+                    <div className="flex items-center">
+                      <i className="fas fa-bed mr-2 text-gray-400 text-sm"></i>
+                      <SelectValue placeholder="Quartos" />
+                    </div>
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="any-bedrooms">Qualquer</SelectItem>
+                    <SelectItem value="1">1+ quartos</SelectItem>
+                    <SelectItem value="2">2+ quartos</SelectItem>
+                    <SelectItem value="3">3+ quartos</SelectItem>
+                    <SelectItem value="4+">4+ quartos</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
               
+              {/* Banheiros */}
+              <div className="filter-item">
+                <div className="text-xs font-medium text-gray-500 mb-1 ml-1">Banheiros</div>
+                <Select 
+                  value={filters.bathrooms} 
+                  onValueChange={(value) => setFilters({...filters, bathrooms: value})}
+                >
+                  <SelectTrigger id="bathrooms" className="h-10 w-auto min-w-[120px] border-gray-300 rounded-lg">
+                    <div className="flex items-center">
+                      <i className="fas fa-shower mr-2 text-gray-400 text-sm"></i>
+                      <SelectValue placeholder="Banheiros" />
+                    </div>
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="any-bathrooms">Qualquer</SelectItem>
+                    <SelectItem value="1">1+ banheiros</SelectItem>
+                    <SelectItem value="2">2+ banheiros</SelectItem>
+                    <SelectItem value="3">3+ banheiros</SelectItem>
+                    <SelectItem value="4+">4+ banheiros</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              {/* Área */}
+              <div className="filter-item">
+                <div className="text-xs font-medium text-gray-500 mb-1 ml-1">Área</div>
+                <Select 
+                  value={filters.area} 
+                  onValueChange={(value) => setFilters({...filters, area: value})}
+                >
+                  <SelectTrigger id="area" className="h-10 w-auto min-w-[120px] border-gray-300 rounded-lg">
+                    <div className="flex items-center">
+                      <i className="fas fa-ruler-combined mr-2 text-gray-400 text-sm"></i>
+                      <SelectValue placeholder="Área" />
+                    </div>
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="any-area">Qualquer área</SelectItem>
+                    <SelectItem value="0-50">Até 50m²</SelectItem>
+                    <SelectItem value="50-100">50-100m²</SelectItem>
+                    <SelectItem value="100-150">100-150m²</SelectItem>
+                    <SelectItem value="150-200">150-200m²</SelectItem>
+                    <SelectItem value="200+">Acima de 200m²</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              {/* Limpar filtros - botão estilizado */}
               <Button 
                 variant="outline" 
-                className="h-10 ml-auto" 
+                className="h-10 ml-auto mt-auto border-gray-300 rounded-lg hover:bg-gray-50" 
                 onClick={clearFilters}
               >
-                <i className="fas fa-redo-alt mr-2"></i>
+                <i className="fas fa-redo-alt mr-2 text-gray-500"></i>
                 Limpar filtros
               </Button>
             </div>
             
-            {/* Slider de preço */}
-            <div className="px-3 py-2">
+            {/* Slider de preço com design melhorado */}
+            <div className="px-5 py-4 border-t border-gray-200">
+              <div className="flex justify-between items-center mb-2">
+                <div className="text-sm font-medium">Faixa de Preço</div>
+                <div className="text-sm font-bold" style={{ color: config?.primaryColor || 'var(--primary)' }}>
+                  {formatPrice(filters.minPrice)} - {formatPrice(filters.maxPrice)}
+                </div>
+              </div>
               <Slider
                 min={0}
                 max={10000000}
-                step={100000}
+                step={50000}
                 value={[filters.minPrice, filters.maxPrice]}
                 onValueChange={(value) => setFilters({...filters, minPrice: value[0], maxPrice: value[1]})}
+                className="py-2"
               />
+              <div className="flex justify-between text-xs text-gray-500 mt-1">
+                <span>R$ 0</span>
+                <span>R$ 2.5M</span>
+                <span>R$ 5M</span>
+                <span>R$ 7.5M</span>
+                <span>R$ 10M</span>
+              </div>
             </div>
             
-            {/* Ordenação */}
-            <div className="flex justify-between items-center pt-3 border-t border-gray-200 mt-3">
-              <div className="text-sm text-gray-500">
-                {filteredProperties?.length || 0} imóveis encontrados
+            {/* Ordenação e contagem de resultados com design aprimorado */}
+            <div className="flex justify-between items-center p-4 bg-gray-50 border-t border-gray-200">
+              <div className="text-sm flex items-center">
+                <i className="fas fa-list-ul mr-2 text-gray-500"></i>
+                <span className="font-medium">{filteredProperties?.length || 0}</span>
+                <span className="text-gray-500 ml-1">imóveis encontrados</span>
               </div>
               
               <div className="flex items-center space-x-2">
+                <i className="fas fa-sort text-gray-500 mr-1"></i>
                 <span className="text-sm text-gray-500">Ordenar por:</span>
                 <Select 
                   value={sortOrder}
                   onValueChange={setSortOrder}
                 >
-                  <SelectTrigger className="h-8 text-sm w-auto min-w-[150px]">
+                  <SelectTrigger className="h-8 text-sm w-auto min-w-[150px] border-gray-300 rounded-lg">
                     <SelectValue placeholder="Mais relevantes" />
                   </SelectTrigger>
                   <SelectContent>
@@ -345,115 +393,139 @@ export default function AllProperties() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {[1, 2, 3, 4, 5, 6, 7, 8].map((item) => (
                 <div key={item} className="bg-white rounded-lg overflow-hidden border border-gray-200">
-                  <Skeleton className="h-48 w-full" />
+                  {/* Skeleton da imagem */}
+                  <Skeleton className="h-52 w-full" />
+                  {/* Skeleton das informações */}
                   <div className="p-4">
-                    <Skeleton className="h-6 w-3/4 mb-2" />
-                    <Skeleton className="h-4 w-full mb-4" />
-                    <div className="flex justify-between mb-4">
-                      <Skeleton className="h-4 w-16" />
-                      <Skeleton className="h-4 w-16" />
-                      <Skeleton className="h-4 w-16" />
+                    <Skeleton className="h-7 w-36 mb-3" /> {/* Preço */}
+                    <Skeleton className="h-6 w-4/5 mb-2" /> {/* Título */}
+                    <Skeleton className="h-4 w-full mb-4" /> {/* Endereço */}
+                    <div className="flex justify-between mb-2">
+                      <Skeleton className="h-4 w-20" /> {/* Quarto */}
+                      <Skeleton className="h-4 w-20" /> {/* Banheiro */}
+                      <Skeleton className="h-4 w-20" /> {/* Vagas */}
                     </div>
-                    <Skeleton className="h-8 w-full" />
                   </div>
                 </div>
               ))}
             </div>
           ) : (
             <>
-              {/* Contagem de resultados */}
-              <p className="mb-6 font-medium text-gray-700">
-                {filteredProperties?.length || 0} imóveis encontrados
-              </p>
-              
-              {/* Grid de imóveis */}
+              {/* Grid de imóveis com design aprimorado */}
               {filteredProperties && filteredProperties.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                   {filteredProperties.map((property) => (
                     <div 
                       key={property.id} 
-                      className="bg-white rounded-lg border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-lg"
+                      className="bg-white rounded-lg border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-xl group"
+                      onClick={() => openPropertyModal(property.id)}
+                      style={{ cursor: 'pointer' }}
                     >
-                      {/* Imagem do imóvel */}
-                      <div className="h-48 bg-gray-100 relative overflow-hidden">
+                      {/* Imagem do imóvel com efeito hover */}
+                      <div className="h-52 bg-gray-100 relative overflow-hidden">
                         {getFeaturedImage(property) ? (
-                          <img 
-                            src={getFeaturedImage(property)} 
-                            alt={property.title} 
-                            className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-                            loading="lazy"
-                          />
+                          <>
+                            <img 
+                              src={getFeaturedImage(property)} 
+                              alt={property.title} 
+                              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                              loading="lazy"
+                            />
+                            <div className="absolute inset-0 bg-black bg-opacity-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                          </>
                         ) : (
                           <div className="flex items-center justify-center h-full bg-gray-200 text-gray-400">
                             <i className="fas fa-home text-3xl"></i>
                           </div>
                         )}
+                        {/* Badge de finalidade (venda/aluguel) */}
                         <div 
-                          className="absolute bottom-0 left-0 text-white px-3 py-1 rounded-tr-lg"
+                          className="absolute top-3 left-3 text-white text-sm px-3 py-1 rounded-full font-medium shadow-md"
                           style={{
                             backgroundColor: config?.primaryColor || 'var(--primary)'
                           }}
                         >
                           {property.purpose === 'sale' ? 'Venda' : 'Aluguel'}
                         </div>
+                        
+                        {/* Badge de área com ícone */}
+                        <div className="absolute bottom-3 left-3 bg-white bg-opacity-90 rounded-full px-3 py-1 text-sm font-medium shadow-sm flex items-center">
+                          <i className="fas fa-ruler-combined text-gray-600 mr-1.5"></i>
+                          <span>{property.area}m²</span>
+                        </div>
+                        
+                        {/* Botão ver detalhes sobreposto */}
+                        <div className="absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                          <Button 
+                            size="sm"
+                            variant="secondary"
+                            className="bg-white text-gray-800 hover:bg-gray-50 shadow-md"
+                          >
+                            <i className="fas fa-eye mr-1.5"></i>
+                            Ver detalhes
+                          </Button>
+                        </div>
                       </div>
                       
                       {/* Informações do imóvel */}
                       <div className="p-4">
-                        <h3 className="text-lg font-semibold mb-2 line-clamp-1">{property.title}</h3>
-                        <p className="text-gray-500 text-sm mb-4 line-clamp-1">{property.address}</p>
-                        
-                        {/* Características do imóvel */}
-                        <div className="flex items-center justify-between mb-4 text-sm text-gray-600">
-                          <span className="flex items-center">
-                            <i className="fas fa-ruler-combined fa-sm mr-1"></i>
-                            {property.area}m²
-                          </span>
-                          <span className="flex items-center">
-                            <i className="fas fa-bed fa-sm mr-1"></i>
-                            {property.bedrooms || 0}
-                          </span>
-                          <span className="flex items-center">
-                            <i className="fas fa-shower fa-sm mr-1"></i>
-                            {property.bathrooms || 0}
-                          </span>
-                          <span className="flex items-center">
-                            <i className="fas fa-bath fa-sm mr-1" style={{ color: config?.primaryColor || 'var(--primary)' }}></i>
-                            {property.suites || 0}
-                          </span>
-                          <span className="flex items-center">
-                            <i className="fas fa-car fa-sm mr-1"></i>
-                            {property.parkingSpots || 0}
-                          </span>
+                        {/* Preço em destaque */}
+                        <div 
+                          className="text-xl font-bold mb-2"
+                          style={{ color: config?.primaryColor || 'var(--primary)' }}
+                        >
+                          R$ {property.price.toLocaleString('pt-BR')}
+                          {property.purpose === 'rent' && <span className="text-xs font-normal text-gray-500">/mês</span>}
                         </div>
                         
-                        {/* Preço e botão */}
-                        <div className="flex justify-between items-center">
-                          <div 
-                            className="text-xl font-bold"
-                            style={{ color: config?.primaryColor || 'var(--primary)' }}
-                          >
-                            R$ {property.price.toLocaleString('pt-BR')}
-                            {property.purpose === 'rent' && <span className="text-xs font-normal text-gray-500">/mês</span>}
-                          </div>
-                          <Button 
-                            variant="outline" 
-                            size="sm" 
-                            onClick={() => openPropertyModal(property.id)}
-                          >
-                            Ver
-                          </Button>
+                        {/* Título e endereço */}
+                        <h3 className="text-lg font-semibold mb-1 line-clamp-1 group-hover:text-primary transition-colors">{property.title}</h3>
+                        <p className="text-gray-500 text-sm mb-3 line-clamp-1">
+                          <i className="fas fa-map-marker-alt mr-1 text-gray-400"></i>
+                          {property.address}
+                        </p>
+                        
+                        {/* Características do imóvel em linha com separadores */}
+                        <div className="flex items-center space-x-3 text-sm text-gray-600">
+                          <span className="flex items-center">
+                            <i className="fas fa-bed fa-sm mr-1.5"></i>
+                            {property.bedrooms || 0} quartos
+                          </span>
+                          <span className="w-1 h-1 rounded-full bg-gray-300"></span>
+                          <span className="flex items-center">
+                            <i className="fas fa-shower fa-sm mr-1.5"></i>
+                            {property.bathrooms || 0} banhs
+                          </span>
+                          <span className="w-1 h-1 rounded-full bg-gray-300"></span>
+                          <span className="flex items-center">
+                            <i className="fas fa-car fa-sm mr-1.5"></i>
+                            {property.parkingSpots || 0} vagas
+                          </span>
                         </div>
                       </div>
                     </div>
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-16 bg-gray-50 rounded-lg">
-                  <i className="fas fa-search text-4xl text-gray-300 mb-4"></i>
-                  <h3 className="text-xl font-medium text-gray-700 mb-2">Nenhum imóvel encontrado</h3>
-                  <p className="text-gray-500 mb-6">Tente ajustar os filtros para ver mais resultados</p>
-                  <Button variant="outline" onClick={clearFilters}>Limpar Filtros</Button>
+                <div className="text-center py-20 bg-gray-50 rounded-lg border border-gray-200">
+                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 text-gray-400 mb-6">
+                    <i className="fas fa-search text-3xl"></i>
+                  </div>
+                  <h3 className="text-2xl font-medium text-gray-700 mb-3">Nenhum imóvel encontrado</h3>
+                  <p className="text-gray-500 mb-8 max-w-md mx-auto">
+                    Não encontramos imóveis que correspondam aos seus critérios de busca. 
+                    Tente ajustar os filtros para ver mais resultados.
+                  </p>
+                  <Button 
+                    onClick={clearFilters}
+                    style={{ 
+                      backgroundColor: config?.primaryColor || 'var(--primary)',
+                    }}
+                    className="px-6 py-2.5"
+                  >
+                    <i className="fas fa-redo-alt mr-2"></i>
+                    Limpar Todos os Filtros
+                  </Button>
                 </div>
               )}
             </>
