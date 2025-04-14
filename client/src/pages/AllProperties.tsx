@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'wouter';
+import { Link, useLocation } from 'wouter';
 import { useQuery } from '@tanstack/react-query';
 import { Property, WebsiteConfig } from '@shared/schema';
 import { apiRequest } from '@/lib/queryClient';
@@ -29,17 +29,18 @@ export default function AllProperties() {
   const [selectedPropertyId, setSelectedPropertyId] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [location, setLocation] = useLocation();
   
   // Estados para os filtros
   const [filters, setFilters] = useState({
     search: '',
-    propertyType: '',
-    bedrooms: '',
-    bathrooms: '',
+    propertyType: 'all',
+    bedrooms: 'any-bedrooms',
+    bathrooms: 'any-bathrooms',
     minPrice: 0,
     maxPrice: 10000000,
-    purpose: '',
-    area: ''
+    purpose: 'all-purposes',
+    area: 'any-area'
   });
 
   // Efeito para monitorar o scroll
@@ -80,24 +81,24 @@ export default function AllProperties() {
       property.address.toLowerCase().includes(filters.search.toLowerCase());
       
     // Filtro por tipo de imóvel
-    const typeMatch = !filters.propertyType || property.type === filters.propertyType;
+    const typeMatch = filters.propertyType === 'all' || property.type === filters.propertyType;
     
     // Filtro por quartos
-    const bedroomsMatch = !filters.bedrooms || 
+    const bedroomsMatch = filters.bedrooms === 'any-bedrooms' || 
       (filters.bedrooms === '4+' ? (property.bedrooms || 0) >= 4 : (property.bedrooms || 0) === parseInt(filters.bedrooms));
     
     // Filtro por banheiros
-    const bathroomsMatch = !filters.bathrooms || 
+    const bathroomsMatch = filters.bathrooms === 'any-bathrooms' || 
       (filters.bathrooms === '4+' ? (property.bathrooms || 0) >= 4 : (property.bathrooms || 0) === parseInt(filters.bathrooms));
     
     // Filtro por preço
     const priceMatch = property.price >= filters.minPrice && property.price <= filters.maxPrice;
     
     // Filtro por finalidade (venda/aluguel)
-    const purposeMatch = !filters.purpose || property.purpose === filters.purpose;
+    const purposeMatch = filters.purpose === 'all-purposes' || property.purpose === filters.purpose;
     
     // Filtro por área
-    const areaMatch = !filters.area || 
+    const areaMatch = filters.area === 'any-area' || 
       (filters.area === '200+' ? property.area >= 200 : 
        filters.area === '150-200' ? (property.area >= 150 && property.area < 200) :
        filters.area === '100-150' ? (property.area >= 100 && property.area < 150) :
@@ -132,13 +133,13 @@ export default function AllProperties() {
   const clearFilters = () => {
     setFilters({
       search: '',
-      propertyType: '',
-      bedrooms: '',
-      bathrooms: '',
+      propertyType: 'all',
+      bedrooms: 'any-bedrooms',
+      bathrooms: 'any-bathrooms',
       minPrice: 0,
       maxPrice: 10000000,
-      purpose: '',
-      area: ''
+      purpose: 'all-purposes',
+      area: 'any-area'
     });
   };
 
@@ -177,7 +178,7 @@ export default function AllProperties() {
                     <SelectValue placeholder="Todos os tipos" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Todos</SelectItem>
+                    <SelectItem value="all">Todos</SelectItem>
                     <SelectItem value="house">Casa</SelectItem>
                     <SelectItem value="apartment">Apartamento</SelectItem>
                     <SelectItem value="condo">Condomínio</SelectItem>
@@ -198,7 +199,7 @@ export default function AllProperties() {
                     <SelectValue placeholder="Qualquer" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Qualquer</SelectItem>
+                    <SelectItem value="any-bedrooms">Qualquer</SelectItem>
                     <SelectItem value="1">1</SelectItem>
                     <SelectItem value="2">2</SelectItem>
                     <SelectItem value="3">3</SelectItem>
@@ -218,7 +219,7 @@ export default function AllProperties() {
                     <SelectValue placeholder="Qualquer" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Qualquer</SelectItem>
+                    <SelectItem value="any-bathrooms">Qualquer</SelectItem>
                     <SelectItem value="1">1</SelectItem>
                     <SelectItem value="2">2</SelectItem>
                     <SelectItem value="3">3</SelectItem>
@@ -238,7 +239,7 @@ export default function AllProperties() {
                     <SelectValue placeholder="Venda ou Aluguel" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Todos</SelectItem>
+                    <SelectItem value="all-purposes">Todos</SelectItem>
                     <SelectItem value="sale">Venda</SelectItem>
                     <SelectItem value="rent">Aluguel</SelectItem>
                   </SelectContent>
@@ -256,7 +257,7 @@ export default function AllProperties() {
                     <SelectValue placeholder="Qualquer tamanho" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Qualquer</SelectItem>
+                    <SelectItem value="any-area">Qualquer</SelectItem>
                     <SelectItem value="0-50">Até 50m²</SelectItem>
                     <SelectItem value="50-100">50-100m²</SelectItem>
                     <SelectItem value="100-150">100-150m²</SelectItem>
@@ -358,11 +359,11 @@ export default function AllProperties() {
                           </span>
                           <span className="flex items-center">
                             <i className="fas fa-bed fa-sm mr-1"></i>
-                            {property.bedrooms}
+                            {property.bedrooms || 0}
                           </span>
                           <span className="flex items-center">
                             <i className="fas fa-shower fa-sm mr-1"></i>
-                            {property.bathrooms}
+                            {property.bathrooms || 0}
                           </span>
                           <span className="flex items-center">
                             <i className="fas fa-bath fa-sm mr-1" style={{ color: config?.primaryColor || 'var(--primary)' }}></i>
