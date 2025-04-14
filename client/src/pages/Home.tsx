@@ -33,6 +33,9 @@ export default function Home() {
   const [showLogin, setShowLogin] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
+  const carouselTrackRef = useRef<HTMLDivElement>(null);
+  const [carouselPage, setCarouselPage] = useState(0);
+  const totalCarouselPages = 3; // Número de páginas no carrossel
 
   const { data: config, isLoading: isLoadingConfig } = useQuery<any>({
     queryKey: ['/api/website/config'],
@@ -275,46 +278,63 @@ export default function Home() {
               {/* Botão de navegação - Anterior */}
               <button 
                 onClick={() => {
-                  const track = document.getElementById('carousel-track');
-                  if (track) {
-                    const containerWidth = track.parentElement?.clientWidth || 0;
-                    const currentScroll = track.scrollLeft;
-                    track.scrollTo({
-                      left: currentScroll - containerWidth,
-                      behavior: 'smooth'
-                    });
-                  }
+                  if (!carouselTrackRef.current) return;
+                  const containerWidth = carouselTrackRef.current.parentElement?.clientWidth || 0;
+                  const newPage = Math.max(0, carouselPage - 1);
+                  carouselTrackRef.current.scrollTo({
+                    left: containerWidth * newPage,
+                    behavior: 'smooth'
+                  });
+                  setCarouselPage(newPage);
                 }}
-                className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white rounded-full shadow-lg p-2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity disabled:opacity-0 disabled:cursor-not-allowed"
-                disabled={document.getElementById('carousel-track')?.scrollLeft === 0}
+                className="absolute left-4 top-1/2 -translate-y-1/2 z-10 bg-white hover:bg-white/90 rounded-full shadow-md p-3 opacity-0 group-hover:opacity-100 transition-opacity disabled:opacity-0 disabled:cursor-not-allowed"
+                style={{
+                  border: `1px solid ${config?.primaryColor ? `${config.primaryColor}33` : 'rgba(59, 130, 246, 0.2)'}`,
+                }}
+                disabled={carouselPage === 0}
+                aria-label="Imóveis anteriores"
               >
-                <i className="ri-arrow-left-s-line text-2xl text-gray-600"></i>
+                <i className="ri-arrow-left-s-line text-xl" style={{ color: config?.primaryColor || 'var(--primary)' }}></i>
               </button>
               
               {/* Botão de navegação - Próximo */}
               <button 
                 onClick={() => {
-                  const track = document.getElementById('carousel-track');
-                  if (track) {
-                    const containerWidth = track.parentElement?.clientWidth || 0;
-                    const currentScroll = track.scrollLeft;
-                    track.scrollTo({
-                      left: currentScroll + containerWidth,
-                      behavior: 'smooth'
-                    });
-                  }
+                  if (!carouselTrackRef.current) return;
+                  const containerWidth = carouselTrackRef.current.parentElement?.clientWidth || 0;
+                  const newPage = Math.min(totalCarouselPages - 1, carouselPage + 1);
+                  carouselTrackRef.current.scrollTo({
+                    left: containerWidth * newPage,
+                    behavior: 'smooth'
+                  });
+                  setCarouselPage(newPage);
                 }}
-                className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white rounded-full shadow-lg p-2 transform translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity"
+                className="absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-white hover:bg-white/90 rounded-full shadow-md p-3 opacity-0 group-hover:opacity-100 transition-opacity disabled:opacity-0 disabled:cursor-not-allowed"
+                style={{
+                  border: `1px solid ${config?.primaryColor ? `${config.primaryColor}33` : 'rgba(59, 130, 246, 0.2)'}`,
+                }}
+                disabled={carouselPage === totalCarouselPages - 1}
+                aria-label="Próximos imóveis"
               >
-                <i className="ri-arrow-right-s-line text-2xl text-gray-600"></i>
+                <i className="ri-arrow-right-s-line text-xl" style={{ color: config?.primaryColor || 'var(--primary)' }}></i>
               </button>
               
               {/* Carrossel */}
               <div className="carousel-container overflow-hidden">
                 <div 
+                  ref={carouselTrackRef}
                   id="carousel-track"
                   className="carousel-track flex space-x-4 py-4 overflow-x-auto scrollbar-hide"
                   style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+                  onScroll={(e) => {
+                    if (!carouselTrackRef.current) return;
+                    const containerWidth = carouselTrackRef.current.parentElement?.clientWidth || 0;
+                    const scrollPosition = e.currentTarget.scrollLeft;
+                    const newPage = Math.round(scrollPosition / containerWidth);
+                    if (newPage !== carouselPage) {
+                      setCarouselPage(newPage);
+                    }
+                  }}
                 >
                   {properties?.slice(0, 9).map((property) => (
                     <div key={property.id} className="carousel-item flex-shrink-0 w-full sm:w-1/2 md:w-1/3 lg:w-1/4 px-2">
@@ -364,6 +384,35 @@ export default function Home() {
                         </div>
                       </div>
                     </div>
+                  ))}
+                </div>
+                
+                {/* Indicadores de página */}
+                <div className="flex justify-center space-x-2 mt-6">
+                  {[...Array(totalCarouselPages)].map((_, index) => (
+                    <button 
+                      key={index} 
+                      className={`h-2 rounded-full transition-all ${
+                        index === carouselPage 
+                          ? 'w-8 bg-gray-800' 
+                          : 'w-2 bg-gray-300'
+                      }`}
+                      aria-label={`Página ${index + 1}`}
+                      onClick={() => {
+                        if (!carouselTrackRef.current) return;
+                        const containerWidth = carouselTrackRef.current.parentElement?.clientWidth || 0;
+                        carouselTrackRef.current.scrollTo({
+                          left: containerWidth * index,
+                          behavior: 'smooth'
+                        });
+                        setCarouselPage(index);
+                      }}
+                      style={{
+                        backgroundColor: index === carouselPage 
+                          ? (config?.primaryColor || 'var(--primary)') 
+                          : undefined
+                      }}
+                    ></button>
                   ))}
                 </div>
               </div>
