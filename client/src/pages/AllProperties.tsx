@@ -38,7 +38,7 @@ export default function AllProperties() {
     bedrooms: 'any-bedrooms',
     bathrooms: 'any-bathrooms',
     minPrice: 0,
-    maxPrice: 10000000,
+    maxPrice: 20000000,
     purpose: 'all-purposes',
     area: 'any-area'
   });
@@ -157,7 +157,7 @@ export default function AllProperties() {
       bedrooms: 'any-bedrooms',
       bathrooms: 'any-bathrooms',
       minPrice: 0,
-      maxPrice: 10000000,
+      maxPrice: 20000000,
       purpose: 'all-purposes',
       area: 'any-area'
     });
@@ -342,18 +342,22 @@ export default function AllProperties() {
               </div>
               <Slider
                 min={0}
-                max={10000000}
-                step={50000}
+                max={20000000}
+                step={100000}
                 value={[filters.minPrice, filters.maxPrice]}
                 onValueChange={(value) => setFilters({...filters, minPrice: value[0], maxPrice: value[1]})}
                 className="py-2"
+                style={{ 
+                  "--thumb-bg": config?.primaryColor || 'var(--primary)',
+                  "--range-bg": config?.primaryColor || 'var(--primary)',
+                } as React.CSSProperties }
               />
               <div className="flex justify-between text-xs text-gray-500 mt-1">
                 <span>R$ 0</span>
-                <span>R$ 2.5M</span>
                 <span>R$ 5M</span>
-                <span>R$ 7.5M</span>
                 <span>R$ 10M</span>
+                <span>R$ 15M</span>
+                <span>R$ 20M</span>
               </div>
             </div>
             
