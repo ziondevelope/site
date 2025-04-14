@@ -84,8 +84,25 @@ export default function Home() {
             )}
           </div>
           
-          {/* Espaço vazio para manter o layout em 3 colunas */}
-          <div></div>
+          {/* Botão WhatsApp */}
+          <div>
+            {config?.phone ? (
+              <a 
+                href={`https://wa.me/${config.phone.replace(/\D/g, '')}`} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="inline-flex items-center px-4 py-2 rounded-full border border-green-500 bg-green-500 text-white hover:bg-green-600 transition-colors"
+              >
+                <i className="ri-whatsapp-line mr-2 text-lg"></i>
+                {config.phone}
+              </a>
+            ) : (
+              <div className="inline-flex items-center px-4 py-2 rounded-full border border-green-500 bg-green-500 text-white">
+                <i className="ri-whatsapp-line mr-2 text-lg"></i>
+                Whatsapp
+              </div>
+            )}
+          </div>
         </div>
       </header>
 
