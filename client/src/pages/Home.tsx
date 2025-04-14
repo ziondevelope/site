@@ -81,13 +81,13 @@ export default function Home() {
           
           {/* Barra de Filtro */}
           {config?.showSearchBar && (
-            <div className="w-full max-w-4xl mx-auto bg-white/80 backdrop-blur-sm rounded-md p-2 md:p-3 shadow-xl">
+            <div className="w-full max-w-2xl mx-auto bg-white/80 backdrop-blur-sm rounded-md p-2 md:p-3 shadow-xl">
               <form className="flex flex-col md:flex-row gap-2">
                 {/* Tipo de Imóvel */}
                 <div className="flex-1">
                   <div className="relative">
                     <select 
-                      className="w-full appearance-none rounded-md px-4 py-3 bg-white border border-gray-200 text-black font-medium"
+                      className="w-full appearance-none rounded-md px-3 py-2 bg-white border border-gray-200 text-black text-sm"
                       defaultValue="apartment"
                     >
                       <option value="apartment">Tipo de Imóvel</option>
@@ -97,7 +97,7 @@ export default function Home() {
                       <option value="land">Terreno</option>
                     </select>
                     <div className="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none">
-                      <i className="ri-arrow-down-s-line text-gray-500"></i>
+                      <i className="ri-arrow-down-s-line text-gray-500 text-xs"></i>
                     </div>
                   </div>
                 </div>
@@ -107,7 +107,7 @@ export default function Home() {
                   <input 
                     type="text"
                     placeholder="Cidade"
-                    className="w-full rounded-md px-4 py-3 bg-white border border-gray-200 text-black font-medium"
+                    className="w-full rounded-md px-3 py-2 bg-white border border-gray-200 text-black text-sm"
                   />
                 </div>
                 
@@ -115,7 +115,7 @@ export default function Home() {
                 <div className="flex-1">
                   <div className="relative">
                     <select 
-                      className="w-full appearance-none rounded-md px-4 py-3 bg-white border border-gray-200 text-black font-medium"
+                      className="w-full appearance-none rounded-md px-3 py-2 bg-white border border-gray-200 text-black text-sm"
                       defaultValue="comprar"
                     >
                       <option value="comprar">Comprar ou Alugar</option>
@@ -123,7 +123,7 @@ export default function Home() {
                       <option value="alugar">Alugar</option>
                     </select>
                     <div className="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none">
-                      <i className="ri-arrow-down-s-line text-gray-500"></i>
+                      <i className="ri-arrow-down-s-line text-gray-500 text-xs"></i>
                     </div>
                   </div>
                 </div>
@@ -132,10 +132,10 @@ export default function Home() {
                 <div className="flex-initial">
                   <button 
                     type="submit"
-                    className="w-full rounded-md py-3 px-5 text-white font-medium transition-all shadow-sm hover:shadow-md flex items-center justify-center"
+                    className="w-full rounded-md py-2 px-4 text-white text-sm transition-all shadow-sm hover:shadow-md flex items-center justify-center"
                     style={{ 
                       backgroundColor: config?.primaryColor || '#8BC34A',
-                      minWidth: '130px'
+                      minWidth: '100px'
                     }}
                   >
                     Buscar
