@@ -306,8 +306,9 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
                         <div 
                           key={index}
                           className={`flex-shrink-0 w-20 h-14 rounded overflow-hidden cursor-pointer ${
-                            activeImage === imageUrl ? 'ring-2 ring-offset-1 ring-primary' : ''
+                            activeImage === imageUrl ? 'ring-2 ring-offset-1 border-2' : ''
                           }`}
+                          style={activeImage === imageUrl ? { borderColor: primaryColor } : {}}
                           onClick={() => setActiveImage(imageUrl)}
                         >
                           <div className="w-full h-full relative">
