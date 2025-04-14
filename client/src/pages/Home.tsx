@@ -373,10 +373,7 @@ export default function Home() {
                               {property.bathrooms}
                             </span>
                             <span className="flex items-center">
-                              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1" style={{ color: config?.primaryColor || 'var(--primary)' }}>
-                                <path d="M9 6 9 12 M12 6 12 12 M15 6 15 12 M5 21 19 21 a1 1 0 0 0 1-1v-3.5a6 6 0 0 0-1.1-3.48 l-.52-.83A1 1 0 0 0 17.5 11 h-11 a1 1 0 0 0-.88.53 l-.52.83 A6 6 0 0 0 4 16.5 V20 a1 1 0 0 0 1 1Z"></path>
-                                <path d="M3 21h18"></path>
-                              </svg>
+                              <i className="fas fa-bath fa-sm mr-1" style={{ color: config?.primaryColor || 'var(--primary)' }}></i>
                               {property.suites || 0}
                             </span>
                             <span className="flex items-center">
