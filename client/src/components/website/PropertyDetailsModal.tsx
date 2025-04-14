@@ -138,11 +138,11 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
               {/* Coluna esquerda - Cartão de contato do corretor */}
               <div className="md:col-span-1 order-2 md:order-1">
                 {agent && (
-                  <div className="bg-white rounded-lg overflow-hidden border border-gray-200 shadow-sm">
+                  <div className="bg-gray-50 rounded-lg overflow-hidden">
                     <div className="p-6 flex flex-col items-center text-center">
                       {/* Avatar */}
                       {agent.avatar ? (
-                        <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-white shadow-md mb-4">
+                        <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-white shadow-sm mb-4">
                           <img
                             src={agent.avatar}
                             alt={agent.displayName}
@@ -150,33 +150,33 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
                           />
                         </div>
                       ) : (
-                        <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center mb-4">
-                          <i className="ri-user-line text-gray-400 text-4xl"></i>
+                        <div className="w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center mb-4">
+                          <i className="ri-user-line text-gray-400 text-3xl"></i>
                         </div>
                       )}
                       
                       {/* Nome e CRECI */}
                       <h3 className="text-xl font-bold text-gray-800 mb-1">{agent.displayName}</h3>
-                      <p className="text-gray-500 mb-6">CRECI {agent.creci || '111111'}</p>
+                      <p className="text-gray-500 mb-5">CRECI {agent.creci || '111111'}</p>
                       
                       {/* Botões de ação */}
                       <div className="w-full space-y-3">
                         <Button 
-                          className="w-full bg-white border-gray-300 hover:bg-gray-50 text-gray-800" 
+                          className="w-full rounded-full border-gray-300 text-gray-800 font-medium" 
                           variant="outline"
                         >
                           FALE COM O CORRETOR
                         </Button>
                         
                         <Button 
-                          className="w-full bg-white border-gray-300 hover:bg-gray-50 text-gray-800" 
+                          className="w-full rounded-full border-gray-300 text-gray-800 font-medium" 
                           variant="outline"
                         >
                           AGENDAR UMA VISITA
                         </Button>
                         
                         <Button 
-                          className="w-full"
+                          className="w-full rounded-full text-white font-medium"
                           style={{ backgroundColor: primaryColor }}
                         >
                           ENTRAR EM CONTATO
@@ -184,22 +184,22 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
                       </div>
                       
                       {/* Compartilhar */}
-                      <div className="mt-6 w-full">
-                        <p className="text-center text-gray-500 mb-3 text-xs uppercase tracking-wider">COMPARTILHAR</p>
+                      <div className="mt-4 w-full">
+                        <p className="text-center text-gray-500 mb-2 text-xs uppercase">COMPARTILHAR</p>
                         <div className="flex justify-center space-x-2">
-                          <button className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-200">
+                          <button className="w-10 h-10 rounded-full bg-white border border-gray-100 flex items-center justify-center text-teal-500 hover:bg-gray-50">
                             <i className="fab fa-whatsapp"></i>
                           </button>
-                          <button className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-200">
+                          <button className="w-10 h-10 rounded-full bg-white border border-gray-100 flex items-center justify-center text-blue-600 hover:bg-gray-50">
                             <i className="fab fa-facebook-f"></i>
                           </button>
-                          <button className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-200">
+                          <button className="w-10 h-10 rounded-full bg-white border border-gray-100 flex items-center justify-center text-blue-400 hover:bg-gray-50">
                             <i className="fab fa-twitter"></i>
                           </button>
-                          <button className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-200">
+                          <button className="w-10 h-10 rounded-full bg-white border border-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-50">
                             <i className="far fa-envelope"></i>
                           </button>
-                          <button className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-200">
+                          <button className="w-10 h-10 rounded-full bg-white border border-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-50">
                             <i className="fas fa-print"></i>
                           </button>
                         </div>
@@ -401,8 +401,6 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
                 </div>
                 
                 {/* Características */}
-                {/* Adicionando log para debug das características */}
-                {console.log("Property features:", currentProperty?.features)}
                 
                 {currentProperty?.features && Array.isArray(currentProperty.features) && currentProperty.features.length > 0 && (
                   <div className="mb-8">
