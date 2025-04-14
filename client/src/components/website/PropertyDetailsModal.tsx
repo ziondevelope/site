@@ -115,7 +115,7 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
     <div className="fixed inset-0 z-50 bg-black">
       <div 
         ref={modalRef}
-        className="bg-white w-full md:w-[85%] lg:w-[75%] xl:w-[65%] 2xl:w-[60%] h-full overflow-y-auto mx-auto"
+        className="bg-white w-full md:w-[70%] lg:w-[60%] xl:w-[50%] 2xl:w-[45%] h-full overflow-y-auto mx-auto"
       >
         {/* Close button */}
         <button 
