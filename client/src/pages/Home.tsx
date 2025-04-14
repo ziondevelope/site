@@ -282,7 +282,7 @@ export default function Home() {
                       }
                     }}
                   >
-                    {properties?.slice(0, 9).map((property) => (
+                    {properties?.filter(property => property.isFeatured).slice(0, 9).map((property) => (
                       <div key={property.id} className="carousel-item flex-shrink-0 w-full sm:w-1/2 md:w-1/3 lg:w-1/4 px-2">
                         <div className="h-full bg-white rounded-lg border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-lg">
                           {/* Property Image */}
