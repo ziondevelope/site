@@ -512,7 +512,7 @@ export default function PropertyDetails() {
                       
                       {/* Box cinza com a referência do imóvel e a foto do corretor */}
                       <div className="w-full bg-gray-100 p-4 rounded-lg mb-3">
-                        <div className="flex justify-between items-center mb-3">
+                        <div className="flex justify-between items-center mb-4">
                           <h3 className="text-gray-600 font-medium">REF: #{currentProperty?.id || '000'}</h3>
                           <div className="flex space-x-2">
                             <a href="#" className="text-gray-500 hover:text-teal-500 transition-colors">
@@ -524,25 +524,27 @@ export default function PropertyDetails() {
                           </div>
                         </div>
                       
-                        {/* Foto do corretor em destaque */}
-                        <div className="w-full rounded-lg overflow-hidden mb-4">
-                          <div className="w-full h-36 overflow-hidden">
-                            {agent?.avatar ? (
-                              <img 
-                                src={agent.avatar}
-                                alt={agent.displayName || "Corretor"} 
-                                className="w-full h-full object-cover"
-                              />
-                            ) : (
-                              <div className="w-full h-full bg-teal-100 flex items-center justify-center text-teal-500">
-                                <i className="ri-user-3-line text-4xl"></i>
-                              </div>
-                            )}
-                          </div>
-                          <div className="text-center py-2">
-                            <p className="font-medium">{agent?.displayName || "Corretor"}</p>
-                            <p className="text-sm text-gray-500">{agent?.role === 'agent' ? 'CRECI 111111' : 'Consultor Imobiliário'}</p>
-                          </div>
+                        {/* Foto do corretor (exatamente igual à foto original) */}
+                        <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-white shadow mx-auto mb-2">
+                          {agent?.avatar ? (
+                            <img 
+                              src={agent.avatar}
+                              alt={agent.displayName || "Corretor"} 
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            <div className="w-full h-full bg-teal-100 flex items-center justify-center text-teal-500">
+                              <i className="ri-user-3-line text-2xl"></i>
+                            </div>
+                          )}
+                        </div>
+                        <div className="text-center mb-4">
+                          <h3 className="text-xl font-bold text-gray-800">
+                            {agent?.displayName || "Corretor"}
+                          </h3>
+                          <p className="text-gray-500">
+                            {agent?.role === 'agent' ? 'CRECI 111111' : 'Consultor Imobiliário'}
+                          </p>
                         </div>
                         
                         {/* Botões dentro do box cinza */}
