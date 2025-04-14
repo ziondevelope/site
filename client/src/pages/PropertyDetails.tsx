@@ -46,8 +46,25 @@ export default function PropertyDetails() {
   // Set the first image as active when property data is loaded
   useEffect(() => {
     if (property?.images && property.images.length > 0) {
-      const featuredImage = property.images.find(img => img.isFeatured);
-      setActiveImage(featuredImage ? featuredImage.url : property.images[0].url);
+      // Verificar se a propriedade tem imagens e se são objetos com url
+      if (typeof property.images[0] === 'object' && property.images[0].url) {
+        const featuredImage = property.images.find(img => 
+          typeof img === 'object' && 'isFeatured' in img && img.isFeatured
+        );
+        
+        setActiveImage(
+          featuredImage && 'url' in featuredImage 
+            ? featuredImage.url 
+            : property.images[0].url
+        );
+      } 
+      // Se for array de strings
+      else if (typeof property.images[0] === 'string') {
+        setActiveImage(property.images[0]);
+      }
+    } else if (property?.featuredImage) {
+      // Compatibilidade com versões antigas
+      setActiveImage(property.featuredImage);
     }
   }, [property]);
 
@@ -262,21 +279,32 @@ export default function PropertyDetails() {
                   {/* Miniaturas */}
                   {currentProperty.images && currentProperty.images.length > 0 && (
                     <div className="flex space-x-2 overflow-x-auto pb-2 mb-6">
-                      {currentProperty.images.map((image, index) => (
-                        <div 
-                          key={index}
-                          className="w-28 h-20 rounded-md flex-shrink-0 cursor-pointer overflow-hidden"
-                          onClick={() => setActiveImage(image.url)}
-                        >
-                          <img 
-                            src={image.url} 
-                            alt={`Imagem ${index + 1} do imóvel`}
-                            className={`w-full h-full object-cover transition-all ${
-                              activeImage === image.url ? 'ring-2 ring-offset-2 ring-primary' : 'filter brightness-75 hover:brightness-100'
-                            }`}
-                          />
-                        </div>
-                      ))}
+                      {currentProperty.images.map((image, index) => {
+                        // Determinar a URL da imagem dependendo do formato
+                        const imageUrl = typeof image === 'object' && image.url 
+                          ? image.url 
+                          : typeof image === 'string' 
+                            ? image 
+                            : '';
+                            
+                        if (!imageUrl) return null;
+                            
+                        return (
+                          <div 
+                            key={index}
+                            className="w-28 h-20 rounded-md flex-shrink-0 cursor-pointer overflow-hidden"
+                            onClick={() => setActiveImage(imageUrl)}
+                          >
+                            <img 
+                              src={imageUrl} 
+                              alt={`Imagem ${index + 1} do imóvel`}
+                              className={`w-full h-full object-cover transition-all ${
+                                activeImage === imageUrl ? 'ring-2 ring-offset-2 ring-primary' : 'filter brightness-75 hover:brightness-100'
+                              }`}
+                            />
+                          </div>
+                        );
+                      })}
                     </div>
                   )}
                   
@@ -553,7 +581,11 @@ export default function PropertyDetails() {
                           <div className="h-48 bg-gray-200 relative">
                             {property.images && property.images.length > 0 && (
                               <img 
-                                src={property.images[0].url}
+                                src={typeof property.images[0] === 'object' && property.images[0].url 
+                                  ? property.images[0].url 
+                                  : typeof property.images[0] === 'string' 
+                                    ? property.images[0] 
+                                    : ''}
                                 alt={property.title}
                                 className="w-full h-full object-cover"
                               />
