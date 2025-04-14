@@ -43,7 +43,7 @@ function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
-      <Route path="/properties/:id" component={PropertyDetails} />
+      <Route path="/property/:id" component={PropertyDetails} />
       <Route path="/admin" component={AdminRouter} />
       <Route path="/admin/:path*" component={AdminRouter} />
       <Route component={NotFound} />
