@@ -67,19 +67,18 @@ export default function Header({ config, isLoadingConfig }: HeaderProps) {
               </>
             )}
           </div>
-        </div>
-        
-        {/* Menu e botão WhatsApp em uma div flex */}
-        <div className="flex items-center space-x-4">
-          {/* Menu navegação */}
+          
+          {/* Menu ao lado da logo */}
           <nav className="hidden md:flex space-x-8">
             <a href="/#home" className={`${scrolled ? 'text-gray-700' : 'text-white'} hover:text-primary font-medium transition-colors duration-300`}>Início</a>
             <a href="/#properties" className={`${scrolled ? 'text-gray-700' : 'text-white'} hover:text-primary font-medium transition-colors duration-300`}>Imóveis</a>
             <a href="/#about" className={`${scrolled ? 'text-gray-700' : 'text-white'} hover:text-primary font-medium transition-colors duration-300`}>Sobre</a>
             <a href="/#contact" className={`${scrolled ? 'text-gray-700' : 'text-white'} hover:text-primary font-medium transition-colors duration-300`}>Contato</a>
           </nav>
-          
-          {/* Botão WhatsApp */}
+        </div>
+        
+        {/* Botão WhatsApp */}
+        <div>
           <a 
             href={config?.phone ? `https://wa.me/${config.phone.replace(/\D/g, '')}` : "#"} 
             target="_blank" 
