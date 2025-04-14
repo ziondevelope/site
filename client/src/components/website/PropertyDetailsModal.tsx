@@ -214,14 +214,15 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
                 {/* Main property image */}
                 <div className="rounded-xl overflow-hidden relative mb-6 group">
                   <div 
-                    className="h-[400px] relative rounded overflow-hidden"
+                    className="relative rounded overflow-hidden"
+                    style={{ aspectRatio: '16/9', maxHeight: '400px' }}
                   >
                     {activeImage ? (
                       <img 
                         src={activeImage} 
                         alt={currentProperty.title || "Imagem do imóvel"} 
                         className="w-full h-full object-cover"
-                        style={{ objectPosition: 'center' }}
+                        style={{ objectPosition: 'center center' }}
                       />
                     ) : (
                       <div className="flex items-center justify-center bg-gray-200 w-full h-full">
