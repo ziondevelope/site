@@ -45,9 +45,16 @@ export default function PropertyDetails() {
   
   // Buscar dados do agente/corretor
   const { data: agent } = useQuery<any>({
-    queryKey: ['/api/agents', property?.agentId],
+    queryKey: [`/api/agents/${property?.agentId}`],
     enabled: !!property?.agentId,
   });
+  
+  // Log para debug
+  useEffect(() => {
+    console.log("PropertyDetails - Dados da propriedade:", property);
+    console.log("PropertyDetails - Dados do agente:", agent);
+    console.log("PropertyDetails - ID do agente:", property?.agentId);
+  }, [property, agent]);
 
   // Set the first image as active when property data is loaded
   useEffect(() => {
@@ -500,7 +507,7 @@ export default function PropertyDetails() {
                         {agent?.displayName || "Corretor"}
                       </h3>
                       <p className="text-gray-500 mb-4">
-                        CRECI 111111
+                        {agent?.role === 'agent' ? 'CRECI 111111' : 'Consultor Imobiliário'}
                       </p>
                       
                       {/* Botões de ação */}
