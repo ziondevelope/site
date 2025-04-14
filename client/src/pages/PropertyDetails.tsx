@@ -535,12 +535,11 @@ export default function PropertyDetails() {
                         className="w-full p-4 rounded-b-lg mb-3 text-white"
                         style={{ backgroundColor: primaryColor }}
                       >
-                        {/* Botão de Financiamento */}
+                        {/* Botão de Contato */}
                         <button 
-                          className="w-full py-4 px-4 rounded-md font-medium text-white mb-6"
-                          style={{ backgroundColor: '#00c18d' }}
+                          className="w-full py-3 px-4 rounded-full border-2 border-white text-white font-medium flex items-center justify-center mb-6 hover:bg-teal-600 transition-colors"
                         >
-                          SIMULE O FINANCIAMENTO
+                          ENTRAR EM CONTATO
                         </button>
                       
                         {/* Botões de compartilhamento */}
