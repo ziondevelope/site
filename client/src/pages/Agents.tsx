@@ -98,7 +98,14 @@ export default function Agents() {
   // Add agent mutation
   const addAgentMutation = useMutation({
     mutationFn: async (data: AgentFormValues) => {
-      const { confirmPassword, ...agentData } = data;
+      // Gera um usuário automático com base no nome
+      const agentData = {
+        ...data,
+        username: data.displayName.toLowerCase().replace(/\s+/g, '.') + Date.now(),
+        password: 'password123', // Senha padrão para o primeiro acesso
+        role: 'agent'
+      };
+      
       const response = await apiRequest("POST", "/api/agents", agentData);
       return response.json();
     },
@@ -123,13 +130,9 @@ export default function Agents() {
   // Update agent mutation
   const updateAgentMutation = useMutation({
     mutationFn: async (data: AgentFormValues & { id: number }) => {
-      const { confirmPassword, id, ...agentData } = data;
-      // Remove password if empty
-      const finalData = agentData.password 
-        ? agentData 
-        : { ...agentData, password: undefined };
+      const { id, ...agentData } = data;
       
-      const response = await apiRequest("PATCH", `/api/agents/${id}`, finalData);
+      const response = await apiRequest("PATCH", `/api/agents/${id}`, agentData);
       return response.json();
     },
     onSuccess: () => {
