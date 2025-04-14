@@ -8,6 +8,7 @@ import Header from '@/components/website/Header';
 import { Property } from "@shared/schema";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShower, faBed, faRulerCombined, faCar, faBath } from "@fortawesome/free-solid-svg-icons";
+import PropertyDetailsModal from '@/components/website/PropertyDetailsModal';
 
 // Função utilitária para obter a imagem de destaque do imóvel
 const getFeaturedImage = (property: Property): string | undefined => {
@@ -40,6 +41,21 @@ export default function Home() {
   const carouselTrackRef = useRef<HTMLDivElement>(null);
   const [carouselPage, setCarouselPage] = useState(0);
   const totalCarouselPages = 3; // Número de páginas no carrossel
+  
+  // Estado para o modal de detalhes do imóvel
+  const [selectedPropertyId, setSelectedPropertyId] = useState<number | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  
+  // Função para abrir o modal
+  const openPropertyModal = (propertyId: number) => {
+    setSelectedPropertyId(propertyId);
+    setIsModalOpen(true);
+  };
+  
+  // Função para fechar o modal
+  const closePropertyModal = () => {
+    setIsModalOpen(false);
+  };
 
   const { data: config, isLoading: isLoadingConfig } = useQuery<WebsiteConfig>({
     queryKey: ['/api/website/config'],
@@ -323,9 +339,13 @@ export default function Home() {
                               R$ {property.price.toLocaleString('pt-BR')}
                               {property.purpose === 'rent' && <span className="text-xs font-normal text-gray-500">/mês</span>}
                             </div>
-                            <Link href={`/properties/${property.id}`}>
-                              <Button variant="outline" size="sm">Ver</Button>
-                            </Link>
+                            <Button 
+                              variant="outline" 
+                              size="sm" 
+                              onClick={() => openPropertyModal(property.id)}
+                            >
+                              Ver
+                            </Button>
                           </div>
                         </div>
                       </div>
@@ -666,6 +686,15 @@ export default function Home() {
           </div>
         </div>
       </footer>
+      
+      {/* Modal de detalhes do imóvel */}
+      {isModalOpen && selectedPropertyId && (
+        <PropertyDetailsModal
+          propertyId={selectedPropertyId}
+          isOpen={isModalOpen}
+          onClose={closePropertyModal}
+        />
+      )}
     </div>
   );
 }
