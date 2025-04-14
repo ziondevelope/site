@@ -17,7 +17,7 @@
 
   /* Estilos para a barra de filtro no estilo moderno */
   .filter-select {
-    @apply text-base w-full appearance-none rounded-md px-4 py-3 transition-all;
+    @apply text-base w-full appearance-none rounded-md px-4 py-3 transition-all text-black font-medium;
   }
 
   .filter-button {
