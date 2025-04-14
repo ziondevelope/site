@@ -201,10 +201,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   apiRouter.post("/agents", async (req, res) => {
     try {
+      console.log("Dados recebidos para criar agente:", req.body);
+      // Verificar se requisição possui os campos obrigatórios
+      if (!req.body.username || !req.body.password || !req.body.displayName) {
+        console.log("Dados insuficientes:", req.body);
+        return res.status(400).json({ 
+          message: "Dados insuficientes para criar o corretor", 
+          required: ["username", "password", "displayName"]
+        });
+      }
+      
       const validatedData = insertUserSchema.parse(req.body);
+      console.log("Dados validados:", validatedData);
       const agent = await storageInstance.createUser(validatedData);
+      console.log("Agente criado com sucesso:", agent);
       res.status(201).json(agent);
     } catch (error) {
+      console.error("Erro ao criar agente:", error);
       if (error instanceof z.ZodError) {
         return res.status(400).json({ message: "Invalid agent data", errors: error.errors });
       }
