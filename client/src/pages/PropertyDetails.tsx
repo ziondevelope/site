@@ -341,17 +341,32 @@ export default function PropertyDetails() {
                             {currentProperty.address || 'Endereço não disponível'}
                             {currentProperty.neighborhood && `, ${currentProperty.neighborhood}`}
                             {currentProperty.city && `, ${currentProperty.city}`}
-                            {currentProperty.state && ` - ${currentProperty.state}`}
                           </p>
                         </div>
                       </div>
                     </div>
                     
-                    <div className="bg-gray-200 rounded-lg h-64 flex items-center justify-center">
-                      <div className="text-center">
-                        <i className="ri-map-pin-line text-4xl mb-2 text-gray-400"></i>
-                        <p className="text-gray-500">Mapa indisponível</p>
-                      </div>
+                    <div className="border border-gray-200 rounded-lg h-64 overflow-hidden">
+                      {currentProperty.address ? (
+                        <iframe 
+                          width="100%" 
+                          height="100%" 
+                          frameBorder="0" 
+                          style={{ border: 0 }} 
+                          src={`https://maps.google.com/maps?q=${encodeURIComponent(
+                            `${currentProperty.address}, ${currentProperty.neighborhood || ''}, ${currentProperty.city || ''}, ${currentProperty.zipCode || ''}`
+                          )}&z=15&output=embed`}
+                          allowFullScreen
+                          title="Localização do imóvel"
+                        ></iframe>
+                      ) : (
+                        <div className="h-full flex items-center justify-center bg-gray-100">
+                          <div className="text-center">
+                            <i className="ri-map-pin-line text-4xl mb-2 text-gray-400"></i>
+                            <p className="text-gray-500">Mapa indisponível</p>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
                   
