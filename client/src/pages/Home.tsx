@@ -271,63 +271,111 @@ export default function Home() {
               ))}
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {properties?.slice(0, 6).map((property) => (
-                <div key={property.id} className="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:scale-105">
-                  {/* Property Image */}
-                  <div className="h-48 bg-gray-200 relative">
-                    {getFeaturedImage(property) ? (
-                      <img 
-                        src={getFeaturedImage(property)} 
-                        alt={property.title} 
-                        className="w-full h-full object-cover"
-                        loading="lazy"
-                      />
-                    ) : null}
-                    <div 
-                      className="absolute bottom-0 left-0 text-white px-3 py-1 rounded-tr-lg"
-                      style={{
-                        backgroundColor: config?.primaryColor || 'var(--primary)'
-                      }}
-                    >
-                      {property.purpose === 'sale' ? 'Venda' : 'Aluguel'}
+            <div className="relative group">
+              {/* Botão de navegação - Anterior */}
+              <button 
+                onClick={() => {
+                  const track = document.getElementById('carousel-track');
+                  if (track) {
+                    const containerWidth = track.parentElement?.clientWidth || 0;
+                    const currentScroll = track.scrollLeft;
+                    track.scrollTo({
+                      left: currentScroll - containerWidth,
+                      behavior: 'smooth'
+                    });
+                  }
+                }}
+                className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white rounded-full shadow-lg p-2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity disabled:opacity-0 disabled:cursor-not-allowed"
+                disabled={document.getElementById('carousel-track')?.scrollLeft === 0}
+              >
+                <i className="ri-arrow-left-s-line text-2xl text-gray-600"></i>
+              </button>
+              
+              {/* Botão de navegação - Próximo */}
+              <button 
+                onClick={() => {
+                  const track = document.getElementById('carousel-track');
+                  if (track) {
+                    const containerWidth = track.parentElement?.clientWidth || 0;
+                    const currentScroll = track.scrollLeft;
+                    track.scrollTo({
+                      left: currentScroll + containerWidth,
+                      behavior: 'smooth'
+                    });
+                  }
+                }}
+                className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white rounded-full shadow-lg p-2 transform translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity"
+              >
+                <i className="ri-arrow-right-s-line text-2xl text-gray-600"></i>
+              </button>
+              
+              {/* Carrossel */}
+              <div className="carousel-container overflow-hidden">
+                <div 
+                  id="carousel-track"
+                  className="carousel-track flex space-x-4 py-4 overflow-x-auto scrollbar-hide"
+                  style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+                >
+                  {properties?.slice(0, 9).map((property) => (
+                    <div key={property.id} className="carousel-item flex-shrink-0 w-full sm:w-1/2 md:w-1/3 lg:w-1/4 px-2">
+                      <div className="h-full bg-white rounded-lg border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-lg">
+                        {/* Property Image */}
+                        <div className="h-48 bg-gray-200 relative">
+                          {getFeaturedImage(property) ? (
+                            <img 
+                              src={getFeaturedImage(property)} 
+                              alt={property.title} 
+                              className="w-full h-full object-cover"
+                              loading="lazy"
+                            />
+                          ) : null}
+                          <div 
+                            className="absolute bottom-0 left-0 text-white px-3 py-1 rounded-tr-lg"
+                            style={{
+                              backgroundColor: config?.primaryColor || 'var(--primary)'
+                            }}
+                          >
+                            {property.purpose === 'sale' ? 'Venda' : 'Aluguel'}
+                          </div>
+                        </div>
+                        
+                        <div className="p-4">
+                          <h3 className="text-lg font-semibold mb-2 line-clamp-1">{property.title}</h3>
+                          <p className="text-gray-500 text-sm mb-4 line-clamp-1">{property.address}</p>
+                          
+                          <div className="flex justify-between mb-4 text-sm">
+                            <div className="flex items-center">
+                              <i className="ri-ruler-line mr-1 text-primary"></i>
+                              <span>{property.area} m²</span>
+                            </div>
+                            <div className="flex items-center">
+                              <i className="ri-hotel-bed-line mr-1 text-primary"></i>
+                              <span>{property.bedrooms} quartos</span>
+                            </div>
+                            <div className="flex items-center">
+                              <i className="ri-shower-line mr-1 text-primary"></i>
+                              <span>{property.bathrooms} banheiros</span>
+                            </div>
+                          </div>
+                          
+                          <div className="flex justify-between items-center">
+                            <div 
+                              className="text-xl font-bold"
+                              style={{ color: config?.primaryColor || 'var(--primary)' }}
+                            >
+                              R$ {property.price.toLocaleString('pt-BR')}
+                              {property.purpose === 'rent' && <span className="text-xs font-normal text-gray-500">/mês</span>}
+                            </div>
+                            <Link href={`/properties/${property.id}`}>
+                              <Button variant="outline" size="sm">Ver</Button>
+                            </Link>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                  
-                  <div className="p-6">
-                    <h3 className="text-xl font-semibold mb-2">{property.title}</h3>
-                    <p className="text-gray-500 mb-4">{property.address}</p>
-                    
-                    <div className="flex justify-between mb-4">
-                      <div className="flex items-center">
-                        <i className="ri-ruler-line mr-1 text-primary"></i>
-                        <span>{property.area} m²</span>
-                      </div>
-                      <div className="flex items-center">
-                        <i className="ri-hotel-bed-line mr-1 text-primary"></i>
-                        <span>{property.bedrooms} quartos</span>
-                      </div>
-                      <div className="flex items-center">
-                        <i className="ri-shower-line mr-1 text-primary"></i>
-                        <span>{property.bathrooms} banheiros</span>
-                      </div>
-                    </div>
-                    
-                    <div className="flex justify-between items-center">
-                      <div 
-                        className="text-2xl font-bold"
-                        style={{ color: config?.primaryColor || 'var(--primary)' }}
-                      >
-                        R$ {property.price.toLocaleString('pt-BR')}
-                        {property.purpose === 'rent' && <span className="text-sm font-normal text-gray-500">/mês</span>}
-                      </div>
-                      <Link href={`/properties/${property.id}`}>
-                        <Button variant="outline" size="sm">Ver detalhes</Button>
-                      </Link>
-                    </div>
-                  </div>
+                  ))}
                 </div>
-              ))}
+              </div>
             </div>
           )}
           
