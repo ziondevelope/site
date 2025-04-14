@@ -471,11 +471,11 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
         {agent && (
           <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50">
             <div 
-              className="flex items-center shadow-lg rounded-full cursor-pointer px-6 py-4"
-              style={{ backgroundColor: primaryColor }}
+              className="flex items-center shadow-lg rounded-full cursor-pointer px-8 py-3 whitespace-nowrap"
+              style={{ backgroundColor: primaryColor, minWidth: '260px' }}
               onClick={() => alert('Chat com o corretor')}
             >
-              <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-white mr-3 flex-shrink-0">
+              <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-white mr-4 flex-shrink-0">
                 {agent.avatar ? (
                   <img
                     src={agent.avatar}
@@ -488,8 +488,8 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
                   </div>
                 )}
               </div>
-              <span className="text-white font-medium mr-2">Fale com o corretor</span>
-              <MessageCircle className="w-5 h-5 text-white" />
+              <span className="text-white font-medium flex-grow text-center">Fale com o corretor</span>
+              <MessageCircle className="w-5 h-5 text-white ml-4 flex-shrink-0" />
             </div>
           </div>
         )}
