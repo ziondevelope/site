@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'wouter';
 import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
-import { Property } from '@shared/schema';
+import { Property, User } from '@shared/schema';
 
 export default function PropertyDetail() {
   const { id } = useParams();
@@ -13,18 +13,36 @@ export default function PropertyDetail() {
     queryKey: [`/api/properties/${id}`],
     enabled: !!id
   });
+  
+  // Fetch agent details if property is loaded
+  const { data: agent } = useQuery<User>({
+    queryKey: [`/api/agents/${property?.agentId}`],
+    enabled: !!property?.agentId
+  });
+  
+  // Fetch all properties for similar properties section
+  const { data: allProperties = [] } = useQuery<Property[]>({
+    queryKey: ['/api/properties'],
+    enabled: !!property
+  });
+  
+  // Filter similar properties (same neighborhood, same type, etc.)
+  const similarProperties = allProperties.filter(p => 
+    p.id !== property?.id && 
+    (p.neighborhood === property?.neighborhood || p.type === property?.type)
+  ).slice(0, 4);
 
   // Função para navegar pelas imagens
   const navigateImage = (direction: 'next' | 'prev') => {
     if (!property?.images || property.images.length === 0) return;
     
     if (direction === 'next') {
-      setCurrentImageIndex((prevIndex) => 
-        prevIndex === property.images.length - 1 ? 0 : prevIndex + 1
+      setCurrentImageIndex((prevIndex: number) => 
+        prevIndex === property.images!.length - 1 ? 0 : prevIndex + 1
       );
     } else {
-      setCurrentImageIndex((prevIndex) => 
-        prevIndex === 0 ? property.images.length - 1 : prevIndex - 1
+      setCurrentImageIndex((prevIndex: number) => 
+        prevIndex === 0 ? property.images!.length - 1 : prevIndex - 1
       );
     }
   };
@@ -48,7 +66,11 @@ export default function PropertyDetail() {
     <div className="min-h-screen bg-white">
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-6xl mx-auto">
-          <h1 className="text-3xl font-bold mb-4">Detalhes do Imóvel ID: {id}</h1>
+          <h1 className="text-3xl font-bold mb-4">
+            {isLoadingProperty ? 'Carregando detalhes do imóvel...' : 
+              property ? `Detalhes do Imóvel - ${property.title || `Cód. LL${String(property.id).padStart(4, '0')}`}` :
+              'Imóvel não encontrado'}
+          </h1>
           
           {isLoadingProperty ? (
             <div className="animate-pulse">
@@ -142,11 +164,134 @@ export default function PropertyDetail() {
                 <h3 className="text-xl font-semibold mb-2">Descrição</h3>
                 <p className="whitespace-pre-line">{property.description || 'Sem descrição disponível'}</p>
               </div>
+              
+              {/* Características */}
+              {property.features && property.features.length > 0 && (
+                <div className="mb-6">
+                  <h3 className="text-xl font-semibold mb-2">Características</h3>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                    {property.features.map((feature, index) => (
+                      <div key={index} className="flex items-center">
+                        <svg 
+                          xmlns="http://www.w3.org/2000/svg" 
+                          className="h-5 w-5 text-green-600 mr-2" 
+                          fill="none" 
+                          viewBox="0 0 24 24" 
+                          stroke="currentColor"
+                        >
+                          <path 
+                            strokeLinecap="round" 
+                            strokeLinejoin="round" 
+                            strokeWidth={2} 
+                            d="M5 13l4 4L19 7" 
+                          />
+                        </svg>
+                        <span>{feature}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+              
+              {/* Informações do corretor */}
+              {property.agentId && (
+                <div className="mb-6 border-t pt-6">
+                  <h3 className="text-xl font-semibold mb-4">Corretor Responsável</h3>
+                  <div className="flex items-center">
+                    <div className="bg-gray-200 w-16 h-16 rounded-full flex-shrink-0 overflow-hidden">
+                      {agent?.avatar ? (
+                        <img 
+                          src={agent.avatar} 
+                          alt={agent.displayName || 'Corretor'} 
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                          </svg>
+                        </div>
+                      )}
+                    </div>
+                    <div className="ml-4">
+                      <p className="font-semibold">{agent?.displayName || `Corretor ID: ${property.agentId}`}</p>
+                      {agent?.role === 'agent' && <p className="text-sm text-gray-600">CRECI: {agent.id}9876</p>}
+                      <p className="text-sm text-gray-600 mt-1">Entre em contato para mais informações sobre este imóvel</p>
+                      <div className="mt-2 flex gap-2">
+                        <button className="px-4 py-2 bg-green-600 text-white rounded-md text-sm font-medium hover:bg-green-700 transition-colors">
+                          Entrar em contato
+                        </button>
+                        {agent?.phone && (
+                          <a 
+                            href={`tel:${agent.phone}`} 
+                            className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium flex items-center hover:bg-gray-50 transition-colors"
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                            </svg>
+                            Ligar
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           ) : (
             <div className="bg-red-100 p-4 rounded">
               <h3 className="text-red-800 font-medium">Imóvel não encontrado</h3>
               <p className="text-red-700">Não foi possível encontrar o imóvel com ID {id}</p>
+            </div>
+          )}
+          
+          {/* Imóveis Similares */}
+          {property && similarProperties.length > 0 && (
+            <div className="mt-10 mb-8 border-t pt-8">
+              <h2 className="text-2xl font-bold mb-6">Imóveis Similares</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {similarProperties.map((similarProperty) => (
+                  <div key={similarProperty.id} className="border rounded-lg overflow-hidden hover:shadow-md transition-shadow">
+                    <div className="h-48 bg-gray-200 relative">
+                      {similarProperty.images && similarProperty.images.length > 0 && (
+                        <img 
+                          src={typeof similarProperty.images[0] === 'object' 
+                            ? similarProperty.images[0].url 
+                            : similarProperty.images[0]
+                          } 
+                          alt={similarProperty.title || 'Imóvel'} 
+                          className="w-full h-full object-cover"
+                        />
+                      )}
+                      {similarProperty.purpose && (
+                        <div className="absolute top-2 right-2 bg-blue-600 text-white text-xs px-2 py-1 rounded">
+                          {similarProperty.purpose === 'sale' ? 'Venda' : 'Aluguel'}
+                        </div>
+                      )}
+                    </div>
+                    <div className="p-4">
+                      <h3 className="font-semibold truncate">{similarProperty.title || ''}</h3>
+                      <p className="text-sm text-gray-500 truncate">{similarProperty.address || ''}</p>
+                      <div className="mt-2 text-lg font-bold">
+                        {similarProperty.price 
+                          ? `R$ ${similarProperty.price.toLocaleString('pt-BR')}` 
+                          : 'Preço não informado'
+                        }
+                      </div>
+                      <div className="mt-2 flex items-center text-sm text-gray-600 space-x-4">
+                        <div>{similarProperty.bedrooms || 0} quartos</div>
+                        <div>{similarProperty.bathrooms || 0} banheiros</div>
+                        <div>{similarProperty.area || 0}m²</div>
+                      </div>
+                      <Link href={`/property/${similarProperty.id}`}>
+                        <a className="mt-3 w-full block text-center py-2 bg-gray-100 hover:bg-gray-200 rounded text-sm font-medium transition-colors">
+                          Ver detalhes
+                        </a>
+                      </Link>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
           
