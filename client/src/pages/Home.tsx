@@ -76,7 +76,7 @@ export default function Home() {
         <div className="container mx-auto px-4 text-center">
           {config?.showBannerText && (
             <div className="mx-auto max-w-3xl mb-6 md:mb-10">
-              <h1 className="text-[2.5rem] md:text-[2.75rem] font-bold mb-2 md:mb-4">{config?.bannerTitle || "Encontre o imóvel dos seus sonhos"}</h1>
+              <h1 className="text-4xl md:text-5xl font-bold mb-2 md:mb-4">{config?.bannerTitle || "Encontre o imóvel dos seus sonhos"}</h1>
               {config?.bannerSubtitle && (
                 <p className="text-lg mb-4 md:mb-8">{config.bannerSubtitle}</p>
               )}
