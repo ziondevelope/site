@@ -12,8 +12,6 @@ export async function apiRequest<T = any>(
   url: string,
   data?: any
 ): Promise<Response> {
-  console.log(`Executando requisição ${method} para ${url}`, data);
-  
   const options: RequestInit = {
     method,
     headers: {
@@ -23,14 +21,7 @@ export async function apiRequest<T = any>(
     body: data ? JSON.stringify(data) : undefined,
   };
   
-  try {
-    const res = await fetch(url, options);
-    console.log(`Resposta recebida de ${url}:`, res.status, res.statusText);
-    return res;
-  } catch (error) {
-    console.error(`Erro na requisição para ${url}:`, error);
-    throw error;
-  }
+  return fetch(url, options);
 }
 
 type UnauthorizedBehavior = "returnNull" | "throw";
