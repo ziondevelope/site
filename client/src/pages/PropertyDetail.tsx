@@ -32,11 +32,31 @@ export default function PropertyDetail() {
   const [carouselPage, setCarouselPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
   const carouselTrackRef = useRef<HTMLDivElement>(null);
+  
+  // Calcular o número total de páginas do carrossel quando os dados são carregados
+  useEffect(() => {
+    if (allProperties && allProperties.length > 0 && currentProperty) {
+      // Filtramos imóveis similares (mesmo propósito e diferente ID)
+      const similarProperties = allProperties.filter(
+        p => p.id !== currentProperty.id && p.purpose === currentProperty.purpose
+      );
+      
+      // Limitar a 8 propriedades no carrossel
+      const propertiesToShow = similarProperties.slice(0, 8);
+      
+      // 3 propriedades por página no desktop, 1 em mobile
+      // Calculamos com base no número máximo (desktop)
+      const itemsPerPage = 3;
+      const calculatedPages = Math.ceil(propertiesToShow.length / itemsPerPage);
+      
+      setTotalPages(calculatedPages > 0 ? calculatedPages : 1);
+    }
+  }, [allProperties, currentProperty]);
 
   // Propriedades similares
-  const { data: allProperties, isLoading: isLoadingProperties } = useQuery({
+  const { data: allProperties = [], isLoading: isLoadingProperties } = useQuery<Property[]>({
     queryKey: ['/api/properties'],
-    enabled: !!property,
+    enabled: true, // Sempre buscar as propriedades
   });
 
   // Define a imagem ativa inicialmente
@@ -65,7 +85,8 @@ export default function PropertyDetail() {
   }, [property]);
   
   // Formatação de moeda
-  const formatCurrency = (value: number) => {
+  const formatCurrency = (value: number | undefined) => {
+    if (value === undefined) return 'R$ 0,00';
     return value.toLocaleString('pt-BR', {
       style: 'currency',
       currency: 'BRL',
@@ -641,7 +662,7 @@ export default function PropertyDetail() {
       </main>
       
       {/* Seção de imóveis similares - Carrossel */}
-      {currentProperty && allProperties && (
+      {currentProperty && allProperties && allProperties.length > 0 && (
         <div className="bg-gray-50 py-12">
           <div className="container mx-auto px-4">
             <div className="text-center mb-10">
@@ -676,27 +697,27 @@ export default function PropertyDetail() {
                   ref={carouselTrackRef}
                 >
                   {allProperties
-                    .filter(p => p.id !== currentProperty.id && p.purpose === currentProperty.purpose)
+                    .filter(p => p.id !== currentProperty?.id && p.purpose === currentProperty?.purpose)
                     .slice(0, 8)
                     .map((property) => (
-                      <Link key={property.id} href={`/property/${property.id}`}>
+                      <Link key={property.id} href={`/properties/${property.id}`}>
                         <div className="min-w-[300px] max-w-[300px] bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow flex flex-col">
                           {/* Imagem */}
                           <div className="h-48 relative">
                             {property.images && property.images.length > 0 ? (
                               <img 
                                 src={
-                                  typeof property.images[0] === 'object' && property.images[0].url
+                                  typeof property.images[0] === 'object' && 'url' in property.images[0] && property.images[0].url
                                     ? property.images[0].url
                                     : typeof property.images[0] === 'string'
                                       ? property.images[0]
                                       : ''
                                 }
-                                alt={property.title}
+                                alt={property.title || 'Imóvel'}
                                 className="w-full h-full object-cover"
                               />
                             ) : property.featuredImage ? (
-                              <img src={property.featuredImage} alt={property.title} className="w-full h-full object-cover" />
+                              <img src={property.featuredImage} alt={property.title || 'Imóvel'} className="w-full h-full object-cover" />
                             ) : (
                               <div className="w-full h-full bg-gray-200 flex items-center justify-center">
                                 <i className="ri-image-line text-4xl text-gray-400"></i>
@@ -715,10 +736,10 @@ export default function PropertyDetail() {
                           <div className="p-4 flex-grow flex flex-col justify-between">
                             <div>
                               <h3 className="font-bold text-gray-800 mb-1 line-clamp-1">
-                                {property.title}
+                                {property.title || 'Propriedade sem título'}
                               </h3>
                               <p className="text-gray-500 text-sm mb-2 line-clamp-1">
-                                {property.neighborhood || property.city}
+                                {property.neighborhood || property.city || 'Localização não informada'}
                               </p>
                             </div>
                             
@@ -729,9 +750,9 @@ export default function PropertyDetail() {
                               </p>
                               
                               <div className="flex gap-3 text-gray-500 text-sm">
-                                {property.bedrooms && <span><i className="ri-hotel-bed-line mr-1"></i> {property.bedrooms}</span>}
-                                {property.bathrooms && <span><i className="ri-shower-line mr-1"></i> {property.bathrooms}</span>}
-                                {property.parkingSpots && <span><i className="ri-car-line mr-1"></i> {property.parkingSpots}</span>}
+                                {property.bedrooms ? <span><i className="ri-hotel-bed-line mr-1"></i> {property.bedrooms}</span> : null}
+                                {property.bathrooms ? <span><i className="ri-shower-line mr-1"></i> {property.bathrooms}</span> : null}
+                                {property.parkingSpots ? <span><i className="ri-car-line mr-1"></i> {property.parkingSpots}</span> : null}
                               </div>
                             </div>
                           </div>
@@ -742,30 +763,32 @@ export default function PropertyDetail() {
               </div>
               
               {/* Indicadores de página */}
-              <div className="flex justify-center space-x-2 mt-6">
-                {allProperties
-                  .filter(p => p.id !== currentProperty.id && p.purpose === currentProperty.purpose)
-                  .slice(0, 8)
-                  .map((_, index) => (
-                  <button
-                    key={index}
-                    className={`h-2 rounded-full transition-all ${index === carouselPage ? 'w-8 bg-gray-800' : 'w-2 bg-gray-300'}`}
-                    aria-label={`Página ${index + 1}`}
-                    onClick={() => {
-                      if (carouselTrackRef.current) {
-                        const containerWidth = carouselTrackRef.current.parentElement?.clientWidth || 0;
-                        const scrollAmount = containerWidth * index;
-                        
-                        carouselTrackRef.current.scrollTo({
-                          left: scrollAmount,
-                          behavior: 'smooth'
-                        });
-                        setCarouselPage(index);
-                      }
-                    }}
-                  />
-                ))}
-              </div>
+              {allProperties.filter(p => p.id !== currentProperty?.id && p.purpose === currentProperty?.purpose).length > 0 && (
+                <div className="flex justify-center space-x-2 mt-6">
+                  {allProperties
+                    .filter(p => p.id !== currentProperty?.id && p.purpose === currentProperty?.purpose)
+                    .slice(0, 8)
+                    .map((_, index) => (
+                    <button
+                      key={index}
+                      className={`h-2 rounded-full transition-all ${index === carouselPage ? 'w-8 bg-gray-800' : 'w-2 bg-gray-300'}`}
+                      aria-label={`Página ${index + 1}`}
+                      onClick={() => {
+                        if (carouselTrackRef.current) {
+                          const containerWidth = carouselTrackRef.current.parentElement?.clientWidth || 0;
+                          const scrollAmount = containerWidth * index;
+                          
+                          carouselTrackRef.current.scrollTo({
+                            left: scrollAmount,
+                            behavior: 'smooth'
+                          });
+                          setCarouselPage(index);
+                        }
+                      }}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </div>
