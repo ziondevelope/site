@@ -83,7 +83,7 @@ export default function Header({ config, isLoadingConfig }: HeaderProps) {
             href={config?.phone ? `https://wa.me/${config.phone.replace(/\D/g, '')}` : "#"} 
             target="_blank" 
             rel="noopener noreferrer"
-            className={`inline-flex items-center px-4 py-1 rounded-full border border-solid transition-all hover:bg-white ${
+            className={`inline-flex items-center px-3 py-1 rounded-full border border-solid transition-all hover:bg-white ${
               scrolled ? 'text-primary' : 'text-white'
             }`}
             style={{ 
@@ -99,7 +99,7 @@ export default function Header({ config, isLoadingConfig }: HeaderProps) {
               e.currentTarget.style.color = scrolled ? (config?.primaryColor || 'var(--primary)') : 'white';
             }}
           >
-            {config?.phone && <span className="mr-2">{config.phone}</span>}
+            {config?.phone && <span className="mr-1">{config.phone}</span>}
             <i 
               className="fab fa-whatsapp text-lg transition-colors" 
               style={{ color: scrolled ? "#25D366" : "white" }}
