@@ -132,26 +132,7 @@ export default function GeneralSettings({ config, configData, onConfigChange }: 
         </div>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div>
-          <Label className="block text-sm font-medium text-gray-700 mb-2">
-            Fonte Principal
-          </Label>
-          <select 
-            className="w-full border border-gray-200 rounded-full px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-transparent"
-            value={mainFont || ""}
-            onChange={(e) => handleMainFontChange(e.target.value)}
-          >
-            <option value="Inter">Inter</option>
-            <option value="Roboto">Roboto</option>
-            <option value="Montserrat">Montserrat</option>
-            <option value="Open Sans">Open Sans</option>
-            <option value="Lato">Lato</option>
-            <option value="Poppins">Poppins</option>
-            <option value="Playfair Display">Playfair Display</option>
-          </select>
-        </div>
-
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
           <Label className="block text-sm font-medium text-gray-700 mb-2">
             Fonte dos Títulos

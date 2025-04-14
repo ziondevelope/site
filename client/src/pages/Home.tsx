@@ -28,7 +28,6 @@ export default function Home() {
   useEffect(() => {
     if (config) {
       // Configurar fontes
-      document.documentElement.style.setProperty('--main-font', `'${config.mainFont || 'Inter'}', sans-serif`);
       document.documentElement.style.setProperty('--heading-font', `'${config.headingFont || 'Inter'}', sans-serif`);
       document.documentElement.style.setProperty('--body-font', `'${config.bodyFont || 'Inter'}', sans-serif`);
       
@@ -37,7 +36,6 @@ export default function Home() {
       document.documentElement.style.setProperty('--secondary', config.secondaryColor || '#10B981');
       
       console.log('Fontes aplicadas:', {
-        main: config.mainFont,
         heading: config.headingFont,
         body: config.bodyFont
       });
@@ -61,7 +59,7 @@ export default function Home() {
                 <div className="h-10 w-10 rounded bg-primary flex items-center justify-center text-white">
                   <i className="ri-home-line text-xl"></i>
                 </div>
-                <h1 className="text-2xl font-bold text-gray-800">{isLoadingConfig ? "Imobiliária" : config?.mainFont || "Imobiliária"}</h1>
+                <h1 className="text-2xl font-bold text-gray-800">Imobiliária</h1>
               </>
             )}
           </div>
