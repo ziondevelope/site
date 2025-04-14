@@ -123,7 +123,7 @@ export default function PropertyDetails() {
       </header>
 
       {/* Conteúdo principal */}
-      <main className="flex-grow">
+      <main className="flex-grow bg-white">
         {isLoadingProperty ? (
           <div className="container mx-auto px-4 py-8">
             <div className="max-w-6xl mx-auto">
@@ -293,14 +293,14 @@ export default function PropertyDetails() {
                   </div>
                   
                   {/* Descrição */}
-                  <div className="bg-white p-6 rounded-lg shadow-sm mb-8">
+                  <div className="mb-8">
                     <h2 className="text-2xl font-bold mb-4">Descrição</h2>
                     <p className="text-gray-600 whitespace-pre-line">{currentProperty.description}</p>
                   </div>
                   
                   {/* Características */}
                   {currentProperty.features && currentProperty.features.length > 0 && (
-                    <div className="bg-white p-6 rounded-lg shadow-sm mb-8">
+                    <div className="mb-8">
                       <h2 className="text-2xl font-bold mb-4">Características</h2>
                       <div className="grid grid-cols-2 md:grid-cols-3 gap-y-4">
                         {currentProperty.features.map((feature, index) => (
@@ -320,7 +320,7 @@ export default function PropertyDetails() {
                   )}
                   
                   {/* Localização */}
-                  <div className="bg-white p-6 rounded-lg shadow-sm mb-8">
+                  <div className="mb-8">
                     <h2 className="text-2xl font-bold mb-4">Localização</h2>
                     <div className="bg-gray-200 rounded-lg h-64 flex items-center justify-center">
                       <div className="text-center">
@@ -338,7 +338,7 @@ export default function PropertyDetails() {
                         {/* Placeholders para imóveis similares */}
                         {[1, 2, 3].map((item) => (
                           <div key={item} className="flex-shrink-0 w-72">
-                            <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+                            <div className="rounded-lg border border-gray-200 overflow-hidden">
                               <div className="h-48 bg-gray-200 relative">
                                 <div className="absolute top-2 left-2 bg-gray-800 text-white text-xs py-1 px-2 rounded">
                                   Verificar disponibilidade
@@ -368,7 +368,7 @@ export default function PropertyDetails() {
                 
                 {/* Coluna da direita - Formulário de contato */}
                 <div>
-                  <div className="bg-white p-6 rounded-lg shadow-sm sticky top-4">
+                  <div className="p-6 border border-gray-200 rounded-lg sticky top-4">
                     <div className="mb-6">
                       <h3 className="text-xl font-bold mb-2">Interessado neste imóvel?</h3>
                       <p className="text-gray-600">
