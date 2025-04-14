@@ -401,7 +401,10 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
                 </div>
                 
                 {/* Características */}
-                {currentProperty.features && currentProperty.features.length > 0 && (
+                {/* Adicionando log para debug das características */}
+                {console.log("Property features:", currentProperty?.features)}
+                
+                {currentProperty?.features && Array.isArray(currentProperty.features) && currentProperty.features.length > 0 && (
                   <div className="mb-8">
                     <h2 className="text-xl font-bold mb-3">Características</h2>
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-y-4">
