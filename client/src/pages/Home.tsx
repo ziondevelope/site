@@ -64,7 +64,7 @@ export default function Home() {
       {/* Hero Section */}
       <section 
         id="home" 
-        className="py-20 text-white"
+        className="py-32 text-white"
         style={{
           background: config?.bannerBackground 
             ? `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${config.bannerBackground}) center/cover no-repeat`
