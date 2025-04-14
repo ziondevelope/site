@@ -283,11 +283,13 @@ export default function PropertyDetail() {
                         <div>{similarProperty.bathrooms || 0} banheiros</div>
                         <div>{similarProperty.area || 0}m²</div>
                       </div>
-                      <Link href={`/property/${similarProperty.id}`}>
-                        <a className="mt-3 w-full block text-center py-2 bg-gray-100 hover:bg-gray-200 rounded text-sm font-medium transition-colors">
-                          Ver detalhes
-                        </a>
-                      </Link>
+                      <div className="mt-3">
+                        <Link href={`/property/${similarProperty.id}`}>
+                          <Button variant="outline" className="w-full text-center text-sm">
+                            Ver detalhes
+                          </Button>
+                        </Link>
+                      </div>
                     </div>
                   </div>
                 ))}
