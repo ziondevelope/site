@@ -439,77 +439,100 @@ export default function PropertyDetails() {
                   {/* Esta seção foi removida para ser substituída por uma seção mais abaixo */}
                 </div>
                 
-                {/* Coluna da direita - Formulário de contato */}
+                {/* Coluna da direita - Cartão de contato no novo estilo */}
                 <div>
-                  <div className="p-6 border border-gray-200 rounded-lg sticky top-4">
-                    <div className="mb-6">
-                      <h3 className="text-xl font-bold mb-2">Interessado neste imóvel?</h3>
-                      <p className="text-gray-600">
-                        Entre em contato com um de nossos corretores
-                      </p>
-                    </div>
-                    
-                    <div className="mb-6">
-                      <button 
-                        className="w-full py-3 px-4 rounded-md font-medium text-white flex items-center justify-center"
-                        style={{ backgroundColor: '#25D366' }}
-                      >
-                        <i className="ri-whatsapp-line mr-2 text-lg"></i>
-                        WhatsApp
-                      </button>
-                    </div>
-                    
-                    <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
-                      <div>
-                        <input
-                          type="text"
-                          placeholder="Seu nome"
-                          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary"
-                        />
-                      </div>
-                      <div>
-                        <input
-                          type="email"
-                          placeholder="Seu email"
-                          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary"
-                        />
-                      </div>
-                      <div>
-                        <input
-                          type="tel"
-                          placeholder="Seu telefone"
-                          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary"
-                        />
-                      </div>
-                      <div>
-                        <textarea
-                          placeholder="Mensagem"
-                          rows={4}
-                          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary"
-                          defaultValue={`Olá, tenho interesse no imóvel ${currentProperty.title} (Ref: #${currentProperty.id}).`}
-                        />
-                      </div>
-                      <button 
-                        type="submit"
-                        className="w-full py-3 rounded-md font-medium text-white"
-                        style={{ backgroundColor: primaryColor }}
-                      >
-                        Enviar Mensagem
-                      </button>
-                    </form>
-                    
-                    <div className="mt-6 pt-6 border-t border-gray-200">
-                      <div className="flex items-center">
-                        <div className="w-12 h-12 rounded-full bg-gray-200 mr-4">
-                          <img 
-                            src="https://via.placeholder.com/48"
-                            alt="Corretor" 
-                            className="w-full h-full object-cover rounded-full"
-                          />
+                  <div className="rounded-lg sticky top-4 overflow-hidden">
+                    {/* Seção de preços e taxas com borda verde */}
+                    <div className="border-l-4" style={{ borderColor: '#00c18d' }}>
+                      <div className="bg-white p-5">
+                        <div className="flex justify-between items-center mb-2">
+                          <div className="text-gray-700 font-medium">
+                            {currentProperty.purpose === 'rent' ? 'Locação' : 'Venda'}
+                          </div>
+                          <div className="text-gray-800 font-bold">
+                            {formatCurrency(currentProperty.price)}
+                          </div>
                         </div>
-                        <div>
-                          <p className="font-medium">Equipe LLImóveis</p>
-                          <p className="text-sm text-gray-500">Entre em contato conosco</p>
+                        
+                        <div className="flex justify-between items-center mb-2">
+                          <div className="text-gray-700 font-medium">
+                            Taxa de limpeza
+                          </div>
+                          <div className="text-gray-800 font-bold">
+                            R$ 10
+                          </div>
+                        </div>
+                        
+                        <div className="flex justify-between items-center border-t pt-2 mt-2 border-gray-200">
+                          <div className="text-gray-700 font-medium">
+                            Total
+                          </div>
+                          <div className="text-gray-800 font-bold">
+                            {formatCurrency(currentProperty.price + 10)}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Informações do corretor */}
+                    <div className="bg-white p-5 flex flex-col items-center text-center">
+                      {/* Avatar do corretor */}
+                      <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-white shadow mb-2">
+                        <img 
+                          src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80"
+                          alt="Corretor" 
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <h3 className="text-xl font-bold text-gray-800">
+                        Amanda Leão
+                      </h3>
+                      <p className="text-gray-500 mb-4">
+                        CRECI 111111
+                      </p>
+                      
+                      {/* Botões de ação */}
+                      <button 
+                        className="w-full py-3 px-4 rounded-full border-2 border-teal-400 text-teal-500 font-medium flex items-center justify-center mb-3 hover:bg-teal-50 transition-colors"
+                      >
+                        FALE COM O CORRETOR
+                      </button>
+                      
+                      <button 
+                        className="w-full py-3 px-4 rounded-full border-2 border-teal-400 text-teal-500 font-medium flex items-center justify-center mb-6 hover:bg-teal-50 transition-colors"
+                      >
+                        AGENDAR UMA VISITA
+                      </button>
+                      
+                      {/* Botão de Financiamento */}
+                      <button 
+                        className="w-full py-4 px-4 rounded-md font-medium text-white mb-3"
+                        style={{ backgroundColor: '#00c18d' }}
+                      >
+                        SIMULE O FINANCIAMENTO
+                      </button>
+                      
+                      {/* Botões de compartilhamento */}
+                      <div className="w-full">
+                        <p className="text-center text-gray-500 text-sm mb-3">
+                          COMPARTILHAR
+                        </p>
+                        <div className="flex justify-center space-x-3">
+                          <a href="#" className="w-10 h-10 rounded-full bg-teal-500 flex items-center justify-center text-white hover:bg-teal-600 transition-colors">
+                            <i className="ri-whatsapp-line"></i>
+                          </a>
+                          <a href="#" className="w-10 h-10 rounded-full bg-teal-500 flex items-center justify-center text-white hover:bg-teal-600 transition-colors">
+                            <i className="ri-facebook-fill"></i>
+                          </a>
+                          <a href="#" className="w-10 h-10 rounded-full bg-teal-500 flex items-center justify-center text-white hover:bg-teal-600 transition-colors">
+                            <i className="ri-twitter-x-fill"></i>
+                          </a>
+                          <a href="#" className="w-10 h-10 rounded-full bg-teal-500 flex items-center justify-center text-white hover:bg-teal-600 transition-colors">
+                            <i className="ri-mail-line"></i>
+                          </a>
+                          <a href="#" className="w-10 h-10 rounded-full bg-teal-500 flex items-center justify-center text-white hover:bg-teal-600 transition-colors">
+                            <i className="ri-printer-line"></i>
+                          </a>
                         </div>
                       </div>
                     </div>
