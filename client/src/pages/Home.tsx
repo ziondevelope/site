@@ -27,9 +27,20 @@ export default function Home() {
   // Definindo as fontes com base na configuração
   useEffect(() => {
     if (config) {
+      // Configurar fontes
       document.documentElement.style.setProperty('--main-font', `'${config.mainFont || 'Inter'}', sans-serif`);
       document.documentElement.style.setProperty('--heading-font', `'${config.headingFont || 'Inter'}', sans-serif`);
       document.documentElement.style.setProperty('--body-font', `'${config.bodyFont || 'Inter'}', sans-serif`);
+      
+      // Configurar cores
+      document.documentElement.style.setProperty('--primary', config.primaryColor || '#3B82F6');
+      document.documentElement.style.setProperty('--secondary', config.secondaryColor || '#10B981');
+      
+      console.log('Fontes aplicadas:', {
+        main: config.mainFont,
+        heading: config.headingFont,
+        body: config.bodyFont
+      });
     }
   }, [config]);
 
