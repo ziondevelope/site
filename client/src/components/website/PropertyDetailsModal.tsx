@@ -110,13 +110,6 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
   const currentProperty = property;
   const primaryColor = config?.primaryColor || 'var(--primary)';
 
-  // Aplicar a variável CSS para a cor primária no documento
-  useEffect(() => {
-    if (primaryColor && isOpen) {
-      document.documentElement.style.setProperty('--primary', primaryColor);
-    }
-  }, [primaryColor, isOpen]);
-
   if (!isOpen) return null;
 
   return (
@@ -126,7 +119,8 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
         className="bg-white w-full md:w-[70%] lg:w-[60%] xl:w-[50%] 2xl:w-[45%] h-full overflow-y-auto mx-auto modal-custom-scrollbar"
         style={{ 
           scrollbarColor: `${primaryColor} #f1f1f1`,
-          scrollbarWidth: 'thin'
+          scrollbarWidth: 'thin',
+          '--primary': primaryColor
         } as React.CSSProperties}
       >
         {/* Content */}
