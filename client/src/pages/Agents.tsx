@@ -106,8 +106,18 @@ export default function Agents() {
         role: 'agent'
       };
       
-      const response = await apiRequest("POST", "/api/agents", agentData);
-      return response.json();
+      try {
+        const response = await apiRequest("POST", "/api/agents", agentData);
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error("Erro na resposta:", errorText);
+          throw new Error(`Erro ao adicionar corretor: ${response.status} ${response.statusText}`);
+        }
+        return await response.json();
+      } catch (error) {
+        console.error("Erro ao processar requisição:", error);
+        throw error;
+      }
     },
     onSuccess: () => {
       setIsAddDialogOpen(false);
@@ -132,8 +142,18 @@ export default function Agents() {
     mutationFn: async (data: AgentFormValues & { id: number }) => {
       const { id, ...agentData } = data;
       
-      const response = await apiRequest("PATCH", `/api/agents/${id}`, agentData);
-      return response.json();
+      try {
+        const response = await apiRequest("PATCH", `/api/agents/${id}`, agentData);
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error("Erro na resposta:", errorText);
+          throw new Error(`Erro ao atualizar corretor: ${response.status} ${response.statusText}`);
+        }
+        return await response.json();
+      } catch (error) {
+        console.error("Erro ao processar requisição de atualização:", error);
+        throw error;
+      }
     },
     onSuccess: () => {
       setIsEditDialogOpen(false);
