@@ -428,7 +428,7 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
                   </div>
                 )}
               </div>
-              <span className="text-white font-medium flex-grow text-center">Fale com o corretor</span>
+              <span className="text-white font-medium flex-grow text-center">FALAR COM CORRETOR</span>
               <i className="fab fa-whatsapp text-white text-xl ml-4 flex-shrink-0"></i>
             </div>
           </div>
