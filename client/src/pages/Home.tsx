@@ -94,7 +94,11 @@ export default function Home() {
               href={config?.phone ? `https://wa.me/${config.phone.replace(/\D/g, '')}` : "#"} 
               target="_blank" 
               rel="noopener noreferrer"
-              className="inline-flex items-center px-4 py-2 rounded-full border border-green-500 bg-green-500 text-white hover:bg-green-600 transition-colors"
+              className="inline-flex items-center px-4 py-2 rounded-full border border-solid text-primary transition-colors hover:bg-gray-50"
+              style={{ 
+                borderColor: config?.primaryColor || 'var(--primary)',
+                color: config?.primaryColor || 'var(--primary)'
+              }}
             >
               {config?.phone && <span className="mr-2">{config.phone}</span>}
               <i className="ri-whatsapp-line text-lg"></i>
