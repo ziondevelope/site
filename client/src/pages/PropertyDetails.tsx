@@ -455,7 +455,7 @@ export default function PropertyDetails() {
                     <div className="border-t border-b border-gray-200 py-4 my-4">
                       <div className="grid grid-cols-5 gap-4">
                         <div className="flex items-center">
-                          <i className="ri-hotel-bed-line text-xl mr-2" style={{ color: primaryColor }}></i>
+                          <i className="fas fa-bed text-xl mr-2" style={{ color: primaryColor }}></i>
                           <div>
                             <span className="font-medium">{currentProperty.bedrooms || 0}</span>
                             <span className="text-gray-500 text-sm ml-1">Quartos</span>
@@ -463,7 +463,7 @@ export default function PropertyDetails() {
                         </div>
                         
                         <div className="flex items-center">
-                          <i className="ri-shower-line text-xl mr-2" style={{ color: primaryColor }}></i>
+                          <i className="fas fa-shower text-xl mr-2" style={{ color: primaryColor }}></i>
                           <div>
                             <span className="font-medium">{currentProperty.bathrooms || 0}</span>
                             <span className="text-gray-500 text-sm ml-1">Banheiros</span>
@@ -471,7 +471,7 @@ export default function PropertyDetails() {
                         </div>
                         
                         <div className="flex items-center">
-                          <i className="ri-shut-down-line text-xl mr-2" style={{ color: primaryColor }}></i>
+                          <i className="fas fa-bath text-xl mr-2" style={{ color: primaryColor }}></i>
                           <div>
                             <span className="font-medium">{currentProperty.suites || 0}</span>
                             <span className="text-gray-500 text-sm ml-1">Suítes</span>
@@ -479,7 +479,7 @@ export default function PropertyDetails() {
                         </div>
                         
                         <div className="flex items-center">
-                          <i className="ri-car-line text-xl mr-2" style={{ color: primaryColor }}></i>
+                          <i className="fas fa-car text-xl mr-2" style={{ color: primaryColor }}></i>
                           <div>
                             <span className="font-medium">{currentProperty.parkingSpots || 0}</span>
                             <span className="text-gray-500 text-sm ml-1">Vagas</span>
@@ -487,7 +487,7 @@ export default function PropertyDetails() {
                         </div>
                         
                         <div className="flex items-center">
-                          <i className="ri-ruler-line text-xl mr-2" style={{ color: primaryColor }}></i>
+                          <i className="fas fa-ruler-combined text-xl mr-2" style={{ color: primaryColor }}></i>
                           <div>
                             <span className="font-medium">{currentProperty.area}</span>
                             <span className="text-gray-500 text-sm ml-1">m²</span>
