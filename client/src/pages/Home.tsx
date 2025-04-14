@@ -359,13 +359,17 @@ export default function Home() {
                           
                           <div className="flex justify-between mb-4 text-sm">
                             <span className="text-gray-600 flex items-center">
-                              {/* Ícone de área - régua quadrada */}
+                              {/* Ícone de área - régua */}
                               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1">
-                                <rect x="3" y="3" width="18" height="18" rx="2" />
-                                <path d="M3 9h18" />
-                                <path d="M3 15h18" />
-                                <path d="M9 3v18" />
-                                <path d="M15 3v18" />
+                                <path d="M21 6H3v12h18V6z" />
+                                <path d="M3 12h3" />
+                                <path d="M8 12h3" />
+                                <path d="M13 12h3" />
+                                <path d="M18 12h3" />
+                                <path d="M3 9h1.5" />
+                                <path d="M3 15h1.5" />
+                                <path d="M19.5 9H21" />
+                                <path d="M19.5 15H21" />
                               </svg> {property.area}
                             </span>
                             <span className="text-gray-600 flex items-center">
@@ -402,14 +406,13 @@ export default function Home() {
                               </svg> {property.suites || 0}
                             </span>
                             <span className="text-gray-600 flex items-center">
-                              {/* Ícone de garagem - carro */}
+                              {/* Ícone de garagem - carro (estilo fusca) */}
                               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1">
-                                <path d="M5 17h14" />
-                                <path d="M5 17a2 2 0 0 1-2-2V7l4-5h10l4 5v8a2 2 0 0 1-2 2H5Z" />
-                                <path d="M5 12h14" />
-                                <path d="M8 12v5" />
-                                <path d="M16 12v5" />
-                                <path d="M5 8h14" />
+                                <path d="M7 17h10" />
+                                <path d="M3 13l2-6c.8-2.4 1.6-3 3-3h8c1.4 0 2.2.6 3 3l2 6" />
+                                <path d="M5 17a2 2 0 0 1-2-2v-2h18v2a2 2 0 0 1-2 2h-2" />
+                                <circle cx="7.5" cy="14" r="1.5" />
+                                <circle cx="16.5" cy="14" r="1.5" />
                               </svg> {property.parkingSpots || 0}
                             </span>
                           </div>
