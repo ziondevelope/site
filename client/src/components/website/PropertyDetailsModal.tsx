@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { Property, WebsiteConfig } from '@shared/schema';
 import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
-import { X } from 'lucide-react';
+import { X, MessageCircle } from 'lucide-react';
 
 interface PropertyDetailsModalProps {
   propertyId: number;
@@ -466,6 +466,33 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
             </div>
           )}
         </div>
+
+        {/* Chat button fixo */}
+        {agent && (
+          <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50">
+            <div 
+              className="flex items-center shadow-lg rounded-full cursor-pointer px-6 py-4"
+              style={{ backgroundColor: primaryColor }}
+              onClick={() => alert('Chat com o corretor')}
+            >
+              <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-white mr-3 flex-shrink-0">
+                {agent.avatar ? (
+                  <img
+                    src={agent.avatar}
+                    alt={agent.displayName}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                    <i className="ri-user-line text-gray-400 text-xl"></i>
+                  </div>
+                )}
+              </div>
+              <span className="text-white font-medium mr-2">Fale com o corretor</span>
+              <MessageCircle className="w-5 h-5 text-white" />
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
