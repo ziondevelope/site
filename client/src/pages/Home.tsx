@@ -51,41 +51,43 @@ export default function Home() {
       {/* Header */}
       <header className="bg-white shadow">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          {/* Menu na esquerda (onde estava a logo) */}
-          <nav className="hidden md:flex space-x-8">
-            <a href="#home" className="text-gray-700 hover:text-primary">Início</a>
-            <a href="#properties" className="text-gray-700 hover:text-primary">Imóveis</a>
-            <a href="#about" className="text-gray-700 hover:text-primary">Sobre</a>
-            <a href="#contact" className="text-gray-700 hover:text-primary">Contato</a>
-          </nav>
-          
-          {/* Logo no centro (onde estava o menu) */}
-          <div className="flex items-center space-x-3">
-            {isLoadingConfig ? (
-              // Placeholder durante o carregamento - mantém o mesmo tamanho
-              <div className="h-16 w-36 bg-gray-100 rounded animate-pulse"></div>
-            ) : config?.logo ? (
-              <div className="h-16 min-w-[140px]">
-                <img 
-                  src={config.logo} 
-                  alt="Logo da Imobiliária" 
-                  className="h-full object-contain"
-                  loading="eager" 
-                  onLoad={(e) => {
-                    // Torna a imagem visível quando carregada
-                    (e.target as HTMLImageElement).style.opacity = "1";
-                  }}
-                  style={{ opacity: 0, transition: "opacity 0.2s ease" }}
-                />
-              </div>
-            ) : (
-              <>
-                <div className="h-10 w-10 rounded bg-primary flex items-center justify-center text-white">
-                  <i className="ri-home-line text-xl"></i>
+          <div className="flex items-center">
+            {/* Logo à esquerda */}
+            <div className="flex items-center mr-8">
+              {isLoadingConfig ? (
+                // Placeholder durante o carregamento - mantém o mesmo tamanho
+                <div className="h-16 w-36 bg-gray-100 rounded animate-pulse"></div>
+              ) : config?.logo ? (
+                <div className="h-16 min-w-[140px]">
+                  <img 
+                    src={config.logo} 
+                    alt="Logo da Imobiliária" 
+                    className="h-full object-contain"
+                    loading="eager" 
+                    onLoad={(e) => {
+                      // Torna a imagem visível quando carregada
+                      (e.target as HTMLImageElement).style.opacity = "1";
+                    }}
+                    style={{ opacity: 0, transition: "opacity 0.2s ease" }}
+                  />
                 </div>
-                <h1 className="text-2xl font-bold text-gray-800">Imobiliária</h1>
-              </>
-            )}
+              ) : (
+                <>
+                  <div className="h-10 w-10 rounded bg-primary flex items-center justify-center text-white">
+                    <i className="ri-home-line text-xl"></i>
+                  </div>
+                  <h1 className="text-2xl font-bold text-gray-800 ml-3">Imobiliária</h1>
+                </>
+              )}
+            </div>
+            
+            {/* Menu ao lado da logo */}
+            <nav className="hidden md:flex space-x-8">
+              <a href="#home" className="text-gray-700 hover:text-primary font-medium">Início</a>
+              <a href="#properties" className="text-gray-700 hover:text-primary font-medium">Imóveis</a>
+              <a href="#about" className="text-gray-700 hover:text-primary font-medium">Sobre</a>
+              <a href="#contact" className="text-gray-700 hover:text-primary font-medium">Contato</a>
+            </nav>
           </div>
           
           {/* Botão WhatsApp */}
