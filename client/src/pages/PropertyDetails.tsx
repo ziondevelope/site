@@ -510,25 +510,55 @@ export default function PropertyDetails() {
                         {agent?.role === 'agent' ? 'CRECI 111111' : 'Consultor Imobiliário'}
                       </p>
                       
-                      {/* Botões de ação */}
-                      <a 
-                        href={agent?.phone ? `https://wa.me/55${agent.phone.replace(/\D/g, '')}?text=Olá, tenho interesse no imóvel ${currentProperty.title} (Ref: #${currentProperty.id}).` : '#'}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="w-full py-3 px-4 rounded-full border-2 border-teal-400 text-teal-500 font-medium flex items-center justify-center mb-3 hover:bg-teal-50 transition-colors"
-                      >
-                        FALE COM O CORRETOR
-                      </a>
+                      {/* Box cinza sobre a foto e os botões */}
+                      <div className="w-full bg-gray-100 p-4 rounded-lg mb-3">
+                        <div className="flex justify-between items-center mb-3">
+                          <h3 className="text-gray-600 font-medium">REF: #{currentProperty?.id || '000'}</h3>
+                          <div className="flex space-x-2">
+                            <a href="#" className="text-gray-500 hover:text-teal-500 transition-colors">
+                              <i className="ri-heart-line text-lg"></i>
+                            </a>
+                            <a href="#" className="text-gray-500 hover:text-teal-500 transition-colors">
+                              <i className="ri-share-line text-lg"></i>
+                            </a>
+                          </div>
+                        </div>
                       
-                      <button 
-                        className="w-full py-3 px-4 rounded-full border-2 border-teal-400 text-teal-500 font-medium flex items-center justify-center mb-3 hover:bg-teal-50 transition-colors"
-                        onClick={() => {
-                          // Função para agendar visita - poderia abrir um modal
-                          window.alert('Funcionalidade de agendamento em desenvolvimento')
-                        }}
-                      >
-                        AGENDAR UMA VISITA
-                      </button>
+                        {/* Foto em miniatura */}
+                        <div className="w-full h-36 rounded-lg overflow-hidden mb-3">
+                          {currentProperty?.images && currentProperty.images.length > 0 && (
+                            <img 
+                              src={typeof currentProperty.images[0] === 'object' && currentProperty.images[0].url 
+                                ? currentProperty.images[0].url 
+                                : typeof currentProperty.images[0] === 'string' 
+                                  ? currentProperty.images[0] 
+                                  : ''}
+                              alt={currentProperty.title}
+                              className="w-full h-full object-cover"
+                            />
+                          )}
+                        </div>
+                        
+                        {/* Botões dentro do box cinza */}
+                        <a 
+                          href={agent?.phone ? `https://wa.me/55${agent.phone.replace(/\D/g, '')}?text=Olá, tenho interesse no imóvel ${currentProperty.title} (Ref: #${currentProperty.id}).` : '#'}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="w-full py-3 px-4 rounded-full border-2 border-teal-400 text-teal-500 font-medium flex items-center justify-center mb-3 hover:bg-teal-50 transition-colors"
+                        >
+                          FALE COM O CORRETOR
+                        </a>
+                        
+                        <button 
+                          className="w-full py-3 px-4 rounded-full border-2 border-teal-400 text-teal-500 font-medium flex items-center justify-center mb-3 hover:bg-teal-50 transition-colors"
+                          onClick={() => {
+                            // Função para agendar visita - poderia abrir um modal
+                            window.alert('Funcionalidade de agendamento em desenvolvimento')
+                          }}
+                        >
+                          AGENDAR UMA VISITA
+                        </button>
+                      </div>
                       
                       {/* Área com fundo da cor primária para todo o resto do box */}
                       <div 
