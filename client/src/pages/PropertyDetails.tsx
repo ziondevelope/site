@@ -455,37 +455,7 @@ export default function PropertyDetails() {
                 {/* Coluna da direita - Cartão de contato no novo estilo */}
                 <div>
                   <div className="rounded-lg sticky top-4 overflow-hidden">
-                    {/* Seção de preços e taxas com borda verde */}
-                    <div className="border-l-4" style={{ borderColor: '#00c18d' }}>
-                      <div className="bg-white p-5">
-                        <div className="flex justify-between items-center mb-2">
-                          <div className="text-gray-700 font-medium">
-                            {currentProperty.purpose === 'rent' ? 'Locação' : 'Venda'}
-                          </div>
-                          <div className="text-gray-800 font-bold">
-                            {formatCurrency(currentProperty.price)}
-                          </div>
-                        </div>
-                        
-                        <div className="flex justify-between items-center mb-2">
-                          <div className="text-gray-700 font-medium">
-                            Taxa de limpeza
-                          </div>
-                          <div className="text-gray-800 font-bold">
-                            R$ 10
-                          </div>
-                        </div>
-                        
-                        <div className="flex justify-between items-center border-t pt-2 mt-2 border-gray-200">
-                          <div className="text-gray-700 font-medium">
-                            Total
-                          </div>
-                          <div className="text-gray-800 font-bold">
-                            {formatCurrency(currentProperty.price + 10)}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+
 
                     {/* Container principal para o box do corretor */}
                     <div className="bg-white p-5">
