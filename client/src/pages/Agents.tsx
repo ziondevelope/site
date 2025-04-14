@@ -28,13 +28,11 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
-const agentFormSchema = insertUserSchema.extend({
-  password: z.string().min(6, "A senha deve ter pelo menos 6 caracteres").optional(),
-  confirmPassword: z.string().optional(),
+const agentFormSchema = z.object({
+  displayName: z.string().min(2, "O nome deve ter pelo menos 2 caracteres"),
+  email: z.string().email("Email inválido"),
+  phone: z.string().min(8, "O número de WhatsApp deve ter pelo menos 8 caracteres"),
   avatar: z.string().optional(),
-}).refine((data) => !data.password || !data.confirmPassword || data.password === data.confirmPassword, {
-  message: "As senhas não coincidem",
-  path: ["confirmPassword"],
 });
 
 type AgentFormValues = z.infer<typeof agentFormSchema>;
@@ -55,11 +53,7 @@ export default function Agents() {
   const form = useForm<AgentFormValues>({
     resolver: zodResolver(agentFormSchema),
     defaultValues: {
-      username: "",
-      password: "",
-      confirmPassword: "",
       displayName: "",
-      role: "agent",
       phone: "",
       email: "",
       avatar: "",
@@ -70,11 +64,7 @@ export default function Agents() {
   const initEditForm = (agent: User) => {
     setSelectedAgent(agent);
     form.reset({
-      username: agent.username,
-      password: "",
-      confirmPassword: "",
       displayName: agent.displayName || "",
-      role: agent.role || "agent",
       phone: agent.phone || "",
       email: agent.email || "",
       avatar: agent.avatar || "",
@@ -86,11 +76,7 @@ export default function Agents() {
   const handleAddClick = () => {
     // Reset form to default values
     form.reset({
-      username: "",
-      password: "",
-      confirmPassword: "",
       displayName: "",
-      role: "agent",
       phone: "",
       email: "",
       avatar: "",
@@ -241,20 +227,6 @@ export default function Agents() {
                         </FormItem>
                       )}
                     />
-                    
-                    <FormField
-                      control={form.control}
-                      name="username"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Usuário</FormLabel>
-                          <FormControl>
-                            <Input placeholder="joaosilva" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
                   
                     <FormField
                       control={form.control}
@@ -275,62 +247,10 @@ export default function Agents() {
                       name="phone"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Telefone</FormLabel>
+                          <FormLabel>WhatsApp</FormLabel>
                           <FormControl>
                             <Input placeholder="(11) 99999-9999" {...field} value={field.value || ""} />
                           </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <FormField
-                        control={form.control}
-                        name="password"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Senha</FormLabel>
-                            <FormControl>
-                              <Input type="password" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      
-                      <FormField
-                        control={form.control}
-                        name="confirmPassword"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Confirmar Senha</FormLabel>
-                            <FormControl>
-                              <Input type="password" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-                    
-                    <FormField
-                      control={form.control}
-                      name="role"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Função</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
-                            <FormControl>
-                              <SelectTrigger>
-                                <SelectValue placeholder="Selecione a função" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              <SelectItem value="agent">Corretor</SelectItem>
-                              <SelectItem value="admin">Administrador</SelectItem>
-                            </SelectContent>
-                          </Select>
                           <FormMessage />
                         </FormItem>
                       )}
@@ -525,20 +445,6 @@ export default function Agents() {
                         </FormItem>
                       )}
                     />
-                    
-                    <FormField
-                      control={form.control}
-                      name="username"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Usuário</FormLabel>
-                          <FormControl>
-                            <Input placeholder="joaosilva" {...field} disabled />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
                   
                     <FormField
                       control={form.control}
@@ -559,62 +465,10 @@ export default function Agents() {
                       name="phone"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Telefone</FormLabel>
+                          <FormLabel>WhatsApp</FormLabel>
                           <FormControl>
                             <Input placeholder="(11) 99999-9999" {...field} value={field.value || ""} />
                           </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <FormField
-                        control={form.control}
-                        name="password"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Nova Senha (opcional)</FormLabel>
-                            <FormControl>
-                              <Input type="password" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      
-                      <FormField
-                        control={form.control}
-                        name="confirmPassword"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Confirmar Nova Senha</FormLabel>
-                            <FormControl>
-                              <Input type="password" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-                    
-                    <FormField
-                      control={form.control}
-                      name="role"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Função</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
-                            <FormControl>
-                              <SelectTrigger>
-                                <SelectValue placeholder="Selecione a função" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              <SelectItem value="agent">Corretor</SelectItem>
-                              <SelectItem value="admin">Administrador</SelectItem>
-                            </SelectContent>
-                          </Select>
                           <FormMessage />
                         </FormItem>
                       )}
