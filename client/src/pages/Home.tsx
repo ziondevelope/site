@@ -373,7 +373,7 @@ export default function Home() {
                               {property.bathrooms}
                             </span>
                             <span className="flex items-center">
-                              <i className="lucide lucide-bath mr-1 h-4 w-4"></i>
+                              <i className="lucide lucide-bath mr-1 h-4 w-4" style={{ color: config?.primaryColor || 'var(--primary)' }}></i>
                               {property.suites || 0}
                             </span>
                             <span className="flex items-center">
