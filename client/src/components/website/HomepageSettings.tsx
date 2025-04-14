@@ -1,6 +1,8 @@
 import { useEffect } from "react";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { WebsiteConfig, UpdateWebsiteConfig } from "@shared/schema";
 
 interface HomepageSettingsProps {
@@ -31,6 +33,18 @@ export default function HomepageSettings({ config, configData, onConfigChange }:
   const showTestimonials = configData.showTestimonials !== undefined 
     ? configData.showTestimonials 
     : config?.showTestimonials ?? true;
+    
+  const showBannerText = configData.showBannerText !== undefined 
+    ? configData.showBannerText 
+    : config?.showBannerText ?? true;
+    
+  const bannerTitle = configData.bannerTitle !== undefined 
+    ? configData.bannerTitle 
+    : config?.bannerTitle ?? "Encontre o imóvel dos seus sonhos";
+    
+  const bannerSubtitle = configData.bannerSubtitle !== undefined 
+    ? configData.bannerSubtitle 
+    : config?.bannerSubtitle ?? "Oferecemos as melhores opções de imóveis para compra e aluguel com atendimento personalizado";
 
   // Handle change functions
   const handleShowSearchBarChange = (checked: boolean) => {
@@ -52,10 +66,67 @@ export default function HomepageSettings({ config, configData, onConfigChange }:
   const handleShowTestimonialsChange = (checked: boolean) => {
     onConfigChange({ showTestimonials: checked });
   };
+  
+  const handleShowBannerTextChange = (checked: boolean) => {
+    onConfigChange({ showBannerText: checked });
+  };
+  
+  const handleBannerTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onConfigChange({ bannerTitle: e.target.value });
+  };
+  
+  const handleBannerSubtitleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    onConfigChange({ bannerSubtitle: e.target.value });
+  };
 
   return (
     <div className="space-y-4">
-      <h3 className="font-medium text-lg border-b pb-2">Componentes da Página Inicial</h3>
+      <h3 className="font-medium text-lg border-b pb-2">Texto do Banner</h3>
+      
+      <div className="flex items-center justify-between py-2">
+        <div>
+          <p className="font-medium">Exibir Texto no Banner</p>
+          <p className="text-sm text-gray-500">Ativa ou desativa o título e subtítulo no banner principal</p>
+        </div>
+        <Switch 
+          checked={showBannerText} 
+          onCheckedChange={handleShowBannerTextChange} 
+          className="data-[state=checked]:bg-indigo-600"
+        />
+      </div>
+      
+      {showBannerText && (
+        <div className="space-y-4 border p-4 rounded-md bg-gray-50 mb-4">
+          <div>
+            <label htmlFor="bannerTitle" className="block text-sm font-medium mb-1">
+              Título do Banner
+            </label>
+            <Input
+              id="bannerTitle"
+              value={bannerTitle}
+              onChange={handleBannerTitleChange}
+              placeholder="Digite o título principal"
+              className="w-full"
+            />
+          </div>
+          
+          <div>
+            <label htmlFor="bannerSubtitle" className="block text-sm font-medium mb-1">
+              Subtítulo do Banner
+            </label>
+            <Textarea
+              id="bannerSubtitle"
+              value={bannerSubtitle}
+              onChange={handleBannerSubtitleChange}
+              placeholder="Digite o texto secundário"
+              className="w-full resize-none"
+              rows={3}
+            />
+          </div>
+        </div>
+      )}
+      
+      <h3 className="font-medium text-lg border-b pb-2 mt-6">Componentes da Página Inicial</h3>
       
       <div className="flex items-center justify-between py-2">
         <div>

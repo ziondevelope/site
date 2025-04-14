@@ -74,10 +74,12 @@ export default function Home() {
         }}
       >
         <div className="container mx-auto px-4 text-center">
-          <div className="mx-auto max-w-3xl mb-10">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">Encontre o imóvel dos seus sonhos</h1>
-            <p className="text-lg mb-8">Oferecemos as melhores opções de imóveis para compra e aluguel com atendimento personalizado.</p>
-          </div>
+          {config?.showBannerText && (
+            <div className="mx-auto max-w-3xl mb-10">
+              <h1 className="text-4xl md:text-5xl font-bold mb-4">{config?.bannerTitle || "Encontre o imóvel dos seus sonhos"}</h1>
+              <p className="text-lg mb-8">{config?.bannerSubtitle || "Oferecemos as melhores opções de imóveis para compra e aluguel com atendimento personalizado."}</p>
+            </div>
+          )}
           
           {/* Barra de Filtro */}
           {config?.showSearchBar && (
