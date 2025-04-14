@@ -357,12 +357,18 @@ export default function Home() {
                           <h3 className="text-lg font-semibold mb-2 line-clamp-1">{property.title}</h3>
                           <p className="text-gray-500 text-sm mb-4 line-clamp-1">{property.address}</p>
                           
-                          <div className="grid grid-cols-2 gap-1 mb-4 text-sm">
-                            <span className="text-gray-600">{property.area}m²</span>
-                            <span className="text-gray-600">{property.bedrooms} quartos</span>
-                            <span className="text-gray-600">{property.bathrooms} banhs</span>
-                            <span className="text-gray-600">{property.suites || 0} suítes</span>
-                            <span className="text-gray-600">{property.parkingSpots || 0} vagas</span>
+                          <div className="flex items-center justify-between mb-4 text-sm">
+                            <div className="flex items-center space-x-2">
+                              <span className="text-gray-600">{property.area}m²</span>
+                              <span className="text-gray-500">|</span>
+                              <span className="text-gray-600">{property.bedrooms} quartos</span>
+                              <span className="text-gray-500">|</span>
+                              <span className="text-gray-600">{property.bathrooms} banhs</span>
+                              <span className="text-gray-500">|</span>
+                              <span className="text-gray-600">{property.suites || 0} suítes</span>
+                              <span className="text-gray-500">|</span>
+                              <span className="text-gray-600">{property.parkingSpots || 0} vagas</span>
+                            </div>
                           </div>
                           
                           <div className="flex justify-between items-center">
