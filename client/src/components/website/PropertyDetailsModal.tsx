@@ -113,10 +113,10 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 bg-black">
+    <div className="fixed inset-0 z-50 bg-black flex items-center justify-center">
       <div 
         ref={modalRef}
-        className="bg-white w-full md:w-[70%] lg:w-[60%] xl:w-[50%] 2xl:w-[45%] h-full overflow-y-auto mx-auto modal-custom-scrollbar"
+        className="bg-white w-full md:w-[70%] lg:w-[60%] xl:w-[50%] 2xl:w-[45%] h-[92%] overflow-y-auto mx-auto modal-custom-scrollbar relative"
         style={{ 
           scrollbarColor: `${primaryColor} #f1f1f1`,
           scrollbarWidth: 'thin',
@@ -126,9 +126,9 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
         {/* Close button */}
         <button 
           onClick={onClose}
-          className="fixed top-6 right-6 z-50 w-12 h-12 rounded-full bg-white bg-opacity-90 hover:bg-opacity-100 shadow-lg flex items-center justify-center transition-all"
+          className="absolute top-4 right-4 z-50 w-10 h-10 rounded-full bg-white bg-opacity-90 hover:bg-opacity-100 shadow-lg flex items-center justify-center transition-all"
         >
-          <X className="w-6 h-6 text-gray-800" />
+          <X className="w-5 h-5 text-gray-800" />
         </button>
 
         {/* Content */}
