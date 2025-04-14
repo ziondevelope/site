@@ -400,6 +400,54 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
                   <p className="text-gray-600 whitespace-pre-line">{currentProperty.description}</p>
                 </div>
                 
+                {/* Características */}
+                {currentProperty.features && currentProperty.features.length > 0 && (
+                  <div className="mb-8">
+                    <h2 className="text-xl font-bold mb-3">Características</h2>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-y-4">
+                      {currentProperty.features.map((feature, index) => (
+                        <div key={index} className="flex items-center">
+                          <div className="w-8 h-8 rounded-full flex items-center justify-center mr-3"
+                            style={{ backgroundColor: `${primaryColor}15` }}>
+                            <i 
+                              className="fas fa-check text-sm"
+                              style={{ color: primaryColor }}
+                            ></i>
+                          </div>
+                          <span className="text-gray-700">{feature}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                
+                {/* Localização */}
+                <div className="mb-8">
+                  <h2 className="text-xl font-bold mb-3">Localização</h2>
+                  <div className="border border-gray-200 rounded-lg h-64 overflow-hidden">
+                    {currentProperty.address ? (
+                      <iframe 
+                        width="100%" 
+                        height="100%" 
+                        frameBorder="0" 
+                        style={{ border: 0 }} 
+                        src={`https://maps.google.com/maps?q=${encodeURIComponent(
+                          `${currentProperty.address}, ${currentProperty.neighborhood || ''}, ${currentProperty.city || ''}, ${currentProperty.zipCode || ''}`
+                        )}&z=15&output=embed`}
+                        allowFullScreen
+                        title="Localização do imóvel"
+                      ></iframe>
+                    ) : (
+                      <div className="h-full flex items-center justify-center bg-gray-100">
+                        <div className="text-center">
+                          <i className="ri-map-pin-line text-4xl mb-2 text-gray-400"></i>
+                          <p className="text-gray-500">Mapa indisponível</p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                
                 {/* Action buttons */}
                 <div className="mt-8 flex flex-wrap gap-4 justify-end">
                   <Button
