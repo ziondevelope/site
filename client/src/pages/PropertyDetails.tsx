@@ -510,28 +510,10 @@ export default function PropertyDetails() {
                         {agent?.role === 'agent' ? 'CRECI 111111' : 'Consultor Imobiliário'}
                       </p>
                       
-                      {/* Box cinza sobre a foto e os botões com foto do corretor */}
+                      {/* Box cinza com a referência do imóvel e a foto do corretor */}
                       <div className="w-full bg-gray-100 p-4 rounded-lg mb-3">
                         <div className="flex justify-between items-center mb-3">
-                          <div className="flex items-center">
-                            <div className="w-10 h-10 mr-2 overflow-hidden rounded-full">
-                              {agent?.avatar ? (
-                                <img 
-                                  src={agent.avatar}
-                                  alt={agent.displayName || "Corretor"} 
-                                  className="w-full h-full object-cover"
-                                />
-                              ) : (
-                                <div className="w-full h-full bg-teal-100 flex items-center justify-center text-teal-500">
-                                  <i className="ri-user-3-line"></i>
-                                </div>
-                              )}
-                            </div>
-                            <div>
-                              <p className="font-medium text-sm">{agent?.displayName || "Corretor"}</p>
-                              <p className="text-xs text-gray-500">CRECI 111111</p>
-                            </div>
-                          </div>
+                          <h3 className="text-gray-600 font-medium">REF: #{currentProperty?.id || '000'}</h3>
                           <div className="flex space-x-2">
                             <a href="#" className="text-gray-500 hover:text-teal-500 transition-colors">
                               <i className="ri-heart-line text-lg"></i>
@@ -542,19 +524,25 @@ export default function PropertyDetails() {
                           </div>
                         </div>
                       
-                        {/* Foto em miniatura */}
-                        <div className="w-full h-36 rounded-lg overflow-hidden mb-3">
-                          {currentProperty?.images && currentProperty.images.length > 0 && (
-                            <img 
-                              src={typeof currentProperty.images[0] === 'object' && currentProperty.images[0].url 
-                                ? currentProperty.images[0].url 
-                                : typeof currentProperty.images[0] === 'string' 
-                                  ? currentProperty.images[0] 
-                                  : ''}
-                              alt={currentProperty.title}
-                              className="w-full h-full object-cover"
-                            />
-                          )}
+                        {/* Foto do corretor em destaque */}
+                        <div className="w-full rounded-lg overflow-hidden mb-4">
+                          <div className="w-full h-36 overflow-hidden">
+                            {agent?.avatar ? (
+                              <img 
+                                src={agent.avatar}
+                                alt={agent.displayName || "Corretor"} 
+                                className="w-full h-full object-cover"
+                              />
+                            ) : (
+                              <div className="w-full h-full bg-teal-100 flex items-center justify-center text-teal-500">
+                                <i className="ri-user-3-line text-4xl"></i>
+                              </div>
+                            )}
+                          </div>
+                          <div className="text-center py-2">
+                            <p className="font-medium">{agent?.displayName || "Corretor"}</p>
+                            <p className="text-sm text-gray-500">{agent?.role === 'agent' ? 'CRECI 111111' : 'Consultor Imobiliário'}</p>
+                          </div>
                         </div>
                         
                         {/* Botões dentro do box cinza */}
