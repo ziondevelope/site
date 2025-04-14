@@ -81,13 +81,7 @@ export default function PropertyDetails() {
     }
   }, [property]);
   
-  // Adiciona a classe 'group' à div principal da galeria para os botões aparecerem no hover
-  useEffect(() => {
-    const propertyContainer = document.querySelector('.rounded-xl.overflow-hidden.relative.mb-6');
-    if (propertyContainer) {
-      propertyContainer.classList.add('group');
-    }
-  }, [activeImage]);
+  // Não precisamos mais adicionar a classe group manualmente, pois ela já está nos elementos
 
   // Format currency
   const formatCurrency = (value: number) => {
@@ -262,168 +256,158 @@ export default function PropertyDetails() {
             </div>
           </div>
         ) : currentProperty ? (
-          <div className="container mx-auto px-4 py-8">
-            <div className="max-w-6xl mx-auto">
-              {/* Navegação e código */}
-              <div className="flex flex-wrap justify-between items-center mb-2">
-                <div className="flex items-center text-sm text-gray-500 mb-2">
-                  <Link href="/">
-                    <span className="cursor-pointer hover:text-gray-700">Home</span>
-                  </Link>
-                  <i className="ri-arrow-right-s-line mx-1"></i>
-                  <Link href="/">
-                    <span className="cursor-pointer hover:text-gray-700">Imóveis</span>
-                  </Link>
-                  <i className="ri-arrow-right-s-line mx-1"></i>
-                  <span className="text-gray-700">{currentProperty.title}</span>
-                </div>
-              </div>
-              
-              {/* Layout de duas colunas principal */}
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                {/* Coluna da esquerda - Conteúdo principal */}
-                <div className="lg:col-span-2">
-                  {/* Galeria de imóveis no estilo da referência */}
-                  <div className="rounded-xl overflow-hidden relative mb-6">
-                    {/* Grid de galeria */}
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-2 h-[500px]">
-                      {/* Imagem principal (ocupa 3 colunas na versão desktop) */}
-                      <div 
-                        className="md:col-span-3 h-full relative rounded overflow-hidden"
-                        style={{
-                          backgroundImage: activeImage ? `url(${activeImage})` : 'none',
-                          backgroundSize: 'cover',
-                          backgroundPosition: 'center'
-                        }}
-                      >
-                        {!activeImage && (
-                          <div className="absolute inset-0 flex items-center justify-center bg-gray-200">
-                            <i className="ri-image-line text-4xl text-gray-400"></i>
-                          </div>
-                        )}
-                        
-                        {/* Contador de fotos */}
-                        {currentProperty.images && currentProperty.images.length > 0 && (
-                          <div className="absolute bottom-4 left-4 bg-black bg-opacity-70 text-white px-3 py-1 rounded-full text-sm">
-                            <i className="ri-camera-line mr-1"></i>
-                            <span>{currentProperty.images.length} fotos</span>
-                          </div>
-                        )}
-                        
-                        {/* Botões de navegação na imagem principal (visíveis em hover) */}
-                        {currentProperty.images && currentProperty.images.length > 1 && (
-                          <>
-                            <button 
-                              className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white bg-opacity-70 hover:bg-opacity-100 shadow-md flex items-center justify-center transition-all opacity-0 group-hover:opacity-100"
-                              onClick={() => {
-                                if (currentProperty.images && activeImage) {
-                                  const index = currentProperty.images.findIndex(img => {
-                                    if (typeof img === 'object' && img.url) return img.url === activeImage;
-                                    if (typeof img === 'string') return img === activeImage;
-                                    return false;
-                                  });
-                                  if (index > 0) {
-                                    const prevImg = currentProperty.images[index - 1];
-                                    const prevUrl = typeof prevImg === 'object' && prevImg.url 
-                                      ? prevImg.url 
-                                      : typeof prevImg === 'string' 
-                                        ? prevImg 
-                                        : '';
-                                    if (prevUrl) setActiveImage(prevUrl);
-                                  }
-                                }
-                              }}
-                            >
-                              <i className="ri-arrow-left-s-line text-2xl text-gray-800"></i>
-                            </button>
-                            <button 
-                              className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white bg-opacity-70 hover:bg-opacity-100 shadow-md flex items-center justify-center transition-all opacity-0 group-hover:opacity-100"
-                              onClick={() => {
-                                if (currentProperty.images && activeImage) {
-                                  const index = currentProperty.images.findIndex(img => {
-                                    if (typeof img === 'object' && img.url) return img.url === activeImage;
-                                    if (typeof img === 'string') return img === activeImage;
-                                    return false;
-                                  });
-                                  if (index < currentProperty.images.length - 1) {
-                                    const nextImg = currentProperty.images[index + 1];
-                                    const nextUrl = typeof nextImg === 'object' && nextImg.url 
-                                      ? nextImg.url 
-                                      : typeof nextImg === 'string' 
-                                        ? nextImg 
-                                        : '';
-                                    if (nextUrl) setActiveImage(nextUrl);
-                                  }
-                                }
-                              }}
-                            >
-                              <i className="ri-arrow-right-s-line text-2xl text-gray-800"></i>
-                            </button>
-                          </>
-                        )}
+          <>
+            {/* Slideshow em tela cheia no topo */}
+            {currentProperty.images && currentProperty.images.length > 0 && (
+              <div className="relative w-full h-[500px] bg-black mb-8 group">
+                {/* Slideshow */}
+                <div 
+                  className="w-full h-full bg-cover bg-center transition-all duration-700"
+                  style={{
+                    backgroundImage: activeImage ? `url(${activeImage})` : 'none',
+                  }}
+                >
+                  {/* Gradiente escuro no topo e embaixo para melhorar legibilidade */}
+                  <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-transparent to-black/50 pointer-events-none"></div>
+                  
+                  {/* Título do imóvel na parte superior */}
+                  <div className="container mx-auto px-4 py-6 relative z-10">
+                    <div className="max-w-6xl mx-auto">
+                      <div className="flex flex-col text-white mt-4">
+                        <h1 className="text-3xl md:text-5xl font-bold uppercase tracking-wider drop-shadow-lg mb-3">
+                          {currentProperty.title}
+                        </h1>
+                        <div className="flex items-center text-white/90 text-lg">
+                          <i className="ri-map-pin-line mr-2"></i>
+                          <span className="drop-shadow-md">
+                            {currentProperty.address}, {currentProperty.neighborhood} - {currentProperty.city}
+                          </span>
+                        </div>
                       </div>
                       
-                      {/* Coluna de miniaturas (desktop) */}
-                      <div className="hidden md:flex md:flex-col gap-2 h-full">
-                        {currentProperty.images && currentProperty.images.length > 0 ? (
-                          // Exibe até 3 miniaturas + botão "ver mais"
-                          <>
-                            {currentProperty.images.slice(0, 3).map((image, index) => {
-                              // Determinar a URL da imagem dependendo do formato
-                              const imageUrl = typeof image === 'object' && image.url 
-                                ? image.url 
-                                : typeof image === 'string' 
-                                  ? image 
-                                  : '';
-                                  
-                              if (!imageUrl) return null;
-                                  
-                              return (
-                                <div 
-                                  key={index}
-                                  className={`h-[32%] rounded overflow-hidden cursor-pointer ${
-                                    currentProperty.images && index === 2 && currentProperty.images.length > 3 ? 'relative' : ''
-                                  }`}
-                                  onClick={() => setActiveImage(imageUrl)}
-                                >
-                                  <img 
-                                    src={imageUrl} 
-                                    alt={`Imagem ${index + 1} do imóvel`}
-                                    className={`w-full h-full object-cover transition-all ${
-                                      activeImage === imageUrl ? 'ring-2 ring-offset-2 ring-primary' : 'hover:brightness-90'
-                                    }`}
-                                  />
-                                  
-                                  {/* Overlay "Ver mais" na última miniatura visível */}
-                                  {currentProperty.images && index === 2 && currentProperty.images.length > 3 && (
-                                    <div 
-                                      className="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center text-white font-medium cursor-pointer"
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        // Aqui poderia abrir uma galeria modal
-                                        window.alert('Galeria de imagens completa em desenvolvimento');
-                                      }}
-                                    >
-                                      <span>Ver mais</span>
-                                    </div>
-                                  )}
-                                </div>
-                              );
-                            })}
-                          </>
-                        ) : (
-                          // Placeholders quando não há imagens
-                          <>
-                            {[1, 2, 3].map((_, index) => (
-                              <div key={index} className="h-[32%] bg-gray-100 rounded"></div>
-                            ))}
-                          </>
-                        )}
+                      {/* Navegação básica */}
+                      <div className="mt-auto md:mt-2">
+                        <div className="flex items-center text-sm text-white/80 mb-2">
+                          <Link href="/">
+                            <span className="cursor-pointer hover:text-white">Home</span>
+                          </Link>
+                          <i className="ri-arrow-right-s-line mx-1"></i>
+                          <Link href="/">
+                            <span className="cursor-pointer hover:text-white">Imóveis</span>
+                          </Link>
+                          <i className="ri-arrow-right-s-line mx-1"></i>
+                          <span className="text-white">Detalhe</span>
+                        </div>
                       </div>
                     </div>
                   </div>
                   
-                  {/* Título e preço no estilo da nova referência */}
+                  {/* Contador de fotos */}
+                  <div className="absolute bottom-6 left-6 bg-black/70 text-white px-3 py-1 rounded-full text-sm z-20">
+                    <i className="ri-camera-line mr-1"></i>
+                    <span>{currentProperty.images.length} fotos</span>
+                  </div>
+                  
+                  {/* Código do imóvel */}
+                  <div className="absolute bottom-6 right-6 bg-white text-gray-800 px-3 py-1 rounded-full text-sm font-medium z-20">
+                    Cód. LL{currentProperty.id}
+                  </div>
+                  
+                  {/* Navegação do slideshow */}
+                  {currentProperty.images.length > 1 && (
+                    <>
+                      <button 
+                        className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/70 hover:bg-white/90 shadow-md flex items-center justify-center transition-all opacity-40 md:opacity-0 group-hover:opacity-100 z-20"
+                        onClick={() => {
+                          if (currentProperty.images && activeImage) {
+                            const index = currentProperty.images.findIndex(img => {
+                              if (typeof img === 'object' && img.url) return img.url === activeImage;
+                              if (typeof img === 'string') return img === activeImage;
+                              return false;
+                            });
+                            if (index > 0) {
+                              const prevImg = currentProperty.images[index - 1];
+                              const prevUrl = typeof prevImg === 'object' && prevImg.url 
+                                ? prevImg.url 
+                                : typeof prevImg === 'string' 
+                                  ? prevImg 
+                                  : '';
+                              if (prevUrl) setActiveImage(prevUrl);
+                            }
+                          }
+                        }}
+                      >
+                        <i className="ri-arrow-left-s-line text-3xl text-gray-800"></i>
+                      </button>
+                      <button 
+                        className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/70 hover:bg-white/90 shadow-md flex items-center justify-center transition-all opacity-40 md:opacity-0 group-hover:opacity-100 z-20"
+                        onClick={() => {
+                          if (currentProperty.images && activeImage) {
+                            const index = currentProperty.images.findIndex(img => {
+                              if (typeof img === 'object' && img.url) return img.url === activeImage;
+                              if (typeof img === 'string') return img === activeImage;
+                              return false;
+                            });
+                            if (index < currentProperty.images.length - 1) {
+                              const nextImg = currentProperty.images[index + 1];
+                              const nextUrl = typeof nextImg === 'object' && nextImg.url 
+                                ? nextImg.url 
+                                : typeof nextImg === 'string' 
+                                  ? nextImg 
+                                  : '';
+                              if (nextUrl) setActiveImage(nextUrl);
+                            }
+                          }
+                        }}
+                      >
+                        <i className="ri-arrow-right-s-line text-3xl text-gray-800"></i>
+                      </button>
+                    </>
+                  )}
+                </div>
+                
+                {/* Indicadores de slide na parte inferior */}
+                {currentProperty.images.length > 1 && (
+                  <div className="absolute bottom-4 left-0 right-0 flex justify-center z-20">
+                    <div className="flex space-x-2">
+                      {currentProperty.images.map((image, index) => {
+                        // Determinar a URL da imagem dependendo do formato
+                        const imageUrl = typeof image === 'object' && image.url 
+                          ? image.url 
+                          : typeof image === 'string' 
+                            ? image 
+                            : '';
+                        
+                        if (!imageUrl) return null;
+                        
+                        return (
+                          <button 
+                            key={index}
+                            className={`w-2 h-2 rounded-full transition-all ${
+                              activeImage === imageUrl 
+                                ? 'bg-white w-4' 
+                                : 'bg-white/40 hover:bg-white/70'
+                            }`}
+                            onClick={() => setActiveImage(imageUrl)}
+                            aria-label={`Imagem ${index + 1}`}
+                          />
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+            
+            <div className="container mx-auto px-4 pb-8">
+              <div className="max-w-6xl mx-auto">
+                {/* Layout de duas colunas principal */}
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                  {/* Coluna da esquerda - Conteúdo principal */}
+                  <div className="lg:col-span-2">
+                    {/* Informações do imóvel */}
+                  
+                    {/* Título e preço no estilo da nova referência */}
                   <div className="mb-6">
                     <div className="flex flex-wrap items-center justify-between mb-2">
                       <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mr-4 flex items-center">
