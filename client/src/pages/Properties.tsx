@@ -31,7 +31,7 @@ import {
 // Tipo para corrigir o erro de tipagem do agente
 type Agent = {
   id: number;
-  name: string;
+  displayName: string;
   email: string;
   role: string;
 };
