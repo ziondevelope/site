@@ -114,8 +114,8 @@ export default function Home() {
           
           {/* Barra de Filtro */}
           {config?.showSearchBar && (
-            <div className="w-full max-w-2xl mx-auto bg-white/80 backdrop-blur-sm rounded-md p-2 md:p-3 shadow-xl">
-              <form className="flex flex-col md:flex-row gap-2">
+            <div className="w-full max-w-3xl mx-auto bg-white/80 backdrop-blur-sm rounded-md p-3 md:p-5 shadow-xl">
+              <form className="flex flex-col md:flex-row gap-2 md:gap-3">
                 {/* Tipo de Imóvel */}
                 <div className="flex-1">
                   <div className="relative">
