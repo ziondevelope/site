@@ -241,7 +241,7 @@ export default function Home() {
                         R$ {property.price.toLocaleString('pt-BR')}
                         {property.purpose === 'rent' && <span className="text-sm font-normal text-gray-500">/mês</span>}
                       </div>
-                      <Link href={`/properties/${property.id}`}>
+                      <Link href={`/property/${property.id}`}>
                         <Button variant="outline" size="sm">Ver detalhes</Button>
                       </Link>
                     </div>
