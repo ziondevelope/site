@@ -394,15 +394,11 @@ export default function Home() {
                           </div>
                           <div className="flex justify-between mb-4 text-sm">
                             <span className="text-gray-600 flex items-center">
-                              {/* Ícone de suíte - banheira com torneiras */}
+                              {/* Ícone de suíte - banheira */}
                               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1">
-                                <path d="M4 12h16" />
-                                <path d="M4 12v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-6" />
-                                <path d="M7 12v-2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2" />
-                                <path d="M5 4v4" />
-                                <path d="M5 8h4" />
-                                <path d="M19 4v4" />
-                                <path d="M19 8h-4" />
+                                <rect x="4" y="10" width="16" height="10" rx="2" />
+                                <path d="M7 10V6a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v4" />
+                                <line x1="4" y1="14" x2="20" y2="14" />
                               </svg> {property.suites || 0}
                             </span>
                             <span className="text-gray-600 flex items-center">
