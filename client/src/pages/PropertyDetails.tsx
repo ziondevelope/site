@@ -521,13 +521,7 @@ export default function PropertyDetails() {
               </div>
             </div>
             
-            <div className="text-center mt-4">
-              <Link href="/properties">
-                <button className="inline-flex items-center justify-center px-6 py-3 border border-transparent rounded-md font-medium text-white bg-gray-800 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors">
-                  Ver todos os imóveis <i className="ri-arrow-right-line ml-2"></i>
-                </button>
-              </Link>
-            </div>
+            {/* Botão removido a pedido do usuário */}
           </div>
         </div>
       )}
