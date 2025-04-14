@@ -521,7 +521,7 @@ export default function PropertyDetails() {
                       </a>
                       
                       <button 
-                        className="w-full py-3 px-4 rounded-t-full border-2 border-teal-400 text-teal-500 font-medium flex items-center justify-center mb-0 hover:bg-teal-50 transition-colors"
+                        className="w-full py-3 px-4 rounded-full border-2 border-teal-400 text-teal-500 font-medium flex items-center justify-center mb-0 hover:bg-teal-50 transition-colors"
                         onClick={() => {
                           // Função para agendar visita - poderia abrir um modal
                           window.alert('Funcionalidade de agendamento em desenvolvimento')
