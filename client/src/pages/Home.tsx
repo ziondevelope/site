@@ -141,7 +141,7 @@ export default function Home() {
       {/* Hero Section */}
       <section 
         id="home" 
-        className="pt-28 pb-20 md:pb-32 text-white"
+        className="pt-36 pb-24 md:pb-36 text-white"
         style={{
           background: config?.bannerBackground 
             ? `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${config.bannerBackground}) center/cover no-repeat`
