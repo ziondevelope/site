@@ -64,38 +64,6 @@ export default function PropertyDetails() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
-      {/* Header com navegação */}
-      <header className="bg-white shadow">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="flex items-center">
-            <Link href="/">
-              <div className="flex items-center space-x-2 cursor-pointer">
-                <div className="h-10 w-10 rounded text-white flex items-center justify-center" style={{ backgroundColor: primaryColor }}>
-                  <i className="ri-home-4-line text-xl"></i>
-                </div>
-                <h1 className="text-xl font-bold text-gray-800">Imobiliária</h1>
-              </div>
-            </Link>
-          </div>
-          <div className="flex items-center space-x-4">
-            <Link href="/">
-              <span className="text-gray-600 hover:text-gray-900 cursor-pointer">Início</span>
-            </Link>
-            <Link href="/">
-              <span className="text-gray-600 hover:text-gray-900 cursor-pointer">Imóveis</span>
-            </Link>
-            <Link href="/">
-              <span className="text-gray-600 hover:text-gray-900 cursor-pointer">Contato</span>
-            </Link>
-            <Link href="/admin">
-              <Button variant="outline" size="sm">
-                <i className="ri-user-3-line mr-1"></i>
-                Área Restrita
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </header>
 
       {/* Conteúdo principal */}
       <main className="flex-grow">
