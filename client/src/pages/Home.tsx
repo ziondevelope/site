@@ -73,77 +73,77 @@ export default function Home() {
               : 'linear-gradient(to right, #3b82f6, var(--primary))'
         }}
       >
-        <div className="container mx-auto px-4">
-          <div className={`${config?.showSearchBar ? 'max-w-5xl' : 'max-w-3xl'}`}>
+        <div className="container mx-auto px-4 text-center">
+          <div className="mx-auto max-w-3xl mb-10">
             <h1 className="text-4xl md:text-5xl font-bold mb-4">Encontre o imóvel dos seus sonhos</h1>
             <p className="text-lg mb-8">Oferecemos as melhores opções de imóveis para compra e aluguel com atendimento personalizado.</p>
-            
-            {/* Barra de Filtro */}
-            {config?.showSearchBar && (
-              <div className="w-full max-w-5xl mx-auto bg-white/80 backdrop-blur-sm rounded-md p-2 md:p-3 shadow-xl">
-                <form className="flex flex-col md:flex-row gap-2">
-                  {/* Tipo de Imóvel */}
-                  <div className="flex-1">
-                    <div className="relative">
-                      <select 
-                        className="w-full appearance-none rounded-md px-4 py-3 bg-white border border-gray-200 text-black font-medium"
-                        defaultValue="apartment"
-                      >
-                        <option value="apartment">Tipo de Imóvel</option>
-                        <option value="apartment">Apartamento</option>
-                        <option value="house">Casa</option>
-                        <option value="commercial">Comercial</option>
-                        <option value="land">Terreno</option>
-                      </select>
-                      <div className="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none">
-                        <i className="ri-arrow-down-s-line text-gray-500"></i>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  {/* Localização/Cidade */}
-                  <div className="flex-1">
-                    <input 
-                      type="text"
-                      placeholder="Cidade"
-                      className="w-full rounded-md px-4 py-3 bg-white border border-gray-200 text-black font-medium"
-                    />
-                  </div>
-                  
-                  {/* Finalidade */}
-                  <div className="flex-1">
-                    <div className="relative">
-                      <select 
-                        className="w-full appearance-none rounded-md px-4 py-3 bg-white border border-gray-200 text-black font-medium"
-                        defaultValue="comprar"
-                      >
-                        <option value="comprar">Comprar ou Alugar</option>
-                        <option value="comprar">Comprar</option>
-                        <option value="alugar">Alugar</option>
-                      </select>
-                      <div className="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none">
-                        <i className="ri-arrow-down-s-line text-gray-500"></i>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  {/* Botão Buscar */}
-                  <div className="flex-initial">
-                    <button 
-                      type="submit"
-                      className="w-full rounded-md py-3 px-5 text-white font-medium transition-all shadow-sm hover:shadow-md flex items-center justify-center"
-                      style={{ 
-                        backgroundColor: config?.primaryColor || '#8BC34A',
-                        minWidth: '130px'
-                      }}
-                    >
-                      Buscar
-                    </button>
-                  </div>
-                </form>
-              </div>
-            )}
           </div>
+          
+          {/* Barra de Filtro */}
+          {config?.showSearchBar && (
+            <div className="w-full max-w-5xl mx-auto bg-white/80 backdrop-blur-sm rounded-md p-2 md:p-3 shadow-xl">
+              <form className="flex flex-col md:flex-row gap-2">
+                {/* Tipo de Imóvel */}
+                <div className="flex-1">
+                  <div className="relative">
+                    <select 
+                      className="w-full appearance-none rounded-md px-4 py-3 bg-white border border-gray-200 text-black font-medium"
+                      defaultValue="apartment"
+                    >
+                      <option value="apartment">Tipo de Imóvel</option>
+                      <option value="apartment">Apartamento</option>
+                      <option value="house">Casa</option>
+                      <option value="commercial">Comercial</option>
+                      <option value="land">Terreno</option>
+                    </select>
+                    <div className="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none">
+                      <i className="ri-arrow-down-s-line text-gray-500"></i>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Localização/Cidade */}
+                <div className="flex-1">
+                  <input 
+                    type="text"
+                    placeholder="Cidade"
+                    className="w-full rounded-md px-4 py-3 bg-white border border-gray-200 text-black font-medium"
+                  />
+                </div>
+                
+                {/* Finalidade */}
+                <div className="flex-1">
+                  <div className="relative">
+                    <select 
+                      className="w-full appearance-none rounded-md px-4 py-3 bg-white border border-gray-200 text-black font-medium"
+                      defaultValue="comprar"
+                    >
+                      <option value="comprar">Comprar ou Alugar</option>
+                      <option value="comprar">Comprar</option>
+                      <option value="alugar">Alugar</option>
+                    </select>
+                    <div className="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none">
+                      <i className="ri-arrow-down-s-line text-gray-500"></i>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Botão Buscar */}
+                <div className="flex-initial">
+                  <button 
+                    type="submit"
+                    className="w-full rounded-md py-3 px-5 text-white font-medium transition-all shadow-sm hover:shadow-md flex items-center justify-center"
+                    style={{ 
+                      backgroundColor: config?.primaryColor || '#8BC34A',
+                      minWidth: '130px'
+                    }}
+                  >
+                    Buscar
+                  </button>
+                </div>
+              </form>
+            </div>
+          )}
         </div>
       </section>
 
