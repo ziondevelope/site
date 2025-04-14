@@ -40,9 +40,7 @@ export default function Home() {
   const headerRef = useRef<HTMLElement>(null);
   const carouselTrackRef = useRef<HTMLDivElement>(null);
   const [carouselPage, setCarouselPage] = useState(0);
-  const carouselItemsPerPage = 3; // Quantos itens mostrar por página do carrossel
-  
-  // Calculamos o número de páginas com base nas propriedades filtradas quando os dados estiverem disponíveis
+  const totalCarouselPages = 3; // Número de páginas no carrossel
   
   // Estado para o modal de detalhes do imóvel
   const [selectedPropertyId, setSelectedPropertyId] = useState<number | null>(null);
@@ -228,78 +226,163 @@ export default function Home() {
                 ))}
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {properties
-                  ?.filter(property => property.isFeatured)
-                  .slice(0, 6)
-                  .map((property) => (
-                    <div key={property.id} className="bg-white rounded-lg border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-lg">
-                      {/* Property Image */}
-                      <div className="h-48 bg-gray-200 relative">
-                        {getFeaturedImage(property) ? (
-                          <img 
-                            src={getFeaturedImage(property)} 
-                            alt={property.title} 
-                            className="w-full h-full object-cover"
-                            loading="lazy"
-                          />
-                        ) : null}
-                        <div 
-                          className="absolute bottom-0 left-0 text-white px-3 py-1 rounded-tr-lg"
-                          style={{
-                            backgroundColor: config?.primaryColor || 'var(--primary)'
-                          }}
-                        >
-                          {property.purpose === 'sale' ? 'Venda' : 'Aluguel'}
-                        </div>
-                      </div>
-                      
-                      <div className="p-4">
-                        <h3 className="text-lg font-semibold mb-2 line-clamp-1">{property.title}</h3>
-                        <p className="text-gray-500 text-sm mb-4 line-clamp-1">{property.address}</p>
-                        
-                        <div className="flex items-center justify-between mb-4 text-sm text-gray-600">
-                          <span className="flex items-center">
-                            <i className="fas fa-ruler-combined fa-sm mr-1"></i>
-                            {property.area}m²
-                          </span>
-                          <span className="flex items-center">
-                            <i className="fas fa-bed fa-sm mr-1"></i>
-                            {property.bedrooms}
-                          </span>
-                          <span className="flex items-center">
-                            <i className="fas fa-shower fa-sm mr-1"></i>
-                            {property.bathrooms}
-                          </span>
-                          <span className="flex items-center">
-                            <i className="fas fa-bath fa-sm mr-1" style={{ color: config?.primaryColor || 'var(--primary)' }}></i>
-                            {property.suites || 0}
-                          </span>
-                          <span className="flex items-center">
-                            <i className="fas fa-car fa-sm mr-1"></i>
-                            {property.parkingSpots || 0}
-                          </span>
-                        </div>
-                        
-                        <div className="flex justify-between items-center">
-                          <div 
-                            className="text-xl font-bold"
-                            style={{ color: config?.primaryColor || 'var(--primary)' }}
-                          >
-                            R$ {property.price.toLocaleString('pt-BR')}
-                            {property.purpose === 'rent' && <span className="text-xs font-normal text-gray-500">/mês</span>}
+              <div className="relative group">
+                {/* Botão de navegação - Anterior */}
+                <button 
+                  onClick={() => {
+                    if (!carouselTrackRef.current) return;
+                    const containerWidth = carouselTrackRef.current.parentElement?.clientWidth || 0;
+                    const newPage = Math.max(0, carouselPage - 1);
+                    carouselTrackRef.current.scrollTo({
+                      left: containerWidth * newPage,
+                      behavior: 'smooth'
+                    });
+                    setCarouselPage(newPage);
+                  }}
+                  className="absolute left-0 top-1/2 -translate-y-1/2 z-10 opacity-0 group-hover:opacity-100 transition-opacity disabled:opacity-0 disabled:cursor-not-allowed"
+                  disabled={carouselPage === 0}
+                  aria-label="Imóveis anteriores"
+                >
+                  <i className="ri-arrow-left-circle-fill text-4xl" style={{ color: config?.primaryColor || 'var(--primary)' }}></i>
+                </button>
+                
+                {/* Botão de navegação - Próximo */}
+                <button 
+                  onClick={() => {
+                    if (!carouselTrackRef.current) return;
+                    const containerWidth = carouselTrackRef.current.parentElement?.clientWidth || 0;
+                    const newPage = Math.min(totalCarouselPages - 1, carouselPage + 1);
+                    carouselTrackRef.current.scrollTo({
+                      left: containerWidth * newPage,
+                      behavior: 'smooth'
+                    });
+                    setCarouselPage(newPage);
+                  }}
+                  className="absolute right-0 top-1/2 -translate-y-1/2 z-10 opacity-0 group-hover:opacity-100 transition-opacity disabled:opacity-0 disabled:cursor-not-allowed"
+                  disabled={carouselPage === totalCarouselPages - 1}
+                  aria-label="Próximos imóveis"
+                >
+                  <i className="ri-arrow-right-circle-fill text-4xl" style={{ color: config?.primaryColor || 'var(--primary)' }}></i>
+                </button>
+                
+                {/* Carrossel */}
+                <div className="carousel-container overflow-hidden">
+                  <div 
+                    ref={carouselTrackRef}
+                    id="carousel-track"
+                    className="carousel-track flex space-x-4 py-4 overflow-x-auto scrollbar-hide"
+                    style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+                    onScroll={(e) => {
+                      if (!carouselTrackRef.current) return;
+                      const containerWidth = carouselTrackRef.current.parentElement?.clientWidth || 0;
+                      const scrollPosition = e.currentTarget.scrollLeft;
+                      const newPage = Math.round(scrollPosition / containerWidth);
+                      if (newPage !== carouselPage) {
+                        setCarouselPage(newPage);
+                      }
+                    }}
+                  >
+                    {properties?.slice(0, 9).map((property) => (
+                      <div key={property.id} className="carousel-item flex-shrink-0 w-full sm:w-1/2 md:w-1/3 lg:w-1/4 px-2">
+                        <div className="h-full bg-white rounded-lg border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-lg">
+                          {/* Property Image */}
+                          <div className="h-48 bg-gray-200 relative">
+                            {getFeaturedImage(property) ? (
+                              <img 
+                                src={getFeaturedImage(property)} 
+                                alt={property.title} 
+                                className="w-full h-full object-cover"
+                                loading="lazy"
+                              />
+                            ) : null}
+                            <div 
+                              className="absolute bottom-0 left-0 text-white px-3 py-1 rounded-tr-lg"
+                              style={{
+                                backgroundColor: config?.primaryColor || 'var(--primary)'
+                              }}
+                            >
+                              {property.purpose === 'sale' ? 'Venda' : 'Aluguel'}
+                            </div>
                           </div>
-                          <Button 
-                            variant="outline" 
-                            size="sm" 
-                            onClick={() => openPropertyModal(property.id)}
-                          >
-                            Ver
-                          </Button>
+                          
+                          <div className="p-4">
+                            <h3 className="text-lg font-semibold mb-2 line-clamp-1">{property.title}</h3>
+                            <p className="text-gray-500 text-sm mb-4 line-clamp-1">{property.address}</p>
+                            
+                            <div className="flex items-center justify-between mb-4 text-sm text-gray-600">
+                              <span className="flex items-center">
+                                <i className="fas fa-ruler-combined fa-sm mr-1"></i>
+                                {property.area}m²
+                              </span>
+                              <span className="flex items-center">
+                                <i className="fas fa-bed fa-sm mr-1"></i>
+                                {property.bedrooms}
+                              </span>
+                              <span className="flex items-center">
+                                <i className="fas fa-shower fa-sm mr-1"></i>
+                                {property.bathrooms}
+                              </span>
+                              <span className="flex items-center">
+                                <i className="fas fa-bath fa-sm mr-1" style={{ color: config?.primaryColor || 'var(--primary)' }}></i>
+                                {property.suites || 0}
+                              </span>
+                              <span className="flex items-center">
+                                <i className="fas fa-car fa-sm mr-1"></i>
+                                {property.parkingSpots || 0}
+                              </span>
+                            </div>
+                            
+                            <div className="flex justify-between items-center">
+                              <div 
+                                className="text-xl font-bold"
+                                style={{ color: config?.primaryColor || 'var(--primary)' }}
+                              >
+                                R$ {property.price.toLocaleString('pt-BR')}
+                                {property.purpose === 'rent' && <span className="text-xs font-normal text-gray-500">/mês</span>}
+                              </div>
+                              <Button 
+                                variant="outline" 
+                                size="sm" 
+                                onClick={() => openPropertyModal(property.id)}
+                              >
+                                Ver
+                              </Button>
+                            </div>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                ))}
+                    ))}
+                  </div>
+                  
+                  {/* Indicadores de página */}
+                  <div className="flex justify-center space-x-2 mt-6">
+                    {[...Array(totalCarouselPages)].map((_, index) => (
+                      <button 
+                        key={index} 
+                        className={`h-2 rounded-full transition-all ${
+                          index === carouselPage 
+                            ? 'w-8 bg-gray-800' 
+                            : 'w-2 bg-gray-300'
+                        }`}
+                        aria-label={`Página ${index + 1}`}
+                        onClick={() => {
+                          if (!carouselTrackRef.current) return;
+                          const containerWidth = carouselTrackRef.current.parentElement?.clientWidth || 0;
+                          carouselTrackRef.current.scrollTo({
+                            left: containerWidth * index,
+                            behavior: 'smooth'
+                          });
+                          setCarouselPage(index);
+                        }}
+                        style={{
+                          backgroundColor: index === carouselPage 
+                            ? (config?.primaryColor || 'var(--primary)') 
+                            : undefined
+                        }}
+                      ></button>
+                    ))}
+                  </div>
+                </div>
               </div>
             )}
             
