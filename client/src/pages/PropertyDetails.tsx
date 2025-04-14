@@ -207,7 +207,7 @@ export default function PropertyDetails() {
                   
                   {/* Imagem Principal */}
                   <div 
-                    className="w-full h-[500px] rounded-xl mb-6 overflow-hidden relative bg-cover bg-center"
+                    className="w-full h-[500px] rounded-xl mb-2 overflow-hidden relative bg-cover bg-center"
                     style={{ 
                       backgroundImage: activeImage ? `url(${activeImage})` : 'none',
                     }}
@@ -218,6 +218,27 @@ export default function PropertyDetails() {
                       </div>
                     )}
                   </div>
+                  
+                  {/* Miniaturas */}
+                  {currentProperty.images && currentProperty.images.length > 0 && (
+                    <div className="flex space-x-2 overflow-x-auto pb-2 mb-6">
+                      {currentProperty.images.map((image, index) => (
+                        <div 
+                          key={index}
+                          className="w-28 h-20 rounded-md flex-shrink-0 cursor-pointer overflow-hidden"
+                          onClick={() => setActiveImage(image.url)}
+                        >
+                          <img 
+                            src={image.url} 
+                            alt={`Imagem ${index + 1} do imóvel`}
+                            className={`w-full h-full object-cover transition-all ${
+                              activeImage === image.url ? 'ring-2 ring-offset-2 ring-primary' : 'filter brightness-75 hover:brightness-100'
+                            }`}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  )}
                   
                   {/* Título e preço - Agora abaixo da foto no estilo da página principal */}
                   <div className="mb-6 bg-white rounded-lg overflow-hidden shadow-sm">
@@ -252,27 +273,6 @@ export default function PropertyDetails() {
                       </div>
                     </div>
                   </div>
-                  
-                  {/* Miniaturas */}
-                  {currentProperty.images && currentProperty.images.length > 0 && (
-                    <div className="flex space-x-2 overflow-x-auto pb-2 mb-8">
-                      {currentProperty.images.map((image, index) => (
-                        <div 
-                          key={index}
-                          className="w-28 h-20 rounded-md flex-shrink-0 cursor-pointer overflow-hidden"
-                          onClick={() => setActiveImage(image.url)}
-                        >
-                          <img 
-                            src={image.url} 
-                            alt={`Imagem ${index + 1} do imóvel`}
-                            className={`w-full h-full object-cover transition-all ${
-                              activeImage === image.url ? 'ring-2 ring-offset-2 ring-primary' : 'filter brightness-75 hover:brightness-100'
-                            }`}
-                          />
-                        </div>
-                      ))}
-                    </div>
-                  )}
                   
                   {/* Destaque dos detalhes principais */}
                   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8 bg-white p-6 rounded-lg shadow-sm">
