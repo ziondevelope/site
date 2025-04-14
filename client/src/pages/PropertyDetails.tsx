@@ -42,6 +42,12 @@ export default function PropertyDetails() {
   const { data: config } = useQuery<any>({
     queryKey: ['/api/website/config']
   });
+  
+  // Buscar dados do agente/corretor
+  const { data: agent } = useQuery<any>({
+    queryKey: ['/api/agents', property?.agentId],
+    enabled: !!property?.agentId,
+  });
 
   // Set the first image as active when property data is loaded
   useEffect(() => {
@@ -478,28 +484,41 @@ export default function PropertyDetails() {
                     <div className="bg-white p-5 flex flex-col items-center text-center">
                       {/* Avatar do corretor */}
                       <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-white shadow mb-2">
-                        <img 
-                          src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80"
-                          alt="Corretor" 
-                          className="w-full h-full object-cover"
-                        />
+                        {agent?.avatar ? (
+                          <img 
+                            src={agent.avatar}
+                            alt={agent.displayName || "Corretor"} 
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <div className="w-full h-full bg-teal-100 flex items-center justify-center text-teal-500">
+                            <i className="ri-user-3-line text-2xl"></i>
+                          </div>
+                        )}
                       </div>
                       <h3 className="text-xl font-bold text-gray-800">
-                        Amanda Leão
+                        {agent?.displayName || "Corretor"}
                       </h3>
                       <p className="text-gray-500 mb-4">
                         CRECI 111111
                       </p>
                       
                       {/* Botões de ação */}
-                      <button 
+                      <a 
+                        href={agent?.phone ? `https://wa.me/55${agent.phone.replace(/\D/g, '')}?text=Olá, tenho interesse no imóvel ${currentProperty.title} (Ref: #${currentProperty.id}).` : '#'}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="w-full py-3 px-4 rounded-full border-2 border-teal-400 text-teal-500 font-medium flex items-center justify-center mb-3 hover:bg-teal-50 transition-colors"
                       >
                         FALE COM O CORRETOR
-                      </button>
+                      </a>
                       
                       <button 
                         className="w-full py-3 px-4 rounded-full border-2 border-teal-400 text-teal-500 font-medium flex items-center justify-center mb-6 hover:bg-teal-50 transition-colors"
+                        onClick={() => {
+                          // Função para agendar visita - poderia abrir um modal
+                          window.alert('Funcionalidade de agendamento em desenvolvimento')
+                        }}
                       >
                         AGENDAR UMA VISITA
                       </button>
