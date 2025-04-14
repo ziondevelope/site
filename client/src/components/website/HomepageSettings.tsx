@@ -89,7 +89,7 @@ export default function HomepageSettings({ config, configData, onConfigChange }:
           <p className="text-sm text-gray-500">Ativa ou desativa o título e subtítulo no banner principal</p>
         </div>
         <Switch 
-          checked={showBannerText} 
+          checked={showBannerText || false} 
           onCheckedChange={handleShowBannerTextChange} 
           className="data-[state=checked]:bg-indigo-600"
         />
@@ -134,7 +134,7 @@ export default function HomepageSettings({ config, configData, onConfigChange }:
           <p className="text-sm text-gray-500">Exibe a barra de pesquisa de imóveis no topo do site</p>
         </div>
         <Switch 
-          checked={showSearchBar} 
+          checked={showSearchBar || false} 
           onCheckedChange={handleShowSearchBarChange} 
           className="data-[state=checked]:bg-indigo-600"
         />
@@ -146,7 +146,7 @@ export default function HomepageSettings({ config, configData, onConfigChange }:
           <p className="text-sm text-gray-500">Exibe carrossel de imóveis em destaque</p>
         </div>
         <Switch 
-          checked={showFeaturedProperties} 
+          checked={showFeaturedProperties || false} 
           onCheckedChange={handleShowFeaturedPropertiesChange} 
           className="data-[state=checked]:bg-indigo-600"
         />
@@ -158,7 +158,7 @@ export default function HomepageSettings({ config, configData, onConfigChange }:
           <p className="text-sm text-gray-500">Exibe seção de imóveis para venda</p>
         </div>
         <Switch 
-          checked={showSaleProperties} 
+          checked={showSaleProperties || false} 
           onCheckedChange={handleShowSalePropertiesChange} 
           className="data-[state=checked]:bg-indigo-600"
         />
