@@ -332,14 +332,62 @@ export default function AllProperties() {
               </Button>
             </div>
             
-            {/* Slider de preço com design melhorado */}
+            {/* Slider de preço com design melhorado e campos para digitação */}
             <div className="px-5 py-4 border-t border-gray-200">
               <div className="flex justify-between items-center mb-2">
                 <div className="text-sm font-medium">Faixa de Preço</div>
-                <div className="text-sm font-bold" style={{ color: config?.primaryColor || 'var(--primary)' }}>
+                <div className="text-sm font-bold hidden md:block" style={{ color: config?.primaryColor || 'var(--primary)' }}>
                   {formatPrice(filters.minPrice)} - {formatPrice(filters.maxPrice)}
                 </div>
               </div>
+              
+              {/* Inputs para digitação direta de valores */}
+              <div className="flex items-center space-x-2 mb-3">
+                <div className="w-full">
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">R$</span>
+                    <Input
+                      type="number"
+                      min="0"
+                      max={filters.maxPrice}
+                      className="pl-8 pr-3 py-1 text-sm border-gray-300"
+                      value={filters.minPrice}
+                      onChange={(e) => {
+                        const value = parseInt(e.target.value) || 0;
+                        if (value >= 0 && value <= filters.maxPrice) {
+                          setFilters({...filters, minPrice: value});
+                        }
+                      }}
+                    />
+                    <label className="block text-xs text-gray-500 mt-0.5">Valor mínimo</label>
+                  </div>
+                </div>
+                
+                <div className="py-3 text-gray-400">
+                  <i className="fas fa-arrow-right"></i>
+                </div>
+                
+                <div className="w-full">
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">R$</span>
+                    <Input
+                      type="number"
+                      min={filters.minPrice}
+                      max="20000000"
+                      className="pl-8 pr-3 py-1 text-sm border-gray-300"
+                      value={filters.maxPrice}
+                      onChange={(e) => {
+                        const value = parseInt(e.target.value) || filters.minPrice;
+                        if (value >= filters.minPrice && value <= 20000000) {
+                          setFilters({...filters, maxPrice: value});
+                        }
+                      }}
+                    />
+                    <label className="block text-xs text-gray-500 mt-0.5">Valor máximo</label>
+                  </div>
+                </div>
+              </div>
+              
               <Slider
                 min={0}
                 max={20000000}
