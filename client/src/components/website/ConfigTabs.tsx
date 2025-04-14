@@ -3,6 +3,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import GeneralSettings from "@/components/website/GeneralSettings";
 import HomepageSettings from "@/components/website/HomepageSettings";
 import SeoSettings from "@/components/website/SeoSettings";
+import InformationSettings from "@/components/website/InformationSettings";
 import { WebsiteConfig, UpdateWebsiteConfig } from "@shared/schema";
 
 interface ConfigTabsProps {
@@ -32,6 +33,12 @@ export default function ConfigTabs({
               Configurações Gerais
             </TabsTrigger>
             <TabsTrigger 
+              value="information" 
+              className="px-6 py-4 data-[state=active]:border-b-2 data-[state=active]:border-indigo-600 rounded-none data-[state=active]:bg-white"
+            >
+              Informações Gerais
+            </TabsTrigger>
+            <TabsTrigger 
               value="homepage" 
               className="px-6 py-4 data-[state=active]:border-b-2 data-[state=active]:border-indigo-600 rounded-none data-[state=active]:bg-white"
             >
@@ -48,6 +55,14 @@ export default function ConfigTabs({
         
         <TabsContent value="general" className="p-6 bg-white">
           <GeneralSettings 
+            config={config} 
+            configData={configData}
+            onConfigChange={onConfigChange}
+          />
+        </TabsContent>
+        
+        <TabsContent value="information" className="p-6 bg-white">
+          <InformationSettings 
             config={config} 
             configData={configData}
             onConfigChange={onConfigChange}

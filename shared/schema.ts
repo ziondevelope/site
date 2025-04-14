@@ -119,6 +119,12 @@ export const websiteConfig = pgTable("website_config", {
   showSaleProperties: boolean("show_sale_properties").default(true),
   showRentProperties: boolean("show_rent_properties").default(true),
   showTestimonials: boolean("show_testimonials").default(false),
+  // Campos de informações de contato
+  address: text("address"),
+  email: text("email"),
+  phone: text("phone"),
+  workingHours: text("working_hours"),
+  // Campos SEO
   seoTitle: text("seo_title"),
   seoDescription: text("seo_description"),
   seoKeywords: text("seo_keywords"),

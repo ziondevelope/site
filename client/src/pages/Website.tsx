@@ -35,6 +35,12 @@ export default function Website() {
         showSaleProperties: config.showSaleProperties,
         showRentProperties: config.showRentProperties,
         showTestimonials: config.showTestimonials,
+        // Informações de contato
+        address: config.address,
+        email: config.email,
+        phone: config.phone,
+        workingHours: config.workingHours,
+        // SEO
         seoTitle: config.seoTitle,
         seoDescription: config.seoDescription,
         seoKeywords: config.seoKeywords,
@@ -98,6 +104,12 @@ export default function Website() {
       showSaleProperties: configData.showSaleProperties ?? config.showSaleProperties ?? true,
       showRentProperties: configData.showRentProperties ?? config.showRentProperties ?? true,
       showTestimonials: configData.showTestimonials ?? config.showTestimonials ?? true,
+      // Informações de contato
+      address: configData.address ?? config.address ?? '',
+      email: configData.email ?? config.email ?? '',
+      phone: configData.phone ?? config.phone ?? '',
+      workingHours: configData.workingHours ?? config.workingHours ?? '',
+      // SEO
       seoTitle: configData.seoTitle ?? config.seoTitle ?? '',
       seoDescription: configData.seoDescription ?? config.seoDescription ?? '',
       seoKeywords: configData.seoKeywords ?? config.seoKeywords ?? '',
