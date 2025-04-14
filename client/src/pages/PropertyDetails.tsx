@@ -179,7 +179,7 @@ export default function PropertyDetails() {
               {/* Layout de duas colunas principal */}
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* Coluna da esquerda - Conteúdo principal */}
-                <div className="lg:col-span-3">
+                <div className="lg:col-span-2">
                   {/* Imagem Principal */}
                   <div 
                     className="w-full h-[500px] rounded-xl mb-2 overflow-hidden relative bg-cover bg-center"
@@ -316,112 +316,6 @@ export default function PropertyDetails() {
                     </div>
                   )}
                   
-                  {/* Formulário de contato */}
-                  <div className="mb-8">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                      <div className="md:col-span-2">
-                        <h2 className="text-2xl font-bold mb-4">Entre em contato</h2>
-                        <div className="p-6 border border-gray-200 rounded-lg mb-4">
-                          <div className="mb-6">
-                            <h3 className="text-xl font-bold mb-2">Interessado neste imóvel?</h3>
-                            <p className="text-gray-600">
-                              Entre em contato com um de nossos corretores
-                            </p>
-                          </div>
-                          
-                          <div className="mb-6">
-                            <button 
-                              className="w-full py-3 px-4 rounded-md font-medium text-white flex items-center justify-center"
-                              style={{ backgroundColor: '#25D366' }}
-                            >
-                              <i className="ri-whatsapp-line mr-2 text-lg"></i>
-                              WhatsApp
-                            </button>
-                          </div>
-                          
-                          <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
-                            <div className="grid grid-cols-2 gap-4">
-                              <div>
-                                <input
-                                  type="text"
-                                  placeholder="Seu nome"
-                                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary"
-                                />
-                              </div>
-                              <div>
-                                <input
-                                  type="tel"
-                                  placeholder="Seu telefone"
-                                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary"
-                                />
-                              </div>
-                            </div>
-                            <div>
-                              <input
-                                type="email"
-                                placeholder="Seu email"
-                                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary"
-                              />
-                            </div>
-                            <div>
-                              <textarea
-                                placeholder="Mensagem"
-                                rows={4}
-                                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary"
-                                defaultValue={`Olá, tenho interesse no imóvel ${currentProperty.title} (Ref: #${currentProperty.id}).`}
-                              />
-                            </div>
-                            <button 
-                              type="submit"
-                              className="w-full py-3 rounded-md font-medium text-white"
-                              style={{ backgroundColor: primaryColor }}
-                            >
-                              Enviar Mensagem
-                            </button>
-                          </form>
-                        </div>
-                      </div>
-                      
-                      <div>
-                        <div className="flex items-center mb-4">
-                          <div className="w-12 h-12 rounded-full bg-gray-200 mr-4">
-                            <img 
-                              src="https://via.placeholder.com/48"
-                              alt="Corretor" 
-                              className="w-full h-full object-cover rounded-full"
-                            />
-                          </div>
-                          <div>
-                            <p className="font-medium">Equipe LLImóveis</p>
-                            <p className="text-sm text-gray-500">Entre em contato conosco</p>
-                          </div>
-                        </div>
-                        
-                        <div className="p-6 border border-gray-200 rounded-lg">
-                          <h3 className="text-lg font-semibold mb-4">Informações de contato</h3>
-                          <ul className="space-y-3">
-                            <li className="flex items-center">
-                              <i className="ri-phone-line mr-3 text-lg" style={{ color: primaryColor }}></i>
-                              <span>(11) 3333-4444</span>
-                            </li>
-                            <li className="flex items-center">
-                              <i className="ri-whatsapp-line mr-3 text-lg" style={{ color: primaryColor }}></i>
-                              <span>(11) 99999-8888</span>
-                            </li>
-                            <li className="flex items-center">
-                              <i className="ri-mail-line mr-3 text-lg" style={{ color: primaryColor }}></i>
-                              <span>contato@llimoveis.com.br</span>
-                            </li>
-                            <li className="flex items-center">
-                              <i className="ri-time-line mr-3 text-lg" style={{ color: primaryColor }}></i>
-                              <span>Seg-Sex: 9h às 18h</span>
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  
                   {/* Localização */}
                   <div className="mb-8">
                     <h2 className="text-2xl font-bold mb-4">Localização</h2>
@@ -452,31 +346,112 @@ export default function PropertyDetails() {
                   {/* Propriedades relacionadas / sugestões */}
                   <div className="mb-8 lg:mb-0">
                     <h2 className="text-2xl font-bold mb-6">Imóveis similares</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {/* Placeholders para imóveis similares */}
-                      {[1, 2, 3].map((item) => (
-                        <div key={item} className="rounded-lg border border-gray-200 overflow-hidden">
-                          <div className="h-48 bg-gray-200 relative">
-                            <div className="absolute top-2 left-2 bg-gray-800 text-white text-xs py-1 px-2 rounded">
-                              Verificar disponibilidade
+                    <div className="relative">
+                      <div className="flex overflow-x-auto space-x-4 pb-4">
+                        {/* Placeholders para imóveis similares */}
+                        {[1, 2, 3].map((item) => (
+                          <div key={item} className="flex-shrink-0 w-72">
+                            <div className="rounded-lg border border-gray-200 overflow-hidden">
+                              <div className="h-48 bg-gray-200 relative">
+                                <div className="absolute top-2 left-2 bg-gray-800 text-white text-xs py-1 px-2 rounded">
+                                  Verificar disponibilidade
+                                </div>
+                              </div>
+                              <div className="p-4">
+                                <h3 className="font-bold text-lg mb-1 truncate">Imóvel similar</h3>
+                                <p className="text-gray-500 text-sm mb-2">Localização</p>
+                                <div className="flex justify-between items-center">
+                                  <div className="font-bold" style={{ color: primaryColor }}>
+                                    Consultar
+                                  </div>
+                                  <div className="flex space-x-2 text-gray-500 text-sm">
+                                    <span><i className="ri-hotel-bed-line"></i> 3</span>
+                                    <span><i className="ri-shower-line"></i> 2</span>
+                                    <span><i className="ri-car-line"></i> 1</span>
+                                  </div>
+                                </div>
+                              </div>
                             </div>
                           </div>
-                          <div className="p-4">
-                            <h3 className="font-bold text-lg mb-1 truncate">Imóvel similar</h3>
-                            <p className="text-gray-500 text-sm mb-2">Localização</p>
-                            <div className="flex justify-between items-center">
-                              <div className="font-bold" style={{ color: primaryColor }}>
-                                Consultar
-                              </div>
-                              <div className="flex space-x-2 text-gray-500 text-sm">
-                                <span><i className="ri-hotel-bed-line"></i> 3</span>
-                                <span><i className="ri-shower-line"></i> 2</span>
-                                <span><i className="ri-car-line"></i> 1</span>
-                              </div>
-                            </div>
-                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Coluna da direita - Formulário de contato */}
+                <div>
+                  <div className="p-6 border border-gray-200 rounded-lg sticky top-4">
+                    <div className="mb-6">
+                      <h3 className="text-xl font-bold mb-2">Interessado neste imóvel?</h3>
+                      <p className="text-gray-600">
+                        Entre em contato com um de nossos corretores
+                      </p>
+                    </div>
+                    
+                    <div className="mb-6">
+                      <button 
+                        className="w-full py-3 px-4 rounded-md font-medium text-white flex items-center justify-center"
+                        style={{ backgroundColor: '#25D366' }}
+                      >
+                        <i className="ri-whatsapp-line mr-2 text-lg"></i>
+                        WhatsApp
+                      </button>
+                    </div>
+                    
+                    <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+                      <div>
+                        <input
+                          type="text"
+                          placeholder="Seu nome"
+                          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary"
+                        />
+                      </div>
+                      <div>
+                        <input
+                          type="email"
+                          placeholder="Seu email"
+                          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary"
+                        />
+                      </div>
+                      <div>
+                        <input
+                          type="tel"
+                          placeholder="Seu telefone"
+                          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary"
+                        />
+                      </div>
+                      <div>
+                        <textarea
+                          placeholder="Mensagem"
+                          rows={4}
+                          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary"
+                          defaultValue={`Olá, tenho interesse no imóvel ${currentProperty.title} (Ref: #${currentProperty.id}).`}
+                        />
+                      </div>
+                      <button 
+                        type="submit"
+                        className="w-full py-3 rounded-md font-medium text-white"
+                        style={{ backgroundColor: primaryColor }}
+                      >
+                        Enviar Mensagem
+                      </button>
+                    </form>
+                    
+                    <div className="mt-6 pt-6 border-t border-gray-200">
+                      <div className="flex items-center">
+                        <div className="w-12 h-12 rounded-full bg-gray-200 mr-4">
+                          <img 
+                            src="https://via.placeholder.com/48"
+                            alt="Corretor" 
+                            className="w-full h-full object-cover rounded-full"
+                          />
                         </div>
-                      ))}
+                        <div>
+                          <p className="font-medium">Equipe LLImóveis</p>
+                          <p className="text-sm text-gray-500">Entre em contato conosco</p>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
