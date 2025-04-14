@@ -4,6 +4,30 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Estilos personalizados */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE e Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Chrome, Safari e Opera */
+}
+
+.carousel-item {
+  transition: transform 0.3s ease-in-out;
+}
+
+@media (min-width: 640px) {
+  .carousel-track {
+    scroll-snap-type: x mandatory;
+  }
+  
+  .carousel-item {
+    scroll-snap-align: start;
+  }
+}
+
 @layer base {
   * {
     @apply border-border;
