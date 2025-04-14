@@ -218,82 +218,77 @@ export default function PropertyDetails() {
                     </div>
                   )}
                   
-                  {/* Título e preço - Agora abaixo da foto no estilo da página principal */}
-                  <div className="mb-6 bg-white rounded-lg overflow-hidden shadow-sm">
-                    <div className="px-6 py-5 border-b border-gray-100">
-                      <div className="flex flex-wrap items-center justify-between">
-                        <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mr-4">{currentProperty.title}</h1>
-                        <div 
-                          className="text-2xl md:text-3xl font-bold mt-3 lg:mt-0"
-                          style={{ color: primaryColor }}
-                        >
-                          {formatCurrency(currentProperty.price)}
-                          {currentProperty.purpose === 'rent' && 
-                            <span className="text-base font-normal text-gray-500">/mês</span>
-                          }
-                        </div>
+                  {/* Título e preço no estilo da nova referência */}
+                  <div className="mb-6">
+                    <div className="flex flex-wrap items-center justify-between mb-2">
+                      <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mr-4 flex items-center">
+                        {currentProperty.title}
+                        <button className="ml-3 text-gray-500 hover:text-gray-700">
+                          <i className="ri-share-line text-xl"></i>
+                        </button>
+                      </h1>
+                      <div 
+                        className="text-2xl md:text-3xl font-bold mt-3 lg:mt-0"
+                        style={{ color: primaryColor }}
+                      >
+                        {formatCurrency(currentProperty.price)}
+                        {currentProperty.purpose === 'rent' && 
+                          <span className="text-base font-normal text-gray-500">/mês</span>
+                        }
                       </div>
                     </div>
-                    <div className="px-6 py-4 bg-gray-50">
-                      <div className="flex flex-wrap justify-between items-center">
-                        <div className="flex items-center text-sm text-gray-600 mb-2 md:mb-0">
-                          <i className="ri-map-pin-line mr-2 text-lg" style={{ color: primaryColor }}></i>
-                          <span>{currentProperty.address}</span>
+                    
+                    <div className="flex items-center mb-4 text-gray-600">
+                      <i className="ri-map-pin-line mr-2"></i>
+                      <span>{currentProperty.address}</span>
+                      <div className="ml-auto text-sm text-gray-600 flex items-center">
+                        <i className="ri-code-line mr-1"></i>
+                        <span>Cód. LL{currentProperty.id}</span>
+                      </div>
+                    </div>
+                    
+                    <div className="border-t border-b border-gray-200 py-4 my-4">
+                      <div className="grid grid-cols-5 gap-4">
+                        <div className="flex items-center">
+                          <i className="ri-hotel-bed-line text-xl mr-2" style={{ color: primaryColor }}></i>
+                          <div>
+                            <span className="font-medium">{currentProperty.bedrooms || 0}</span>
+                            <span className="text-gray-500 text-sm ml-1">Quartos</span>
+                          </div>
                         </div>
                         
-                        <div className="flex space-x-4">
-                          <div className="flex items-center">
-                            <div className="px-3 py-1 text-white text-sm font-medium rounded-md" 
-                              style={{ backgroundColor: primaryColor }}>
-                              {currentProperty.purpose === 'sale' ? 'Venda' : 'Aluguel'}
-                            </div>
+                        <div className="flex items-center">
+                          <i className="ri-shower-line text-xl mr-2" style={{ color: primaryColor }}></i>
+                          <div>
+                            <span className="font-medium">{currentProperty.bathrooms || 0}</span>
+                            <span className="text-gray-500 text-sm ml-1">Banheiros</span>
                           </div>
-                          
-                          <button className="flex items-center text-gray-500 hover:text-primary">
-                            <i className="ri-share-line mr-1"></i>
-                            <span className="text-sm">Compartilhar</span>
-                          </button>
+                        </div>
+                        
+                        <div className="flex items-center">
+                          <i className="ri-shut-down-line text-xl mr-2" style={{ color: primaryColor }}></i>
+                          <div>
+                            <span className="font-medium">{currentProperty.suites || 0}</span>
+                            <span className="text-gray-500 text-sm ml-1">Suítes</span>
+                          </div>
+                        </div>
+                        
+                        <div className="flex items-center">
+                          <i className="ri-car-line text-xl mr-2" style={{ color: primaryColor }}></i>
+                          <div>
+                            <span className="font-medium">{currentProperty.parkingSpots || 0}</span>
+                            <span className="text-gray-500 text-sm ml-1">Vagas</span>
+                          </div>
+                        </div>
+                        
+                        <div className="flex items-center">
+                          <i className="ri-ruler-line text-xl mr-2" style={{ color: primaryColor }}></i>
+                          <div>
+                            <span className="font-medium">{currentProperty.area}</span>
+                            <span className="text-gray-500 text-sm ml-1">m²</span>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </div>
-                  
-                  {/* Destaque dos detalhes principais */}
-                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8 bg-white p-6 rounded-lg shadow-sm">
-                    <div className="flex flex-col items-center text-center">
-                      <i className="ri-ruler-line text-2xl mb-2" style={{ color: primaryColor }}></i>
-                      <span className="text-sm text-gray-500">Área</span>
-                      <span className="font-medium text-gray-800">{currentProperty.area} m²</span>
-                    </div>
-                    
-                    <div className="flex flex-col items-center text-center">
-                      <i className="ri-hotel-bed-line text-2xl mb-2" style={{ color: primaryColor }}></i>
-                      <span className="text-sm text-gray-500">Quartos</span>
-                      <span className="font-medium text-gray-800">{currentProperty.bedrooms || 0}</span>
-                    </div>
-                    
-                    <div className="flex flex-col items-center text-center">
-                      <i className="ri-shower-line text-2xl mb-2" style={{ color: primaryColor }}></i>
-                      <span className="text-sm text-gray-500">Banheiros</span>
-                      <span className="font-medium text-gray-800">{currentProperty.bathrooms || 0}</span>
-                    </div>
-                    
-                    <div className="flex flex-col items-center text-center">
-                      <i className="ri-shut-down-line text-2xl mb-2" style={{ color: primaryColor }}></i>
-                      <span className="text-sm text-gray-500">Suítes</span>
-                      <span className="font-medium text-gray-800">{currentProperty.suites || 0}</span>
-                    </div>
-                    
-                    <div className="flex flex-col items-center text-center">
-                      <i className="ri-car-line text-2xl mb-2" style={{ color: primaryColor }}></i>
-                      <span className="text-sm text-gray-500">Vagas</span>
-                      <span className="font-medium text-gray-800">{currentProperty.parkingSpots || 0}</span>
-                    </div>
-                    
-                    <div className="flex flex-col items-center text-center">
-                      <i className="ri-home-line text-2xl mb-2" style={{ color: primaryColor }}></i>
-                      <span className="text-sm text-gray-500">Tipo</span>
-                      <span className="font-medium text-gray-800 capitalize">{currentProperty.type}</span>
                     </div>
                   </div>
                   
