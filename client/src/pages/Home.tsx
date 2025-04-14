@@ -80,73 +80,86 @@ export default function Home() {
             
             {/* Barra de Filtro */}
             {config?.showSearchBar && (
-              <div className="bg-white rounded-lg p-4 shadow-lg mb-8">
-                <form className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                  <div>
-                    <label className="block text-gray-700 text-sm font-medium mb-2">Tipo de imóvel</label>
-                    <select 
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      defaultValue=""
-                    >
-                      <option value="" disabled>Selecione</option>
-                      <option value="apartment">Apartamento</option>
-                      <option value="house">Casa</option>
-                      <option value="commercial">Comercial</option>
-                      <option value="land">Terreno</option>
-                    </select>
-                  </div>
-                  
-                  <div>
-                    <label className="block text-gray-700 text-sm font-medium mb-2">Finalidade</label>
-                    <div className="grid grid-cols-2 gap-2">
-                      <div className="flex items-center">
-                        <input 
-                          type="radio" 
-                          id="buy" 
-                          name="purpose" 
-                          className="mr-2 h-4 w-4" 
-                          defaultChecked 
-                        />
-                        <label htmlFor="buy" className="text-gray-700">Comprar</label>
-                      </div>
-                      <div className="flex items-center">
-                        <input 
-                          type="radio" 
-                          id="rent" 
-                          name="purpose" 
-                          className="mr-2 h-4 w-4" 
-                        />
-                        <label htmlFor="rent" className="text-gray-700">Alugar</label>
-                      </div>
+              <div className="w-full max-w-4xl mx-auto">
+                <div className="bg-white/90 backdrop-blur-sm rounded-lg shadow-lg py-4 px-4 md:px-6 mb-4">
+                  <form className="flex flex-col md:flex-row gap-4">
+                    {/* Finalidade */}
+                    <div className="flex-1">
+                      <select 
+                        className="filter-select border border-gray-200"
+                        defaultValue="comprar"
+                      >
+                        <option value="comprar">Comprar</option>
+                        <option value="alugar">Alugar</option>
+                      </select>
                     </div>
-                  </div>
-                  
-                  <div>
-                    <label className="block text-gray-700 text-sm font-medium mb-2">Valor máximo</label>
-                    <select 
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      defaultValue=""
-                    >
-                      <option value="" disabled>Selecione</option>
-                      <option value="100000">Até R$ 100.000</option>
-                      <option value="300000">Até R$ 300.000</option>
-                      <option value="500000">Até R$ 500.000</option>
-                      <option value="1000000">Até R$ 1.000.000</option>
-                      <option value="2000000">Até R$ 2.000.000</option>
-                      <option value="5000000">Acima de R$ 2.000.000</option>
-                    </select>
-                  </div>
-                  
-                  <div className="flex items-end">
-                    <button 
-                      type="submit"
-                      className="w-full rounded-lg py-2 px-4 text-white font-medium transition-colors"
-                      style={{ backgroundColor: config?.primaryColor || 'var(--primary)' }}
-                    >
-                      Buscar Imóveis
-                    </button>
-                  </div>
-                </form>
+                    
+                    {/* Tipo de Imóvel */}
+                    <div className="flex-1">
+                      <select 
+                        className="filter-select border border-gray-200"
+                        defaultValue=""
+                      >
+                        <option value="" disabled>Tipo de imóvel</option>
+                        <option value="apartment">Apartamento</option>
+                        <option value="house">Casa</option>
+                        <option value="commercial">Comercial</option>
+                        <option value="land">Terreno</option>
+                      </select>
+                    </div>
+                    
+                    {/* Valor Máximo */}
+                    <div className="flex-1">
+                      <select 
+                        className="filter-select border border-gray-200"
+                        defaultValue=""
+                      >
+                        <option value="" disabled>Valor máximo</option>
+                        <option value="100000">Até R$ 100.000</option>
+                        <option value="300000">Até R$ 300.000</option>
+                        <option value="500000">Até R$ 500.000</option>
+                        <option value="1000000">Até R$ 1.000.000</option>
+                        <option value="2000000">Até R$ 2.000.000</option>
+                        <option value="5000000">Acima de R$ 2.000.000</option>
+                      </select>
+                    </div>
+                    
+                    {/* Botão Buscar */}
+                    <div className="flex-initial">
+                      <button 
+                        type="submit"
+                        className="filter-button"
+                        style={{ 
+                          backgroundColor: config?.primaryColor || 'var(--primary)',
+                          minWidth: '160px'
+                        }}
+                      >
+                        <i className="ri-search-line mr-2"></i>
+                        Encontrar imóvel
+                      </button>
+                    </div>
+                  </form>
+                </div>
+                
+                {/* Tags de filtro adicionais */}
+                <div className="search-filters">
+                  <button className="tag-filter">
+                    <span>Busca por código</span>
+                    <i className="ri-search-line text-xs"></i>
+                  </button>
+                  <button className="tag-filter">
+                    <span>Localização</span>
+                    <i className="ri-map-pin-line text-xs"></i>
+                  </button>
+                  <button className="tag-filter">
+                    <span>Mobiliado</span>
+                    <i className="ri-checkbox-blank-line text-xs"></i>
+                  </button>
+                  <button className="tag-filter">
+                    <span>Permite pets</span>
+                    <i className="ri-checkbox-blank-line text-xs"></i>
+                  </button>
+                </div>
               </div>
             )}
             
