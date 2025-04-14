@@ -174,9 +174,6 @@ export default function PropertyDetails() {
                   <i className="ri-arrow-right-s-line mx-1"></i>
                   <span className="text-gray-700">{currentProperty.title}</span>
                 </div>
-                <div className="flex items-center text-sm">
-                  <span className="text-gray-500">Ref: <span className="font-medium text-gray-700">#{currentProperty.id}</span></span>
-                </div>
               </div>
               
               {/* Layout de duas colunas principal */}
