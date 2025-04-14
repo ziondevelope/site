@@ -101,7 +101,7 @@ export default function Home() {
               }}
             >
               {config?.phone && <span className="mr-2">{config.phone}</span>}
-              <i className="ri-whatsapp-line text-lg"></i>
+              <i className="ri-whatsapp-line text-lg" style={{ color: "#25D366" }}></i>
             </a>
           </div>
         </div>
