@@ -103,7 +103,7 @@ export default function HomepageSettings({ config, configData, onConfigChange }:
             </label>
             <Input
               id="bannerTitle"
-              value={bannerTitle}
+              value={bannerTitle || ""}
               onChange={handleBannerTitleChange}
               placeholder="Digite o título principal"
               className="w-full"
@@ -116,7 +116,7 @@ export default function HomepageSettings({ config, configData, onConfigChange }:
             </label>
             <Textarea
               id="bannerSubtitle"
-              value={bannerSubtitle}
+              value={bannerSubtitle || ""}
               onChange={handleBannerSubtitleChange}
               placeholder="Digite o texto secundário"
               className="w-full resize-none"
@@ -170,7 +170,7 @@ export default function HomepageSettings({ config, configData, onConfigChange }:
           <p className="text-sm text-gray-500">Exibe seção de imóveis para locação</p>
         </div>
         <Switch 
-          checked={showRentProperties} 
+          checked={showRentProperties || false} 
           onCheckedChange={handleShowRentPropertiesChange} 
           className="data-[state=checked]:bg-indigo-600"
         />
@@ -182,7 +182,7 @@ export default function HomepageSettings({ config, configData, onConfigChange }:
           <p className="text-sm text-gray-500">Exibe depoimentos de clientes</p>
         </div>
         <Switch 
-          checked={showTestimonials} 
+          checked={showTestimonials || false} 
           onCheckedChange={handleShowTestimonialsChange}
           className="data-[state=checked]:bg-indigo-600"
         />
