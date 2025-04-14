@@ -28,6 +28,14 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
+// Tipo para corrigir o erro de tipagem do agente
+type Agent = {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+};
+
 const propertyFormSchema = insertPropertySchema.extend({
   // Add additional validation as needed
   images: z.array(
@@ -128,7 +136,7 @@ export default function Properties() {
   });
   
   // Fetch agents
-  const { data: allAgents } = useQuery({
+  const { data: allAgents } = useQuery<Agent[]>({
     queryKey: ['/api/agents'],
   });
   
@@ -223,6 +231,7 @@ export default function Properties() {
       parkingSpots: property.parkingSpots || 0,
       suites: property.suites || 0,
       features: property.features || [],
+      agentId: property.agentId || null,
     });
     setIsEditDialogOpen(true);
   };
@@ -249,6 +258,7 @@ export default function Properties() {
       parkingSpots: 0,
       suites: 0,
       features: [],
+      agentId: null,
     });
     setIsAddDialogOpen(true);
   };
