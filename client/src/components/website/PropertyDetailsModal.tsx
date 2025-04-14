@@ -138,7 +138,7 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
               {/* Coluna esquerda - Cartão de contato do corretor */}
               <div className="md:col-span-1 order-2 md:order-1">
                 {agent && (
-                  <div className="bg-gray-50 rounded-lg overflow-hidden">
+                  <div className="rounded-lg overflow-hidden" style={{ backgroundColor: primaryColor }}>
                     <div className="p-6 flex flex-col items-center text-center">
                       {/* Avatar */}
                       {agent.avatar ? (
@@ -156,28 +156,28 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
                       )}
                       
                       {/* Nome e CRECI */}
-                      <h3 className="text-xl font-bold text-gray-800 mb-1">{agent.displayName}</h3>
-                      <p className="text-gray-500 mb-5">CRECI {agent.creci || '111111'}</p>
+                      <h3 className="text-xl font-bold text-white mb-1">{agent.displayName}</h3>
+                      <p className="text-white text-opacity-80 mb-5">CRECI {agent.creci || '111111'}</p>
                       
                       {/* Botões de ação */}
                       <div className="w-full space-y-3">
                         <Button 
-                          className="w-full rounded-full border-gray-300 text-gray-800 font-medium" 
+                          className="w-full rounded-full border-white border-opacity-30 text-white font-medium hover:bg-white hover:bg-opacity-10" 
                           variant="outline"
                         >
                           FALE COM O CORRETOR
                         </Button>
                         
                         <Button 
-                          className="w-full rounded-full border-gray-300 text-gray-800 font-medium" 
+                          className="w-full rounded-full border-white border-opacity-30 text-white font-medium hover:bg-white hover:bg-opacity-10" 
                           variant="outline"
                         >
                           AGENDAR UMA VISITA
                         </Button>
                         
                         <Button 
-                          className="w-full rounded-full text-white font-medium"
-                          style={{ backgroundColor: primaryColor }}
+                          className="w-full rounded-full bg-white font-medium"
+                          style={{ color: primaryColor }}
                         >
                           ENTRAR EM CONTATO
                         </Button>
@@ -185,21 +185,21 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
                       
                       {/* Compartilhar */}
                       <div className="mt-4 w-full">
-                        <p className="text-center text-gray-500 mb-2 text-xs uppercase">COMPARTILHAR</p>
+                        <p className="text-center text-white text-opacity-80 mb-2 text-xs uppercase">COMPARTILHAR</p>
                         <div className="flex justify-center space-x-2">
-                          <button className="w-10 h-10 rounded-full bg-white border border-gray-100 flex items-center justify-center text-teal-500 hover:bg-gray-50">
+                          <button className="w-10 h-10 rounded-full bg-white bg-opacity-10 flex items-center justify-center text-white hover:bg-opacity-20">
                             <i className="fab fa-whatsapp"></i>
                           </button>
-                          <button className="w-10 h-10 rounded-full bg-white border border-gray-100 flex items-center justify-center text-blue-600 hover:bg-gray-50">
+                          <button className="w-10 h-10 rounded-full bg-white bg-opacity-10 flex items-center justify-center text-white hover:bg-opacity-20">
                             <i className="fab fa-facebook-f"></i>
                           </button>
-                          <button className="w-10 h-10 rounded-full bg-white border border-gray-100 flex items-center justify-center text-blue-400 hover:bg-gray-50">
+                          <button className="w-10 h-10 rounded-full bg-white bg-opacity-10 flex items-center justify-center text-white hover:bg-opacity-20">
                             <i className="fab fa-twitter"></i>
                           </button>
-                          <button className="w-10 h-10 rounded-full bg-white border border-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-50">
+                          <button className="w-10 h-10 rounded-full bg-white bg-opacity-10 flex items-center justify-center text-white hover:bg-opacity-20">
                             <i className="far fa-envelope"></i>
                           </button>
-                          <button className="w-10 h-10 rounded-full bg-white border border-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-50">
+                          <button className="w-10 h-10 rounded-full bg-white bg-opacity-10 flex items-center justify-center text-white hover:bg-opacity-20">
                             <i className="fas fa-print"></i>
                           </button>
                         </div>
