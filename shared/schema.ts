@@ -106,6 +106,8 @@ export const websiteConfig = pgTable("website_config", {
   logo: text("logo"),
   bannerBackground: text("banner_background"),
   mainFont: text("main_font").default("Inter"),
+  headingFont: text("heading_font").default("Inter"),
+  bodyFont: text("body_font").default("Inter"),
   primaryColor: text("primary_color").default("#3B82F6"),
   secondaryColor: text("secondary_color").default("#10B981"),
   footerInfo: text("footer_info"),

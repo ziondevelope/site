@@ -25,6 +25,14 @@ export default function GeneralSettings({ config, configData, onConfigChange }: 
   const mainFont = configData.mainFont !== undefined 
     ? configData.mainFont 
     : config?.mainFont || 'Inter';
+
+  const headingFont = configData.headingFont !== undefined 
+    ? configData.headingFont 
+    : config?.headingFont || 'Inter';
+
+  const bodyFont = configData.bodyFont !== undefined 
+    ? configData.bodyFont 
+    : config?.bodyFont || 'Inter';
     
   const primaryColor = configData.primaryColor !== undefined 
     ? configData.primaryColor 
@@ -49,6 +57,14 @@ export default function GeneralSettings({ config, configData, onConfigChange }: 
 
   const handleMainFontChange = (newValue: string) => {
     onConfigChange({ mainFont: newValue });
+  };
+
+  const handleHeadingFontChange = (newValue: string) => {
+    onConfigChange({ headingFont: newValue });
+  };
+
+  const handleBodyFontChange = (newValue: string) => {
+    onConfigChange({ bodyFont: newValue });
   };
 
   const handlePrimaryColorChange = (newValue: string) => {
@@ -131,9 +147,53 @@ export default function GeneralSettings({ config, configData, onConfigChange }: 
             <option value="Montserrat">Montserrat</option>
             <option value="Open Sans">Open Sans</option>
             <option value="Lato">Lato</option>
+            <option value="Poppins">Poppins</option>
+            <option value="Playfair Display">Playfair Display</option>
           </select>
         </div>
-        
+
+        <div>
+          <Label className="block text-sm font-medium text-gray-700 mb-2">
+            Fonte dos Títulos
+          </Label>
+          <select 
+            className="w-full border border-gray-200 rounded-full px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-transparent"
+            value={headingFont || ""}
+            onChange={(e) => handleHeadingFontChange(e.target.value)}
+          >
+            <option value="Inter">Inter</option>
+            <option value="Roboto">Roboto</option>
+            <option value="Montserrat">Montserrat</option>
+            <option value="Open Sans">Open Sans</option>
+            <option value="Lato">Lato</option>
+            <option value="Poppins">Poppins</option>
+            <option value="Playfair Display">Playfair Display</option>
+            <option value="Raleway">Raleway</option>
+            <option value="Merriweather">Merriweather</option>
+          </select>
+        </div>
+
+        <div>
+          <Label className="block text-sm font-medium text-gray-700 mb-2">
+            Fonte dos Textos
+          </Label>
+          <select 
+            className="w-full border border-gray-200 rounded-full px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-transparent"
+            value={bodyFont || ""}
+            onChange={(e) => handleBodyFontChange(e.target.value)}
+          >
+            <option value="Inter">Inter</option>
+            <option value="Roboto">Roboto</option>
+            <option value="Montserrat">Montserrat</option>
+            <option value="Open Sans">Open Sans</option>
+            <option value="Lato">Lato</option>
+            <option value="Source Sans Pro">Source Sans Pro</option>
+            <option value="Nunito">Nunito</option>
+          </select>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div>
           <Label className="block text-sm font-medium text-gray-700 mb-2">
             Cor Primária

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
@@ -23,6 +23,15 @@ export default function Home() {
   });
 
   // A navegação agora é feita diretamente pelo Link em vez da função handleAdminLogin
+
+  // Definindo as fontes com base na configuração
+  useEffect(() => {
+    if (config) {
+      document.documentElement.style.setProperty('--main-font', `'${config.mainFont || 'Inter'}', sans-serif`);
+      document.documentElement.style.setProperty('--heading-font', `'${config.headingFont || 'Inter'}', sans-serif`);
+      document.documentElement.style.setProperty('--body-font', `'${config.bodyFont || 'Inter'}', sans-serif`);
+    }
+  }, [config]);
 
   return (
     <div className="min-h-screen flex flex-col">
