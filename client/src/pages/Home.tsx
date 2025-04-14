@@ -77,7 +77,9 @@ export default function Home() {
           {config?.showBannerText && (
             <div className="mx-auto max-w-3xl mb-10">
               <h1 className="text-4xl md:text-5xl font-bold mb-4">{config?.bannerTitle || "Encontre o imóvel dos seus sonhos"}</h1>
-              <p className="text-lg mb-8">{config?.bannerSubtitle || "Oferecemos as melhores opções de imóveis para compra e aluguel com atendimento personalizado."}</p>
+              {config?.bannerSubtitle && (
+                <p className="text-lg mb-8">{config.bannerSubtitle}</p>
+              )}
             </div>
           )}
           
