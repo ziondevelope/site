@@ -536,11 +536,14 @@ export default function PropertyDetails() {
                         style={{ backgroundColor: primaryColor }}
                       >
                         {/* Botão de Contato */}
-                        <button 
+                        <a 
+                          href={agent?.phone ? `https://wa.me/55${agent?.phone.replace(/\D/g, '')}?text=Olá, tenho interesse no imóvel ${currentProperty?.title} (Ref: #${currentProperty?.id}).` : '#'}
+                          target="_blank"
+                          rel="noopener noreferrer"
                           className="w-full py-3 px-4 rounded-full border-2 border-white text-white font-medium flex items-center justify-center mb-6 hover:bg-teal-600 transition-colors"
                         >
                           ENTRAR EM CONTATO
-                        </button>
+                        </a>
                       
                         {/* Botões de compartilhamento */}
                         <p className="text-center text-white text-sm mb-3">
