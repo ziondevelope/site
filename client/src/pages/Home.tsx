@@ -361,31 +361,11 @@ export default function Home() {
                           
                           <div className="flex items-center justify-between mb-4 text-sm text-gray-600">
                             <span className="flex items-center">
-                              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="mr-1">
-                                <path d="M4 22H2V2H4V22Z" fill="currentColor"/>
-                                <path d="M22 4H4V2H22V4Z" fill="currentColor"/>
-                                <path d="M8 7H6V9H8V7Z" fill="currentColor"/>
-                                <path d="M12 7H10V9H12V7Z" fill="currentColor"/>
-                                <path d="M16 7H14V9H16V7Z" fill="currentColor"/>
-                                <path d="M20 7H18V9H20V7Z" fill="currentColor"/>
-                                <path d="M8 11H6V13H8V11Z" fill="currentColor"/>
-                                <path d="M12 11H10V13H12V11Z" fill="currentColor"/>
-                                <path d="M16 11H14V13H16V11Z" fill="currentColor"/>
-                                <path d="M20 11H18V13H20V11Z" fill="currentColor"/>
-                                <path d="M8 15H6V17H8V15Z" fill="currentColor"/>
-                                <path d="M12 15H10V17H12V15Z" fill="currentColor"/>
-                                <path d="M16 15H14V17H16V15Z" fill="currentColor"/>
-                                <path d="M20 15H18V17H20V15Z" fill="currentColor"/>
-                              </svg>
+                              <i className="fas fa-ruler-combined fa-xl property-characteristics-icons_icon__q1Mde mr-1"></i>
                               {property.area}m²
                             </span>
                             <span className="flex items-center">
-                              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="mr-1">
-                                <path d="M22 17H2V20H22V17Z" fill="currentColor"/>
-                                <path d="M22 11H18V14H22V11Z" fill="currentColor"/>
-                                <path d="M6 11H2V14H6V11Z" fill="currentColor"/>
-                                <path d="M15 4H9C7.89543 4 7 4.89543 7 6V14H17V6C17 4.89543 16.1046 4 15 4Z" fill="currentColor"/>
-                              </svg>
+                              <i className="fas fa-bed fa-xl property-characteristics-icons_icon__q1Mde mr-1"></i>
                               {property.bedrooms}
                             </span>
                             <span className="flex items-center">
@@ -393,11 +373,7 @@ export default function Home() {
                               {property.bathrooms}
                             </span>
                             <span className="flex items-center">
-                              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="mr-1">
-                                <path d="M5 8C5 6.34315 6.34315 5 8 5H16C17.6569 5 19 6.34315 19 8V20H5V8Z" fill="currentColor"/>
-                                <path d="M2 20H22V22H2V20Z" fill="currentColor"/>
-                                <path d="M7 10H17V12H7V10Z" fill="currentColor"/>
-                              </svg>
+                              <i className="fas fa-bath fa-xl property-characteristics-icons_icon__q1Mde mr-1"></i>
                               {property.suites || 0}
                             </span>
                             <span className="flex items-center">
