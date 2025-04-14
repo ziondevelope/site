@@ -324,70 +324,70 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
                 )}
                 
                 {/* Title and price */}
-                <div className="mb-8 text-center">
-                  <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">
-                    {currentProperty.title}
-                  </h1>
-                  <div 
-                    className="text-2xl md:text-3xl font-bold mb-4"
-                    style={{ color: primaryColor }}
-                  >
-                    {formatCurrency(currentProperty.price)}
-                    {currentProperty.purpose === 'rent' && 
-                      <span className="text-base font-normal text-gray-500">/mês</span>
-                    }
+                <div className="mb-6">
+                  <div className="flex flex-wrap items-center justify-between mb-2">
+                    <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mr-4">
+                      {currentProperty.title}
+                    </h1>
+                    <div 
+                      className="text-2xl md:text-3xl font-bold mt-3 md:mt-0"
+                      style={{ color: primaryColor }}
+                    >
+                      {formatCurrency(currentProperty.price)}
+                      {currentProperty.purpose === 'rent' && 
+                        <span className="text-base font-normal text-gray-500">/mês</span>
+                      }
+                    </div>
                   </div>
                   
-                  <div className="flex flex-col items-center mb-4 text-gray-600">
-                    <div className="flex items-center mb-2">
-                      <i className="ri-map-pin-line mr-2"></i>
-                      <span>{currentProperty.address}</span>
-                    </div>
-                    <div className="text-sm text-gray-600 flex items-center">
+                  <div className="flex items-center mb-4 text-gray-600">
+                    <i className="ri-map-pin-line mr-2"></i>
+                    <span>{currentProperty.address}</span>
+                    <div className="ml-auto text-sm text-gray-600 flex items-center">
                       <i className="ri-code-line mr-1"></i>
                       <span>Cód. LL{currentProperty.id}</span>
                     </div>
                   </div>
                   
-                  <div className="border-t border-b border-gray-200 py-6 my-4">
-                    <div className="flex flex-wrap gap-8 justify-center items-center">
-                      <div className="flex flex-col items-center text-center">
-                        <i className="fas fa-bed text-2xl mb-2" style={{ color: primaryColor }}></i>
-                        <div className="text-center">
-                          <span className="font-medium text-lg">{currentProperty.bedrooms || 0}</span>
-                          <span className="text-gray-500 text-sm ml-1 block">Quartos</span>
+                  <div className="border-t border-b border-gray-200 py-4 my-4">
+                    <div className="flex flex-wrap gap-4 justify-between">
+                      <div className="flex items-center">
+                        <i className="fas fa-bed text-xl mr-2" style={{ color: primaryColor }}></i>
+                        <div>
+                          <span className="font-medium">{currentProperty.bedrooms || 0}</span>
+                          <span className="text-gray-500 text-sm ml-1">Quartos</span>
                         </div>
                       </div>
                       
-                      <div className="flex flex-col items-center text-center">
-                        <i className="fas fa-shower text-2xl mb-2" style={{ color: primaryColor }}></i>
-                        <div className="text-center">
-                          <span className="font-medium text-lg">{currentProperty.bathrooms || 0}</span>
-                          <span className="text-gray-500 text-sm ml-1 block">Banheiros</span>
+                      <div className="flex items-center">
+                        <i className="fas fa-shower text-xl mr-2" style={{ color: primaryColor }}></i>
+                        <div>
+                          <span className="font-medium">{currentProperty.bathrooms || 0}</span>
+                          <span className="text-gray-500 text-sm ml-1">Banheiros</span>
                         </div>
                       </div>
                       
-                      <div className="flex flex-col items-center text-center">
-                        <i className="fas fa-bath text-2xl mb-2" style={{ color: primaryColor }}></i>
-                        <div className="text-center">
-                          <span className="font-medium text-lg">{currentProperty.suites || 0}</span>
-                          <span className="text-gray-500 text-sm ml-1 block">Suítes</span>
+                      <div className="flex items-center">
+                        <i className="fas fa-bath text-xl mr-2" style={{ color: primaryColor }}></i>
+                        <div>
+                          <span className="font-medium">{currentProperty.suites || 0}</span>
+                          <span className="text-gray-500 text-sm ml-1">Suítes</span>
                         </div>
                       </div>
                       
-                      <div className="flex flex-col items-center text-center">
-                        <i className="fas fa-car text-2xl mb-2" style={{ color: primaryColor }}></i>
-                        <div className="text-center">
-                          <span className="font-medium text-lg">{currentProperty.parkingSpots || 0}</span>
-                          <span className="text-gray-500 text-sm ml-1 block">Vagas</span>
+                      <div className="flex items-center">
+                        <i className="fas fa-car text-xl mr-2" style={{ color: primaryColor }}></i>
+                        <div>
+                          <span className="font-medium">{currentProperty.parkingSpots || 0}</span>
+                          <span className="text-gray-500 text-sm ml-1">Vagas</span>
                         </div>
                       </div>
                       
-                      <div className="flex flex-col items-center text-center">
-                        <i className="fas fa-ruler-combined text-2xl mb-2" style={{ color: primaryColor }}></i>
-                        <div className="text-center">
-                          <span className="font-medium text-lg">{currentProperty.area}</span>
-                          <span className="text-gray-500 text-sm ml-1 block">m²</span>
+                      <div className="flex items-center">
+                        <i className="fas fa-ruler-combined text-xl mr-2" style={{ color: primaryColor }}></i>
+                        <div>
+                          <span className="font-medium">{currentProperty.area}</span>
+                          <span className="text-gray-500 text-sm ml-1">m²</span>
                         </div>
                       </div>
                     </div>
@@ -395,23 +395,21 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
                 </div>
                 
                 {/* Description */}
-                <div className="mb-8 text-center">
+                <div className="mb-8">
                   <h2 className="text-xl font-bold mb-3">Descrição</h2>
                   <p className="text-gray-600 whitespace-pre-line">{currentProperty.description}</p>
                 </div>
                 
                 {/* Action buttons */}
-                <div className="mt-8 flex flex-wrap gap-4 justify-center">
+                <div className="mt-8 flex flex-wrap gap-4 justify-end">
                   <Button
                     variant="outline"
                     onClick={onClose}
-                    className="min-w-[150px]"
                   >
                     Fechar
                   </Button>
                   <Button
                     onClick={() => window.location.href = `/properties/${propertyId}`}
-                    className="min-w-[150px]"
                   >
                     Ver página completa
                   </Button>
