@@ -175,7 +175,7 @@ export default function PropertyDetails() {
       <Header config={config} isLoadingConfig={isLoadingConfig} />
 
       {/* Conteúdo principal */}
-      <main className="flex-grow bg-white">
+      <main className="flex-grow bg-white pt-24">
         {isLoadingProperty ? (
           <div className="container mx-auto px-4 py-8">
             <div className="max-w-6xl mx-auto">
