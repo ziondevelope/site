@@ -346,35 +346,33 @@ export default function PropertyDetails() {
                   {/* Propriedades relacionadas / sugestões */}
                   <div className="mb-8 lg:mb-0">
                     <h2 className="text-2xl font-bold mb-6">Imóveis similares</h2>
-                    <div className="relative">
-                      <div className="flex overflow-x-auto space-x-4 pb-4">
-                        {/* Placeholders para imóveis similares */}
-                        {[1, 2, 3].map((item) => (
-                          <div key={item} className="flex-shrink-0 w-72">
-                            <div className="rounded-lg border border-gray-200 overflow-hidden">
-                              <div className="h-48 bg-gray-200 relative">
-                                <div className="absolute top-2 left-2 bg-gray-800 text-white text-xs py-1 px-2 rounded">
-                                  Verificar disponibilidade
-                                </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {/* Placeholders para imóveis similares */}
+                      {[1, 2, 3].map((item) => (
+                        <div key={item}>
+                          <div className="rounded-lg border border-gray-200 overflow-hidden">
+                            <div className="h-48 bg-gray-200 relative">
+                              <div className="absolute top-2 left-2 bg-gray-800 text-white text-xs py-1 px-2 rounded">
+                                Verificar disponibilidade
                               </div>
-                              <div className="p-4">
-                                <h3 className="font-bold text-lg mb-1 truncate">Imóvel similar</h3>
-                                <p className="text-gray-500 text-sm mb-2">Localização</p>
-                                <div className="flex justify-between items-center">
-                                  <div className="font-bold" style={{ color: primaryColor }}>
-                                    Consultar
-                                  </div>
-                                  <div className="flex space-x-2 text-gray-500 text-sm">
-                                    <span><i className="ri-hotel-bed-line"></i> 3</span>
-                                    <span><i className="ri-shower-line"></i> 2</span>
-                                    <span><i className="ri-car-line"></i> 1</span>
-                                  </div>
+                            </div>
+                            <div className="p-4">
+                              <h3 className="font-bold text-lg mb-1 truncate">Imóvel similar</h3>
+                              <p className="text-gray-500 text-sm mb-2">Localização</p>
+                              <div className="flex justify-between items-center">
+                                <div className="font-bold" style={{ color: primaryColor }}>
+                                  Consultar
+                                </div>
+                                <div className="flex space-x-2 text-gray-500 text-sm">
+                                  <span><i className="ri-hotel-bed-line"></i> 3</span>
+                                  <span><i className="ri-shower-line"></i> 2</span>
+                                  <span><i className="ri-car-line"></i> 1</span>
                                 </div>
                               </div>
                             </div>
                           </div>
-                        ))}
-                      </div>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 </div>
