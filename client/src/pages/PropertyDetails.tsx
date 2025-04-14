@@ -487,90 +487,94 @@ export default function PropertyDetails() {
                       </div>
                     </div>
 
-                    {/* Container para o box do corretor */}
+                    {/* Container principal para o box do corretor */}
                     <div className="bg-white p-5">
-                      
-                      {/* Box cinza com a foto do corretor */}
-                      <div className="w-full bg-gray-100 p-4 rounded-lg mb-3">
-                        {/* Foto do corretor (exatamente igual à foto original) */}
-                        <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-white shadow mx-auto mb-2">
-                          {agent?.avatar ? (
-                            <img 
-                              src={agent.avatar}
-                              alt={agent.displayName || "Corretor"} 
-                              className="w-full h-full object-cover"
-                            />
-                          ) : (
-                            <div className="w-full h-full bg-teal-100 flex items-center justify-center text-teal-500">
-                              <i className="ri-user-3-line text-2xl"></i>
-                            </div>
-                          )}
+                      {/* Box único com dois grids */}
+                      <div className="w-full rounded-lg overflow-hidden mb-3">
+                        {/* Grid 1: Foto do corretor e botões principais (caixa cinza) */}
+                        <div className="bg-gray-100 p-4">
+                          {/* Foto do corretor */}
+                          <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-white shadow mx-auto mb-2">
+                            {agent?.avatar ? (
+                              <img 
+                                src={agent.avatar}
+                                alt={agent.displayName || "Corretor"} 
+                                className="w-full h-full object-cover"
+                              />
+                            ) : (
+                              <div className="w-full h-full bg-teal-100 flex items-center justify-center text-teal-500">
+                                <i className="ri-user-3-line text-2xl"></i>
+                              </div>
+                            )}
+                          </div>
+                          
+                          {/* Informações do corretor */}
+                          <div className="text-center mb-4">
+                            <h3 className="text-xl font-bold text-gray-800">
+                              {agent?.displayName || "Corretor"}
+                            </h3>
+                            <p className="text-gray-500">
+                              {agent?.role === 'agent' ? 'CRECI 111111' : 'Consultor Imobiliário'}
+                            </p>
+                          </div>
+                          
+                          {/* Botões principais */}
+                          <a 
+                            href={agent?.phone ? `https://wa.me/55${agent.phone.replace(/\D/g, '')}?text=Olá, tenho interesse no imóvel ${currentProperty.title} (Ref: #${currentProperty.id}).` : '#'}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="w-full py-3 px-4 rounded-full border-2 border-teal-400 text-teal-500 font-medium flex items-center justify-center mb-3 hover:bg-teal-50 transition-colors"
+                          >
+                            FALE COM O CORRETOR
+                          </a>
+                          
+                          <button 
+                            className="w-full py-3 px-4 rounded-full border-2 border-teal-400 text-teal-500 font-medium flex items-center justify-center mb-0 hover:bg-teal-50 transition-colors"
+                            onClick={() => {
+                              // Função para agendar visita - poderia abrir um modal
+                              window.alert('Funcionalidade de agendamento em desenvolvimento')
+                            }}
+                          >
+                            AGENDAR UMA VISITA
+                          </button>
                         </div>
-                        <div className="text-center mb-4">
-                          <h3 className="text-xl font-bold text-gray-800">
-                            {agent?.displayName || "Corretor"}
-                          </h3>
-                          <p className="text-gray-500">
-                            {agent?.role === 'agent' ? 'CRECI 111111' : 'Consultor Imobiliário'}
+                        
+                        {/* Grid 2: Botão contato e ícones de compartilhamento (fundo colorido) */}
+                        <div 
+                          className="p-4 text-white"
+                          style={{ backgroundColor: primaryColor }}
+                        >
+                          {/* Botão de Contato */}
+                          <a 
+                            href={agent?.phone ? `https://wa.me/55${agent?.phone.replace(/\D/g, '')}?text=Olá, tenho interesse no imóvel ${currentProperty?.title} (Ref: #${currentProperty?.id}).` : '#'}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="w-full py-3 px-4 rounded-full border-2 border-white text-white font-medium flex items-center justify-center mb-3 hover:bg-teal-600 transition-colors"
+                          >
+                            ENTRAR EM CONTATO
+                          </a>
+                        
+                          {/* Botões de compartilhamento */}
+                          <p className="text-center text-white text-sm mb-3">
+                            COMPARTILHAR
                           </p>
-                        </div>
-                        
-                        {/* Botões dentro do box cinza */}
-                        <a 
-                          href={agent?.phone ? `https://wa.me/55${agent.phone.replace(/\D/g, '')}?text=Olá, tenho interesse no imóvel ${currentProperty.title} (Ref: #${currentProperty.id}).` : '#'}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="w-full py-3 px-4 rounded-full border-2 border-teal-400 text-teal-500 font-medium flex items-center justify-center mb-3 hover:bg-teal-50 transition-colors"
-                        >
-                          FALE COM O CORRETOR
-                        </a>
-                        
-                        <button 
-                          className="w-full py-3 px-4 rounded-full border-2 border-teal-400 text-teal-500 font-medium flex items-center justify-center mb-3 hover:bg-teal-50 transition-colors"
-                          onClick={() => {
-                            // Função para agendar visita - poderia abrir um modal
-                            window.alert('Funcionalidade de agendamento em desenvolvimento')
-                          }}
-                        >
-                          AGENDAR UMA VISITA
-                        </button>
-                      </div>
-                      
-                      {/* Área com fundo da cor primária para todo o resto do box */}
-                      <div 
-                        className="w-full p-4 rounded-b-lg mb-3 text-white"
-                        style={{ backgroundColor: primaryColor }}
-                      >
-                        {/* Botão de Contato */}
-                        <a 
-                          href={agent?.phone ? `https://wa.me/55${agent?.phone.replace(/\D/g, '')}?text=Olá, tenho interesse no imóvel ${currentProperty?.title} (Ref: #${currentProperty?.id}).` : '#'}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="w-full py-3 px-4 rounded-full border-2 border-white text-white font-medium flex items-center justify-center mb-3 hover:bg-teal-600 transition-colors"
-                        >
-                          ENTRAR EM CONTATO
-                        </a>
-                      
-                        {/* Botões de compartilhamento */}
-                        <p className="text-center text-white text-sm mb-3">
-                          COMPARTILHAR
-                        </p>
-                        <div className="flex justify-center space-x-3">
-                          <a href="#" className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-teal-500 hover:bg-gray-100 transition-colors">
-                            <i className="ri-whatsapp-line"></i>
-                          </a>
-                          <a href="#" className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-teal-500 hover:bg-gray-100 transition-colors">
-                            <i className="ri-facebook-fill"></i>
-                          </a>
-                          <a href="#" className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-teal-500 hover:bg-gray-100 transition-colors">
-                            <i className="ri-twitter-x-fill"></i>
-                          </a>
-                          <a href="#" className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-teal-500 hover:bg-gray-100 transition-colors">
-                            <i className="ri-mail-line"></i>
-                          </a>
-                          <a href="#" className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-teal-500 hover:bg-gray-100 transition-colors">
-                            <i className="ri-printer-line"></i>
-                          </a>
+                          <div className="flex justify-center space-x-3">
+                            <a href="#" className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-teal-500 hover:bg-gray-100 transition-colors">
+                              <i className="ri-whatsapp-line"></i>
+                            </a>
+                            <a href="#" className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-teal-500 hover:bg-gray-100 transition-colors">
+                              <i className="ri-facebook-fill"></i>
+                            </a>
+                            <a href="#" className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-teal-500 hover:bg-gray-100 transition-colors">
+                              <i className="ri-twitter-x-fill"></i>
+                            </a>
+                            <a href="#" className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-teal-500 hover:bg-gray-100 transition-colors">
+                              <i className="ri-mail-line"></i>
+                            </a>
+                            <a href="#" className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-teal-500 hover:bg-gray-100 transition-colors">
+                              <i className="ri-printer-line"></i>
+                            </a>
+                          </div>
                         </div>
                       </div>
                     </div>
