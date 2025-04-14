@@ -359,32 +359,60 @@ export default function Home() {
                           
                           <div className="flex justify-between mb-4 text-sm">
                             <span className="text-gray-600 flex items-center">
-                              <i className="ri-ruler-2-line mr-1"></i> {property.area}
-                            </span>
-                            <span className="text-gray-600 flex items-center">
-                              <i className="ri-hotel-bed-line mr-1"></i> {property.bedrooms}
-                            </span>
-                            <span className="text-gray-600 flex items-center">
+                              {/* Ícone de área - régua quadrada */}
                               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1">
-                                <path d="M6 10v9"></path>
-                                <path d="M18 10v9"></path>
-                                <path d="M9 6a3 3 0 0 0-3 3"></path>
-                                <path d="M15 6a3 3 0 0 1 3 3"></path>
-                                <circle cx="12" cy="6" r="1"></circle>
+                                <rect x="3" y="3" width="18" height="18" rx="2" />
+                                <path d="M3 9h18" />
+                                <path d="M3 15h18" />
+                                <path d="M9 3v18" />
+                                <path d="M15 3v18" />
+                              </svg> {property.area}
+                            </span>
+                            <span className="text-gray-600 flex items-center">
+                              {/* Ícone de quarto - cama */}
+                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1">
+                                <path d="M2 9V6c0-1.1.9-2 2-2h16a2 2 0 0 1 2 2v3" />
+                                <path d="M2 11v5a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-5" />
+                                <path d="M2 11h20" />
+                                <path d="M4 17V9" />
+                                <path d="M20 17V9" />
+                              </svg> {property.bedrooms}
+                            </span>
+                            <span className="text-gray-600 flex items-center">
+                              {/* Ícone de banheiro - chuveiro */}
+                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1">
+                                <path d="M8 2v2" />
+                                <path d="M16 2v2" />
+                                <path d="M3 6h18" />
+                                <path d="M10 10h4" />
+                                <path d="M4 10h2" />
+                                <path d="M18 10h2" />
+                                <path d="M8 14h8" />
+                                <path d="M12 22v-8" />
                               </svg> {property.bathrooms}
                             </span>
                           </div>
                           <div className="flex justify-between mb-4 text-sm">
                             <span className="text-gray-600 flex items-center">
+                              {/* Ícone de suíte - banheira */}
                               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1">
-                                <path d="M4 12h16"></path>
-                                <path d="M20 20v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"></path>
-                                <path d="M4 20h16"></path>
-                                <path d="M15 12v5"></path>
+                                <path d="M2 12h20" />
+                                <path d="M2 12a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-2z" />
+                                <path d="M6 12v-6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v6" />
+                                <path d="M10 16v4" />
+                                <path d="M14 16v4" />
                               </svg> {property.suites || 0}
                             </span>
                             <span className="text-gray-600 flex items-center">
-                              <i className="ri-car-line mr-1"></i> {property.parkingSpots || 0}
+                              {/* Ícone de garagem - carro */}
+                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1">
+                                <path d="M5 17h14" />
+                                <path d="M5 17a2 2 0 0 1-2-2V7l4-5h10l4 5v8a2 2 0 0 1-2 2H5Z" />
+                                <path d="M5 12h14" />
+                                <path d="M8 12v5" />
+                                <path d="M16 12v5" />
+                                <path d="M5 8h14" />
+                              </svg> {property.parkingSpots || 0}
                             </span>
                           </div>
                           
@@ -441,7 +469,10 @@ export default function Home() {
           <div className="text-center mt-12">
             <Button variant="outline" size="lg">
               Ver todos os imóveis
-              <i className="ri-arrow-right-line ml-2"></i>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="ml-2">
+                <path d="M5 12h14"></path>
+                <path d="m12 5 7 7-7 7"></path>
+              </svg>
             </Button>
           </div>
         </div>
@@ -466,10 +497,21 @@ export default function Home() {
               </p>
               <ul className="space-y-3 mb-8">
                 <li className="flex items-start">
-                  <i 
-                    className="ri-check-line text-xl mr-2"
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="mr-2 flex-shrink-0"
                     style={{ color: config?.primaryColor || 'var(--primary)' }}
-                  ></i>
+                  >
+                    <path d="M20 6 9 17l-5-5"></path>
+                  </svg>
                   <span>Atendimento personalizado</span>
                 </li>
                 <li className="flex items-start">
