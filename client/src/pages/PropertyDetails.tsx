@@ -408,7 +408,7 @@ export default function PropertyDetails() {
                 
                 {/* Coluna da direita - Formulário de contato */}
                 <div>
-                  <div className="p-6 border border-gray-200 rounded-lg sticky top-4">
+                  <div className="p-6 border border-gray-200 rounded-lg sticky" style={{ top: '1rem', maxHeight: 'calc(100vh - 2rem)', overflowY: 'auto' }}>
                     <div className="mb-6">
                       <h3 className="text-xl font-bold mb-2">Interessado neste imóvel?</h3>
                       <p className="text-gray-600">
