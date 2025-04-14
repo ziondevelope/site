@@ -106,13 +106,10 @@ export default function Agents() {
         role: 'agent'
       };
       
-      const response = await apiRequest("POST", "/api/agents", agentData);
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error("Erro na resposta:", errorText);
-        throw new Error(`Erro ao adicionar corretor: ${response.status} ${response.statusText}`);
-      }
-      return await response.json();
+      return apiRequest("/api/agents", {
+        method: "POST",
+        body: JSON.stringify(agentData)
+      });
     },
     onSuccess: () => {
       setIsAddDialogOpen(false);
@@ -137,13 +134,10 @@ export default function Agents() {
     mutationFn: async (data: AgentFormValues & { id: number }) => {
       const { id, ...agentData } = data;
       
-      const response = await apiRequest("PATCH", `/api/agents/${id}`, agentData);
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error("Erro na resposta:", errorText);
-        throw new Error(`Erro ao atualizar corretor: ${response.status} ${response.statusText}`);
-      }
-      return await response.json();
+      return apiRequest(`/api/agents/${id}`, {
+        method: "PATCH",
+        body: JSON.stringify(agentData)
+      });
     },
     onSuccess: () => {
       setIsEditDialogOpen(false);
@@ -167,8 +161,9 @@ export default function Agents() {
   // Delete agent mutation
   const deleteAgentMutation = useMutation({
     mutationFn: async (id: number) => {
-      const response = await apiRequest("DELETE", `/api/agents/${id}`);
-      return response.ok;
+      return apiRequest(`/api/agents/${id}`, {
+        method: "DELETE"
+      });
     },
     onSuccess: () => {
       setIsDeleteAlertOpen(false);
