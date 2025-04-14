@@ -370,7 +370,7 @@ export default function Home() {
                           </div>
                           <div className="flex justify-between mb-4 text-sm">
                             <span className="text-gray-600 flex items-center">
-                              <i className="ri-home-4-line mr-1"></i> {property.suites || 0}
+                              <i className="ri-hotel-bed-fill mr-1"></i> {property.suites || 0}
                             </span>
                             <span className="text-gray-600 flex items-center">
                               <i className="ri-car-line mr-1"></i> {property.parkingSpots || 0}
