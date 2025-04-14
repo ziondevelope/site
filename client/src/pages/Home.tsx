@@ -84,14 +84,8 @@ export default function Home() {
             )}
           </div>
           
-          {/* Botão admin na direita (mantido na mesma posição) */}
-          <div>
-            <Link href="/admin">
-              <Button variant="outline" className="ml-4">
-                Área do Admin
-              </Button>
-            </Link>
-          </div>
+          {/* Espaço vazio para manter o layout em 3 colunas */}
+          <div></div>
         </div>
       </header>
 
@@ -534,7 +528,12 @@ export default function Home() {
           </div>
           
           <div className="border-t border-gray-700 mt-12 pt-8 text-center text-gray-400">
-            <p>&copy; 2025 Imobiliária. Todos os direitos reservados.</p>
+            <p>
+              &copy; 2025 Imobiliária. Todos os direitos reservados. 
+              <Link href="/admin">
+                <span className="ml-3 hover:text-white cursor-pointer">Área do Administrador</span>
+              </Link>
+            </p>
           </div>
         </div>
       </footer>
