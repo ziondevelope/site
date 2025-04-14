@@ -82,7 +82,7 @@ const getFeaturedImage = (property: Property): string | undefined => {
   }
   
   // Compatibilidade com o campo imageUrl (formato mais antigo)
-  if (property.imageUrl) {
+  if ('imageUrl' in property && property.imageUrl) {
     return property.imageUrl;
   }
   
@@ -90,7 +90,7 @@ const getFeaturedImage = (property: Property): string | undefined => {
 };
 
 // Componente de destaque personalizado
-function FeaturedCheckbox({ field }) {
+function FeaturedCheckbox({ field }: { field: any }) {
   return (
     <FormItem className="pt-6">
       <div className={`border rounded-lg p-4 ${field.value ? 'bg-indigo-50 border-indigo-200' : 'border-gray-200'} transition-colors duration-200`}>
