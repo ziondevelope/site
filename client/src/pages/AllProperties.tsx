@@ -42,6 +42,9 @@ export default function AllProperties() {
     purpose: 'all-purposes',
     area: 'any-area'
   });
+  
+  // Estado para a ordenação
+  const [sortOrder, setSortOrder] = useState('most_relevant');
 
   // Efeito para monitorar o scroll
   useEffect(() => {
@@ -106,6 +109,23 @@ export default function AllProperties() {
        property.area < 50);
     
     return searchMatch && typeMatch && bedroomsMatch && bathroomsMatch && priceMatch && purposeMatch && areaMatch;
+  })?.sort((a, b) => {
+    // Aplicar ordenação de acordo com o critério selecionado
+    if (sortOrder === 'price_asc') {
+      return a.price - b.price;
+    } else if (sortOrder === 'price_desc') {
+      return b.price - a.price;
+    } else if (sortOrder === 'area_asc') {
+      return a.area - b.area;
+    } else if (sortOrder === 'area_desc') {
+      return b.area - a.area;
+    } else if (sortOrder === 'newest') {
+      // Como não temos um campo de data, vamos utilizar o ID como referência
+      // assumindo que IDs maiores são de propriedades mais recentes
+      return b.id - a.id;
+    }
+    // Para "most_relevant" ou qualquer outro valor, não alteramos a ordem
+    return 0;
   });
 
   // Abrir modal de detalhes do imóvel
@@ -153,138 +173,170 @@ export default function AllProperties() {
         <div className="container mx-auto px-4">
           <h1 className="text-3xl font-bold mb-8">Todos os Imóveis</h1>
           
-          {/* Filtros */}
-          <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 mb-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-6">
-              {/* Busca por texto */}
-              <div>
-                <Label htmlFor="search" className="mb-1 block">Buscar</Label>
-                <Input
-                  id="search"
-                  placeholder="Buscar por título ou endereço"
-                  value={filters.search}
-                  onChange={(e) => setFilters({...filters, search: e.target.value})}
-                />
+          {/* Filtros - Estilo Horizontal */}
+          <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 mb-8">
+            {/* Barra de busca principal com finalidade */}
+            <div className="flex flex-col md:flex-row gap-4 mb-4">
+              <div className="flex-grow">
+                <div className="relative">
+                  <i className="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                  <Input
+                    id="search"
+                    className="pl-10 py-6 text-lg"
+                    placeholder="Busque por endereço, bairro ou cidade"
+                    value={filters.search}
+                    onChange={(e) => setFilters({...filters, search: e.target.value})}
+                  />
+                </div>
               </div>
               
-              {/* Tipo de imóvel */}
-              <div>
-                <Label htmlFor="propertyType" className="mb-1 block">Tipo</Label>
-                <Select 
-                  value={filters.propertyType} 
-                  onValueChange={(value) => setFilters({...filters, propertyType: value})}
-                >
-                  <SelectTrigger id="propertyType">
-                    <SelectValue placeholder="Todos os tipos" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Todos</SelectItem>
-                    <SelectItem value="house">Casa</SelectItem>
-                    <SelectItem value="apartment">Apartamento</SelectItem>
-                    <SelectItem value="condo">Condomínio</SelectItem>
-                    <SelectItem value="land">Terreno</SelectItem>
-                    <SelectItem value="commercial">Comercial</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              {/* Número de quartos */}
-              <div>
-                <Label htmlFor="bedrooms" className="mb-1 block">Quartos</Label>
-                <Select 
-                  value={filters.bedrooms} 
-                  onValueChange={(value) => setFilters({...filters, bedrooms: value})}
-                >
-                  <SelectTrigger id="bedrooms">
-                    <SelectValue placeholder="Qualquer" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="any-bedrooms">Qualquer</SelectItem>
-                    <SelectItem value="1">1</SelectItem>
-                    <SelectItem value="2">2</SelectItem>
-                    <SelectItem value="3">3</SelectItem>
-                    <SelectItem value="4+">4+</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              {/* Número de banheiros */}
-              <div>
-                <Label htmlFor="bathrooms" className="mb-1 block">Banheiros</Label>
-                <Select 
-                  value={filters.bathrooms} 
-                  onValueChange={(value) => setFilters({...filters, bathrooms: value})}
-                >
-                  <SelectTrigger id="bathrooms">
-                    <SelectValue placeholder="Qualquer" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="any-bathrooms">Qualquer</SelectItem>
-                    <SelectItem value="1">1</SelectItem>
-                    <SelectItem value="2">2</SelectItem>
-                    <SelectItem value="3">3</SelectItem>
-                    <SelectItem value="4+">4+</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              {/* Finalidade (venda/aluguel) */}
-              <div>
-                <Label htmlFor="purpose" className="mb-1 block">Finalidade</Label>
+              <div className="w-full md:w-48">
                 <Select 
                   value={filters.purpose} 
                   onValueChange={(value) => setFilters({...filters, purpose: value})}
                 >
-                  <SelectTrigger id="purpose">
-                    <SelectValue placeholder="Venda ou Aluguel" />
+                  <SelectTrigger id="purpose" className="h-12">
+                    <SelectValue placeholder="Finalidade" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all-purposes">Todos</SelectItem>
-                    <SelectItem value="sale">Venda</SelectItem>
-                    <SelectItem value="rent">Aluguel</SelectItem>
+                    <SelectItem value="all-purposes">Comprar ou Alugar</SelectItem>
+                    <SelectItem value="sale">Comprar</SelectItem>
+                    <SelectItem value="rent">Alugar</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               
-              {/* Área */}
-              <div>
-                <Label htmlFor="area" className="mb-1 block">Área</Label>
-                <Select 
-                  value={filters.area} 
-                  onValueChange={(value) => setFilters({...filters, area: value})}
-                >
-                  <SelectTrigger id="area">
-                    <SelectValue placeholder="Qualquer tamanho" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="any-area">Qualquer</SelectItem>
-                    <SelectItem value="0-50">Até 50m²</SelectItem>
-                    <SelectItem value="50-100">50-100m²</SelectItem>
-                    <SelectItem value="100-150">100-150m²</SelectItem>
-                    <SelectItem value="150-200">150-200m²</SelectItem>
-                    <SelectItem value="200+">Acima de 200m²</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              {/* Faixa de preço */}
-              <div className="lg:col-span-2">
-                <Label className="mb-1 block">Faixa de Preço: {formatPrice(filters.minPrice)} - {formatPrice(filters.maxPrice)}</Label>
-                <div className="px-2 pt-2 pb-6">
-                  <Slider
-                    min={0}
-                    max={10000000}
-                    step={50000}
-                    value={[filters.minPrice, filters.maxPrice]}
-                    onValueChange={(value) => setFilters({...filters, minPrice: value[0], maxPrice: value[1]})}
-                  />
-                </div>
-              </div>
+              <Button 
+                className="h-12"
+                onClick={() => {}}
+                style={{ 
+                  backgroundColor: config?.primaryColor || 'var(--primary)',
+                }}
+              >
+                <i className="fas fa-sliders-h mr-2"></i>
+                Mais filtros
+              </Button>
             </div>
             
-            {/* Botões de ação */}
-            <div className="flex justify-end space-x-2">
-              <Button variant="outline" onClick={clearFilters}>Limpar Filtros</Button>
+            {/* Filtros em linha */}
+            <div className="flex flex-wrap gap-2 mb-2">
+              <Select 
+                value={filters.propertyType} 
+                onValueChange={(value) => setFilters({...filters, propertyType: value})}
+              >
+                <SelectTrigger id="propertyType" className="h-10 w-auto min-w-[140px]">
+                  <SelectValue placeholder="Tipo de imóvel" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todos os tipos</SelectItem>
+                  <SelectItem value="house">Casa</SelectItem>
+                  <SelectItem value="apartment">Apartamento</SelectItem>
+                  <SelectItem value="condo">Condomínio</SelectItem>
+                  <SelectItem value="land">Terreno</SelectItem>
+                  <SelectItem value="commercial">Comercial</SelectItem>
+                </SelectContent>
+              </Select>
+              
+              <Select 
+                value={filters.bedrooms} 
+                onValueChange={(value) => setFilters({...filters, bedrooms: value})}
+              >
+                <SelectTrigger id="bedrooms" className="h-10 w-auto min-w-[120px]">
+                  <SelectValue placeholder="Quartos" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="any-bedrooms">Quartos</SelectItem>
+                  <SelectItem value="1">1+ quartos</SelectItem>
+                  <SelectItem value="2">2+ quartos</SelectItem>
+                  <SelectItem value="3">3+ quartos</SelectItem>
+                  <SelectItem value="4+">4+ quartos</SelectItem>
+                </SelectContent>
+              </Select>
+              
+              <Select 
+                value={filters.bathrooms} 
+                onValueChange={(value) => setFilters({...filters, bathrooms: value})}
+              >
+                <SelectTrigger id="bathrooms" className="h-10 w-auto min-w-[120px]">
+                  <SelectValue placeholder="Banheiros" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="any-bathrooms">Banheiros</SelectItem>
+                  <SelectItem value="1">1+ banheiros</SelectItem>
+                  <SelectItem value="2">2+ banheiros</SelectItem>
+                  <SelectItem value="3">3+ banheiros</SelectItem>
+                  <SelectItem value="4+">4+ banheiros</SelectItem>
+                </SelectContent>
+              </Select>
+              
+              <Select 
+                value={filters.area} 
+                onValueChange={(value) => setFilters({...filters, area: value})}
+              >
+                <SelectTrigger id="area" className="h-10 w-auto min-w-[120px]">
+                  <SelectValue placeholder="Área" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="any-area">Qualquer área</SelectItem>
+                  <SelectItem value="0-50">Até 50m²</SelectItem>
+                  <SelectItem value="50-100">50-100m²</SelectItem>
+                  <SelectItem value="100-150">100-150m²</SelectItem>
+                  <SelectItem value="150-200">150-200m²</SelectItem>
+                  <SelectItem value="200+">Acima de 200m²</SelectItem>
+                </SelectContent>
+              </Select>
+              
+              <div className="flex items-center space-x-2 h-10 bg-gray-100 rounded-md px-3">
+                <span className="text-sm text-gray-500">Preço:</span>
+                <span className="text-sm font-medium">{formatPrice(filters.minPrice)} - {formatPrice(filters.maxPrice)}</span>
+              </div>
+              
+              <Button 
+                variant="outline" 
+                className="h-10 ml-auto" 
+                onClick={clearFilters}
+              >
+                <i className="fas fa-redo-alt mr-2"></i>
+                Limpar filtros
+              </Button>
+            </div>
+            
+            {/* Slider de preço */}
+            <div className="px-3 py-2">
+              <Slider
+                min={0}
+                max={10000000}
+                step={100000}
+                value={[filters.minPrice, filters.maxPrice]}
+                onValueChange={(value) => setFilters({...filters, minPrice: value[0], maxPrice: value[1]})}
+              />
+            </div>
+            
+            {/* Ordenação */}
+            <div className="flex justify-between items-center pt-3 border-t border-gray-200 mt-3">
+              <div className="text-sm text-gray-500">
+                {filteredProperties?.length || 0} imóveis encontrados
+              </div>
+              
+              <div className="flex items-center space-x-2">
+                <span className="text-sm text-gray-500">Ordenar por:</span>
+                <Select 
+                  value={sortOrder}
+                  onValueChange={setSortOrder}
+                >
+                  <SelectTrigger className="h-8 text-sm w-auto min-w-[150px]">
+                    <SelectValue placeholder="Mais relevantes" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="most_relevant">Mais relevantes</SelectItem>
+                    <SelectItem value="price_asc">Menor preço</SelectItem>
+                    <SelectItem value="price_desc">Maior preço</SelectItem>
+                    <SelectItem value="area_asc">Menor área</SelectItem>
+                    <SelectItem value="area_desc">Maior área</SelectItem>
+                    <SelectItem value="newest">Mais recentes</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
           </div>
           
