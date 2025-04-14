@@ -255,21 +255,6 @@ export default function PropertyDetails() {
                           </button>
                         </div>
                       </div>
-
-                      <div className="flex items-center text-sm text-gray-500 mt-3 pt-3 border-t border-gray-200">
-                        <span className="inline-flex items-center mr-3">
-                          <i className="ri-home-4-line mr-1"></i>
-                          <span>{currentProperty.type && currentProperty.type.charAt(0).toUpperCase() + currentProperty.type.slice(1)}</span>
-                        </span>
-                        <span className="inline-flex items-center mr-3">
-                          <i className="ri-map-pin-line mr-1"></i>
-                          <span>{currentProperty.neighborhood || 'Centro'}</span>
-                        </span>
-                        <span className="inline-flex items-center">
-                          <i className="ri-code-line mr-1"></i>
-                          <span>Ref: #{currentProperty.id}</span>
-                        </span>
-                      </div>
                     </div>
                   </div>
                   
