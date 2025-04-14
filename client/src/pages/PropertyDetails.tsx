@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useParams, Link } from 'wouter';
 import { Property } from '@shared/schema';
 import { useQuery } from '@tanstack/react-query';
@@ -7,15 +7,39 @@ import { Button } from '@/components/ui/button';
 export default function PropertyDetails() {
   const { id } = useParams();
   const [activeImage, setActiveImage] = useState<string | null>(null);
+  
+  // Estado e referências para o carrossel
+  const [carouselPage, setCarouselPage] = useState(0);
+  const carouselTrackRef = useRef<HTMLDivElement>(null);
+  const totalPages = 3; // Número total de páginas no carrossel
+  const [similarProperties, setSimilarProperties] = useState<Property[]>([]);
 
   // Fetch property details
   const { data: property, isLoading: isLoadingProperty } = useQuery<Property>({
     queryKey: [`/api/properties/${id}`],
     enabled: !!id
   });
+  
+  // Fetch all properties (for similar properties)
+  const { data: allProperties } = useQuery<Property[]>({
+    queryKey: ['/api/properties']
+  });
+  
+  // Atualiza propriedades similares quando property ou allProperties mudarem
+  useEffect(() => {
+    if (property && allProperties) {
+      // Filtra propriedades similares (mesma cidade ou tipo)
+      const similar = allProperties.filter((p: Property) => 
+        p.id !== property.id && 
+        (p.city === property.city || p.type === property.type)
+      ).slice(0, 8);
+      
+      setSimilarProperties(similar);
+    }
+  }, [property, allProperties]);
 
   // Fetch website configuration
-  const { data: config } = useQuery({
+  const { data: config } = useQuery<any>({
     queryKey: ['/api/website/config']
   });
 
@@ -64,6 +88,47 @@ export default function PropertyDetails() {
 
   // Estado para controlar o carregamento do logo
   const [logoLoaded, setLogoLoaded] = useState(false);
+  
+  // Função para navegar no carrossel
+  const navigateCarousel = (direction: 'prev' | 'next') => {
+    if (!carouselTrackRef.current) return;
+    
+    const newPage = direction === 'next' 
+      ? Math.min(carouselPage + 1, totalPages - 1)
+      : Math.max(carouselPage - 1, 0);
+    
+    setCarouselPage(newPage);
+    
+    // Calcular o deslocamento para a página
+    const containerWidth = carouselTrackRef.current.parentElement?.clientWidth || 0;
+    const scrollAmount = containerWidth * newPage;
+    
+    carouselTrackRef.current.scrollTo({
+      left: scrollAmount,
+      behavior: 'smooth'
+    });
+  };
+  
+  // Evento de escuta para detectar mudanças no scroll
+  useEffect(() => {
+    const trackElement = carouselTrackRef.current;
+    if (trackElement) {
+      const handleCarouselScroll = () => {
+        const containerWidth = trackElement.parentElement?.clientWidth || 0;
+        if (containerWidth === 0) return;
+        
+        const scrollPosition = trackElement.scrollLeft;
+        const newPage = Math.round(scrollPosition / containerWidth);
+        
+        if (newPage !== carouselPage) {
+          setCarouselPage(newPage);
+        }
+      };
+      
+      trackElement.addEventListener('scroll', handleCarouselScroll);
+      return () => trackElement.removeEventListener('scroll', handleCarouselScroll);
+    }
+  }, [carouselPage]);
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
@@ -457,71 +522,118 @@ export default function PropertyDetails() {
             
             <div className="relative mb-10">
               {/* Controles do carrossel */}
-              <button className="absolute left-0 top-1/2 -translate-y-1/2 -ml-5 z-10 bg-white rounded-full shadow-md p-2 hover:bg-gray-100 transition-colors hidden md:block" aria-label="Anterior">
+              <button 
+                className={`absolute left-0 top-1/2 -translate-y-1/2 -ml-5 z-10 bg-white rounded-full shadow-md p-2 hover:bg-gray-100 transition-colors hidden md:block ${carouselPage === 0 ? 'opacity-50 cursor-not-allowed' : 'opacity-100 cursor-pointer'}`} 
+                aria-label="Anterior"
+                onClick={() => navigateCarousel('prev')}
+                disabled={carouselPage === 0}
+              >
                 <i className="ri-arrow-left-s-line text-2xl text-gray-600"></i>
               </button>
               
-              <button className="absolute right-0 top-1/2 -translate-y-1/2 -mr-5 z-10 bg-white rounded-full shadow-md p-2 hover:bg-gray-100 transition-colors hidden md:block" aria-label="Próximo">
+              <button 
+                className={`absolute right-0 top-1/2 -translate-y-1/2 -mr-5 z-10 bg-white rounded-full shadow-md p-2 hover:bg-gray-100 transition-colors hidden md:block ${carouselPage === totalPages - 1 ? 'opacity-50 cursor-not-allowed' : 'opacity-100 cursor-pointer'}`} 
+                aria-label="Próximo"
+                onClick={() => navigateCarousel('next')}
+                disabled={carouselPage === totalPages - 1}
+              >
                 <i className="ri-arrow-right-s-line text-2xl text-gray-600"></i>
               </button>
               
               {/* Carrossel */}
               <div className="carousel-container overflow-hidden">
-                <div className="carousel-track flex space-x-4 py-4 overflow-x-auto scrollbar-hide">
-                  {[1, 2, 3, 4, 5, 6, 7, 8].map((item) => (
-                    <div key={item} className="carousel-item flex-shrink-0 w-full sm:w-1/2 md:w-1/3 lg:w-1/4 px-2">
-                      <div className="h-full bg-white rounded-lg border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-lg">
-                        <div className="h-48 bg-gray-200 relative">
-                          <div className="absolute top-2 left-2 bg-gray-800 text-white text-xs py-1 px-2 rounded">
-                            {item % 2 === 0 ? 'Venda' : 'Aluguel'}
-                          </div>
-                          {item % 4 === 0 && (
-                            <div className="absolute top-2 right-2 bg-yellow-500 text-white text-xs py-1 px-2 rounded">
-                              Destaque
+                <div 
+                  ref={carouselTrackRef}
+                  className="carousel-track flex space-x-4 py-4 overflow-x-auto scrollbar-hide"
+                >
+                  {similarProperties.length > 0 ? (
+                    similarProperties.map((property) => (
+                      <div key={property.id} className="carousel-item flex-shrink-0 w-full sm:w-1/2 md:w-1/3 lg:w-1/4 px-2">
+                        <div className="h-full bg-white rounded-lg border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-lg">
+                          <div className="h-48 bg-gray-200 relative">
+                            {property.images && property.images.length > 0 && (
+                              <img 
+                                src={property.images[0].url}
+                                alt={property.title}
+                                className="w-full h-full object-cover"
+                              />
+                            )}
+                            <div className="absolute top-2 left-2 bg-gray-800 text-white text-xs py-1 px-2 rounded">
+                              {property.purpose === 'rent' ? 'Aluguel' : 'Venda'}
                             </div>
-                          )}
-                        </div>
-                        <div className="p-4">
-                          <h3 className="font-bold text-lg mb-1 truncate">
-                            {item % 3 === 0 ? 'Apartamento Moderno' : item % 2 === 0 ? 'Casa com Jardim' : 'Studio Compacto'}
-                          </h3>
-                          <p className="text-gray-500 text-sm mb-2">
-                            {item % 4 === 0 ? 'Centro' : item % 3 === 0 ? 'Zona Sul' : item % 2 === 0 ? 'Zona Norte' : 'Região Leste'}
-                          </p>
-                          <div className="flex justify-between items-center mb-3">
-                            <div className="font-bold text-lg" style={{ color: primaryColor }}>
-                              {item % 2 === 0 ? 'R$ 450.000' : `R$ ${(item * 1.5 + 1).toFixed(3)}`}
+                            {property.isFeatured && (
+                              <div className="absolute top-2 right-2 bg-yellow-500 text-white text-xs py-1 px-2 rounded">
+                                Destaque
+                              </div>
+                            )}
+                          </div>
+                          <div className="p-4">
+                            <h3 className="font-bold text-lg mb-1 truncate">
+                              {property.title}
+                            </h3>
+                            <p className="text-gray-500 text-sm mb-2 truncate">
+                              {property.neighborhood || property.city}
+                            </p>
+                            <div className="flex justify-between items-center mb-3">
+                              <div className="font-bold text-lg" style={{ color: primaryColor }}>
+                                {formatCurrency(property.price)}
+                                {property.purpose === 'rent' && <span className="text-xs font-normal text-gray-500">/mês</span>}
+                              </div>
                             </div>
+                            <div className="flex flex-wrap gap-2 text-gray-500 text-sm mb-3">
+                              {property.bedrooms && <span><i className="ri-hotel-bed-line mr-1"></i> {property.bedrooms}</span>}
+                              {property.bathrooms && <span><i className="ri-shower-line mr-1"></i> {property.bathrooms}</span>}
+                              {property.parkingSpots && <span><i className="ri-car-line mr-1"></i> {property.parkingSpots}</span>}
+                              <span><i className="ri-ruler-line mr-1"></i> {property.area}m²</span>
+                            </div>
+                            <Link href={`/property/${property.id}`}>
+                              <button className="w-full py-2 px-4 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors text-sm font-medium flex justify-center items-center">
+                                <i className="ri-search-line mr-2"></i> Ver detalhes
+                              </button>
+                            </Link>
                           </div>
-                          <div className="flex flex-wrap gap-2 text-gray-500 text-sm mb-3">
-                            <span><i className="ri-hotel-bed-line mr-1"></i> {item % 3 + 1}</span>
-                            <span><i className="ri-shower-line mr-1"></i> {item % 2 + 1}</span>
-                            <span><i className="ri-car-line mr-1"></i> {item % 2}</span>
-                            <span><i className="ri-ruler-line mr-1"></i> {item * 20 + 40}m²</span>
-                          </div>
-                          <button className="w-full py-2 px-4 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors text-sm font-medium flex justify-center items-center">
-                            <i className="ri-search-line mr-2"></i> Ver detalhes
-                          </button>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    ))
+                  ) : (
+                    // Placeholders quando não há propriedades similares
+                    [1, 2, 3, 4].map((item) => (
+                      <div key={item} className="carousel-item flex-shrink-0 w-full sm:w-1/2 md:w-1/3 lg:w-1/4 px-2">
+                        <div className="h-full bg-white rounded-lg border border-gray-200 overflow-hidden">
+                          <div className="h-48 bg-gray-100"></div>
+                          <div className="p-4">
+                            <div className="h-6 bg-gray-100 rounded w-3/4 mb-2"></div>
+                            <div className="h-4 bg-gray-100 rounded w-1/2 mb-3"></div>
+                            <div className="h-6 bg-gray-100 rounded w-1/3 mb-3"></div>
+                            <div className="h-8 bg-gray-100 rounded w-full"></div>
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  )}
                 </div>
               </div>
               
               {/* Indicadores de página */}
               <div className="flex justify-center space-x-2 mt-6">
-                {[0, 1, 2].map((index) => (
+                {[...Array(totalPages)].map((_, index) => (
                   <button 
                     key={index} 
-                    className={`h-2 rounded-full transition-all ${index === 0 ? 'w-8 bg-gray-800' : 'w-2 bg-gray-300'}`}
+                    className={`h-2 rounded-full transition-all ${index === carouselPage ? 'w-8 bg-gray-800' : 'w-2 bg-gray-300'}`}
                     aria-label={`Página ${index + 1}`}
+                    onClick={() => {
+                      if (!carouselTrackRef.current) return;
+                      const containerWidth = carouselTrackRef.current.parentElement?.clientWidth || 0;
+                      carouselTrackRef.current.scrollTo({
+                        left: containerWidth * index,
+                        behavior: 'smooth'
+                      });
+                      setCarouselPage(index);
+                    }}
                   ></button>
                 ))}
               </div>
             </div>
-            
-            {/* Botão removido a pedido do usuário */}
           </div>
         </div>
       )}
