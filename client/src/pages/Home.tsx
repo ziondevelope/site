@@ -39,6 +39,10 @@ export default function Home() {
         heading: config.headingFont,
         body: config.bodyFont
       });
+      
+      // Debug das configurações
+      console.log('Configurações:', config);
+      console.log('Telefone:', config.phone);
     }
   }, [config]);
 
