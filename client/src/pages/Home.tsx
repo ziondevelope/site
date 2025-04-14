@@ -72,7 +72,7 @@ export default function Home() {
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           scrolled 
             ? 'bg-white shadow-lg py-2' 
-            : 'bg-transparent py-4'
+            : 'bg-transparent py-6'
         }`}
       >
         <div className="container mx-auto px-4 flex justify-between items-center">
@@ -101,7 +101,7 @@ export default function Home() {
                   <div className={`${scrolled ? 'h-8 w-8' : 'h-10 w-10'} rounded bg-primary flex items-center justify-center text-white transition-all duration-300`}>
                     <i className="ri-home-line text-xl"></i>
                   </div>
-                  <h1 className={`${scrolled ? 'text-xl' : 'text-2xl'} font-bold text-gray-800 ml-3 transition-all duration-300`}>Imobiliária</h1>
+                  <h1 className={`${scrolled ? 'text-xl' : 'text-2xl'} font-bold ${scrolled ? 'text-gray-800' : 'text-white'} ml-3 transition-all duration-300`}>Imobiliária</h1>
                 </>
               )}
             </div>
@@ -138,13 +138,10 @@ export default function Home() {
         </div>
       </header>
       
-      {/* Espaçador para compensar o header fixo */}
-      <div className="h-20"></div>
-
       {/* Hero Section */}
       <section 
         id="home" 
-        className="py-20 md:py-32 text-white"
+        className="pt-28 pb-20 md:pb-32 text-white"
         style={{
           background: config?.bannerBackground 
             ? `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${config.bannerBackground}) center/cover no-repeat`
