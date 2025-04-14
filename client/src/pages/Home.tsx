@@ -47,6 +47,15 @@ export default function Home() {
       {/* Header */}
       <header className="bg-white shadow">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+          {/* Menu na esquerda (onde estava a logo) */}
+          <nav className="hidden md:flex space-x-8">
+            <a href="#home" className="text-gray-700 hover:text-primary">Início</a>
+            <a href="#properties" className="text-gray-700 hover:text-primary">Imóveis</a>
+            <a href="#about" className="text-gray-700 hover:text-primary">Sobre</a>
+            <a href="#contact" className="text-gray-700 hover:text-primary">Contato</a>
+          </nav>
+          
+          {/* Logo no centro (onde estava o menu) */}
           <div className="flex items-center space-x-3">
             {isLoadingConfig ? (
               // Placeholder durante o carregamento - mantém o mesmo tamanho
@@ -74,12 +83,8 @@ export default function Home() {
               </>
             )}
           </div>
-          <nav className="hidden md:flex space-x-8">
-            <a href="#home" className="text-gray-700 hover:text-primary">Início</a>
-            <a href="#properties" className="text-gray-700 hover:text-primary">Imóveis</a>
-            <a href="#about" className="text-gray-700 hover:text-primary">Sobre</a>
-            <a href="#contact" className="text-gray-700 hover:text-primary">Contato</a>
-          </nav>
+          
+          {/* Botão admin na direita (mantido na mesma posição) */}
           <div>
             <Link href="/admin">
               <Button variant="outline" className="ml-4">
