@@ -490,10 +490,8 @@ export default function PropertyDetails() {
                     {/* Container para o box do corretor */}
                     <div className="bg-white p-5">
                       
-                      {/* Box cinza com a referência do imóvel e a foto do corretor */}
+                      {/* Box cinza com a foto do corretor */}
                       <div className="w-full bg-gray-100 p-4 rounded-lg mb-3">
-
-                      
                         {/* Foto do corretor (exatamente igual à foto original) */}
                         <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-white shadow mx-auto mb-2">
                           {agent?.avatar ? (
