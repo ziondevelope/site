@@ -64,7 +64,7 @@ export default function Home() {
       {/* Hero Section */}
       <section 
         id="home" 
-        className="py-32 text-white"
+        className="py-20 md:py-32 text-white"
         style={{
           background: config?.bannerBackground 
             ? `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${config.bannerBackground}) center/cover no-repeat`
@@ -75,10 +75,10 @@ export default function Home() {
       >
         <div className="container mx-auto px-4 text-center">
           {config?.showBannerText && (
-            <div className="mx-auto max-w-3xl mb-10">
-              <h1 className="text-4xl md:text-5xl font-bold mb-4">{config?.bannerTitle || "Encontre o imóvel dos seus sonhos"}</h1>
+            <div className="mx-auto max-w-3xl mb-6 md:mb-10">
+              <h1 className="text-4xl md:text-5xl font-bold mb-2 md:mb-4">{config?.bannerTitle || "Encontre o imóvel dos seus sonhos"}</h1>
               {config?.bannerSubtitle && (
-                <p className="text-lg mb-8">{config.bannerSubtitle}</p>
+                <p className="text-lg mb-4 md:mb-8">{config.bannerSubtitle}</p>
               )}
             </div>
           )}
