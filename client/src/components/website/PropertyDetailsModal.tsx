@@ -123,15 +123,17 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
           '--primary': primaryColor
         } as React.CSSProperties}
       >
-        {/* Close button */}
-        <button 
-          onClick={onClose}
-          className="fixed top-6 right-6 z-50 w-12 h-12 rounded-full bg-white bg-opacity-90 hover:bg-opacity-100 shadow-lg flex items-center justify-center transition-all"
-        >
-          <X className="w-6 h-6 text-gray-800" />
-        </button>
-
         {/* Content */}
+        {/* Close button */}
+        <div className="absolute top-4 right-4 z-50">
+          <button 
+            onClick={onClose}
+            className="w-10 h-10 rounded-full bg-white bg-opacity-90 hover:bg-opacity-100 shadow-lg flex items-center justify-center transition-all"
+          >
+            <X className="w-5 h-5 text-gray-800" />
+          </button>
+        </div>
+
         <div className="p-6">
           {isLoadingProperty ? (
             <div className="animate-pulse">
