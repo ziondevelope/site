@@ -134,83 +134,9 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
               <div className="h-[400px] bg-gray-200 rounded-xl mb-6"></div>
             </div>
           ) : currentProperty ? (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {/* Coluna esquerda - Cartão de contato do corretor */}
-              <div className="md:col-span-1 order-2 md:order-1">
-                {agent && (
-                  <div className="rounded-lg overflow-hidden" style={{ backgroundColor: primaryColor }}>
-                    <div className="p-6 flex flex-col items-center text-center">
-                      {/* Avatar */}
-                      {agent.avatar ? (
-                        <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-white shadow-sm mb-4">
-                          <img
-                            src={agent.avatar}
-                            alt={agent.displayName}
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                      ) : (
-                        <div className="w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center mb-4">
-                          <i className="ri-user-line text-gray-400 text-3xl"></i>
-                        </div>
-                      )}
-                      
-                      {/* Nome e CRECI */}
-                      <h3 className="text-xl font-bold text-gray-300 mb-1">{agent.displayName}</h3>
-                      <p className="text-gray-300 text-opacity-80 mb-5">CRECI {agent.creci || '111111'}</p>
-                      
-                      {/* Botões de ação */}
-                      <div className="w-full space-y-3">
-                        <Button 
-                          className="w-full rounded-full border-white border-opacity-30 text-gray-300 font-medium hover:bg-white hover:bg-opacity-10" 
-                          variant="outline"
-                        >
-                          FALE COM O CORRETOR
-                        </Button>
-                        
-                        <Button 
-                          className="w-full rounded-full border-white border-opacity-30 text-gray-300 font-medium hover:bg-white hover:bg-opacity-10" 
-                          variant="outline"
-                        >
-                          AGENDAR UMA VISITA
-                        </Button>
-                        
-                        <Button 
-                          className="w-full rounded-full bg-white font-medium"
-                          style={{ color: primaryColor }}
-                        >
-                          ENTRAR EM CONTATO
-                        </Button>
-                      </div>
-                      
-                      {/* Compartilhar */}
-                      <div className="mt-4 w-full">
-                        <p className="text-center text-gray-300 mb-2 text-xs uppercase">COMPARTILHAR</p>
-                        <div className="flex justify-center space-x-2">
-                          <button className="w-10 h-10 rounded-full bg-white bg-opacity-10 flex items-center justify-center text-gray-300 hover:bg-opacity-20">
-                            <i className="fab fa-whatsapp"></i>
-                          </button>
-                          <button className="w-10 h-10 rounded-full bg-white bg-opacity-10 flex items-center justify-center text-gray-300 hover:bg-opacity-20">
-                            <i className="fab fa-facebook-f"></i>
-                          </button>
-                          <button className="w-10 h-10 rounded-full bg-white bg-opacity-10 flex items-center justify-center text-gray-300 hover:bg-opacity-20">
-                            <i className="fab fa-twitter"></i>
-                          </button>
-                          <button className="w-10 h-10 rounded-full bg-white bg-opacity-10 flex items-center justify-center text-gray-300 hover:bg-opacity-20">
-                            <i className="far fa-envelope"></i>
-                          </button>
-                          <button className="w-10 h-10 rounded-full bg-white bg-opacity-10 flex items-center justify-center text-gray-300 hover:bg-opacity-20">
-                            <i className="fas fa-print"></i>
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-              
-              {/* Coluna direita - Detalhes do imóvel */}
-              <div className="md:col-span-2 order-1 md:order-2">
+            <div className="grid grid-cols-1 gap-8">
+              {/* Detalhes do imóvel */}
+              <div className="col-span-1">
                 {/* Main property image */}
                 <div className="rounded-xl overflow-hidden relative mb-6 group">
                   <div 
