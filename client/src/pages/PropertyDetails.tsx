@@ -194,17 +194,37 @@ export default function PropertyDetails() {
                     )}
                   </div>
                   
-                  {/* Título e preço - Agora abaixo da foto */}
-                  <div className="flex flex-wrap items-center justify-between mb-6 bg-white p-5 rounded-lg shadow-sm">
-                    <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mr-4">{currentProperty.title}</h1>
-                    <div 
-                      className="text-3xl font-bold mt-3 lg:mt-0"
-                      style={{ color: primaryColor }}
-                    >
-                      {formatCurrency(currentProperty.price)}
-                      {currentProperty.purpose === 'rent' && 
-                        <span className="text-base font-normal text-gray-500">/mês</span>
-                      }
+                  {/* Título e preço - Agora abaixo da foto no estilo da página principal */}
+                  <div className="mb-6 bg-white rounded-lg overflow-hidden shadow-sm">
+                    <div className="px-6 py-5 border-b border-gray-100">
+                      <div className="flex flex-wrap items-center justify-between">
+                        <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mr-4">{currentProperty.title}</h1>
+                        <div 
+                          className="text-2xl md:text-3xl font-bold mt-3 lg:mt-0"
+                          style={{ color: primaryColor }}
+                        >
+                          {formatCurrency(currentProperty.price)}
+                          {currentProperty.purpose === 'rent' && 
+                            <span className="text-base font-normal text-gray-500">/mês</span>
+                          }
+                        </div>
+                      </div>
+                    </div>
+                    <div className="px-6 py-4 bg-gray-50">
+                      <div className="flex items-center text-sm text-gray-500">
+                        <span className="inline-flex items-center mr-3">
+                          <i className="ri-home-4-line mr-1"></i>
+                          <span>{currentProperty.type && currentProperty.type.charAt(0).toUpperCase() + currentProperty.type.slice(1)}</span>
+                        </span>
+                        <span className="inline-flex items-center mr-3">
+                          <i className="ri-map-pin-line mr-1"></i>
+                          <span>{currentProperty.neighborhood || 'Centro'}</span>
+                        </span>
+                        <span className="inline-flex items-center">
+                          <i className="ri-code-line mr-1"></i>
+                          <span>Ref: #{currentProperty.id}</span>
+                        </span>
+                      </div>
                     </div>
                   </div>
                   
