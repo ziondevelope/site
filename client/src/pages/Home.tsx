@@ -141,26 +141,6 @@ export default function Home() {
                     </button>
                   </div>
                 </form>
-                
-                {/* Tags de filtro adicionais */}
-                <div className="flex flex-wrap gap-2 mt-2 px-1">
-                  <button className="bg-white/90 text-gray-800 px-2.5 py-1 rounded-full text-sm font-medium flex items-center gap-1 border border-gray-200">
-                    <span>Busca por código</span>
-                    <i className="ri-search-line text-xs"></i>
-                  </button>
-                  <button className="bg-white/90 text-gray-800 px-2.5 py-1 rounded-full text-sm font-medium flex items-center gap-1 border border-gray-200">
-                    <span>Localização</span>
-                    <i className="ri-map-pin-line text-xs"></i>
-                  </button>
-                  <button className="bg-white/90 text-gray-800 px-2.5 py-1 rounded-full text-sm font-medium flex items-center gap-1 border border-gray-200">
-                    <span>Mobiliado</span>
-                    <i className="ri-checkbox-blank-line text-xs"></i>
-                  </button>
-                  <button className="bg-white/90 text-gray-800 px-2.5 py-1 rounded-full text-sm font-medium flex items-center gap-1 border border-gray-200">
-                    <span>Permite pets</span>
-                    <i className="ri-checkbox-blank-line text-xs"></i>
-                  </button>
-                </div>
               </div>
             )}
             
