@@ -319,33 +319,6 @@ export default function PropertyDetails() {
                   {/* Localização */}
                   <div className="mb-8">
                     <h2 className="text-2xl font-bold mb-4">Localização</h2>
-                    <div className="mb-4 border p-4 rounded-lg">
-                      <div className="flex flex-col md:flex-row md:items-center">
-                        <div className="flex items-center mb-3 md:mb-0 md:mr-8">
-                          <div className="w-10 h-10 rounded-full flex items-center justify-center mr-3"
-                            style={{ backgroundColor: `${primaryColor}15` }}>
-                            <i className="ri-map-pin-line text-xl" style={{ color: primaryColor }}></i>
-                          </div>
-                          <div>
-                            <p className="text-sm text-gray-500">CEP</p>
-                            <p className="font-medium">{currentProperty.zipCode ? 
-                              `${currentProperty.zipCode.slice(0, 5)}-${currentProperty.zipCode.slice(5)}` : 
-                              'Não informado'}
-                            </p>
-                          </div>
-                        </div>
-                        
-                        <div className="flex-1">
-                          <p className="text-sm text-gray-500 mb-1">Endereço completo</p>
-                          <p className="text-gray-700">
-                            {currentProperty.address || 'Endereço não disponível'}
-                            {currentProperty.neighborhood && `, ${currentProperty.neighborhood}`}
-                            {currentProperty.city && `, ${currentProperty.city}`}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                    
                     <div className="border border-gray-200 rounded-lg h-64 overflow-hidden">
                       {currentProperty.address ? (
                         <iframe 
@@ -408,7 +381,7 @@ export default function PropertyDetails() {
                 
                 {/* Coluna da direita - Formulário de contato */}
                 <div>
-                  <div className="p-6 border border-gray-200 rounded-lg sticky" style={{ top: '1rem', maxHeight: 'calc(100vh - 2rem)', overflowY: 'auto' }}>
+                  <div className="p-6 border border-gray-200 rounded-lg sticky top-4">
                     <div className="mb-6">
                       <h3 className="text-xl font-bold mb-2">Interessado neste imóvel?</h3>
                       <p className="text-gray-600">
