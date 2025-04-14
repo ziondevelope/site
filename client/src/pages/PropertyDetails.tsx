@@ -158,20 +158,6 @@ export default function PropertyDetails() {
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* Coluna da esquerda - Conteúdo principal */}
                 <div className="lg:col-span-2">
-                  {/* Título e preço */}
-                  <div className="flex flex-wrap items-center justify-between mb-6">
-                    <h1 className="text-3xl md:text-4xl font-bold text-gray-800">{currentProperty.title}</h1>
-                    <div 
-                      className="text-3xl font-bold mt-3 lg:mt-0"
-                      style={{ color: primaryColor }}
-                    >
-                      {formatCurrency(currentProperty.price)}
-                      {currentProperty.purpose === 'rent' && 
-                        <span className="text-base font-normal text-gray-500">/mês</span>
-                      }
-                    </div>
-                  </div>
-                  
                   {/* Endereço e compartilhar */}
                   <div className="flex flex-wrap justify-between mb-6">
                     <div className="flex items-center text-gray-600 mb-2 md:mb-0">
@@ -196,7 +182,7 @@ export default function PropertyDetails() {
                   
                   {/* Imagem Principal */}
                   <div 
-                    className="w-full h-[500px] rounded-xl mb-4 overflow-hidden relative bg-cover bg-center"
+                    className="w-full h-[500px] rounded-xl mb-6 overflow-hidden relative bg-cover bg-center"
                     style={{ 
                       backgroundImage: activeImage ? `url(${activeImage})` : 'none',
                     }}
@@ -206,6 +192,20 @@ export default function PropertyDetails() {
                         <i className="ri-image-line text-4xl text-gray-400"></i>
                       </div>
                     )}
+                  </div>
+                  
+                  {/* Título e preço - Agora abaixo da foto */}
+                  <div className="flex flex-wrap items-center justify-between mb-6 bg-white p-5 rounded-lg shadow-sm">
+                    <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mr-4">{currentProperty.title}</h1>
+                    <div 
+                      className="text-3xl font-bold mt-3 lg:mt-0"
+                      style={{ color: primaryColor }}
+                    >
+                      {formatCurrency(currentProperty.price)}
+                      {currentProperty.purpose === 'rent' && 
+                        <span className="text-base font-normal text-gray-500">/mês</span>
+                      }
+                    </div>
                   </div>
                   
                   {/* Miniaturas */}
