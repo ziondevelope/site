@@ -143,29 +143,6 @@ export default function Home() {
                 </form>
               </div>
             )}
-            
-            <div className="flex flex-wrap gap-4">
-              <Button 
-                variant="default" 
-                size="lg" 
-                className="bg-white hover:bg-gray-100"
-                style={{ color: config?.primaryColor || 'var(--primary)' }}
-              >
-                Ver imóveis
-              </Button>
-              <Button 
-                variant="outline" 
-                size="lg" 
-                className="border-white text-white hover:bg-white"
-                style={{ 
-                  '--hover-text-color': config?.primaryColor || 'var(--primary)'
-                } as React.CSSProperties}
-                onMouseOver={(e) => e.currentTarget.style.color = config?.primaryColor || 'var(--primary)'}
-                onMouseOut={(e) => e.currentTarget.style.color = 'white'}
-              >
-                Agendar visita
-              </Button>
-            </div>
           </div>
         </div>
       </section>
