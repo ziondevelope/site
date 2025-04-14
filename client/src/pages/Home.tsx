@@ -375,9 +375,6 @@ export default function Home() {
                             <span className="text-gray-600 flex items-center">
                               <i className="ri-car-line mr-1"></i> {property.parkingSpots || 0}
                             </span>
-                            <span className="text-gray-600 flex items-center">
-                              <i className="ri-building-line mr-1"></i> {property.type}
-                            </span>
                           </div>
                           
                           <div className="flex justify-between items-center">
