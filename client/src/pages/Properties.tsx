@@ -127,6 +127,11 @@ export default function Properties() {
     queryKey: ['/api/properties'],
   });
   
+  // Fetch agents
+  const { data: allAgents } = useQuery({
+    queryKey: ['/api/agents'],
+  });
+  
   // Filtered properties
   const filteredProperties = useMemo(() => {
     if (!properties) return [];
@@ -879,6 +884,34 @@ export default function Properties() {
                               onChange={(e) => field.onChange(Number(e.target.value))}
                             />
                           </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={form.control}
+                      name="agentId"
+                      render={({ field }) => (
+                        <FormItem className="mb-6">
+                          <FormLabel className="font-medium">Corretor Responsável</FormLabel>
+                          <Select 
+                            onValueChange={(value) => field.onChange(Number(value) || null)} 
+                            value={field.value?.toString() || ""}
+                          >
+                            <FormControl>
+                              <SelectTrigger className="bg-white border border-gray-300 shadow-sm">
+                                <SelectValue placeholder="Selecione o corretor" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {allAgents?.map((agent) => (
+                                <SelectItem key={agent.id} value={agent.id.toString()}>
+                                  {agent.name}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
                           <FormMessage />
                         </FormItem>
                       )}
