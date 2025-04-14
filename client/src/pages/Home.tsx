@@ -370,7 +370,12 @@ export default function Home() {
                           </div>
                           <div className="flex justify-between mb-4 text-sm">
                             <span className="text-gray-600 flex items-center">
-                              <i className="ri-water-flash-fill mr-1"></i> {property.suites || 0}
+                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1">
+                                <path d="M4 12h16"></path>
+                                <path d="M20 20v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"></path>
+                                <path d="M4 20h16"></path>
+                                <path d="M15 12v5"></path>
+                              </svg> {property.suites || 0}
                             </span>
                             <span className="text-gray-600 flex items-center">
                               <i className="ri-car-line mr-1"></i> {property.parkingSpots || 0}
