@@ -357,18 +357,12 @@ export default function Home() {
                           <h3 className="text-lg font-semibold mb-2 line-clamp-1">{property.title}</h3>
                           <p className="text-gray-500 text-sm mb-4 line-clamp-1">{property.address}</p>
                           
-                          <div className="flex items-center justify-between mb-4 text-sm">
-                            <div className="flex items-center space-x-2">
-                              <span className="text-gray-600">{property.area}m²</span>
-                              <span className="text-gray-500">|</span>
-                              <span className="text-gray-600">{property.bedrooms} quartos</span>
-                              <span className="text-gray-500">|</span>
-                              <span className="text-gray-600">{property.bathrooms} banhs</span>
-                              <span className="text-gray-500">|</span>
-                              <span className="text-gray-600">{property.suites || 0} suítes</span>
-                              <span className="text-gray-500">|</span>
-                              <span className="text-gray-600">{property.parkingSpots || 0} vagas</span>
-                            </div>
+                          <div className="flex items-center space-x-4 mb-4 text-sm text-gray-600">
+                            <span><i className="ri-ruler-line text-lg"></i> {property.area}m²</span>
+                            <span><i className="ri-hotel-bed-line text-lg"></i> {property.bedrooms}</span>
+                            <span><i className="ri-shower-line text-lg"></i> {property.bathrooms}</span>
+                            <span><i className="ri-shut-down-line text-lg"></i> {property.suites || 0}</span>
+                            <span><i className="ri-car-line text-lg"></i> {property.parkingSpots || 0}</span>
                           </div>
                           
                           <div className="flex justify-between items-center">
