@@ -357,63 +357,21 @@ export default function Home() {
                           <h3 className="text-lg font-semibold mb-2 line-clamp-1">{property.title}</h3>
                           <p className="text-gray-500 text-sm mb-4 line-clamp-1">{property.address}</p>
                           
-                          <div className="flex justify-between mb-4 text-sm">
-                            <span className="text-gray-600 flex items-center">
-                              {/* Ícone de área - régua */}
-                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1">
-                                <path d="M21 6H3v12h18V6z" />
-                                <path d="M3 12h3" />
-                                <path d="M8 12h3" />
-                                <path d="M13 12h3" />
-                                <path d="M18 12h3" />
-                                <path d="M3 9h1.5" />
-                                <path d="M3 15h1.5" />
-                                <path d="M19.5 9H21" />
-                                <path d="M19.5 15H21" />
-                              </svg> {property.area}
+                          <div className="grid grid-cols-2 gap-2 mb-4 text-sm">
+                            <span className="text-gray-600 font-medium">
+                              Área: <span className="font-normal">{property.area} m²</span>
                             </span>
-                            <span className="text-gray-600 flex items-center">
-                              {/* Ícone de quarto - cama */}
-                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1">
-                                <path d="M2 9V6c0-1.1.9-2 2-2h16a2 2 0 0 1 2 2v3" />
-                                <path d="M2 11v5a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-5" />
-                                <path d="M2 11h20" />
-                                <path d="M4 17V9" />
-                                <path d="M20 17V9" />
-                              </svg> {property.bedrooms}
+                            <span className="text-gray-600 font-medium">
+                              Quartos: <span className="font-normal">{property.bedrooms}</span>
                             </span>
-                            <span className="text-gray-600 flex items-center">
-                              {/* Ícone de banheiro - chuveiro */}
-                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1">
-                                <path d="M8 2v2" />
-                                <path d="M16 2v2" />
-                                <path d="M3 6h18" />
-                                <path d="M10 10h4" />
-                                <path d="M4 10h2" />
-                                <path d="M18 10h2" />
-                                <path d="M8 14h8" />
-                                <path d="M12 22v-8" />
-                              </svg> {property.bathrooms}
+                            <span className="text-gray-600 font-medium">
+                              Banheiros: <span className="font-normal">{property.bathrooms}</span>
                             </span>
-                          </div>
-                          <div className="flex justify-between mb-4 text-sm">
-                            <span className="text-gray-600 flex items-center">
-                              {/* Ícone de suíte - banheira */}
-                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1">
-                                <rect x="4" y="10" width="16" height="10" rx="2" />
-                                <path d="M7 10V6a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v4" />
-                                <line x1="4" y1="14" x2="20" y2="14" />
-                              </svg> {property.suites || 0}
+                            <span className="text-gray-600 font-medium">
+                              Suítes: <span className="font-normal">{property.suites || 0}</span>
                             </span>
-                            <span className="text-gray-600 flex items-center">
-                              {/* Ícone de garagem - carro (estilo fusca) */}
-                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1">
-                                <path d="M7 17h10" />
-                                <path d="M3 13l2-6c.8-2.4 1.6-3 3-3h8c1.4 0 2.2.6 3 3l2 6" />
-                                <path d="M5 17a2 2 0 0 1-2-2v-2h18v2a2 2 0 0 1-2 2h-2" />
-                                <circle cx="7.5" cy="14" r="1.5" />
-                                <circle cx="16.5" cy="14" r="1.5" />
-                              </svg> {property.parkingSpots || 0}
+                            <span className="text-gray-600 font-medium">
+                              Vagas: <span className="font-normal">{property.parkingSpots || 0}</span>
                             </span>
                           </div>
                           
