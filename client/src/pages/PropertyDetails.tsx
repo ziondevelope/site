@@ -343,40 +343,7 @@ export default function PropertyDetails() {
                     </div>
                   </div>
                   
-                  {/* Propriedades relacionadas / sugestões */}
-                  <div className="mb-8 lg:mb-0">
-                    <h2 className="text-2xl font-bold mb-6">Imóveis similares</h2>
-                    <div className="relative">
-                      <div className="flex overflow-x-auto space-x-4 pb-4">
-                        {/* Placeholders para imóveis similares */}
-                        {[1, 2, 3].map((item) => (
-                          <div key={item} className="flex-shrink-0 w-72">
-                            <div className="rounded-lg border border-gray-200 overflow-hidden">
-                              <div className="h-48 bg-gray-200 relative">
-                                <div className="absolute top-2 left-2 bg-gray-800 text-white text-xs py-1 px-2 rounded">
-                                  Verificar disponibilidade
-                                </div>
-                              </div>
-                              <div className="p-4">
-                                <h3 className="font-bold text-lg mb-1 truncate">Imóvel similar</h3>
-                                <p className="text-gray-500 text-sm mb-2">Localização</p>
-                                <div className="flex justify-between items-center">
-                                  <div className="font-bold" style={{ color: primaryColor }}>
-                                    Consultar
-                                  </div>
-                                  <div className="flex space-x-2 text-gray-500 text-sm">
-                                    <span><i className="ri-hotel-bed-line"></i> 3</span>
-                                    <span><i className="ri-shower-line"></i> 2</span>
-                                    <span><i className="ri-car-line"></i> 1</span>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
+                  {/* Esta seção foi removida para ser substituída por uma seção mais abaixo */}
                 </div>
                 
                 {/* Coluna da direita - Formulário de contato */}
@@ -478,6 +445,65 @@ export default function PropertyDetails() {
           </div>
         )}
       </main>
+      
+      {/* Seção de imóveis similares - Grid completo */}
+      {currentProperty && (
+        <div className="bg-gray-50 py-12">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-10">
+              <h2 className="text-3xl font-bold mb-2">Imóveis similares</h2>
+              <p className="text-gray-600">Confira outras opções que podem te interessar</p>
+            </div>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {[1, 2, 3, 4, 5, 6, 7, 8].map((item) => (
+                <div key={item} className="bg-white rounded-lg border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-md">
+                  <div className="h-48 bg-gray-200 relative">
+                    <div className="absolute top-2 left-2 bg-gray-800 text-white text-xs py-1 px-2 rounded">
+                      {item % 2 === 0 ? 'Venda' : 'Aluguel'}
+                    </div>
+                    {item % 4 === 0 && (
+                      <div className="absolute top-2 right-2 bg-yellow-500 text-white text-xs py-1 px-2 rounded">
+                        Destaque
+                      </div>
+                    )}
+                  </div>
+                  <div className="p-4">
+                    <h3 className="font-bold text-lg mb-1 truncate">
+                      {item % 3 === 0 ? 'Apartamento Moderno' : item % 2 === 0 ? 'Casa com Jardim' : 'Studio Compacto'}
+                    </h3>
+                    <p className="text-gray-500 text-sm mb-2">
+                      {item % 4 === 0 ? 'Centro' : item % 3 === 0 ? 'Zona Sul' : item % 2 === 0 ? 'Zona Norte' : 'Região Leste'}
+                    </p>
+                    <div className="flex justify-between items-center mb-3">
+                      <div className="font-bold text-lg" style={{ color: primaryColor }}>
+                        {item % 2 === 0 ? 'R$ 450.000' : `R$ ${(item * 1.5 + 1).toFixed(3)}`}
+                      </div>
+                    </div>
+                    <div className="flex space-x-4 text-gray-500 text-sm mb-3">
+                      <span><i className="ri-hotel-bed-line mr-1"></i> {item % 3 + 1}</span>
+                      <span><i className="ri-shower-line mr-1"></i> {item % 2 + 1}</span>
+                      <span><i className="ri-car-line mr-1"></i> {item % 2}</span>
+                      <span><i className="ri-ruler-line mr-1"></i> {item * 20 + 40}m²</span>
+                    </div>
+                    <button className="w-full py-2 px-4 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors text-sm font-medium flex justify-center items-center">
+                      <i className="ri-search-line mr-2"></i> Ver detalhes
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+            
+            <div className="text-center mt-10">
+              <Link href="/properties">
+                <button className="inline-flex items-center justify-center px-6 py-3 border border-transparent rounded-md font-medium text-white bg-gray-800 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors">
+                  Ver todos os imóveis <i className="ri-arrow-right-line ml-2"></i>
+                </button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
       
       {/* Footer */}
       <footer className="bg-gray-800 text-white py-12">
