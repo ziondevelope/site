@@ -45,6 +45,11 @@
   select:focus, input:focus {
     border-color: var(--primary) !important;
   }
+  
+  .property-characteristics-icons_icon__q1Mde {
+    color: currentColor;
+    font-size: 1rem;
+  }
 
   /* Estilos para a barra de filtro no estilo moderno */
   .filter-select {

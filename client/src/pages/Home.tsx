@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { Property } from "@shared/schema";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faShower, faBed, faRulerCombined, faCar, faBath } from "@fortawesome/free-solid-svg-icons";
 
 // Função utilitária para obter a imagem de destaque do imóvel
 const getFeaturedImage = (property: Property): string | undefined => {
@@ -387,11 +389,7 @@ export default function Home() {
                               {property.bedrooms}
                             </span>
                             <span className="flex items-center">
-                              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="mr-1">
-                                <path d="M6 8C6 5.79086 7.79086 4 10 4H14C16.2091 4 18 5.79086 18 8V20H6V8Z" fill="currentColor"/>
-                                <path d="M2 20H22V22H2V20Z" fill="currentColor"/>
-                                <path d="M9 8H15V10H9V8Z" fill="currentColor"/>
-                              </svg>
+                              <i className="fas fa-shower fa-xl property-characteristics-icons_icon__q1Mde mr-1"></i>
                               {property.bathrooms}
                             </span>
                             <span className="flex items-center">
