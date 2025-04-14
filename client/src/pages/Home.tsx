@@ -3,6 +3,30 @@ import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
+import { Property } from "@shared/schema";
+
+// Função utilitária para obter a imagem de destaque do imóvel
+const getFeaturedImage = (property: Property): string | undefined => {
+  // Se tiver array de imagens com formato { url, isFeatured }
+  if (property.images && Array.isArray(property.images) && property.images.length > 0) {
+    // Procura por uma imagem marcada como destaque
+    const featuredImage = property.images.find(img => 
+      typeof img === 'object' && 'isFeatured' in img && img.isFeatured
+    );
+    
+    // Se encontrou imagem de destaque, retorna sua URL
+    if (featuredImage && typeof featuredImage === 'object' && 'url' in featuredImage) {
+      return featuredImage.url;
+    }
+    
+    // Se não encontrou imagem de destaque, retorna a primeira imagem
+    if (property.images[0] && typeof property.images[0] === 'object' && 'url' in property.images[0]) {
+      return property.images[0].url;
+    }
+  }
+  
+  return undefined;
+};
 
 export default function Home() {
   const [location, setLocation] = useLocation();
@@ -252,6 +276,14 @@ export default function Home() {
                 <div key={property.id} className="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:scale-105">
                   {/* Property Image */}
                   <div className="h-48 bg-gray-200 relative">
+                    {getFeaturedImage(property) ? (
+                      <img 
+                        src={getFeaturedImage(property)} 
+                        alt={property.title} 
+                        className="w-full h-full object-cover"
+                        loading="lazy"
+                      />
+                    ) : null}
                     <div 
                       className="absolute bottom-0 left-0 text-white px-3 py-1 rounded-tr-lg"
                       style={{
