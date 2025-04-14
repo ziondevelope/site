@@ -287,14 +287,11 @@ export default function Home() {
                   });
                   setCarouselPage(newPage);
                 }}
-                className="absolute left-4 top-1/2 -translate-y-1/2 z-10 bg-white hover:bg-white/90 rounded-full shadow-md p-3 opacity-0 group-hover:opacity-100 transition-opacity disabled:opacity-0 disabled:cursor-not-allowed"
-                style={{
-                  border: `1px solid ${config?.primaryColor ? `${config.primaryColor}33` : 'rgba(59, 130, 246, 0.2)'}`,
-                }}
+                className="absolute left-0 top-1/2 -translate-y-1/2 z-10 opacity-0 group-hover:opacity-100 transition-opacity disabled:opacity-0 disabled:cursor-not-allowed"
                 disabled={carouselPage === 0}
                 aria-label="Imóveis anteriores"
               >
-                <i className="ri-arrow-left-s-line text-xl" style={{ color: config?.primaryColor || 'var(--primary)' }}></i>
+                <i className="ri-arrow-left-circle-fill text-4xl" style={{ color: config?.primaryColor || 'var(--primary)' }}></i>
               </button>
               
               {/* Botão de navegação - Próximo */}
@@ -309,14 +306,11 @@ export default function Home() {
                   });
                   setCarouselPage(newPage);
                 }}
-                className="absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-white hover:bg-white/90 rounded-full shadow-md p-3 opacity-0 group-hover:opacity-100 transition-opacity disabled:opacity-0 disabled:cursor-not-allowed"
-                style={{
-                  border: `1px solid ${config?.primaryColor ? `${config.primaryColor}33` : 'rgba(59, 130, 246, 0.2)'}`,
-                }}
+                className="absolute right-0 top-1/2 -translate-y-1/2 z-10 opacity-0 group-hover:opacity-100 transition-opacity disabled:opacity-0 disabled:cursor-not-allowed"
                 disabled={carouselPage === totalCarouselPages - 1}
                 aria-label="Próximos imóveis"
               >
-                <i className="ri-arrow-right-s-line text-xl" style={{ color: config?.primaryColor || 'var(--primary)' }}></i>
+                <i className="ri-arrow-right-circle-fill text-4xl" style={{ color: config?.primaryColor || 'var(--primary)' }}></i>
               </button>
               
               {/* Carrossel */}
