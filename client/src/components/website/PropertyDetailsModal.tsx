@@ -403,12 +403,6 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
                 {/* Action buttons */}
                 <div className="mt-8 flex flex-wrap gap-4 justify-end">
                   <Button
-                    variant="outline"
-                    onClick={onClose}
-                  >
-                    Fechar
-                  </Button>
-                  <Button
                     onClick={() => window.location.href = `/properties/${propertyId}`}
                   >
                     Ver página completa
