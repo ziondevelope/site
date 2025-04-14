@@ -154,7 +154,7 @@ export default function Home() {
                 <div className="flex-1">
                   <div className="relative">
                     <select 
-                      className="w-full appearance-none rounded-md px-3 py-2 bg-white border border-gray-200 text-black text-sm"
+                      className="w-full appearance-none rounded-md px-4 py-3 bg-white border border-gray-200 text-black text-sm"
                       defaultValue="apartment"
                     >
                       <option value="apartment">Tipo de Imóvel</option>
@@ -174,7 +174,7 @@ export default function Home() {
                   <input 
                     type="text"
                     placeholder="Cidade"
-                    className="w-full rounded-md px-3 py-2 bg-white border border-gray-200 text-black text-sm"
+                    className="w-full rounded-md px-4 py-3 bg-white border border-gray-200 text-black text-sm"
                   />
                 </div>
                 
@@ -182,7 +182,7 @@ export default function Home() {
                 <div className="flex-1">
                   <div className="relative">
                     <select 
-                      className="w-full appearance-none rounded-md px-3 py-2 bg-white border border-gray-200 text-black text-sm"
+                      className="w-full appearance-none rounded-md px-4 py-3 bg-white border border-gray-200 text-black text-sm"
                       defaultValue="comprar"
                     >
                       <option value="comprar">Comprar ou Alugar</option>
@@ -199,7 +199,7 @@ export default function Home() {
                 <div className="flex-initial">
                   <button 
                     type="submit"
-                    className="w-full rounded-md py-2 px-4 text-white text-sm transition-all shadow-sm hover:shadow-md flex items-center justify-center"
+                    className="w-full rounded-md py-3 px-4 text-white text-sm transition-all shadow-sm hover:shadow-md flex items-center justify-center"
                     style={{ 
                       backgroundColor: config?.primaryColor || '#8BC34A',
                       minWidth: '100px'
