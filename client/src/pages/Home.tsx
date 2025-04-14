@@ -365,7 +365,13 @@ export default function Home() {
                               <i className="ri-hotel-bed-line mr-1"></i> {property.bedrooms}
                             </span>
                             <span className="text-gray-600 flex items-center">
-                              <i className="ri-shower-line mr-1"></i> {property.bathrooms}
+                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1">
+                                <path d="M6 10v9"></path>
+                                <path d="M18 10v9"></path>
+                                <path d="M9 6a3 3 0 0 0-3 3"></path>
+                                <path d="M15 6a3 3 0 0 1 3 3"></path>
+                                <circle cx="12" cy="6" r="1"></circle>
+                              </svg> {property.bathrooms}
                             </span>
                           </div>
                           <div className="flex justify-between mb-4 text-sm">
