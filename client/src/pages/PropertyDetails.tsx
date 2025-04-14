@@ -523,13 +523,15 @@ export default function PropertyDetails() {
                             href={agent?.phone ? `https://wa.me/55${agent.phone.replace(/\D/g, '')}?text=Olá, tenho interesse no imóvel ${currentProperty.title} (Ref: #${currentProperty.id}).` : '#'}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="w-full py-3 px-4 rounded-full border-2 border-teal-400 text-teal-500 font-medium flex items-center justify-center mb-3 hover:bg-teal-50 transition-colors"
+                            className="w-full py-3 px-4 rounded-full border-2 text-teal-500 font-medium flex items-center justify-center mb-3 hover:bg-teal-50 transition-colors"
+                            style={{ borderColor: primaryColor, color: primaryColor }}
                           >
                             FALE COM O CORRETOR
                           </a>
                           
                           <button 
-                            className="w-full py-3 px-4 rounded-full border-2 border-teal-400 text-teal-500 font-medium flex items-center justify-center mb-0 hover:bg-teal-50 transition-colors"
+                            className="w-full py-3 px-4 rounded-full border-2 font-medium flex items-center justify-center mb-0 hover:bg-teal-50 transition-colors"
+                            style={{ borderColor: primaryColor, color: primaryColor }}
                             onClick={() => {
                               // Função para agendar visita - poderia abrir um modal
                               window.alert('Funcionalidade de agendamento em desenvolvimento')
