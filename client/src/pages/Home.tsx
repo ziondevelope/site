@@ -344,18 +344,9 @@ export default function Home() {
                           <p className="text-gray-500 text-sm mb-4 line-clamp-1">{property.address}</p>
                           
                           <div className="flex justify-between mb-4 text-sm">
-                            <div className="flex items-center">
-                              <i className="ri-ruler-line mr-1 text-primary"></i>
-                              <span>{property.area} m²</span>
-                            </div>
-                            <div className="flex items-center">
-                              <i className="ri-hotel-bed-line mr-1 text-primary"></i>
-                              <span>{property.bedrooms} quartos</span>
-                            </div>
-                            <div className="flex items-center">
-                              <i className="ri-shower-line mr-1 text-primary"></i>
-                              <span>{property.bathrooms} banheiros</span>
-                            </div>
+                            <span className="text-gray-600">{property.area} m²</span>
+                            <span className="text-gray-600">{property.bedrooms} quartos</span>
+                            <span className="text-gray-600">{property.bathrooms} ban.</span>
                           </div>
                           
                           <div className="flex justify-between items-center">
