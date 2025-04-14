@@ -156,20 +156,20 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
                       )}
                       
                       {/* Nome e CRECI */}
-                      <h3 className="text-xl font-bold text-white mb-1">{agent.displayName}</h3>
-                      <p className="text-white text-opacity-80 mb-5">CRECI {agent.creci || '111111'}</p>
+                      <h3 className="text-xl font-bold text-gray-300 mb-1">{agent.displayName}</h3>
+                      <p className="text-gray-300 text-opacity-80 mb-5">CRECI {agent.creci || '111111'}</p>
                       
                       {/* Botões de ação */}
                       <div className="w-full space-y-3">
                         <Button 
-                          className="w-full rounded-full border-white border-opacity-30 text-white font-medium hover:bg-white hover:bg-opacity-10" 
+                          className="w-full rounded-full border-white border-opacity-30 text-gray-300 font-medium hover:bg-white hover:bg-opacity-10" 
                           variant="outline"
                         >
                           FALE COM O CORRETOR
                         </Button>
                         
                         <Button 
-                          className="w-full rounded-full border-white border-opacity-30 text-white font-medium hover:bg-white hover:bg-opacity-10" 
+                          className="w-full rounded-full border-white border-opacity-30 text-gray-300 font-medium hover:bg-white hover:bg-opacity-10" 
                           variant="outline"
                         >
                           AGENDAR UMA VISITA
@@ -185,21 +185,21 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
                       
                       {/* Compartilhar */}
                       <div className="mt-4 w-full">
-                        <p className="text-center text-white text-opacity-80 mb-2 text-xs uppercase">COMPARTILHAR</p>
+                        <p className="text-center text-gray-300 mb-2 text-xs uppercase">COMPARTILHAR</p>
                         <div className="flex justify-center space-x-2">
-                          <button className="w-10 h-10 rounded-full bg-white bg-opacity-10 flex items-center justify-center text-white hover:bg-opacity-20">
+                          <button className="w-10 h-10 rounded-full bg-white bg-opacity-10 flex items-center justify-center text-gray-300 hover:bg-opacity-20">
                             <i className="fab fa-whatsapp"></i>
                           </button>
-                          <button className="w-10 h-10 rounded-full bg-white bg-opacity-10 flex items-center justify-center text-white hover:bg-opacity-20">
+                          <button className="w-10 h-10 rounded-full bg-white bg-opacity-10 flex items-center justify-center text-gray-300 hover:bg-opacity-20">
                             <i className="fab fa-facebook-f"></i>
                           </button>
-                          <button className="w-10 h-10 rounded-full bg-white bg-opacity-10 flex items-center justify-center text-white hover:bg-opacity-20">
+                          <button className="w-10 h-10 rounded-full bg-white bg-opacity-10 flex items-center justify-center text-gray-300 hover:bg-opacity-20">
                             <i className="fab fa-twitter"></i>
                           </button>
-                          <button className="w-10 h-10 rounded-full bg-white bg-opacity-10 flex items-center justify-center text-white hover:bg-opacity-20">
+                          <button className="w-10 h-10 rounded-full bg-white bg-opacity-10 flex items-center justify-center text-gray-300 hover:bg-opacity-20">
                             <i className="far fa-envelope"></i>
                           </button>
-                          <button className="w-10 h-10 rounded-full bg-white bg-opacity-10 flex items-center justify-center text-white hover:bg-opacity-20">
+                          <button className="w-10 h-10 rounded-full bg-white bg-opacity-10 flex items-center justify-center text-gray-300 hover:bg-opacity-20">
                             <i className="fas fa-print"></i>
                           </button>
                         </div>
