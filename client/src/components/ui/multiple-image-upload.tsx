@@ -38,15 +38,24 @@ export const MultipleImageUpload = ({
 
     const reader = new FileReader();
     reader.onloadend = () => {
-      const base64 = reader.result as string;
-      const newImage: GalleryImage = {
-        url: base64,
-        isFeatured: images.length === 0 // Se for a primeira imagem, marca como destaque
-      };
-      
-      const newImages = [...images, newImage];
-      setImages(newImages);
-      onChange(newImages);
+      try {
+        const base64 = reader.result as string;
+        const newImage: GalleryImage = {
+          url: base64,
+          isFeatured: images.length === 0 // Se for a primeira imagem, marca como destaque
+        };
+        
+        const newImages = [...images, newImage];
+        setImages(newImages);
+        onChange(newImages);
+      } catch (error) {
+        console.error('Erro ao processar a imagem:', error);
+        alert('Ocorreu um erro ao processar a imagem. Tente novamente.');
+      }
+    };
+    reader.onerror = (error) => {
+      console.error('Erro ao ler o arquivo:', error);
+      alert('Ocorreu um erro ao processar a imagem. Tente novamente.');
     };
     reader.readAsDataURL(file);
   };

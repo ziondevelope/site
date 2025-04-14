@@ -739,7 +739,7 @@ export default function Properties() {
                             <MultipleImageUpload 
                               value={field.value}
                               onChange={field.onChange}
-                              maxFiles={10}
+                              maxImages={10}
                             />
                           </FormControl>
                           <FormMessage />
@@ -1140,7 +1140,7 @@ export default function Properties() {
                             <MultipleImageUpload 
                               value={field.value}
                               onChange={field.onChange}
-                              maxFiles={10}
+                              maxImages={10}
                             />
                           </FormControl>
                           <FormMessage />
