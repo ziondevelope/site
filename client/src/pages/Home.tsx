@@ -63,9 +63,9 @@ export default function Home() {
           <div className="flex items-center space-x-3">
             {isLoadingConfig ? (
               // Placeholder durante o carregamento - mantém o mesmo tamanho
-              <div className="h-12 w-28 bg-gray-100 rounded animate-pulse"></div>
+              <div className="h-16 w-36 bg-gray-100 rounded animate-pulse"></div>
             ) : config?.logo ? (
-              <div className="h-12 min-w-[112px]">
+              <div className="h-16 min-w-[140px]">
                 <img 
                   src={config.logo} 
                   alt="Logo da Imobiliária" 
