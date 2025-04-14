@@ -83,7 +83,7 @@ export default function Header({ config, isLoadingConfig }: HeaderProps) {
             href={config?.phone ? `https://wa.me/${config.phone.replace(/\D/g, '')}` : "#"} 
             target="_blank" 
             rel="noopener noreferrer"
-            className={`inline-flex items-center px-4 py-1 rounded-full border border-solid transition-colors hover:bg-white hover:text-primary ${
+            className={`inline-flex items-center px-4 py-1 rounded-full border border-solid transition-all hover:bg-white ${
               scrolled ? 'text-primary' : 'text-white'
             }`}
             style={{ 
@@ -92,9 +92,28 @@ export default function Header({ config, isLoadingConfig }: HeaderProps) {
                 : 'rgba(255, 255, 255, 0.3)',
               color: scrolled ? (config?.primaryColor || 'var(--primary)') : 'white'
             }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.color = config?.primaryColor || 'var(--primary)';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.color = scrolled ? (config?.primaryColor || 'var(--primary)') : 'white';
+            }}
           >
             {config?.phone && <span className="mr-2">{config.phone}</span>}
-            <i className="fab fa-whatsapp text-lg" style={{ color: scrolled ? "#25D366" : "white" }}></i>
+            <i 
+              className="fab fa-whatsapp text-lg transition-colors" 
+              style={{ color: scrolled ? "#25D366" : "white" }}
+              ref={(el) => {
+                if (el) {
+                  el.parentElement?.addEventListener('mouseover', () => {
+                    el.style.color = "#25D366";
+                  });
+                  el.parentElement?.addEventListener('mouseout', () => {
+                    el.style.color = scrolled ? "#25D366" : "white";
+                  });
+                }
+              }}
+            ></i>
           </a>
         </div>
       </div>
