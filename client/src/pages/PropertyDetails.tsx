@@ -488,7 +488,7 @@ export default function PropertyDetails() {
                     </div>
 
                     {/* Informações do corretor */}
-                    <div className="bg-white p-5 flex flex-col items-center text-center rounded-lg border" style={{ borderColor: primaryColor }}>
+                    <div className="bg-white p-5 flex flex-col items-center text-center">
                       {/* Avatar do corretor */}
                       <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-white shadow mb-2">
                         {agent?.avatar ? (
