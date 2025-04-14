@@ -214,15 +214,16 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
                 {/* Main property image */}
                 <div className="rounded-xl overflow-hidden relative mb-6 group">
                   <div 
-                    className="h-[400px] bg-gray-100 w-full relative rounded overflow-hidden"
-                    style={{
-                      backgroundImage: activeImage ? `url(${activeImage})` : 'none',
-                      backgroundSize: 'cover',
-                      backgroundPosition: 'center'
-                    }}
+                    className="h-[400px] bg-gray-100 w-full relative rounded overflow-hidden flex items-center justify-center"
                   >
-                    {!activeImage && (
-                      <div className="absolute inset-0 flex items-center justify-center bg-gray-200">
+                    {activeImage ? (
+                      <img 
+                        src={activeImage} 
+                        alt={currentProperty.title || "Imagem do imóvel"} 
+                        className="w-full h-full object-contain"
+                      />
+                    ) : (
+                      <div className="flex items-center justify-center bg-gray-200 w-full h-full">
                         <i className="ri-image-line text-4xl text-gray-400"></i>
                       </div>
                     )}
@@ -302,16 +303,18 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
                       return (
                         <div 
                           key={index}
-                          className="flex-shrink-0 w-20 h-14 rounded overflow-hidden cursor-pointer"
+                          className={`flex-shrink-0 w-20 h-14 rounded overflow-hidden cursor-pointer ${
+                            activeImage === imageUrl ? 'ring-2 ring-offset-1 ring-primary' : ''
+                          }`}
                           onClick={() => setActiveImage(imageUrl)}
                         >
-                          <img 
-                            src={imageUrl} 
-                            alt={`Imagem ${index + 1} do imóvel`}
-                            className={`w-full h-full object-cover transition-all ${
-                              activeImage === imageUrl ? 'ring-2 ring-primary' : 'hover:brightness-90'
-                            }`}
-                          />
+                          <div className="w-full h-full relative">
+                            <img 
+                              src={imageUrl} 
+                              alt={`Imagem ${index + 1} do imóvel`}
+                              className="w-full h-full object-cover hover:opacity-90 transition-opacity"
+                            />
+                          </div>
                         </div>
                       );
                     })}
