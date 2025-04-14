@@ -512,17 +512,7 @@ export default function PropertyDetails() {
                       
                       {/* Box cinza com a referência do imóvel e a foto do corretor */}
                       <div className="w-full bg-gray-100 p-4 rounded-lg mb-3">
-                        <div className="flex justify-between items-center mb-4">
-                          <h3 className="text-gray-600 font-medium">REF: #{currentProperty?.id || '000'}</h3>
-                          <div className="flex space-x-2">
-                            <a href="#" className="text-gray-500 hover:text-teal-500 transition-colors">
-                              <i className="ri-heart-line text-lg"></i>
-                            </a>
-                            <a href="#" className="text-gray-500 hover:text-teal-500 transition-colors">
-                              <i className="ri-share-line text-lg"></i>
-                            </a>
-                          </div>
-                        </div>
+
                       
                         {/* Foto do corretor (exatamente igual à foto original) */}
                         <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-white shadow mx-auto mb-2">
