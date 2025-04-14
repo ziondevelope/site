@@ -5,6 +5,7 @@ import NotFound from "@/pages/not-found";
 import Dashboard from "@/pages/Dashboard";
 import Properties from "@/pages/Properties";
 import PropertyDetails from "@/pages/PropertyDetails";
+import AllProperties from "@/pages/AllProperties";
 import CRM from "@/pages/CRM";
 import Agents from "@/pages/Agents";
 import Website from "@/pages/Website";
@@ -43,6 +44,7 @@ function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
+      <Route path="/properties" component={AllProperties} />
       <Route path="/properties/:id" component={PropertyDetails} />
       <Route path="/admin" component={AdminRouter} />
       <Route path="/admin/:path*" component={AdminRouter} />
