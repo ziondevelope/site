@@ -517,7 +517,7 @@ export default function Properties() {
                             <SelectContent>
                               {allAgents?.map((agent) => (
                                 <SelectItem key={agent.id} value={agent.id.toString()}>
-                                  {agent.name}
+                                  {agent.displayName}
                                 </SelectItem>
                               ))}
                             </SelectContent>
@@ -917,7 +917,7 @@ export default function Properties() {
                             <SelectContent>
                               {allAgents?.map((agent) => (
                                 <SelectItem key={agent.id} value={agent.id.toString()}>
-                                  {agent.name}
+                                  {agent.displayName}
                                 </SelectItem>
                               ))}
                             </SelectContent>
