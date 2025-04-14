@@ -40,7 +40,6 @@ export default function Home() {
   const headerRef = useRef<HTMLElement>(null);
   const carouselTrackRef = useRef<HTMLDivElement>(null);
   const [carouselPage, setCarouselPage] = useState(0);
-  const totalCarouselPages = 3; // Número de páginas no carrossel
   
   // Estado para o modal de detalhes do imóvel
   const [selectedPropertyId, setSelectedPropertyId] = useState<number | null>(null);
@@ -64,12 +63,21 @@ export default function Home() {
     },
   });
 
-  const { data: properties, isLoading: isLoadingProperties } = useQuery<any[]>({
+  const { data: properties, isLoading: isLoadingProperties } = useQuery<Property[]>({
     queryKey: ['/api/properties'],
     queryFn: async () => {
-      return apiRequest<any[]>('/api/properties');
+      return apiRequest<Property[]>('/api/properties');
     },
   });
+  
+  // Filtra apenas os imóveis marcados como destaque
+  const featuredProperties = properties?.filter(property => property.isFeatured) || [];
+  
+  // Calcula o número de páginas no carrossel baseado na quantidade de imóveis em destaque
+  const itemsPerPage = 4; // Quantidade de itens por página do carrossel
+  const totalCarouselPages = featuredProperties.length > 0 
+    ? Math.ceil(featuredProperties.length / itemsPerPage) 
+    : 1;
 
   // Efeito para monitorar o scroll e mudar a aparência do header
   useEffect(() => {
@@ -282,7 +290,7 @@ export default function Home() {
                       }
                     }}
                   >
-                    {properties?.slice(0, 9).map((property) => (
+                    {featuredProperties.map((property) => (
                       <div key={property.id} className="carousel-item flex-shrink-0 w-full sm:w-1/2 md:w-1/3 lg:w-1/4 px-2">
                         <div className="h-full bg-white rounded-lg border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-lg">
                           {/* Property Image */}
