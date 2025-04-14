@@ -11,7 +11,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
-import { Slider } from '@/components/ui/slider';
+import { PriceRangeSlider } from '@/components/ui/price-range-slider';
 
 // Função para obter a imagem em destaque do imóvel
 const getFeaturedImage = (property: Property): string | undefined => {
@@ -340,13 +340,13 @@ export default function AllProperties() {
                   {formatPrice(filters.minPrice)} - {formatPrice(filters.maxPrice)}
                 </div>
               </div>
-              <Slider
+              <PriceRangeSlider
                 min={0}
                 max={20000000}
                 step={100000}
                 value={[filters.minPrice, filters.maxPrice]}
-                onValueChange={(value) => setFilters({...filters, minPrice: value[0], maxPrice: value[1]})}
-                className="py-2"
+                onValueChange={(value: number[]) => setFilters({...filters, minPrice: value[0], maxPrice: value[1]})}
+                className="py-2 group"
                 style={{ 
                   "--thumb-bg": config?.primaryColor || 'var(--primary)',
                   "--range-bg": config?.primaryColor || 'var(--primary)',
