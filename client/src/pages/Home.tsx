@@ -401,11 +401,7 @@ export default function Home() {
                               {property.suites || 0}
                             </span>
                             <span className="flex items-center">
-                              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="mr-1">
-                                <path d="M19 13V19H5V13M19 13H21V11L19 6H5L3 11V13H5M19 13H5M12 4V6M8 4V6M16 4V6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                <circle cx="7" cy="16" r="1.5" fill="currentColor"/>
-                                <circle cx="17" cy="16" r="1.5" fill="currentColor"/>
-                              </svg>
+                              <i className="fas fa-car fa-xl property-characteristics-icons_icon__q1Mde mr-1"></i>
                               {property.parkingSpots || 0}
                             </span>
                           </div>
