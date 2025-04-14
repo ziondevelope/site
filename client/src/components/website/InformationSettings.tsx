@@ -13,21 +13,21 @@ interface InformationSettingsProps {
 export default function InformationSettings({ config, configData, onConfigChange }: InformationSettingsProps) {
   // Valores derivados que refletem o estado atual de edição (configData)
   // ou usam os valores salvos (config) se nenhuma edição foi feita
-  const address = configData.address !== undefined 
+  const address = configData.address !== undefined && configData.address !== null
     ? configData.address 
-    : config?.address || '';
+    : config?.address !== null && config?.address !== undefined ? config.address : '';
     
-  const email = configData.email !== undefined 
+  const email = configData.email !== undefined && configData.email !== null
     ? configData.email 
-    : config?.email || '';
+    : config?.email !== null && config?.email !== undefined ? config.email : '';
     
-  const phone = configData.phone !== undefined 
+  const phone = configData.phone !== undefined && configData.phone !== null
     ? configData.phone 
-    : config?.phone || '';
+    : config?.phone !== null && config?.phone !== undefined ? config.phone : '';
   
-  const workingHours = configData.workingHours !== undefined 
+  const workingHours = configData.workingHours !== undefined && configData.workingHours !== null
     ? configData.workingHours 
-    : config?.workingHours || '';
+    : config?.workingHours !== null && config?.workingHours !== undefined ? config.workingHours : '';
 
   // Funções de manipulação de mudanças
   const handleAddressChange = (newValue: string) => {
@@ -60,7 +60,7 @@ export default function InformationSettings({ config, configData, onConfigChange
             <Textarea
               id="address"
               placeholder="Ex: Av. Paulista, 1000 - Bela Vista, São Paulo - SP, 01310-100"
-              value={address}
+              value={address || ""}
               onChange={(e) => handleAddressChange(e.target.value)}
               className="resize-none"
               rows={3}
@@ -74,7 +74,7 @@ export default function InformationSettings({ config, configData, onConfigChange
               id="email"
               type="email"
               placeholder="contato@imobiliaria.com.br"
-              value={email}
+              value={email || ""}
               onChange={(e) => handleEmailChange(e.target.value)}
             />
             <p className="text-sm text-gray-500">E-mail principal para contato.</p>
@@ -86,7 +86,7 @@ export default function InformationSettings({ config, configData, onConfigChange
               id="phone"
               type="tel"
               placeholder="(11) 3333-4444"
-              value={phone}
+              value={phone || ""}
               onChange={(e) => handlePhoneChange(e.target.value)}
             />
             <p className="text-sm text-gray-500">Número de telefone principal para contato.</p>
@@ -97,7 +97,7 @@ export default function InformationSettings({ config, configData, onConfigChange
             <Textarea
               id="workingHours"
               placeholder="Segunda a Sexta: 9h às 18h&#10;Sábados: 9h às 13h"
-              value={workingHours}
+              value={workingHours || ""}
               onChange={(e) => handleWorkingHoursChange(e.target.value)}
               className="resize-none"
               rows={3}
