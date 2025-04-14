@@ -523,14 +523,14 @@ export default function PropertyDetails() {
                             href={agent?.phone ? `https://wa.me/55${agent.phone.replace(/\D/g, '')}?text=Olá, tenho interesse no imóvel ${currentProperty.title} (Ref: #${currentProperty.id}).` : '#'}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="w-full py-3 px-4 rounded-full border-2 text-teal-500 font-medium flex items-center justify-center mb-3 hover:bg-teal-50 transition-colors"
+                            className="w-full py-3 px-4 rounded-full border border-solid text-teal-500 font-medium flex items-center justify-center mb-3 hover:bg-teal-50 transition-colors"
                             style={{ borderColor: primaryColor, color: primaryColor }}
                           >
                             FALE COM O CORRETOR
                           </a>
                           
                           <button 
-                            className="w-full py-3 px-4 rounded-full border-2 font-medium flex items-center justify-center mb-0 hover:bg-teal-50 transition-colors"
+                            className="w-full py-3 px-4 rounded-full border border-solid font-medium flex items-center justify-center mb-0 hover:bg-teal-50 transition-colors"
                             style={{ borderColor: primaryColor, color: primaryColor }}
                             onClick={() => {
                               // Função para agendar visita - poderia abrir um modal
@@ -551,7 +551,7 @@ export default function PropertyDetails() {
                             href={agent?.phone ? `https://wa.me/55${agent?.phone.replace(/\D/g, '')}?text=Olá, tenho interesse no imóvel ${currentProperty?.title} (Ref: #${currentProperty?.id}).` : '#'}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="w-full py-3 px-4 rounded-full border-2 border-white text-white font-medium flex items-center justify-center mb-3 hover:bg-teal-600 transition-colors"
+                            className="w-full py-3 px-4 rounded-full border border-solid border-white text-white font-medium flex items-center justify-center mb-3 hover:bg-teal-600 transition-colors"
                           >
                             ENTRAR EM CONTATO
                           </a>
