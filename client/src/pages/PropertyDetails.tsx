@@ -1,8 +1,9 @@
 import { useEffect, useState, useRef } from 'react';
 import { useParams, Link } from 'wouter';
-import { Property } from '@shared/schema';
+import { Property, WebsiteConfig } from '@shared/schema';
 import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
+import Header from '@/components/website/Header';
 
 export default function PropertyDetails() {
   const { id } = useParams();
@@ -39,7 +40,7 @@ export default function PropertyDetails() {
   }, [property, allProperties]);
 
   // Fetch website configuration
-  const { data: config } = useQuery<any>({
+  const { data: config, isLoading: isLoadingConfig } = useQuery<WebsiteConfig>({
     queryKey: ['/api/website/config']
   });
   
@@ -170,60 +171,8 @@ export default function PropertyDetails() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
-      {/* Header - Mesmo da página principal */}
-      <header className="bg-white shadow">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="flex items-center space-x-3">
-            {isLoadingProperty ? (
-              // Placeholder durante o carregamento - mantém o mesmo tamanho
-              <div className="h-12 w-28 bg-gray-100 rounded animate-pulse"></div>
-            ) : config?.logo ? (
-              <div className="h-12 min-w-[112px]">
-                <img 
-                  src={config.logo} 
-                  alt="Logo da Imobiliária" 
-                  className="h-full object-contain"
-                  loading="eager" 
-                  onLoad={(e) => {
-                    // Torna a imagem visível quando carregada
-                    (e.target as HTMLImageElement).style.opacity = "1";
-                    setLogoLoaded(true);
-                  }}
-                  style={{ opacity: 0, transition: "opacity 0.2s ease" }}
-                />
-              </div>
-            ) : (
-              <>
-                <div className="h-10 w-10 rounded bg-primary flex items-center justify-center text-white">
-                  <i className="ri-home-line text-xl"></i>
-                </div>
-                <h1 className="text-2xl font-bold text-gray-800">Imobiliária</h1>
-              </>
-            )}
-          </div>
-          <nav className="hidden md:flex space-x-8">
-            <Link href="/">
-              <span className="text-gray-700 hover:text-primary cursor-pointer">Início</span>
-            </Link>
-            <Link href="/#properties">
-              <span className="text-gray-700 hover:text-primary cursor-pointer">Imóveis</span>
-            </Link>
-            <Link href="/#about">
-              <span className="text-gray-700 hover:text-primary cursor-pointer">Sobre</span>
-            </Link>
-            <Link href="/#contact">
-              <span className="text-gray-700 hover:text-primary cursor-pointer">Contato</span>
-            </Link>
-          </nav>
-          <div>
-            <Link href="/admin">
-              <Button variant="outline" className="ml-4">
-                Área do Admin
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </header>
+      {/* Usar o componente Header */}
+      <Header config={config} isLoadingConfig={isLoadingConfig} />
 
       {/* Conteúdo principal */}
       <main className="flex-grow bg-white">
