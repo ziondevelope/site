@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { Property, WebsiteConfig } from '@shared/schema';
 import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
-import { X, MessageCircle } from 'lucide-react';
+import { X } from 'lucide-react';
 
 interface PropertyDetailsModalProps {
   propertyId: number;
@@ -473,7 +473,13 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
             <div 
               className="flex items-center shadow-lg rounded-full cursor-pointer px-8 py-3 whitespace-nowrap"
               style={{ backgroundColor: primaryColor, minWidth: '260px' }}
-              onClick={() => alert('Chat com o corretor')}
+              onClick={() => {
+                if (!agent || !currentProperty) return;
+                const phone = agent.phone?.replace(/\D/g, '') || '';
+                const message = `Olá, tenho interesse no imóvel "${currentProperty.title}" (Ref: ${currentProperty.id})`;
+                const whatsappUrl = `https://wa.me/55${phone}?text=${encodeURIComponent(message)}`;
+                window.open(whatsappUrl, '_blank');
+              }}
             >
               <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-white mr-4 flex-shrink-0">
                 {agent.avatar ? (
@@ -489,7 +495,7 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
                 )}
               </div>
               <span className="text-white font-medium flex-grow text-center">Fale com o corretor</span>
-              <MessageCircle className="w-5 h-5 text-white ml-4 flex-shrink-0" />
+              <i className="fab fa-whatsapp text-white text-xl ml-4 flex-shrink-0"></i>
             </div>
           </div>
         )}
