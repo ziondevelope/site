@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
@@ -7,6 +7,8 @@ import { apiRequest } from "@/lib/queryClient";
 export default function Home() {
   const [location, setLocation] = useLocation();
   const [showLogin, setShowLogin] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
 
   const { data: config, isLoading: isLoadingConfig } = useQuery<any>({
     queryKey: ['/api/website/config'],
@@ -22,7 +24,23 @@ export default function Home() {
     },
   });
 
-  // A navegação agora é feita diretamente pelo Link em vez da função handleAdminLogin
+  // Efeito para monitorar o scroll e mudar a aparência do header
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY;
+      if (scrollPosition > 100) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   // Definindo as fontes com base na configuração
   useEffect(() => {
@@ -49,16 +67,23 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col">
       {/* Header */}
-      <header className="bg-white shadow">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+      <header 
+        ref={headerRef}
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+          scrolled 
+            ? 'bg-white shadow-lg py-2' 
+            : 'bg-transparent py-4'
+        }`}
+      >
+        <div className="container mx-auto px-4 flex justify-between items-center">
           <div className="flex items-center">
             {/* Logo à esquerda */}
             <div className="flex items-center mr-8">
               {isLoadingConfig ? (
                 // Placeholder durante o carregamento - mantém o mesmo tamanho
-                <div className="h-16 w-36 bg-gray-100 rounded animate-pulse"></div>
+                <div className={`${scrolled ? 'h-12 w-28' : 'h-16 w-36'} bg-gray-100 rounded animate-pulse transition-all duration-300`}></div>
               ) : config?.logo ? (
-                <div className="h-16 min-w-[140px]">
+                <div className={`${scrolled ? 'h-12 min-w-[112px]' : 'h-16 min-w-[140px]'} transition-all duration-300`}>
                   <img 
                     src={config.logo} 
                     alt="Logo da Imobiliária" 
@@ -73,20 +98,20 @@ export default function Home() {
                 </div>
               ) : (
                 <>
-                  <div className="h-10 w-10 rounded bg-primary flex items-center justify-center text-white">
+                  <div className={`${scrolled ? 'h-8 w-8' : 'h-10 w-10'} rounded bg-primary flex items-center justify-center text-white transition-all duration-300`}>
                     <i className="ri-home-line text-xl"></i>
                   </div>
-                  <h1 className="text-2xl font-bold text-gray-800 ml-3">Imobiliária</h1>
+                  <h1 className={`${scrolled ? 'text-xl' : 'text-2xl'} font-bold text-gray-800 ml-3 transition-all duration-300`}>Imobiliária</h1>
                 </>
               )}
             </div>
             
             {/* Menu ao lado da logo */}
             <nav className="hidden md:flex space-x-8">
-              <a href="#home" className="text-gray-700 hover:text-primary font-medium">Início</a>
-              <a href="#properties" className="text-gray-700 hover:text-primary font-medium">Imóveis</a>
-              <a href="#about" className="text-gray-700 hover:text-primary font-medium">Sobre</a>
-              <a href="#contact" className="text-gray-700 hover:text-primary font-medium">Contato</a>
+              <a href="#home" className={`${scrolled ? 'text-gray-700' : 'text-white'} hover:text-primary font-medium transition-colors duration-300`}>Início</a>
+              <a href="#properties" className={`${scrolled ? 'text-gray-700' : 'text-white'} hover:text-primary font-medium transition-colors duration-300`}>Imóveis</a>
+              <a href="#about" className={`${scrolled ? 'text-gray-700' : 'text-white'} hover:text-primary font-medium transition-colors duration-300`}>Sobre</a>
+              <a href="#contact" className={`${scrolled ? 'text-gray-700' : 'text-white'} hover:text-primary font-medium transition-colors duration-300`}>Contato</a>
             </nav>
           </div>
           
@@ -96,18 +121,25 @@ export default function Home() {
               href={config?.phone ? `https://wa.me/${config.phone.replace(/\D/g, '')}` : "#"} 
               target="_blank" 
               rel="noopener noreferrer"
-              className="inline-flex items-center px-4 py-1 rounded-full border border-solid text-primary transition-colors hover:bg-gray-50"
+              className={`inline-flex items-center px-4 py-1 rounded-full border border-solid transition-colors hover:bg-gray-50 ${
+                scrolled ? 'text-primary' : 'text-white'
+              }`}
               style={{ 
-                borderColor: config?.primaryColor ? `${config.primaryColor}33` : 'var(--primary-33)',
-                color: config?.primaryColor || 'var(--primary)'
+                borderColor: scrolled 
+                  ? (config?.primaryColor ? `${config.primaryColor}33` : 'var(--primary-33)') 
+                  : 'rgba(255, 255, 255, 0.3)',
+                color: scrolled ? (config?.primaryColor || 'var(--primary)') : 'white'
               }}
             >
               {config?.phone && <span className="mr-2">{config.phone}</span>}
-              <i className="ri-whatsapp-line text-lg" style={{ color: "#25D366" }}></i>
+              <i className="ri-whatsapp-line text-lg" style={{ color: scrolled ? "#25D366" : "white" }}></i>
             </a>
           </div>
         </div>
       </header>
+      
+      {/* Espaçador para compensar o header fixo */}
+      <div className="h-20"></div>
 
       {/* Hero Section */}
       <section 
