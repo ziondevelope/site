@@ -361,23 +361,26 @@ export default function Home() {
                           
                           <div className="flex items-center justify-between mb-4 text-sm text-gray-600">
                             <span className="flex items-center">
-                              <i className="fas fa-ruler-combined fa-xl property-characteristics-icons_icon__q1Mde mr-1"></i>
+                              <i className="fas fa-ruler-combined fa-sm mr-1"></i>
                               {property.area}m²
                             </span>
                             <span className="flex items-center">
-                              <i className="fas fa-bed fa-xl property-characteristics-icons_icon__q1Mde mr-1"></i>
+                              <i className="fas fa-bed fa-sm mr-1"></i>
                               {property.bedrooms}
                             </span>
                             <span className="flex items-center">
-                              <i className="fas fa-shower fa-xl property-characteristics-icons_icon__q1Mde mr-1"></i>
+                              <i className="fas fa-shower fa-sm mr-1"></i>
                               {property.bathrooms}
                             </span>
                             <span className="flex items-center">
-                              <i className="lucide lucide-bath mr-1 h-4 w-4" style={{ color: config?.primaryColor || 'var(--primary)' }}></i>
+                              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1" style={{ color: config?.primaryColor || 'var(--primary)' }}>
+                                <path d="M9 6 9 12 M12 6 12 12 M15 6 15 12 M5 21 19 21 a1 1 0 0 0 1-1v-3.5a6 6 0 0 0-1.1-3.48 l-.52-.83A1 1 0 0 0 17.5 11 h-11 a1 1 0 0 0-.88.53 l-.52.83 A6 6 0 0 0 4 16.5 V20 a1 1 0 0 0 1 1Z"></path>
+                                <path d="M3 21h18"></path>
+                              </svg>
                               {property.suites || 0}
                             </span>
                             <span className="flex items-center">
-                              <i className="fas fa-car fa-xl property-characteristics-icons_icon__q1Mde mr-1"></i>
+                              <i className="fas fa-car fa-sm mr-1"></i>
                               {property.parkingSpots || 0}
                             </span>
                           </div>
