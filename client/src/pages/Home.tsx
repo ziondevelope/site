@@ -48,12 +48,23 @@ export default function Home() {
       <header className="bg-white shadow">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <div className="flex items-center space-x-3">
-            {config?.logo ? (
-              <img 
-                src={config.logo} 
-                alt="Logo da Imobiliária" 
-                className="h-12 object-contain" 
-              />
+            {isLoadingConfig ? (
+              // Placeholder durante o carregamento - mantém o mesmo tamanho
+              <div className="h-12 w-28 bg-gray-100 rounded animate-pulse"></div>
+            ) : config?.logo ? (
+              <div className="h-12 min-w-[112px]">
+                <img 
+                  src={config.logo} 
+                  alt="Logo da Imobiliária" 
+                  className="h-full object-contain"
+                  loading="eager" 
+                  onLoad={(e) => {
+                    // Torna a imagem visível quando carregada
+                    (e.target as HTMLImageElement).style.opacity = "1";
+                  }}
+                  style={{ opacity: 0, transition: "opacity 0.2s ease" }}
+                />
+              </div>
             ) : (
               <>
                 <div className="h-10 w-10 rounded bg-primary flex items-center justify-center text-white">
@@ -420,12 +431,23 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
               <div className="flex items-center space-x-3 mb-6">
-                {config?.logo ? (
-                  <img 
-                    src={config.logo} 
-                    alt="Logo da Imobiliária" 
-                    className="h-10 object-contain" 
-                  />
+                {isLoadingConfig ? (
+                  // Placeholder durante o carregamento - mantém o mesmo tamanho
+                  <div className="h-10 w-24 bg-gray-700 rounded animate-pulse"></div>
+                ) : config?.logo ? (
+                  <div className="h-10 min-w-[96px]">
+                    <img 
+                      src={config.logo} 
+                      alt="Logo da Imobiliária" 
+                      className="h-full object-contain"
+                      loading="eager" 
+                      onLoad={(e) => {
+                        // Torna a imagem visível quando carregada
+                        (e.target as HTMLImageElement).style.opacity = "1";
+                      }}
+                      style={{ opacity: 0, transition: "opacity 0.2s ease" }}
+                    />
+                  </div>
                 ) : (
                   <>
                     <div className="h-10 w-10 rounded bg-primary flex items-center justify-center text-white">
