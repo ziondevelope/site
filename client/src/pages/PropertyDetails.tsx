@@ -510,10 +510,28 @@ export default function PropertyDetails() {
                         {agent?.role === 'agent' ? 'CRECI 111111' : 'Consultor Imobiliário'}
                       </p>
                       
-                      {/* Box cinza sobre a foto e os botões */}
+                      {/* Box cinza sobre a foto e os botões com foto do corretor */}
                       <div className="w-full bg-gray-100 p-4 rounded-lg mb-3">
                         <div className="flex justify-between items-center mb-3">
-                          <h3 className="text-gray-600 font-medium">REF: #{currentProperty?.id || '000'}</h3>
+                          <div className="flex items-center">
+                            <div className="w-10 h-10 mr-2 overflow-hidden rounded-full">
+                              {agent?.avatar ? (
+                                <img 
+                                  src={agent.avatar}
+                                  alt={agent.displayName || "Corretor"} 
+                                  className="w-full h-full object-cover"
+                                />
+                              ) : (
+                                <div className="w-full h-full bg-teal-100 flex items-center justify-center text-teal-500">
+                                  <i className="ri-user-3-line"></i>
+                                </div>
+                              )}
+                            </div>
+                            <div>
+                              <p className="font-medium text-sm">{agent?.displayName || "Corretor"}</p>
+                              <p className="text-xs text-gray-500">CRECI 111111</p>
+                            </div>
+                          </div>
                           <div className="flex space-x-2">
                             <a href="#" className="text-gray-500 hover:text-teal-500 transition-colors">
                               <i className="ri-heart-line text-lg"></i>
