@@ -19,7 +19,7 @@ const leadFormSchema = insertLeadSchema.extend({
   phone: z.string().optional().nullable(),
   whatsapp: z.string().optional().nullable(),
   email: z.string().email("Email inválido").optional().nullable(),
-  businessType: z.enum(["purchase", "rent", "sale"]).optional().nullable(),
+  interestType: z.enum(["purchase", "rent", "sale"]).optional().nullable(),
   propertyType: z.enum(["apartment", "house", "commercial"]).optional().nullable(),
   region: z.string().optional().nullable(),
   priceRange: z.object({
@@ -28,6 +28,7 @@ const leadFormSchema = insertLeadSchema.extend({
   }).optional().nullable(),
   stage: z.enum(["new", "contacted", "visit", "proposal"]).default("new"),
   quickNote: z.string().optional().nullable(),
+  notes: z.string().optional().nullable(),
 });
 
 type LeadFormValues = z.infer<typeof leadFormSchema>;
@@ -271,7 +272,7 @@ export default function CRM() {
         message: data.message || data.quickNote, // Use a mensagem ou nota rápida
         status: data.stage || 'new',
         source: data.source || 'manual',
-        interestType: data.businessType, // Usar businessType como interestType
+        interestType: data.interestType, // Usar interestType do formulário
         budget: data.priceRange?.max, // Usar o valor máximo da faixa de preço como orçamento
         notes: data.quickNote, // Salvar a nota rápida
         propertyType: data.propertyType, // Adicionar tipo de propriedade
@@ -450,7 +451,7 @@ export default function CRM() {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       <FormField
                         control={form.control}
-                        name="businessType"
+                        name="interestType"
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Tipo de Negócio</FormLabel>

@@ -1,5 +1,8 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import { Progress } from "@/components/ui/progress";
+import { useQuery } from "@tanstack/react-query";
+import { FunnelStage, SalesFunnel as SalesFunnelType } from "@shared/schema";
+import { useMemo } from "react";
 
 interface SalesFunnelProps {
   isLoading: boolean;
@@ -12,8 +15,33 @@ interface SalesFunnelProps {
   };
 }
 
-export default function SalesFunnel({ isLoading, data }: SalesFunnelProps) {
-  if (isLoading || !data) {
+export default function SalesFunnel({ isLoading: initialLoading, data }: SalesFunnelProps) {
+  // Fetch all sales funnels
+  const { data: funnels, isLoading: funnelsLoading } = useQuery<SalesFunnelType[]>({
+    queryKey: ['/api/sales-funnels'],
+  });
+
+  // Get the default funnel
+  const defaultFunnel = useMemo(() => {
+    if (!funnels) return null;
+    return funnels.find(f => f.isDefault) || funnels[0];
+  }, [funnels]);
+
+  // Fetch funnel stages for the default funnel
+  const { data: stages, isLoading: stagesLoading } = useQuery<FunnelStage[]>({
+    queryKey: ['/api/funnel-stages', defaultFunnel?.id],
+    enabled: !!defaultFunnel,
+  });
+
+  // Sort stages by position
+  const sortedStages = useMemo(() => {
+    if (!stages) return [];
+    return [...stages].sort((a, b) => a.position - b.position);
+  }, [stages]);
+
+  const isLoading = initialLoading || funnelsLoading || stagesLoading;
+
+  if (isLoading || !data || !defaultFunnel || !sortedStages.length) {
     return (
       <div className="h-80 w-full space-y-6 p-4">
         {Array.from({ length: 5 }).map((_, i) => (
@@ -33,56 +61,85 @@ export default function SalesFunnel({ isLoading, data }: SalesFunnelProps) {
   const total = data.leads;
   const getPercentage = (value: number) => (total > 0 ? Math.round((value / total) * 100) : 0);
 
-  const contactsPercentage = getPercentage(data.contacts);
-  const visitsPercentage = getPercentage(data.visits);
-  const proposalsPercentage = getPercentage(data.proposals);
-  const salesPercentage = getPercentage(data.sales);
-
+  // Estimate lead counts per stage 
+  // Note: This is a simplified approach based on the counts we already have
+  const stageCounts = stagesToCounts(sortedStages, data);
+  
   return (
-    <div className="h-80 w-full relative">
-      <div className="absolute inset-0 flex items-center justify-center">
+    <div className="h-auto w-full relative">
+      <div className="absolute top-0 right-0">
+        <span className="text-sm font-medium text-gray-600">
+          Funil: {defaultFunnel.name}
+        </span>
+      </div>
+      <div className="mt-6 flex items-center justify-center">
         <div className="space-y-4 w-full px-8">
           <div>
             <div className="flex justify-between mb-1">
-              <span className="text-sm font-medium">Leads ({data.leads})</span>
+              <span className="text-sm font-medium">Total de Leads ({data.leads})</span>
               <span className="text-sm font-medium">100%</span>
             </div>
-            <Progress value={100} className="h-5" />
+            <Progress value={100} className="h-1 mb-6" />
           </div>
           
-          <div>
-            <div className="flex justify-between mb-1">
-              <span className="text-sm font-medium">Contatos ({data.contacts})</span>
-              <span className="text-sm font-medium">{contactsPercentage}%</span>
-            </div>
-            <Progress value={contactsPercentage} className="h-5" />
-          </div>
-          
-          <div>
-            <div className="flex justify-between mb-1">
-              <span className="text-sm font-medium">Visitas ({data.visits})</span>
-              <span className="text-sm font-medium">{visitsPercentage}%</span>
-            </div>
-            <Progress value={visitsPercentage} className="h-5" />
-          </div>
-          
-          <div>
-            <div className="flex justify-between mb-1">
-              <span className="text-sm font-medium">Propostas ({data.proposals})</span>
-              <span className="text-sm font-medium">{proposalsPercentage}%</span>
-            </div>
-            <Progress value={proposalsPercentage} className="h-5" />
-          </div>
-          
-          <div>
-            <div className="flex justify-between mb-1">
-              <span className="text-sm font-medium">Vendas ({data.sales})</span>
-              <span className="text-sm font-medium">{salesPercentage}%</span>
-            </div>
-            <Progress value={salesPercentage} className="h-5 bg-green-200" />
-          </div>
+          {sortedStages.map((stage, index) => {
+            const count = stageCounts[stage.id] || 0;
+            const percentage = getPercentage(count);
+            const isLastStage = index === sortedStages.length - 1;
+            
+            return (
+              <div key={stage.id}>
+                <div className="flex justify-between mb-1">
+                  <span className="text-sm font-medium">{stage.name} ({count})</span>
+                  <span className="text-sm font-medium">{percentage}%</span>
+                </div>
+                <Progress 
+                  value={percentage} 
+                  className={`h-5 ${isLastStage ? 'bg-green-200' : ''}`}
+                  style={{ 
+                    backgroundColor: percentage > 0 ? `${getStageBackgroundColor(index, sortedStages.length)}20` : undefined,
+                    color: getStageBackgroundColor(index, sortedStages.length)
+                  }}
+                />
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>
   );
+}
+
+// Helper function to get a background color based on stage position
+function getStageBackgroundColor(index: number, totalStages: number): string {
+  if (index === totalStages - 1) return "#16a34a"; // Green for last stage
+  
+  // Create a gradient from blue to green
+  const blueComponent = Math.round(10 + (80 * (totalStages - index - 1)) / totalStages);
+  return `rgb(0, ${blueComponent}, 220)`;
+}
+
+// Helper function to estimate stage counts based on existing data
+function stagesToCounts(
+  stages: FunnelStage[], 
+  data: { leads: number; contacts: number; visits: number; proposals: number; sales: number; }
+): Record<number, number> {
+  const counts: Record<number, number> = {};
+  const stageCount = stages.length;
+  
+  if (stageCount <= 1) {
+    if (stages[0]) counts[stages[0].id] = data.leads;
+    return counts;
+  }
+  
+  // This is a simplified mapping of standard funnels to custom stages
+  const standardData = [data.leads, data.contacts, data.visits, data.proposals, data.sales];
+  
+  stages.forEach((stage, index) => {
+    // Map stages based on position in funnel
+    const dataIndex = Math.min(index, standardData.length - 1);
+    counts[stage.id] = standardData[dataIndex] || 0;
+  });
+  
+  return counts;
 }
