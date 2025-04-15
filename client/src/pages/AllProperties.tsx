@@ -12,6 +12,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 import { PriceRangeSlider } from '@/components/ui/price-range-slider';
+import { useLoading } from '@/contexts/LoadingContext';
 
 // Função para obter a imagem em destaque do imóvel
 const getFeaturedImage = (property: Property): string | undefined => {
@@ -30,6 +31,7 @@ export default function AllProperties() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [location, setLocation] = useLocation();
+  const { stopLoading } = useLoading();
   
   // Estados para os filtros
   const [filters, setFilters] = useState({
@@ -75,6 +77,13 @@ export default function AllProperties() {
       return apiRequest<Property[]>('/api/properties');
     },
   });
+
+  // Parar a animação de carregamento quando os dados forem carregados
+  useEffect(() => {
+    if (!isLoadingProperties && !isLoadingConfig) {
+      stopLoading();
+    }
+  }, [isLoadingProperties, isLoadingConfig, stopLoading]);
 
   // Filtrar os imóveis de acordo com os filtros selecionados
   const filteredProperties = properties?.filter(property => {
