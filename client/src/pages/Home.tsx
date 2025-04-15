@@ -316,10 +316,11 @@ export default function Home() {
                                 loading="lazy"
                               />
                             ) : null}
-                            {/* Ícone de olho que aparece no hover */}
+                            {/* Botão Ver Detalhes que aparece no hover */}
                             <div className="eye-icon absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300">
-                              <div className="rounded-full bg-white/80 p-3 backdrop-blur-sm">
-                                <i className="fas fa-eye text-xl" style={{ color: config?.primaryColor || 'var(--primary)' }}></i>
+                              <div className="rounded-md bg-white/90 px-4 py-2 backdrop-blur-sm flex items-center gap-2">
+                                <i className="fas fa-eye text-sm" style={{ color: config?.primaryColor || 'var(--primary)' }}></i>
+                                <span className="text-sm font-medium" style={{ color: config?.primaryColor || 'var(--primary)' }}>Ver Detalhes</span>
                               </div>
                             </div>
                             <div 
