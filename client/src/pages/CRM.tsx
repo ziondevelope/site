@@ -60,6 +60,31 @@ export default function CRM() {
       status: "new",
     },
   });
+  
+  // Mutation para atualizar o status do lead
+  const updateLeadStatusMutation = useMutation({
+    mutationFn: ({ id, status }: { id: number; status: string }) => {
+      return apiRequest(`/api/leads/${id}/status`, {
+        method: 'PATCH',
+        body: JSON.stringify({ status })
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/leads'] });
+      toast({
+        title: "Status atualizado",
+        description: "O status do lead foi atualizado com sucesso.",
+      });
+    },
+    onError: (error) => {
+      console.error("Erro ao atualizar status:", error);
+      toast({
+        title: "Erro ao atualizar status",
+        description: "Não foi possível atualizar o status do lead. Tente novamente.",
+        variant: "destructive",
+      });
+    },
+  });
 
   const createLeadMutation = useMutation({
     mutationFn: (data: LeadFormValues) => {
@@ -485,7 +510,7 @@ export default function CRM() {
                                 <Select 
                                   value={lead.status}
                                   onValueChange={(value) => {
-                                    // Implementar alteração de status
+                                    updateLeadStatusMutation.mutate({ id: lead.id, status: value });
                                   }}
                                 >
                                   <SelectTrigger className="h-9">
@@ -578,7 +603,7 @@ export default function CRM() {
                       <Select 
                         value={lead.status}
                         onValueChange={(value) => {
-                          // Implementar alteração de status
+                          updateLeadStatusMutation.mutate({ id: lead.id, status: value });
                         }}
                       >
                         <SelectTrigger className="w-[140px] h-9 inline-flex">
