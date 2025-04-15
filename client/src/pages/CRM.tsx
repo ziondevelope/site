@@ -81,6 +81,32 @@ export default function CRM() {
     }
   }, [funnels, selectedFunnelId]);
   
+  // Garantir que todos os leads tenham um funil associado
+  useEffect(() => {
+    if (allLeads && funnels && funnels.length > 0) {
+      const leadsWithoutFunnel = allLeads.filter(lead => !lead.funnelId);
+      
+      if (leadsWithoutFunnel.length > 0) {
+        // Encontrar o funil padrão ou usar o primeiro da lista
+        const defaultFunnel = funnels.find(f => f.isDefault) || funnels[0];
+        
+        // Atualizar cada lead sem funil para usar o funil padrão
+        leadsWithoutFunnel.forEach(lead => {
+          apiRequest(`/api/leads/${lead.id}/funnel`, {
+            method: "PATCH",
+            body: JSON.stringify({ funnelId: defaultFunnel.id }),
+          })
+            .then(() => {
+              queryClient.invalidateQueries({ queryKey: ['/api/leads'] });
+            })
+            .catch(error => {
+              console.error("Erro ao atribuir funil padrão:", error);
+            });
+        });
+      }
+    }
+  }, [allLeads, funnels]);
+  
   // Filter leads by status on the client side (for backward compatibility)
   const newLeads = allLeads?.filter(lead => lead.status === 'new') || [];
   const contactedLeads = allLeads?.filter(lead => lead.status === 'contacted') || [];
@@ -202,6 +228,9 @@ export default function CRM() {
   const createLeadMutation = useMutation({
     mutationFn: (data: LeadFormValues) => {
       // Transformar os dados do formulário no formato esperado pelo schema do lead
+      // Encontrar o funil padrão ou usar o primeiro da lista
+      const defaultFunnel = funnels?.find(f => f.isDefault) || funnels?.[0];
+      
       const leadData = {
         name: data.name,
         email: data.email,
@@ -214,6 +243,8 @@ export default function CRM() {
         notes: data.quickNote, // Salvar a nota rápida
         propertyType: data.propertyType, // Adicionar tipo de propriedade
         region: data.region, // Adicionar região
+        // Incluir automaticamente um funil padrão para novos leads
+        funnelId: defaultFunnel?.id,
         // Outros campos específicos que não estão no schema padrão
         whatsapp: data.whatsapp,
         priceRangeMin: data.priceRange?.min,
