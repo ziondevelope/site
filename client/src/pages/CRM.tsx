@@ -41,16 +41,6 @@ export default function CRM() {
   const [openLeadId, setOpenLeadId] = useState<number | null>(null);
   const { toast } = useToast();
   const queryClient = useQueryClient();
-
-  // Quando um lead é aberto, carregar seus dados de funil
-  useEffect(() => {
-    if (openLeadId !== null && allLeads) {
-      const openLead = allLeads.find(lead => lead.id === openLeadId);
-      if (openLead && openLead.funnelId) {
-        setCurrentLeadFunnelId(openLead.funnelId);
-      }
-    }
-  }, [openLeadId, allLeads]);
   
   // Função para abrir o modal de adicionar novo lead
   const handleAddClick = () => {
@@ -114,6 +104,16 @@ export default function CRM() {
     
     return allLeads;
   }, [allLeads, selectedFunnelId, selectedStageId]);
+  
+  // Quando um lead é aberto, carregar seus dados de funil
+  useEffect(() => {
+    if (openLeadId !== null && allLeads) {
+      const openLead = allLeads.find(lead => lead.id === openLeadId);
+      if (openLead && openLead.funnelId) {
+        setCurrentLeadFunnelId(openLead.funnelId);
+      }
+    }
+  }, [openLeadId, allLeads]);
   
   const isLoading = leadsLoading || funnelsLoading || (selectedFunnelId !== null && stagesLoading);
 
