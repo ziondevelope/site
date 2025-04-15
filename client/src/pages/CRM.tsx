@@ -422,8 +422,8 @@ export default function CRM() {
                   <TableRow>
                     <TableHead className="w-[300px]">Nome / Contato</TableHead>
                     <TableHead>Interesse</TableHead>
-                    <TableHead>Origem</TableHead>
-                    <TableHead>Orçamento</TableHead>
+                    <TableHead>WhatsApp</TableHead>
+                    <TableHead>Estágio</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -461,23 +461,38 @@ export default function CRM() {
                           </span>
                         </TableCell>
                         <TableCell>
-                          <span className="capitalize">
-                            {lead.source === 'manual' ? 'Manual' :
-                            lead.source === 'website' ? 'Website' :
-                            lead.source === 'whatsapp' ? 'WhatsApp' :
-                            lead.source === 'instagram' ? 'Instagram' :
-                            lead.source === 'facebook' ? 'Facebook' :
-                            lead.source === 'indicacao' ? 'Indicação' :
-                            lead.source || 'Não informado'}
-                          </span>
+                          {(lead as any).whatsapp ? (
+                            <div className="flex items-center">
+                              <span className="mr-2">{(lead as any).whatsapp}</span>
+                              <a 
+                                href={`https://wa.me/${(lead as any).whatsapp.replace(/\D/g, '')}`} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                onClick={(e) => e.stopPropagation()}
+                                className="text-green-600 hover:text-green-700"
+                              >
+                                <i className="fab fa-whatsapp"></i>
+                              </a>
+                            </div>
+                          ) : 'Não informado'}
                         </TableCell>
-                        <TableCell className="font-medium">
-                          {lead.budget ? lead.budget.toLocaleString('pt-BR', {
-                            style: 'currency',
-                            currency: 'BRL',
-                            minimumFractionDigits: 0,
-                            maximumFractionDigits: 0,
-                          }) : 'Não informado'}
+                        <TableCell>
+                          {(() => {
+                            // Verificar se o lead tem um estágio no funil
+                            if (lead.stageId && stages) {
+                              const currentStage = stages.find(s => s.id === lead.stageId);
+                              if (currentStage) {
+                                return currentStage.name;
+                              }
+                            }
+                            
+                            // Fallback para o status legado se não tiver estágio
+                            return lead.status === 'new' ? 'Novo' :
+                                   lead.status === 'contacted' ? 'Contatado' :
+                                   lead.status === 'visit' ? 'Agendado' :
+                                   lead.status === 'proposal' ? 'Proposta' :
+                                   'Não definido';
+                          })()}
                         </TableCell>
                       </TableRow>
                     ))}
