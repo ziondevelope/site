@@ -176,16 +176,16 @@ export default function AllProperties() {
           {/* Filtros - Estilo Aprimorado */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-8 overflow-hidden">
             
-            {/* Filtros rápidos em linha */}
-            <div className="p-4 flex flex-wrap items-center gap-3">
-              {/* Campo de busca integrado */}
-              <div className="filter-item mr-1">
+            {/* Filtros com layout adaptativo para mobile */}
+            <div className="p-4">
+              {/* Campo de busca sempre em largura completa no topo para melhor usabilidade */}
+              <div className="w-full mb-4">
                 <div className="text-xs font-medium text-gray-500 mb-1 ml-1">Busca</div>
                 <div className="relative">
                   <i className="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm"></i>
                   <Input
                     id="search"
-                    className="h-10 pl-9 border-gray-300 rounded-lg min-w-[220px]"
+                    className="h-10 pl-9 border-gray-300 rounded-lg w-full"
                     placeholder="Endereço, bairro ou cidade"
                     value={filters.search}
                     onChange={(e) => setFilters({...filters, search: e.target.value})}
@@ -193,134 +193,140 @@ export default function AllProperties() {
                 </div>
               </div>
               
-              {/* Finalidade (Comprar/Alugar) */}
-              <div className="filter-item">
-                <div className="text-xs font-medium text-gray-500 mb-1 ml-1">Finalidade</div>
-                <Select 
-                  value={filters.purpose} 
-                  onValueChange={(value) => setFilters({...filters, purpose: value})}
-                >
-                  <SelectTrigger className="h-10 w-auto min-w-[140px] border-gray-300 rounded-lg">
-                    <div className="flex items-center">
-                      <i className="fas fa-home mr-2 text-gray-400 text-sm"></i>
-                      <SelectValue placeholder="Finalidade" />
-                    </div>
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all-purposes">Comprar ou Alugar</SelectItem>
-                    <SelectItem value="sale">Comprar</SelectItem>
-                    <SelectItem value="rent">Alugar</SelectItem>
-                  </SelectContent>
-                </Select>
+              {/* Grid responsivo para os filtros - quebra automaticamente em diferentes tamanhos de tela */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+                {/* Finalidade (Comprar/Alugar) */}
+                <div>
+                  <div className="text-xs font-medium text-gray-500 mb-1 ml-1">Finalidade</div>
+                  <Select 
+                    value={filters.purpose} 
+                    onValueChange={(value) => setFilters({...filters, purpose: value})}
+                  >
+                    <SelectTrigger className="h-10 w-full border-gray-300 rounded-lg">
+                      <div className="flex items-center">
+                        <i className="fas fa-home mr-2 text-gray-400 text-sm"></i>
+                        <SelectValue placeholder="Finalidade" />
+                      </div>
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all-purposes">Comprar ou Alugar</SelectItem>
+                      <SelectItem value="sale">Comprar</SelectItem>
+                      <SelectItem value="rent">Alugar</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                
+                {/* Tipo de imóvel */}
+                <div>
+                  <div className="text-xs font-medium text-gray-500 mb-1 ml-1">Tipo</div>
+                  <Select 
+                    value={filters.propertyType} 
+                    onValueChange={(value) => setFilters({...filters, propertyType: value})}
+                  >
+                    <SelectTrigger id="propertyType" className="h-10 w-full border-gray-300 rounded-lg">
+                      <div className="flex items-center">
+                        <i className="fas fa-building mr-2 text-gray-400 text-sm"></i>
+                        <SelectValue placeholder="Tipo de imóvel" />
+                      </div>
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Todos os tipos</SelectItem>
+                      <SelectItem value="house">Casa</SelectItem>
+                      <SelectItem value="apartment">Apartamento</SelectItem>
+                      <SelectItem value="condo">Condomínio</SelectItem>
+                      <SelectItem value="land">Terreno</SelectItem>
+                      <SelectItem value="commercial">Comercial</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                
+                {/* Quartos */}
+                <div>
+                  <div className="text-xs font-medium text-gray-500 mb-1 ml-1">Quartos</div>
+                  <Select 
+                    value={filters.bedrooms} 
+                    onValueChange={(value) => setFilters({...filters, bedrooms: value})}
+                  >
+                    <SelectTrigger id="bedrooms" className="h-10 w-full border-gray-300 rounded-lg">
+                      <div className="flex items-center">
+                        <i className="fas fa-bed mr-2 text-gray-400 text-sm"></i>
+                        <SelectValue placeholder="Quartos" />
+                      </div>
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="any-bedrooms">Qualquer</SelectItem>
+                      <SelectItem value="1">1+ quartos</SelectItem>
+                      <SelectItem value="2">2+ quartos</SelectItem>
+                      <SelectItem value="3">3+ quartos</SelectItem>
+                      <SelectItem value="4+">4+ quartos</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                
+                {/* Banheiros */}
+                <div>
+                  <div className="text-xs font-medium text-gray-500 mb-1 ml-1">Banheiros</div>
+                  <Select 
+                    value={filters.bathrooms} 
+                    onValueChange={(value) => setFilters({...filters, bathrooms: value})}
+                  >
+                    <SelectTrigger id="bathrooms" className="h-10 w-full border-gray-300 rounded-lg">
+                      <div className="flex items-center">
+                        <i className="fas fa-shower mr-2 text-gray-400 text-sm"></i>
+                        <SelectValue placeholder="Banheiros" />
+                      </div>
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="any-bathrooms">Qualquer</SelectItem>
+                      <SelectItem value="1">1+ banheiros</SelectItem>
+                      <SelectItem value="2">2+ banheiros</SelectItem>
+                      <SelectItem value="3">3+ banheiros</SelectItem>
+                      <SelectItem value="4+">4+ banheiros</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                
+                {/* Área */}
+                <div>
+                  <div className="text-xs font-medium text-gray-500 mb-1 ml-1">Área</div>
+                  <Select 
+                    value={filters.area} 
+                    onValueChange={(value) => setFilters({...filters, area: value})}
+                  >
+                    <SelectTrigger id="area" className="h-10 w-full border-gray-300 rounded-lg">
+                      <div className="flex items-center">
+                        <i className="fas fa-ruler-combined mr-2 text-gray-400 text-sm"></i>
+                        <SelectValue placeholder="Área" />
+                      </div>
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="any-area">Qualquer área</SelectItem>
+                      <SelectItem value="0-50">Até 50m²</SelectItem>
+                      <SelectItem value="50-100">50-100m²</SelectItem>
+                      <SelectItem value="100-150">100-150m²</SelectItem>
+                      <SelectItem value="150-200">150-200m²</SelectItem>
+                      <SelectItem value="200+">Acima de 200m²</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                
+                {/* Limpar filtros - botão estilizado - agora é parte do grid responsivo */}
+                <div className="flex items-end">
+                  <Button 
+                    variant="outline" 
+                    className="h-10 w-full border-gray-300 rounded-lg hover:bg-gray-50" 
+                    onClick={clearFilters}
+                  >
+                    <i className="fas fa-redo-alt mr-2 text-gray-500"></i>
+                    Limpar filtros
+                  </Button>
+                </div>
               </div>
-              {/* Tipo de imóvel */}
-              <div className="filter-item">
-                <div className="text-xs font-medium text-gray-500 mb-1 ml-1">Tipo</div>
-                <Select 
-                  value={filters.propertyType} 
-                  onValueChange={(value) => setFilters({...filters, propertyType: value})}
-                >
-                  <SelectTrigger id="propertyType" className="h-10 w-auto min-w-[140px] border-gray-300 rounded-lg">
-                    <div className="flex items-center">
-                      <i className="fas fa-building mr-2 text-gray-400 text-sm"></i>
-                      <SelectValue placeholder="Tipo de imóvel" />
-                    </div>
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Todos os tipos</SelectItem>
-                    <SelectItem value="house">Casa</SelectItem>
-                    <SelectItem value="apartment">Apartamento</SelectItem>
-                    <SelectItem value="condo">Condomínio</SelectItem>
-                    <SelectItem value="land">Terreno</SelectItem>
-                    <SelectItem value="commercial">Comercial</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              {/* Quartos */}
-              <div className="filter-item">
-                <div className="text-xs font-medium text-gray-500 mb-1 ml-1">Quartos</div>
-                <Select 
-                  value={filters.bedrooms} 
-                  onValueChange={(value) => setFilters({...filters, bedrooms: value})}
-                >
-                  <SelectTrigger id="bedrooms" className="h-10 w-auto min-w-[120px] border-gray-300 rounded-lg">
-                    <div className="flex items-center">
-                      <i className="fas fa-bed mr-2 text-gray-400 text-sm"></i>
-                      <SelectValue placeholder="Quartos" />
-                    </div>
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="any-bedrooms">Qualquer</SelectItem>
-                    <SelectItem value="1">1+ quartos</SelectItem>
-                    <SelectItem value="2">2+ quartos</SelectItem>
-                    <SelectItem value="3">3+ quartos</SelectItem>
-                    <SelectItem value="4+">4+ quartos</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              {/* Banheiros */}
-              <div className="filter-item">
-                <div className="text-xs font-medium text-gray-500 mb-1 ml-1">Banheiros</div>
-                <Select 
-                  value={filters.bathrooms} 
-                  onValueChange={(value) => setFilters({...filters, bathrooms: value})}
-                >
-                  <SelectTrigger id="bathrooms" className="h-10 w-auto min-w-[120px] border-gray-300 rounded-lg">
-                    <div className="flex items-center">
-                      <i className="fas fa-shower mr-2 text-gray-400 text-sm"></i>
-                      <SelectValue placeholder="Banheiros" />
-                    </div>
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="any-bathrooms">Qualquer</SelectItem>
-                    <SelectItem value="1">1+ banheiros</SelectItem>
-                    <SelectItem value="2">2+ banheiros</SelectItem>
-                    <SelectItem value="3">3+ banheiros</SelectItem>
-                    <SelectItem value="4+">4+ banheiros</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              {/* Área */}
-              <div className="filter-item">
-                <div className="text-xs font-medium text-gray-500 mb-1 ml-1">Área</div>
-                <Select 
-                  value={filters.area} 
-                  onValueChange={(value) => setFilters({...filters, area: value})}
-                >
-                  <SelectTrigger id="area" className="h-10 w-auto min-w-[120px] border-gray-300 rounded-lg">
-                    <div className="flex items-center">
-                      <i className="fas fa-ruler-combined mr-2 text-gray-400 text-sm"></i>
-                      <SelectValue placeholder="Área" />
-                    </div>
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="any-area">Qualquer área</SelectItem>
-                    <SelectItem value="0-50">Até 50m²</SelectItem>
-                    <SelectItem value="50-100">50-100m²</SelectItem>
-                    <SelectItem value="100-150">100-150m²</SelectItem>
-                    <SelectItem value="150-200">150-200m²</SelectItem>
-                    <SelectItem value="200+">Acima de 200m²</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              {/* Limpar filtros - botão estilizado */}
-              <Button 
-                variant="outline" 
-                className="h-10 ml-auto mt-auto border-gray-300 rounded-lg hover:bg-gray-50" 
-                onClick={clearFilters}
-              >
-                <i className="fas fa-redo-alt mr-2 text-gray-500"></i>
-                Limpar filtros
-              </Button>
             </div>
             
-            {/* Slider de preço com design melhorado */}
-            <div className="px-5 py-4 border-t border-gray-200">
-              <div className="flex justify-between items-center mb-2">
+            {/* Slider de preço com design responsivo */}
+            <div className="px-4 sm:px-5 py-4 border-t border-gray-200">
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-2 gap-1">
                 <div className="text-sm font-medium">Faixa de Preço</div>
                 <div className="text-sm font-bold" style={{ color: config?.primaryColor || 'var(--primary)' }}>
                   {formatPrice(filters.minPrice)} - {formatPrice(filters.maxPrice)}
@@ -338,31 +344,33 @@ export default function AllProperties() {
                   "--range-bg": config?.primaryColor || 'var(--primary)',
                 } as React.CSSProperties }
               />
-              <div className="flex justify-between text-xs text-gray-500 mt-1">
+              <div className="grid grid-cols-3 sm:flex sm:justify-between text-xs text-gray-500 mt-1">
                 <span>R$ 0</span>
-                <span>R$ 5M</span>
-                <span>R$ 10M</span>
-                <span>R$ 15M</span>
-                <span>R$ 20M</span>
+                <span className="text-center">R$ 5M</span>
+                <span className="text-right sm:text-left">R$ 10M</span>
+                <span className="hidden sm:inline">R$ 15M</span>
+                <span className="hidden sm:inline">R$ 20M</span>
               </div>
             </div>
             
-            {/* Ordenação e contagem de resultados com design aprimorado */}
-            <div className="flex justify-between items-center p-4 bg-gray-50 border-t border-gray-200">
+            {/* Ordenação e contagem de resultados com design responsivo */}
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 bg-gray-50 border-t border-gray-200 gap-3">
               <div className="text-sm flex items-center">
                 <i className="fas fa-list-ul mr-2 text-gray-500"></i>
                 <span className="font-medium">{filteredProperties?.length || 0}</span>
                 <span className="text-gray-500 ml-1">imóveis encontrados</span>
               </div>
               
-              <div className="flex items-center space-x-2">
-                <i className="fas fa-sort text-gray-500 mr-1"></i>
-                <span className="text-sm text-gray-500">Ordenar por:</span>
+              <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+                <div className="flex items-center">
+                  <i className="fas fa-sort text-gray-500 mr-1.5"></i>
+                  <span className="text-sm text-gray-500 mr-2">Ordenar por:</span>
+                </div>
                 <Select 
                   value={sortOrder}
                   onValueChange={setSortOrder}
                 >
-                  <SelectTrigger className="h-8 text-sm w-auto min-w-[150px] border-gray-300 rounded-lg">
+                  <SelectTrigger className="h-9 text-sm w-full sm:w-auto min-w-[180px] border-gray-300 rounded-lg">
                     <SelectValue placeholder="Mais relevantes" />
                   </SelectTrigger>
                   <SelectContent>
