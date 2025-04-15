@@ -306,12 +306,12 @@ export default function Home() {
                           onClick={() => openPropertyModal(property.id)}
                         >
                           {/* Property Image */}
-                          <div className="h-48 bg-gray-200 relative">
+                          <div className="h-48 bg-gray-200 relative overflow-hidden">
                             {getFeaturedImage(property) ? (
                               <img 
                                 src={getFeaturedImage(property)} 
                                 alt={property.title} 
-                                className="w-full h-full object-cover"
+                                className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
                                 loading="lazy"
                               />
                             ) : null}
