@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'wouter';
 import { WebsiteConfig } from '@shared/schema';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 
 interface HeaderProps {
   config?: WebsiteConfig;
@@ -82,13 +83,14 @@ export default function Header({ config, isLoadingConfig }: HeaderProps) {
           </nav>
         </div>
         
-        {/* Botão WhatsApp */}
-        <div>
+        {/* Botão WhatsApp apenas desktop e Menu hamburger para mobile */}
+        <div className="flex items-center">
+          {/* Botão WhatsApp - visível apenas em desktop */}
           <a 
             href={config?.phone ? `https://wa.me/${config.phone.replace(/\D/g, '')}` : "#"} 
             target="_blank" 
             rel="noopener noreferrer"
-            className={`inline-flex items-center px-4 py-1 rounded-full border border-solid transition-all hover:bg-white ${
+            className={`hidden md:inline-flex items-center px-4 py-1 rounded-full border border-solid transition-all hover:bg-white ${
               isPropertiesPage || scrolled ? 'text-primary' : 'text-white'
             }`}
             style={{ 
@@ -120,6 +122,51 @@ export default function Header({ config, isLoadingConfig }: HeaderProps) {
               }}
             ></i>
           </a>
+          
+          {/* Menu hamburger - apenas mobile */}
+          <Sheet>
+            <SheetTrigger asChild>
+              <button className="md:hidden flex items-center justify-center w-10 h-10 rounded-full bg-white bg-opacity-10 hover:bg-opacity-20 transition-all">
+                <i className={`fas fa-bars text-lg ${isPropertiesPage || scrolled ? 'text-gray-800' : 'text-white'}`}></i>
+              </button>
+            </SheetTrigger>
+            <SheetContent className="w-[280px] sm:w-[350px]">
+              <div className="py-6 flex flex-col space-y-4">
+                <h3 className="text-lg font-bold mb-2">Menu</h3>
+                <a href="/#home" className="flex items-center py-2 border-b border-gray-100">
+                  <i className="fas fa-home mr-3 text-primary"></i>
+                  <span>Início</span>
+                </a>
+                <a href="/#properties" className="flex items-center py-2 border-b border-gray-100">
+                  <i className="fas fa-star mr-3 text-primary"></i>
+                  <span>Destaques</span>
+                </a>
+                <Link href="/properties" className="flex items-center py-2 border-b border-gray-100">
+                  <i className="fas fa-building mr-3 text-primary"></i>
+                  <span>Todos Imóveis</span>
+                </Link>
+                <a href="/#about" className="flex items-center py-2 border-b border-gray-100">
+                  <i className="fas fa-info-circle mr-3 text-primary"></i>
+                  <span>Sobre</span>
+                </a>
+                <a href="/#contact" className="flex items-center py-2 border-b border-gray-100">
+                  <i className="fas fa-envelope mr-3 text-primary"></i>
+                  <span>Contato</span>
+                </a>
+                {config?.phone && (
+                  <a 
+                    href={`https://wa.me/${config.phone.replace(/\D/g, '')}`} 
+                    className="flex items-center py-2 mt-4"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <i className="fab fa-whatsapp mr-3 text-green-500"></i>
+                    <span>{config.phone}</span>
+                  </a>
+                )}
+              </div>
+            </SheetContent>
+          </Sheet>
         </div>
       </div>
     </header>
