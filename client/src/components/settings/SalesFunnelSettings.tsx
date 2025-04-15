@@ -36,6 +36,10 @@ export default function SalesFunnelSettings({}: SalesFunnelSettingsProps) {
   // Buscar os estágios do funil ativo
   const { data: stages, isLoading: isStagesLoading } = useQuery<FunnelStage[]>({
     queryKey: ['/api/funnel-stages', activeFunnelId],
+    queryFn: async () => {
+      if (!activeFunnelId) throw new Error("Nenhum funil selecionado");
+      return apiRequest(`/api/funnel-stages?funnelId=${activeFunnelId}`);
+    },
     enabled: activeFunnelId !== null,
   });
 
