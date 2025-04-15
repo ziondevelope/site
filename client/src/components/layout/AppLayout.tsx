@@ -92,14 +92,6 @@ export default function AppLayout({ children }: AppLayoutProps) {
         </header>
         
         <div className="p-4 pb-16">
-          <div className="flex justify-end mb-4">
-            {location.includes('/crm') && (
-              <Button className="bg-indigo-600 hover:bg-indigo-700 rounded-full px-5">
-                <i className="ri-add-line mr-1"></i> Cadastrar usuário
-              </Button>
-            )}
-          </div>
-          
           <div>
             {children}
           </div>
