@@ -722,27 +722,67 @@ export default function CRM() {
             if (!open) setOpenLeadId(null);
           }}
         >
-          <DialogContent className="max-w-6xl w-[90vw] max-h-[90vh] overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle className="flex justify-between items-center">
-                <div className="flex items-center">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 text-blue-600 mr-3">
-                    <i className="fas fa-user-alt"></i>
+          <DialogContent className="max-w-6xl w-[90vw] max-h-[90vh] overflow-y-auto p-0">
+            {/* Remove o header padrão e implementa um header personalizado */}
+            <div className="mt-0">
+              {/* Novo layout baseado no Agendor */}
+              {/* Barra superior com nome do lead e agente responsável */}
+              <div className="flex justify-between items-center bg-white p-6 rounded-t-lg border-b border-gray-100">
+                <div className="flex items-center space-x-4">
+                  <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600">
+                    <i className="fas fa-user text-xl"></i>
                   </div>
                   <div>
-                    <p className="font-medium">{lead.name}</p>
-                    <p className="text-sm font-normal text-gray-500">
-                      Criado em {lead.createdAt ? new Date(lead.createdAt).toLocaleDateString('pt-BR') : "Data não disponível"}
+                    <h2 className="text-xl font-bold text-gray-800">{lead.name}</h2>
+                    <p className="text-sm text-gray-500">
+                      {lead.source === 'manual' ? 'Lead manual' :
+                      lead.source === 'website' ? 'Lead do website' :
+                      lead.source === 'whatsapp' ? 'Lead do WhatsApp' :
+                      lead.source === 'instagram' ? 'Lead do Instagram' :
+                      lead.source === 'facebook' ? 'Lead do Facebook' :
+                      lead.source === 'indicacao' ? 'Lead por indicação' :
+                      'Lead'} · Criado em {lead.createdAt ? new Date(lead.createdAt).toLocaleDateString('pt-BR') : "Data não disponível"}
                     </p>
                   </div>
                 </div>
-              </DialogTitle>
-              <div className="sr-only">Detalhes do lead</div>
-            </DialogHeader>
-            
-            <div className="mt-4">
-              {/* Indicadores de progresso */}
-              <div className="relative mb-6">
+                
+                <div className="flex items-center space-x-2">
+                  <Button variant="outline" className="h-9 px-3 text-sm">
+                    <i className="fas fa-user-plus mr-2 text-blue-600"></i> 
+                    Atribuir agente
+                  </Button>
+                  <Button className="bg-blue-600 hover:bg-blue-700 h-9 px-3 text-sm">
+                    <i className="fas fa-pen mr-2"></i> 
+                    Editar lead
+                  </Button>
+                  <DialogClose className="rounded-full w-9 h-9 p-0 border border-gray-200 inline-flex items-center justify-center text-gray-500 hover:bg-gray-100">
+                    <i className="fas fa-times"></i>
+                  </DialogClose>
+                </div>
+              </div>
+              
+              {/* Abas de ação */}
+              <div className="flex bg-gray-50 border-b border-gray-100 px-6 py-3 space-x-6">
+                <div className="flex items-center space-x-2 text-blue-600 border-b-2 border-blue-600 pb-1 cursor-pointer">
+                  <i className="fas fa-clipboard-list"></i>
+                  <span className="text-sm font-medium">Detalhes</span>
+                </div>
+                <div className="flex items-center space-x-2 text-gray-500 hover:text-gray-700 pb-1 cursor-pointer">
+                  <i className="fas fa-history"></i>
+                  <span className="text-sm font-medium">Histórico</span>
+                </div>
+                <div className="flex items-center space-x-2 text-gray-500 hover:text-gray-700 pb-1 cursor-pointer">
+                  <i className="fas fa-tasks"></i>
+                  <span className="text-sm font-medium">Tarefas</span>
+                </div>
+              </div>
+              
+              {/* Indicadores de progresso (funil) - mantemos o código já melhorado */}
+              <div className="relative mb-6 bg-white px-6 py-4 border-b border-gray-100">
+                <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-3">
+                  Estágio atual no funil
+                </h3>
+                
                 {stages && stages.length > 0 ? (
                   (() => {
                     // Determinamos o funil atual
@@ -779,7 +819,7 @@ export default function CRM() {
                     };
                     
                     return (
-                      <div className="relative mb-4 pt-1 pb-2">
+                      <div className="relative mb-2 pt-1 pb-1">
                         {/* Linha conectora por baixo dos estágios */}
                         <div className="absolute left-0 right-0 h-[3px] bg-gray-200 top-[25px] -z-0"></div>
                         
