@@ -360,7 +360,7 @@ export default function Home() {
                               </span>
                             </div>
                             
-                            <div className="flex justify-between items-center">
+                            <div className="flex justify-center items-center">
                               <div 
                                 className="text-xl font-bold"
                                 style={{ color: config?.primaryColor || 'var(--primary)' }}
@@ -368,16 +368,6 @@ export default function Home() {
                                 R$ {property.price.toLocaleString('pt-BR')}
                                 {property.purpose === 'rent' && <span className="text-xs font-normal text-gray-500">/mês</span>}
                               </div>
-                              <Button 
-                                variant="outline" 
-                                size="sm" 
-                                onClick={(e) => {
-                                  e.stopPropagation(); // Impede que o clique no botão propague para o card
-                                  openPropertyModal(property.id);
-                                }}
-                              >
-                                Ver
-                              </Button>
                             </div>
                           </div>
                           
