@@ -17,7 +17,17 @@ import { apiRequest } from "@/lib/queryClient";
 const leadFormSchema = insertLeadSchema.extend({
   name: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
   phone: z.string().optional().nullable(),
+  whatsapp: z.string().optional().nullable(),
   email: z.string().email("Email inválido").optional().nullable(),
+  businessType: z.enum(["purchase", "rent", "sale"]).optional().nullable(),
+  propertyType: z.enum(["apartment", "house", "commercial"]).optional().nullable(),
+  region: z.string().optional().nullable(),
+  priceRange: z.object({
+    min: z.number().optional().nullable(),
+    max: z.number().optional().nullable(),
+  }).optional().nullable(),
+  stage: z.enum(["new", "contacted", "visit", "proposal"]).default("new"),
+  quickNote: z.string().optional().nullable(),
 });
 
 type LeadFormValues = z.infer<typeof leadFormSchema>;
@@ -52,12 +62,22 @@ export default function CRM() {
       name: "",
       email: "",
       phone: "",
+      whatsapp: "",
       message: "",
       source: "manual",
       interestType: undefined,
       budget: undefined,
       notes: "",
       status: "new",
+      businessType: undefined,
+      propertyType: undefined,
+      region: "",
+      priceRange: {
+        min: undefined,
+        max: undefined,
+      },
+      stage: "new",
+      quickNote: "",
     },
   });
   
@@ -140,22 +160,55 @@ export default function CRM() {
                   <DialogTitle>Adicionar Novo Lead</DialogTitle>
                 </DialogHeader>
                 <Form {...form}>
-                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                    <FormField
-                      control={form.control}
-                      name="name"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Nome*</FormLabel>
-                          <FormControl>
-                            <Input placeholder="Nome do lead" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                    {/* Perfil do Cliente */}
+                    <div className="space-y-4">
+                      <h3 className="text-sm font-medium text-gray-700 border-b pb-2">Perfil do Cliente</h3>
+                      
+                      <FormField
+                        control={form.control}
+                        name="name"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Nome*</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Nome do cliente" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
 
-                    <div className="grid grid-cols-2 gap-4">
+                      <div className="grid grid-cols-2 gap-4">
+                        <FormField
+                          control={form.control}
+                          name="whatsapp"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>WhatsApp</FormLabel>
+                              <FormControl>
+                                <Input placeholder="(00) 00000-0000" {...field} value={field.value || ""} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={form.control}
+                          name="phone"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Telefone</FormLabel>
+                              <FormControl>
+                                <Input placeholder="(00) 00000-0000" {...field} value={field.value || ""} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+
                       <FormField
                         control={form.control}
                         name="email"
@@ -169,135 +222,174 @@ export default function CRM() {
                           </FormItem>
                         )}
                       />
+                    </div>
+
+                    {/* Interesse do Lead */}
+                    <div className="space-y-4">
+                      <h3 className="text-sm font-medium text-gray-700 border-b pb-2">Interesse do Lead</h3>
+                      
+                      <div className="grid grid-cols-2 gap-4">
+                        <FormField
+                          control={form.control}
+                          name="businessType"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Tipo de Negócio</FormLabel>
+                              <Select
+                                onValueChange={field.onChange}
+                                defaultValue={field.value as string}
+                              >
+                                <FormControl>
+                                  <SelectTrigger>
+                                    <SelectValue placeholder="Selecione" />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  <SelectItem value="purchase">Compra</SelectItem>
+                                  <SelectItem value="rent">Aluguel</SelectItem>
+                                  <SelectItem value="sale">Venda</SelectItem>
+                                </SelectContent>
+                              </Select>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={form.control}
+                          name="propertyType"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Tipo de Imóvel</FormLabel>
+                              <Select
+                                onValueChange={field.onChange}
+                                defaultValue={field.value as string}
+                              >
+                                <FormControl>
+                                  <SelectTrigger>
+                                    <SelectValue placeholder="Selecione" />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  <SelectItem value="apartment">Apartamento</SelectItem>
+                                  <SelectItem value="house">Casa</SelectItem>
+                                  <SelectItem value="commercial">Comercial</SelectItem>
+                                </SelectContent>
+                              </Select>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
 
                       <FormField
                         control={form.control}
-                        name="phone"
+                        name="region"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Telefone</FormLabel>
+                            <FormLabel>Região de Interesse</FormLabel>
                             <FormControl>
-                              <Input placeholder="(00) 00000-0000" {...field} value={field.value || ""} />
+                              <Input placeholder="Bairro, cidade ou região" {...field} value={field.value || ""} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <div className="space-y-2">
+                        <FormLabel>Faixa de Preço (R$)</FormLabel>
+                        <div className="grid grid-cols-2 gap-4">
+                          <FormField
+                            control={form.control}
+                            name="priceRange.min"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormControl>
+                                  <Input 
+                                    type="number" 
+                                    placeholder="Valor mínimo" 
+                                    {...field}
+                                    onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : undefined)}
+                                    value={field.value || ""}
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          
+                          <FormField
+                            control={form.control}
+                            name="priceRange.max"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormControl>
+                                  <Input 
+                                    type="number" 
+                                    placeholder="Valor máximo" 
+                                    {...field}
+                                    onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : undefined)}
+                                    value={field.value || ""}
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Funil de Vendas */}
+                    <div className="space-y-4">
+                      <h3 className="text-sm font-medium text-gray-700 border-b pb-2">Funil de Vendas</h3>
+                      
+                      <FormField
+                        control={form.control}
+                        name="stage"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Estágio</FormLabel>
+                            <Select
+                              onValueChange={field.onChange}
+                              defaultValue={field.value}
+                            >
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Selecione o estágio" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectItem value="new">Contato</SelectItem>
+                                <SelectItem value="contacted">Envio de proposta</SelectItem>
+                                <SelectItem value="visit">Follow-up</SelectItem>
+                                <SelectItem value="proposal">Fechamento</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="quickNote"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Nota Rápida</FormLabel>
+                            <FormControl>
+                              <Textarea 
+                                placeholder="Adicione uma nota rápida sobre este lead" 
+                                className="resize-none h-24" 
+                                {...field}
+                                value={field.value || ""}
+                              />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
                         )}
                       />
                     </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                      <FormField
-                        control={form.control}
-                        name="source"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Origem</FormLabel>
-                            <Select
-                              onValueChange={field.onChange}
-                              defaultValue={field.value}
-                            >
-                              <FormControl>
-                                <SelectTrigger>
-                                  <SelectValue placeholder="Selecione a origem" />
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent>
-                                <SelectItem value="manual">Manual</SelectItem>
-                                <SelectItem value="website">Website</SelectItem>
-                                <SelectItem value="whatsapp">WhatsApp</SelectItem>
-                                <SelectItem value="instagram">Instagram</SelectItem>
-                                <SelectItem value="facebook">Facebook</SelectItem>
-                                <SelectItem value="indicacao">Indicação</SelectItem>
-                              </SelectContent>
-                            </Select>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={form.control}
-                        name="interestType"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Tipo de Interesse</FormLabel>
-                            <Select
-                              onValueChange={field.onChange}
-                              defaultValue={field.value}
-                            >
-                              <FormControl>
-                                <SelectTrigger>
-                                  <SelectValue placeholder="Selecione" />
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent>
-                                <SelectItem value="purchase">Compra</SelectItem>
-                                <SelectItem value="rent">Aluguel</SelectItem>
-                              </SelectContent>
-                            </Select>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-
-                    <FormField
-                      control={form.control}
-                      name="budget"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Orçamento (R$)</FormLabel>
-                          <FormControl>
-                            <Input 
-                              type="number" 
-                              placeholder="Informe o orçamento" 
-                              {...field}
-                              onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : undefined)}
-                              value={field.value || ""}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="message"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Mensagem</FormLabel>
-                          <FormControl>
-                            <Textarea 
-                              placeholder="Mensagem do lead" 
-                              className="resize-none" 
-                              {...field}
-                              value={field.value || ""}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="notes"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Observações</FormLabel>
-                          <FormControl>
-                            <Textarea 
-                              placeholder="Observações internas" 
-                              className="resize-none" 
-                              {...field}
-                              value={field.value || ""}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
 
                     <div className="flex justify-end space-x-2 pt-4">
                       <Button
