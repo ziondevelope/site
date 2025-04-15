@@ -9,7 +9,8 @@
 }
 
 /* Usa a estrutura do card para aplicar o efeito apenas no card atual */
-.carousel-item:hover .property-image {
+.carousel-item:hover .property-image,
+.property-card:hover .property-image {
   transform: scale(1.15);
 }
 
@@ -19,16 +20,19 @@
 }
 
 /* Mostra o ícone de olho no hover */
-.carousel-item:hover .eye-icon {
+.carousel-item:hover .eye-icon,
+.property-card:hover .eye-icon {
   opacity: 1;
 }
 
 /* Efeito de crescimento do ícone de olho */
-.carousel-item .eye-icon div {
+.carousel-item .eye-icon div,
+.property-card .eye-icon div {
   transform: scale(0.8);
   transition: transform 0.3s ease;
 }
 
-.carousel-item:hover .eye-icon div {
+.carousel-item:hover .eye-icon div,
+.property-card:hover .eye-icon div {
   transform: scale(1);
 }

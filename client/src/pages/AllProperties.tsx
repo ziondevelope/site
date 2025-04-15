@@ -13,6 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Label } from '@/components/ui/label';
 import { PriceRangeSlider } from '@/components/ui/price-range-slider';
 import { useLoading } from '@/contexts/LoadingContext';
+import '@/styles/hover-effects.css';
 
 // Função para obter a imagem em destaque do imóvel
 const getFeaturedImage = (property: Property): string | undefined => {
