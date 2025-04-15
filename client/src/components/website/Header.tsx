@@ -176,14 +176,14 @@ export default function Header({ config, isLoadingConfig }: HeaderProps) {
                 </div>
                 
                 {/* Links do menu com efeito hover */}
-                <div className="px-6 py-8 flex flex-col space-y-2" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                <div className="px-6 py-8 flex flex-col space-y-3" style={{ fontFamily: 'Poppins, sans-serif' }}>
                   <a 
                     href="/#home" 
-                    className="flex items-center py-3 px-4 rounded-md transition-all hover:bg-gray-50 relative overflow-hidden group"
+                    className="flex items-center py-4 px-4 rounded-md transition-all hover:bg-gray-50 relative overflow-hidden group"
                   >
                     <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary opacity-0 group-hover:opacity-100 transition-opacity" style={{ backgroundColor: config?.primaryColor || 'var(--primary)' }}></div>
                     <i className="fas fa-home text-gray-400 w-6 group-hover:text-primary transition-colors" style={{ color: 'rgba(0,0,0,0.3)' }}></i>
-                    <span className="ml-3 text-gray-700 font-medium text-[15px] group-hover:text-primary transition-colors">Início</span>
+                    <span className="ml-3 text-gray-700 font-medium text-[17px] group-hover:text-primary transition-colors">Início</span>
                   </a>
                   
                   <a 
@@ -192,7 +192,7 @@ export default function Header({ config, isLoadingConfig }: HeaderProps) {
                   >
                     <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary opacity-0 group-hover:opacity-100 transition-opacity" style={{ backgroundColor: config?.primaryColor || 'var(--primary)' }}></div>
                     <i className="fas fa-star text-gray-400 w-6 group-hover:text-primary transition-colors" style={{ color: 'rgba(0,0,0,0.3)' }}></i>
-                    <span className="ml-3 text-gray-700 font-medium text-[15px] group-hover:text-primary transition-colors">Destaques</span>
+                    <span className="ml-3 text-gray-700 font-medium text-[17px] group-hover:text-primary transition-colors">Destaques</span>
                   </a>
                   
                   <Link 
@@ -201,7 +201,7 @@ export default function Header({ config, isLoadingConfig }: HeaderProps) {
                   >
                     <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary opacity-0 group-hover:opacity-100 transition-opacity" style={{ backgroundColor: config?.primaryColor || 'var(--primary)' }}></div>
                     <i className="fas fa-building text-gray-400 w-6 group-hover:text-primary transition-colors" style={{ color: 'rgba(0,0,0,0.3)' }}></i>
-                    <span className="ml-3 text-gray-700 font-medium text-[15px] group-hover:text-primary transition-colors">Todos Imóveis</span>
+                    <span className="ml-3 text-gray-700 font-medium text-[17px] group-hover:text-primary transition-colors">Todos Imóveis</span>
                   </Link>
                   
                   <a 
@@ -210,7 +210,7 @@ export default function Header({ config, isLoadingConfig }: HeaderProps) {
                   >
                     <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary opacity-0 group-hover:opacity-100 transition-opacity" style={{ backgroundColor: config?.primaryColor || 'var(--primary)' }}></div>
                     <i className="fas fa-info-circle text-gray-400 w-6 group-hover:text-primary transition-colors" style={{ color: 'rgba(0,0,0,0.3)' }}></i>
-                    <span className="ml-3 text-gray-700 font-medium text-[15px] group-hover:text-primary transition-colors">Sobre</span>
+                    <span className="ml-3 text-gray-700 font-medium text-[17px] group-hover:text-primary transition-colors">Sobre</span>
                   </a>
                   
                   <a 
@@ -219,7 +219,7 @@ export default function Header({ config, isLoadingConfig }: HeaderProps) {
                   >
                     <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary opacity-0 group-hover:opacity-100 transition-opacity" style={{ backgroundColor: config?.primaryColor || 'var(--primary)' }}></div>
                     <i className="fas fa-envelope text-gray-400 w-6 group-hover:text-primary transition-colors" style={{ color: 'rgba(0,0,0,0.3)' }}></i>
-                    <span className="ml-3 text-gray-700 font-medium text-[15px] group-hover:text-primary transition-colors">Contato</span>
+                    <span className="ml-3 text-gray-700 font-medium text-[17px] group-hover:text-primary transition-colors">Contato</span>
                   </a>
                 </div>
                 
@@ -234,7 +234,7 @@ export default function Header({ config, isLoadingConfig }: HeaderProps) {
                       style={{ backgroundColor: config?.primaryColor || 'var(--primary)' }}
                     >
                       <i className="fab fa-whatsapp mr-2 text-lg"></i>
-                      <span className="font-medium tracking-wide" style={{ fontFamily: 'Poppins, sans-serif', letterSpacing: '0.5px', fontSize: '14px' }}>FALAR COM CORRETOR</span>
+                      <span className="font-medium tracking-wide" style={{ fontFamily: 'Poppins, sans-serif', letterSpacing: '0.5px', fontSize: '16px' }}>FALAR COM CORRETOR</span>
                     </a>
                   </div>
                 )}
