@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { InsertLead, Lead, insertLeadSchema } from "@shared/schema";
 import { useForm } from "react-hook-form";
@@ -157,245 +157,181 @@ export default function CRM() {
               </DialogTrigger>
               <DialogContent className="sm:max-w-[500px]">
                 <DialogHeader>
-                  <DialogTitle>Adicionar Novo Lead</DialogTitle>
+                  <DialogTitle>Consultoria Marketing</DialogTitle>
+                  <DialogDescription className="text-gray-500">Período indefinido</DialogDescription>
                 </DialogHeader>
                 <Form {...form}>
                   <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                    {/* Perfil do Cliente */}
-                    <div className="space-y-4">
-                      <h3 className="text-sm font-medium text-gray-700 border-b pb-2">Perfil do Cliente</h3>
-                      
+                    {/* Informações principais */}
+                    <div className="flex items-center space-x-2 mt-2">
+                      <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-gray-600">
+                        <i className="fas fa-user-alt text-xs"></i>
+                      </div>
                       <FormField
                         control={form.control}
                         name="name"
                         render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Nome*</FormLabel>
-                            <FormControl>
-                              <Input placeholder="Nome do cliente" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
+                          <Input 
+                            placeholder="Nome do cliente" 
+                            className="font-medium"
+                            {...field}
+                          />
                         )}
                       />
-
-                      <div className="grid grid-cols-2 gap-4">
-                        <FormField
-                          control={form.control}
-                          name="whatsapp"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>WhatsApp</FormLabel>
-                              <FormControl>
-                                <Input placeholder="(00) 00000-0000" {...field} value={field.value || ""} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-
-                        <FormField
-                          control={form.control}
-                          name="phone"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Telefone</FormLabel>
-                              <FormControl>
-                                <Input placeholder="(00) 00000-0000" {...field} value={field.value || ""} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
+                    </div>
+                    
+                    {/* Estágios do funil */}
+                    <div className="w-full flex rounded-md overflow-hidden mt-2 mb-3">
+                      <div className="bg-indigo-600 text-white text-center py-3 flex-1 font-medium">
+                        Contato
                       </div>
-
+                      <div className="bg-gray-200 text-gray-600 text-center py-3 flex-1 font-medium">
+                        Envio de proposta
+                      </div>
+                      <div className="bg-gray-200 text-gray-600 text-center py-3 flex-1 font-medium">
+                        Follow-up
+                      </div>
+                      <div className="bg-gray-200 text-gray-600 text-center py-3 flex-1 font-medium">
+                        Fechamento
+                      </div>
+                    </div>
+                    
+                    {/* Ações principais */}
+                    <div className="grid grid-cols-2 gap-3">
+                      <Button
+                        type="button" 
+                        variant="outline"
+                        className="border-gray-300 flex items-center justify-center space-x-2 py-5"
+                      >
+                        <i className="far fa-sticky-note text-gray-600 mr-2"></i>
+                        <span>Nota</span>
+                      </Button>
+                      <Button
+                        type="button" 
+                        variant="outline"
+                        className="border-gray-300 flex items-center justify-center space-x-2 py-5"
+                      >
+                        <i className="far fa-envelope text-gray-600 mr-2"></i>
+                        <span>E-mail</span>
+                      </Button>
+                      
+                      <Button
+                        type="button" 
+                        variant="outline"
+                        className="border-gray-300 flex items-center justify-center space-x-2 py-5"
+                      >
+                        <i className="fas fa-phone-alt text-gray-600 mr-2"></i>
+                        <span>Ligação</span>
+                      </Button>
+                      <Button
+                        type="button" 
+                        variant="outline"
+                        className="border-gray-300 flex items-center justify-center space-x-2 py-5"
+                      >
+                        <i className="fab fa-whatsapp text-gray-600 mr-2"></i>
+                        <span>WhatsApp</span>
+                      </Button>
+                      
+                      <Button
+                        type="button" 
+                        variant="outline"
+                        className="border-gray-300 flex items-center justify-center space-x-2 py-5"
+                      >
+                        <i className="far fa-file-alt text-gray-600 mr-2"></i>
+                        <span>Proposta</span>
+                      </Button>
+                      <Button
+                        type="button" 
+                        variant="outline"
+                        className="border-gray-300 flex items-center justify-center space-x-2 py-5"
+                      >
+                        <i className="fas fa-handshake text-gray-600 mr-2"></i>
+                        <span>Reunião</span>
+                      </Button>
+                    </div>
+                    
+                    {/* Campo de anotação */}
+                    <div className="mt-4">
+                      <FormField
+                        control={form.control}
+                        name="quickNote"
+                        render={({ field }) => (
+                          <Textarea 
+                            placeholder="O que foi feito e qual o próximo passo?" 
+                            className="resize-none min-h-20 border-gray-300" 
+                            {...field}
+                            value={field.value || ""}
+                          />
+                        )}
+                      />
+                    </div>
+                    
+                    {/* Seções escondidas mas mantidas para armazenar dados */}
+                    <div className="hidden">
                       <FormField
                         control={form.control}
                         name="email"
                         render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Email</FormLabel>
-                            <FormControl>
-                              <Input placeholder="email@exemplo.com" {...field} value={field.value || ""} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
+                          <Input {...field} value={field.value || ""} />
                         )}
                       />
-                    </div>
-
-                    {/* Interesse do Lead */}
-                    <div className="space-y-4">
-                      <h3 className="text-sm font-medium text-gray-700 border-b pb-2">Interesse do Lead</h3>
                       
-                      <div className="grid grid-cols-2 gap-4">
-                        <FormField
-                          control={form.control}
-                          name="businessType"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Tipo de Negócio</FormLabel>
-                              <Select
-                                onValueChange={field.onChange}
-                                defaultValue={field.value as string}
-                              >
-                                <FormControl>
-                                  <SelectTrigger>
-                                    <SelectValue placeholder="Selecione" />
-                                  </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                  <SelectItem value="purchase">Compra</SelectItem>
-                                  <SelectItem value="rent">Aluguel</SelectItem>
-                                  <SelectItem value="sale">Venda</SelectItem>
-                                </SelectContent>
-                              </Select>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-
-                        <FormField
-                          control={form.control}
-                          name="propertyType"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Tipo de Imóvel</FormLabel>
-                              <Select
-                                onValueChange={field.onChange}
-                                defaultValue={field.value as string}
-                              >
-                                <FormControl>
-                                  <SelectTrigger>
-                                    <SelectValue placeholder="Selecione" />
-                                  </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                  <SelectItem value="apartment">Apartamento</SelectItem>
-                                  <SelectItem value="house">Casa</SelectItem>
-                                  <SelectItem value="commercial">Comercial</SelectItem>
-                                </SelectContent>
-                              </Select>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-
+                      <FormField
+                        control={form.control}
+                        name="whatsapp"
+                        render={({ field }) => (
+                          <Input {...field} value={field.value || ""} />
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="phone"
+                        render={({ field }) => (
+                          <Input {...field} value={field.value || ""} />
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="businessType"
+                        render={({ field }) => (
+                          <Input {...field} value={field.value || ""} />
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="propertyType"
+                        render={({ field }) => (
+                          <Input {...field} value={field.value || ""} />
+                        )}
+                      />
+                      
                       <FormField
                         control={form.control}
                         name="region"
                         render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Região de Interesse</FormLabel>
-                            <FormControl>
-                              <Input placeholder="Bairro, cidade ou região" {...field} value={field.value || ""} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
+                          <Input {...field} value={field.value || ""} />
                         )}
                       />
-
-                      <div className="space-y-2">
-                        <FormLabel>Faixa de Preço (R$)</FormLabel>
-                        <div className="grid grid-cols-2 gap-4">
-                          <FormField
-                            control={form.control}
-                            name="priceRange.min"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormControl>
-                                  <Input 
-                                    type="number" 
-                                    placeholder="Valor mínimo" 
-                                    {...field}
-                                    onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : undefined)}
-                                    value={field.value || ""}
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          
-                          <FormField
-                            control={form.control}
-                            name="priceRange.max"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormControl>
-                                  <Input 
-                                    type="number" 
-                                    placeholder="Valor máximo" 
-                                    {...field}
-                                    onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : undefined)}
-                                    value={field.value || ""}
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Funil de Vendas */}
-                    <div className="space-y-4">
-                      <h3 className="text-sm font-medium text-gray-700 border-b pb-2">Funil de Vendas</h3>
                       
                       <FormField
                         control={form.control}
                         name="stage"
                         render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Estágio</FormLabel>
-                            <Select
-                              onValueChange={field.onChange}
-                              defaultValue={field.value}
-                            >
-                              <FormControl>
-                                <SelectTrigger>
-                                  <SelectValue placeholder="Selecione o estágio" />
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent>
-                                <SelectItem value="new">Contato</SelectItem>
-                                <SelectItem value="contacted">Envio de proposta</SelectItem>
-                                <SelectItem value="visit">Follow-up</SelectItem>
-                                <SelectItem value="proposal">Fechamento</SelectItem>
-                              </SelectContent>
-                            </Select>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      
-                      <FormField
-                        control={form.control}
-                        name="quickNote"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Nota Rápida</FormLabel>
-                            <FormControl>
-                              <Textarea 
-                                placeholder="Adicione uma nota rápida sobre este lead" 
-                                className="resize-none h-24" 
-                                {...field}
-                                value={field.value || ""}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
+                          <Input {...field} value={field.value || "new"} />
                         )}
                       />
                     </div>
-
-                    <div className="flex justify-end space-x-2 pt-4">
+                    
+                    {/* Ações do formulário */}
+                    <div className="flex justify-end space-x-2 pt-4 border-t mt-4">
                       <Button
                         variant="outline"
                         type="button"
                         onClick={() => setIsAddLeadOpen(false)}
+                        className="border-gray-300"
                       >
                         Cancelar
                       </Button>
