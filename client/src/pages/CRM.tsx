@@ -591,7 +591,57 @@ export default function CRM() {
                           </DialogHeader>
                           
                           <div className="grid grid-cols-3 gap-6 mt-2">
-                            {/* Coluna da esquerda com funil de vendas */}
+                            {/* Coluna da esquerda com informações de contato */}
+                            <div className="bg-white p-6 rounded border border-gray-200">
+                              <h3 className="text-base font-semibold mb-4">Informações de Contato</h3>
+                              
+                              <div className="space-y-4">
+                                <div>
+                                  <h4 className="text-sm font-medium text-gray-700 mb-1">Nome</h4>
+                                  <p className="text-gray-900">{lead.name}</p>
+                                </div>
+                                
+                                <div>
+                                  <h4 className="text-sm font-medium text-gray-700 mb-1">Email</h4>
+                                  <p className="text-gray-900">{lead.email || "Não informado"}</p>
+                                </div>
+                                
+                                <div>
+                                  <h4 className="text-sm font-medium text-gray-700 mb-1">Telefone</h4>
+                                  <p className="text-gray-900">{lead.phone || "Não informado"}</p>
+                                </div>
+
+                                {/* Esconder o campo WhatsApp para evitar erros de tipo */}
+                                <div>
+                                  <h4 className="text-sm font-medium text-gray-700 mb-1">WhatsApp</h4>
+                                  <p className="text-gray-900">{"Não informado"}</p>
+                                </div>
+                              </div>
+                              
+                              <div className="mt-4">
+                                <h3 className="text-base font-semibold my-4">Campos Personalizados</h3>
+                                <div className="space-y-4">
+                                  <div>
+                                    <h4 className="text-sm font-medium text-gray-700 mb-1">Valor</h4>
+                                    <p className="text-gray-900">
+                                      {lead.budget ? lead.budget.toLocaleString('pt-BR', {
+                                        style: 'currency',
+                                        currency: 'BRL',
+                                        minimumFractionDigits: 0,
+                                        maximumFractionDigits: 0,
+                                      }) : 'R$ 0,00'}
+                                    </p>
+                                  </div>
+                                  
+                                  <div>
+                                    <h4 className="text-sm font-medium text-gray-700 mb-1">Data Prevista</h4>
+                                    <p className="text-gray-900">Não informado</p>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            
+                            {/* Coluna central com funil de vendas */}
                             <div className="bg-white p-6 rounded border border-gray-200">
                               <div className="flex justify-between items-center mb-4">
                                 <h3 className="text-base font-semibold">Funil de Vendas</h3>
@@ -669,57 +719,44 @@ export default function CRM() {
                               </div>
                             </div>
                             
-                            {/* Coluna central com informações de contato */}
-                            <div className="bg-white p-6 rounded border border-gray-200">
-                              <h3 className="text-base font-semibold mb-4">Informações de Contato</h3>
-                              
-                              <div className="space-y-4">
-                                <div>
-                                  <h4 className="text-sm font-medium text-gray-700 mb-1">Nome</h4>
-                                  <p className="text-gray-900">{lead.name}</p>
-                                </div>
-                                
-                                <div>
-                                  <h4 className="text-sm font-medium text-gray-700 mb-1">Email</h4>
-                                  <p className="text-gray-900">{lead.email || "Não informado"}</p>
-                                </div>
-                                
-                                <div>
-                                  <h4 className="text-sm font-medium text-gray-700 mb-1">Telefone</h4>
-                                  <p className="text-gray-900">{lead.phone || "Não informado"}</p>
-                                </div>
-
-                                {/* Esconder o campo WhatsApp para evitar erros de tipo */}
-                                <div>
-                                  <h4 className="text-sm font-medium text-gray-700 mb-1">WhatsApp</h4>
-                                  <p className="text-gray-900">{"Não informado"}</p>
+                            {/* Coluna da direita com ações */}
+                            <div className="space-y-6">
+                              <div className="bg-white p-6 rounded border border-gray-200">
+                                <h3 className="text-base font-semibold mb-4">Ações</h3>
+                                <div className="space-y-2">
+                                  <Button variant="outline" className="w-full justify-start text-gray-700 border-gray-300">
+                                    <i className="fas fa-pen mr-2 text-gray-500"></i> Editar Lead
+                                  </Button>
+                                  <Button variant="outline" className="w-full justify-start text-gray-700 border-gray-300">
+                                    <i className="far fa-calendar-alt mr-2 text-gray-500"></i> Agendar Atividade
+                                  </Button>
+                                  <Button variant="outline" className="w-full justify-start text-red-600 hover:text-red-700 border-gray-300">
+                                    <i className="fas fa-trash-alt mr-2"></i> Excluir Lead
+                                  </Button>
                                 </div>
                               </div>
                               
-                              <div className="mt-4">
-                                <h3 className="text-base font-semibold my-4">Campos Personalizados</h3>
-                                <div className="space-y-4">
-                                  <div>
-                                    <h4 className="text-sm font-medium text-gray-700 mb-1">Valor</h4>
-                                    <p className="text-gray-900">
-                                      {lead.budget ? lead.budget.toLocaleString('pt-BR', {
-                                        style: 'currency',
-                                        currency: 'BRL',
-                                        minimumFractionDigits: 0,
-                                        maximumFractionDigits: 0,
-                                      }) : 'R$ 0,00'}
-                                    </p>
-                                  </div>
-                                  
-                                  <div>
-                                    <h4 className="text-sm font-medium text-gray-700 mb-1">Data Prevista</h4>
-                                    <p className="text-gray-900">Não informado</p>
-                                  </div>
+                              <div className="bg-white p-6 rounded border border-gray-200">
+                                <h3 className="text-base font-semibold mb-4">Próximas Atividades</h3>
+                                <div className="flex flex-col items-center justify-center py-4">
+                                  <p className="text-gray-500 text-sm mb-4">Nenhuma atividade agendada.</p>
+                                  <Button variant="outline" className="border-dashed border-gray-300 text-gray-600">
+                                    <i className="fas fa-plus mr-2"></i> Agendar Nova Atividade
+                                  </Button>
                                 </div>
                               </div>
                               
-                              <div className="mt-4">
-                                <h3 className="text-base font-semibold my-4">Interesse do Lead</h3>
+                              {lead.message && (
+                                <div className="bg-white p-6 rounded border border-gray-200">
+                                  <h3 className="text-base font-semibold mb-4">Mensagem Original</h3>
+                                  <div className="bg-gray-50 p-3 rounded border border-gray-200 text-gray-700">
+                                    {lead.message}
+                                  </div>
+                                </div>
+                              )}
+                              
+                              <div className="bg-white p-6 rounded border border-gray-200">
+                                <h3 className="text-base font-semibold mb-4">Interesse do Lead</h3>
                                 <div className="space-y-4">
                                   <div>
                                     <h4 className="text-sm font-medium text-gray-700 mb-1">Tipo de Negócio</h4>
@@ -766,43 +803,6 @@ export default function CRM() {
                                   </div>
                                 </div>
                               </div>
-                            </div>
-                            
-                            {/* Coluna da direita com ações */}
-                            <div className="space-y-6">
-                              <div className="bg-white p-6 rounded border border-gray-200">
-                                <h3 className="text-base font-semibold mb-4">Ações</h3>
-                                <div className="space-y-2">
-                                  <Button variant="outline" className="w-full justify-start text-gray-700 border-gray-300">
-                                    <i className="fas fa-pen mr-2 text-gray-500"></i> Editar Lead
-                                  </Button>
-                                  <Button variant="outline" className="w-full justify-start text-gray-700 border-gray-300">
-                                    <i className="far fa-calendar-alt mr-2 text-gray-500"></i> Agendar Atividade
-                                  </Button>
-                                  <Button variant="outline" className="w-full justify-start text-red-600 hover:text-red-700 border-gray-300">
-                                    <i className="fas fa-trash-alt mr-2"></i> Excluir Lead
-                                  </Button>
-                                </div>
-                              </div>
-                              
-                              <div className="bg-white p-6 rounded border border-gray-200">
-                                <h3 className="text-base font-semibold mb-4">Próximas Atividades</h3>
-                                <div className="flex flex-col items-center justify-center py-4">
-                                  <p className="text-gray-500 text-sm mb-4">Nenhuma atividade agendada.</p>
-                                  <Button variant="outline" className="border-dashed border-gray-300 text-gray-600">
-                                    <i className="fas fa-plus mr-2"></i> Agendar Nova Atividade
-                                  </Button>
-                                </div>
-                              </div>
-                              
-                              {lead.message && (
-                                <div className="bg-white p-6 rounded border border-gray-200">
-                                  <h3 className="text-base font-semibold mb-4">Mensagem Original</h3>
-                                  <div className="bg-gray-50 p-3 rounded border border-gray-200 text-gray-700">
-                                    {lead.message}
-                                  </div>
-                                </div>
-                              )}
                             </div>
                           </div>
                         </DialogContent>
