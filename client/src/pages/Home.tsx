@@ -363,7 +363,10 @@ export default function Home() {
                               <Button 
                                 variant="outline" 
                                 size="sm" 
-                                onClick={() => openPropertyModal(property.id)}
+                                onClick={(e) => {
+                                  e.stopPropagation(); // Evita que o clique propague para o card
+                                  openPropertyModal(property.id);
+                                }}
                               >
                                 Ver
                               </Button>

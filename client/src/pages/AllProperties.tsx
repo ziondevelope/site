@@ -428,7 +428,8 @@ export default function AllProperties() {
                   {filteredProperties.map((property) => (
                     <div 
                       key={property.id} 
-                      className="h-full bg-white rounded-lg border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-lg"
+                      className="h-full bg-white rounded-lg border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-lg cursor-pointer"
+                      onClick={() => openPropertyModal(property.id)}
                     >
                       {/* Imagem do imóvel */}
                       <div className="h-48 bg-gray-200 relative">
@@ -496,7 +497,10 @@ export default function AllProperties() {
                           <Button 
                             variant="outline" 
                             size="sm" 
-                            onClick={() => openPropertyModal(property.id)}
+                            onClick={(e) => {
+                              e.stopPropagation(); // Evita que o clique propague para o card
+                              openPropertyModal(property.id);
+                            }}
                           >
                             Ver
                           </Button>
