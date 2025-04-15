@@ -171,7 +171,6 @@ export default function AllProperties() {
       {/* Main Content */}
       <main className="flex-grow pt-24 pb-16">
         <div className="container mx-auto px-4">
-          <h1 className="text-3xl font-bold mb-8">Todos os Imóveis</h1>
           
           {/* Filtros - Estilo Aprimorado */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-8 overflow-hidden">
