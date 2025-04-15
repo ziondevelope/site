@@ -999,9 +999,14 @@ export class FirebaseStorage implements IStorage {
   async getFunnelStagesByFunnelId(funnelId: number): Promise<FunnelStage[]> {
     try {
       const stagesRef = collection(db, 'funnel_stages');
-      const q = query(stagesRef, where('funnelId', '==', funnelId), orderBy('position', 'asc'));
+      
+      // Modificado para buscar primeiro por funnelId sem ordenação para evitar necessidade de índice composto
+      const q = query(stagesRef, where('funnelId', '==', funnelId));
       const stagesSnapshot = await getDocs(q);
-      return stagesSnapshot.docs.map(doc => doc.data() as FunnelStage);
+      
+      // Ordenamos manualmente os resultados
+      const stages = stagesSnapshot.docs.map(doc => doc.data() as FunnelStage);
+      return stages.sort((a, b) => a.position - b.position);
     } catch (error) {
       console.error('Error fetching funnel stages:', error);
       return [];
@@ -1144,14 +1149,15 @@ export class FirebaseStorage implements IStorage {
       
       await batch.commit();
       
-      // Retornar os estágios atualizados
+      // Retornar os estágios atualizados (sem usar orderBy para evitar necessidade de índice composto)
       const updatedQ = query(
         stagesRef, 
-        where('funnelId', '==', funnelId),
-        orderBy('position', 'asc')
+        where('funnelId', '==', funnelId)
       );
       const updatedSnapshot = await getDocs(updatedQ);
-      return updatedSnapshot.docs.map(doc => doc.data() as FunnelStage);
+      const stages = updatedSnapshot.docs.map(doc => doc.data() as FunnelStage);
+      // Ordenação manual
+      return stages.sort((a, b) => a.position - b.position);
     } catch (error) {
       console.error('Error reordering funnel stages:', error);
       throw new Error('Failed to reorder funnel stages');
@@ -1222,13 +1228,11 @@ export class FirebaseStorage implements IStorage {
         throw new Error('Funnel not found');
       }
       
-      // Obter o primeiro estágio do funil
+      // Obter o primeiro estágio do funil (sem orderBy para evitar índice composto)
       const stagesRef = collection(db, 'funnel_stages');
       const q = query(
         stagesRef, 
-        where('funnelId', '==', funnelId),
-        orderBy('position', 'asc'),
-        limit(1)
+        where('funnelId', '==', funnelId)
       );
       const stagesSnapshot = await getDocs(q);
       
@@ -1236,7 +1240,11 @@ export class FirebaseStorage implements IStorage {
         throw new Error('Funnel has no stages');
       }
       
-      const firstStage = stagesSnapshot.docs[0].data() as FunnelStage;
+      // Ordenamos manualmente e pegamos o primeiro
+      const stages = stagesSnapshot.docs.map(doc => doc.data() as FunnelStage)
+        .sort((a, b) => a.position - b.position);
+      
+      const firstStage = stages[0];
       
       // Obter o lead
       const leadRef = doc(db, 'leads', leadId.toString());
