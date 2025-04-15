@@ -571,7 +571,7 @@ export default function CRM() {
                             <i className="fas fa-eye mr-1 text-xs"></i> Detalhes
                           </Button>
                         </DialogTrigger>
-                        <DialogContent className="max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+                        <DialogContent className="max-w-7xl w-[95vw] max-h-[90vh] overflow-y-auto">
                           <DialogHeader>
                             <DialogTitle className="flex justify-between items-center">
                               <div className="flex items-center">
