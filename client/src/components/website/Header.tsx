@@ -51,7 +51,7 @@ export default function Header({ config, isLoadingConfig }: HeaderProps) {
               // Placeholder durante o carregamento - mantém o mesmo tamanho
               <div className={`${scrolled ? 'h-12 w-28' : 'h-16 w-36'} bg-gray-100 rounded animate-pulse transition-all duration-300`}></div>
             ) : config?.logo ? (
-              <div className={`${scrolled ? 'h-12 min-w-[112px]' : 'h-16 min-w-[140px]'} transition-all duration-300`}>
+              <NavigationLink href="/" className={`${scrolled ? 'h-12 min-w-[112px]' : 'h-16 min-w-[140px]'} transition-all duration-300 cursor-pointer`}>
                 <img 
                   src={config.logo} 
                   alt="Logo da Imobiliária" 
@@ -63,14 +63,14 @@ export default function Header({ config, isLoadingConfig }: HeaderProps) {
                   }}
                   style={{ opacity: 0, transition: "opacity 0.2s ease" }}
                 />
-              </div>
+              </NavigationLink>
             ) : (
-              <>
+              <NavigationLink href="/" className="flex items-center cursor-pointer">
                 <div className={`${isPropertiesPage || scrolled ? 'h-8 w-8' : 'h-10 w-10'} rounded bg-primary flex items-center justify-center text-white transition-all duration-300`}>
                   <i className="fas fa-home text-xl"></i>
                 </div>
                 <h1 className={`${isPropertiesPage || scrolled ? 'text-xl' : 'text-2xl'} font-bold ${isPropertiesPage || scrolled ? 'text-gray-800' : 'text-white'} ml-3 transition-all duration-300`}>Imobiliária</h1>
-              </>
+              </NavigationLink>
             )}
           </div>
           
@@ -182,14 +182,16 @@ export default function Header({ config, isLoadingConfig }: HeaderProps) {
                   style={{ borderColor: 'rgba(0, 0, 0, 0.06)' }}
                 >
                   {config?.logo ? (
-                    <img src={config.logo} alt="Logo" className="h-10 object-contain" />
+                    <NavigationLink href="/">
+                      <img src={config.logo} alt="Logo" className="h-10 object-contain cursor-pointer" />
+                    </NavigationLink>
                   ) : (
-                    <div className="flex items-center">
+                    <NavigationLink href="/" className="flex items-center cursor-pointer">
                       <div className="h-8 w-8 rounded bg-primary flex items-center justify-center text-white">
                         <i className="fas fa-home text-sm"></i>
                       </div>
                       <span className="text-xl font-bold ml-2" style={{ fontFamily: 'Poppins, sans-serif' }}>Imobiliária</span>
-                    </div>
+                    </NavigationLink>
                   )}
                 </div>
                 
