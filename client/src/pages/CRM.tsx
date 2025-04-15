@@ -147,11 +147,32 @@ export default function CRM() {
   useEffect(() => {
     if (openLeadId !== null && allLeads) {
       const openLead = allLeads.find(lead => lead.id === openLeadId);
+      
       if (openLead && openLead.funnelId) {
+        // Se o lead já tem um funil associado, usar esse funil
         setCurrentLeadFunnelId(openLead.funnelId);
+      } else if (openLead && funnels && funnels.length > 0) {
+        // Se o lead não tem funil, mas existem funis disponíveis,
+        // atribuir o funil padrão ou o primeiro funil disponível
+        const defaultFunnel = funnels.find(f => f.isDefault) || funnels[0];
+        
+        // Atualizar o lead no backend
+        apiRequest(`/api/leads/${openLead.id}/funnel`, {
+          method: "PATCH",
+          body: JSON.stringify({ funnelId: defaultFunnel.id }),
+        })
+          .then(() => {
+            // Após atualizar o lead, definir o funil atual
+            setCurrentLeadFunnelId(defaultFunnel.id);
+            // Recarregar a lista de leads
+            queryClient.invalidateQueries({ queryKey: ['/api/leads'] });
+          })
+          .catch(error => {
+            console.error("Erro ao atribuir funil padrão:", error);
+          });
       }
     }
-  }, [openLeadId, allLeads]);
+  }, [openLeadId, allLeads, funnels]);
   
   const isLoading = leadsLoading || funnelsLoading || (selectedFunnelId !== null && stagesLoading);
 
@@ -497,16 +518,31 @@ export default function CRM() {
             <div className="mt-4">
               {/* Indicadores de progresso */}
               <div className="relative mb-6">
-                {lead.funnelId && stages && stages.length > 0 ? (
+                {stages && stages.length > 0 ? (
                   <div className={`grid gap-0 ${
-                    stages.filter(s => s.funnelId === lead.funnelId).length === 1 ? 'grid-cols-1' :
-                    stages.filter(s => s.funnelId === lead.funnelId).length === 2 ? 'grid-cols-2' :
-                    stages.filter(s => s.funnelId === lead.funnelId).length === 3 ? 'grid-cols-3' :
-                    stages.filter(s => s.funnelId === lead.funnelId).length === 4 ? 'grid-cols-4' :
+                    // Se o lead não tem funil, mas temos funis disponíveis, considerar o padrão
+                    (lead.funnelId ? 
+                      stages.filter(s => s.funnelId === lead.funnelId).length : 
+                      stages.filter(s => s.funnelId === (funnels?.find(f => f.isDefault)?.id || funnels?.[0]?.id)).length
+                    ) === 1 ? 'grid-cols-1' :
+                    (lead.funnelId ? 
+                      stages.filter(s => s.funnelId === lead.funnelId).length : 
+                      stages.filter(s => s.funnelId === (funnels?.find(f => f.isDefault)?.id || funnels?.[0]?.id)).length
+                    ) === 2 ? 'grid-cols-2' :
+                    (lead.funnelId ? 
+                      stages.filter(s => s.funnelId === lead.funnelId).length : 
+                      stages.filter(s => s.funnelId === (funnels?.find(f => f.isDefault)?.id || funnels?.[0]?.id)).length
+                    ) === 3 ? 'grid-cols-3' :
+                    (lead.funnelId ? 
+                      stages.filter(s => s.funnelId === lead.funnelId).length : 
+                      stages.filter(s => s.funnelId === (funnels?.find(f => f.isDefault)?.id || funnels?.[0]?.id)).length
+                    ) === 4 ? 'grid-cols-4' :
                     'grid-cols-5'
                   }`}>
-                    {stages
-                      .filter(stage => stage.funnelId === lead.funnelId)
+                    {(lead.funnelId ? 
+                      stages.filter(stage => stage.funnelId === lead.funnelId) :
+                      stages.filter(stage => stage.funnelId === (funnels?.find(f => f.isDefault)?.id || funnels?.[0]?.id))
+                    )
                       .sort((a, b) => a.position - b.position)
                       .map((stage, index, filteredStages) => (
                         <div 
@@ -673,7 +709,7 @@ export default function CRM() {
                           Selecionar Funil
                         </label>
                         <Select
-                          value={String(lead.funnelId || "")}
+                          value={String(lead.funnelId || (funnels?.find(f => f.isDefault)?.id || funnels?.[0]?.id || ""))}
                           onValueChange={(value) => {
                             // Armazenar o ID do funil selecionado temporariamente
                             const funnelId = Number(value);
@@ -747,13 +783,13 @@ export default function CRM() {
                                 });
                               });
                           }}
-                          disabled={!lead.funnelId}
+                          disabled={!lead.funnelId && !funnels?.length}
                         >
                           <SelectTrigger className="w-full">
-                            <SelectValue placeholder={lead.funnelId ? "Selecione um estágio" : "Selecione um funil primeiro"} />
+                            <SelectValue placeholder={(lead.funnelId || (funnels?.length > 0)) ? "Selecione um estágio" : "Selecione um funil primeiro"} />
                           </SelectTrigger>
                           <SelectContent>
-                            {stages?.filter(stage => stage.funnelId === lead.funnelId).map((stage) => (
+                            {stages?.filter(stage => stage.funnelId === (lead.funnelId || funnels?.find(f => f.isDefault)?.id || funnels?.[0]?.id)).map((stage) => (
                               <SelectItem key={stage.id} value={String(stage.id)}>
                                 {stage.name}
                               </SelectItem>
