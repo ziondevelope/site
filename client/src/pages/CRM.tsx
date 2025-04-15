@@ -690,11 +690,49 @@ export default function CRM() {
                 </div>
                 
                 {/* Funil de Vendas */}
-                <div className="md:col-span-6 px-8">
-                  <div className="flex justify-between items-center mb-4">
-                    <h3 className="text-base font-semibold">Funil de Vendas</h3>
+                <div className="md:col-span-6 px-8">                  
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-500 mb-3">Nota Rápida</h3>
+                    <div className="bg-gray-50 p-4 rounded-md border border-gray-200">
+                      <Textarea 
+                        placeholder="Digite uma anotação rápida sobre este lead..." 
+                        className="resize-none border-0 bg-transparent p-0 focus-visible:ring-0 text-sm" 
+                        rows={8}
+                        defaultValue={lead.notes || ""}
+                      />
+                    </div>
+                    <div className="flex justify-end mt-4">
+                      <Button className="bg-blue-600 hover:bg-blue-700 text-sm">
+                        Salvar Nota
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Ações e Atividades */}
+                <div className="md:col-span-3">
+                  <h3 className="text-base font-semibold mb-4">Ações</h3>
+                  <div className="space-y-2 mb-8">
+                    <Button variant="outline" className="w-full justify-start text-gray-700 border-gray-300 h-10">
+                      <i className="fas fa-pen mr-2 text-gray-500"></i> Editar Lead
+                    </Button>
+                    <Button variant="outline" className="w-full justify-start text-gray-700 border-gray-300 h-10">
+                      <i className="far fa-calendar-alt mr-2 text-gray-500"></i> Agendar Atividade
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      className="w-full justify-start text-red-600 hover:text-red-700 border-gray-300 h-10"
+                      onClick={() => {
+                        setLeadToDelete(lead);
+                        setIsDeleteConfirmOpen(true);
+                      }}
+                    >
+                      <i className="fas fa-trash-alt mr-2"></i> Excluir Lead
+                    </Button>
                   </div>
                   
+                  {/* Funil de Vendas */}
+                  <h3 className="text-base font-semibold mb-4">Funil de Vendas</h3>                  
                   <div className="bg-white p-4 rounded-md border border-gray-100 mb-8">
                     <div className="grid grid-cols-1 gap-4">
                       {/* Seletor de Funil */}
@@ -819,46 +857,6 @@ export default function CRM() {
                         </div>
                       </div>
                     </div>
-                  </div>
-                  
-                  <div>
-                    <h3 className="text-sm font-medium text-gray-500 mb-3">Nota Rápida</h3>
-                    <div className="bg-gray-50 p-4 rounded-md border border-gray-200">
-                      <Textarea 
-                        placeholder="Digite uma anotação rápida sobre este lead..." 
-                        className="resize-none border-0 bg-transparent p-0 focus-visible:ring-0 text-sm" 
-                        rows={8}
-                        defaultValue={lead.notes || ""}
-                      />
-                    </div>
-                    <div className="flex justify-end mt-4">
-                      <Button className="bg-blue-600 hover:bg-blue-700 text-sm">
-                        Salvar Nota
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-                
-                {/* Ações e Atividades */}
-                <div className="md:col-span-3">
-                  <h3 className="text-base font-semibold mb-4">Ações</h3>
-                  <div className="space-y-2 mb-8">
-                    <Button variant="outline" className="w-full justify-start text-gray-700 border-gray-300 h-10">
-                      <i className="fas fa-pen mr-2 text-gray-500"></i> Editar Lead
-                    </Button>
-                    <Button variant="outline" className="w-full justify-start text-gray-700 border-gray-300 h-10">
-                      <i className="far fa-calendar-alt mr-2 text-gray-500"></i> Agendar Atividade
-                    </Button>
-                    <Button 
-                      variant="outline" 
-                      className="w-full justify-start text-red-600 hover:text-red-700 border-gray-300 h-10"
-                      onClick={() => {
-                        setLeadToDelete(lead);
-                        setIsDeleteConfirmOpen(true);
-                      }}
-                    >
-                      <i className="fas fa-trash-alt mr-2"></i> Excluir Lead
-                    </Button>
                   </div>
                 </div>
               </div>
