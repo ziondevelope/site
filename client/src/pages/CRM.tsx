@@ -116,11 +116,21 @@ export default function CRM() {
       });
     },
     onSuccess: () => {
+      // Invalidar todas as consultas relacionadas a leads para atualizar a UI
       queryClient.invalidateQueries({ queryKey: ['/api/leads'] });
+      
+      // Invalidar consultas específicas por status
+      queryClient.invalidateQueries({ queryKey: ['/api/leads', 'new'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/leads', 'contacted'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/leads', 'visit'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/leads', 'proposal'] });
+      
       toast({
         title: "Lead excluído",
         description: "O lead foi excluído com sucesso.",
       });
+      
+      // Fechar o diálogo e limpar o estado
       setIsDeleteConfirmOpen(false);
       setLeadToDelete(null);
     },
