@@ -137,14 +137,37 @@ export default function CRM() {
 
   const createLeadMutation = useMutation({
     mutationFn: (data: LeadFormValues) => {
+      // Transformar os dados do formulário no formato esperado pelo schema do lead
+      const leadData = {
+        name: data.name,
+        email: data.email,
+        phone: data.phone,
+        message: data.message || data.quickNote, // Use a mensagem ou nota rápida
+        status: data.stage || 'new',
+        source: data.source || 'manual',
+        interestType: data.businessType, // Usar businessType como interestType
+        budget: data.priceRange?.max, // Usar o valor máximo da faixa de preço como orçamento
+        notes: data.quickNote, // Salvar a nota rápida
+        propertyType: data.propertyType, // Adicionar tipo de propriedade
+        region: data.region, // Adicionar região
+        // Outros campos específicos que não estão no schema padrão
+        whatsapp: data.whatsapp,
+        priceRangeMin: data.priceRange?.min,
+        priceRangeMax: data.priceRange?.max,
+      };
+      
+      console.log("Dados formatados para envio:", leadData);
+      
       return apiRequest('/api/leads', {
         method: 'POST',
-        body: JSON.stringify(data)
+        body: JSON.stringify(leadData)
       });
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       // Invalidar a consulta principal que busca todos os leads
       queryClient.invalidateQueries({ queryKey: ['/api/leads'] });
+      
+      console.log("Lead criado com sucesso:", data);
       
       toast({
         title: "Lead criado com sucesso",
@@ -716,21 +739,39 @@ export default function CRM() {
                                   
                                   <div>
                                     <h4 className="text-sm font-medium text-gray-500 mb-1">WhatsApp</h4>
-                                    <p className="text-gray-900">Não informado</p>
+                                    <p className="text-gray-900">{(lead as any).whatsapp || "Não informado"}</p>
                                   </div>
                                   
-                                  <h3 className="text-base font-semibold mt-8 mb-4">Campos Personalizados</h3>
+                                  <h3 className="text-base font-semibold mt-8 mb-4">Detalhes do Interesse</h3>
                                   
                                   <div>
-                                    <h4 className="text-sm font-medium text-gray-500 mb-1">Valor</h4>
+                                    <h4 className="text-sm font-medium text-gray-500 mb-1">Valor Orçado</h4>
                                     <p className="text-gray-900">
-                                      {lead.budget ? 'R$ ' + lead.budget.toLocaleString('pt-BR') : 'R$ 0'}
+                                      {lead.budget ? 'R$ ' + lead.budget.toLocaleString('pt-BR') : 
+                                      (lead as any).priceRangeMax ? 'R$ ' + (lead as any).priceRangeMax.toLocaleString('pt-BR') : 'Não informado'}
                                     </p>
                                   </div>
                                   
                                   <div>
-                                    <h4 className="text-sm font-medium text-gray-500 mb-1">Data Prevista</h4>
-                                    <p className="text-gray-900">Não informado</p>
+                                    <h4 className="text-sm font-medium text-gray-500 mb-1">Valor Mínimo</h4>
+                                    <p className="text-gray-900">
+                                      {(lead as any).priceRangeMin ? 'R$ ' + (lead as any).priceRangeMin.toLocaleString('pt-BR') : 'Não informado'}
+                                    </p>
+                                  </div>
+                                  
+                                  <div>
+                                    <h4 className="text-sm font-medium text-gray-500 mb-1">Região</h4>
+                                    <p className="text-gray-900">{(lead as any).region || "Não informado"}</p>
+                                  </div>
+                                  
+                                  <div>
+                                    <h4 className="text-sm font-medium text-gray-500 mb-1">Tipo de Imóvel</h4>
+                                    <p className="text-gray-900">
+                                      {(lead as any).propertyType === 'apartment' ? 'Apartamento' : 
+                                      (lead as any).propertyType === 'house' ? 'Casa' : 
+                                      (lead as any).propertyType === 'commercial' ? 'Comercial' : 
+                                      'Não informado'}
+                                    </p>
                                   </div>
                                 </div>
                               </div>

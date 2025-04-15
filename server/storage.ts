@@ -365,7 +365,9 @@ export class FirebaseStorage implements IStorage {
       console.log('ID mais alto encontrado:', highestId);
       
       const now = new Date().toISOString();
-      const newLead: Lead = {
+      
+      // Garantir que todos os campos extras sejam preservados mesmo que não estejam no schema
+      const leadData = {
         ...lead,
         id: highestId + 1,
         status: lead.status || 'new',
@@ -373,14 +375,26 @@ export class FirebaseStorage implements IStorage {
         updatedAt: now,
       };
       
-      console.log('Novo lead para salvar:', newLead);
+      // Verificar e incluir todos os campos adicionais que podem ter sido enviados
+      // @ts-ignore - Permitir campos adicionais
+      if (lead.whatsapp) leadData.whatsapp = lead.whatsapp;
+      // @ts-ignore
+      if (lead.propertyType) leadData.propertyType = lead.propertyType;
+      // @ts-ignore
+      if (lead.region) leadData.region = lead.region;
+      // @ts-ignore
+      if (lead.priceRangeMin !== undefined) leadData.priceRangeMin = lead.priceRangeMin;
+      // @ts-ignore
+      if (lead.priceRangeMax !== undefined) leadData.priceRangeMax = lead.priceRangeMax;
       
-      // Salvar no Firestore
-      const leadDocRef = doc(db, 'leads', newLead.id.toString());
-      await setDoc(leadDocRef, newLead);
+      console.log('Novo lead para salvar (com campos extras):', leadData);
+      
+      // Salvar no Firestore como plain object para incluir todos os campos
+      const leadDocRef = doc(db, 'leads', leadData.id.toString());
+      await setDoc(leadDocRef, leadData);
       
       console.log('Lead salvo com sucesso!');
-      return newLead;
+      return leadData as Lead;
     } catch (error) {
       console.error('Error creating lead:', error);
       throw new Error('Failed to create lead');
