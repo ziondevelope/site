@@ -515,63 +515,41 @@ export default function CRM() {
           </div>
         </div>
 
-        <div className="bg-gray-50 p-4 rounded-lg mb-6">
-          <div className="grid md:grid-cols-4 gap-4">
-            <div className="col-span-1">
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 block">Nome</label>
-                <div className="relative">
-                  <input 
-                    type="text" 
-                    placeholder="Filtrar por nome"
-                    className="border border-gray-300 rounded-md w-full py-2 px-3 text-sm focus:ring-2 focus:ring-indigo-100 focus:border-indigo-300"
-                  />
-                  <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-gray-400">
-                    <i className="ri-user-search-line"></i>
-                  </div>
-                </div>
-              </div>
+        <div className="flex items-center justify-between mb-6">
+          <Button 
+            onClick={handleAddClick}
+            className="bg-indigo-600 hover:bg-indigo-700 rounded-full px-5">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+            Adicionar Lead
+          </Button>
+          
+          <div className="flex space-x-4 items-center">
+            <div className="relative">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+              <input 
+                type="search" 
+                placeholder="Buscar leads..." 
+                className="pl-9 pr-4 py-2 rounded-full border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-200"
+              />
             </div>
             
-            <div className="col-span-1">
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 block">E-mail</label>
-                <div className="relative">
-                  <input 
-                    type="text" 
-                    placeholder="Filtrar por e-mail"
-                    className="border border-gray-300 rounded-md w-full py-2 px-3 text-sm focus:ring-2 focus:ring-indigo-100 focus:border-indigo-300"
-                  />
-                  <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-gray-400">
-                    <i className="ri-mail-line"></i>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <select 
+              className="py-2 px-3 rounded-full border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            >
+              <option value="">Todos os tipos</option>
+              <option value="purchase">Compra</option>
+              <option value="rent">Aluguel</option>
+            </select>
             
-            <div className="col-span-1">
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 block">Situação</label>
-                <Select>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Todas situações" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Todas situações</SelectItem>
-                    <SelectItem value="new">Novo</SelectItem>
-                    <SelectItem value="contacted">Contatado</SelectItem>
-                    <SelectItem value="visit">Visita</SelectItem>
-                    <SelectItem value="proposal">Proposta</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-            
-            <div className="col-span-1 flex items-end">
-              <Button className="w-full py-2 bg-indigo-600 hover:bg-indigo-700">
-                <i className="ri-search-line mr-2"></i> Buscar
-              </Button>
-            </div>
+            <select 
+              className="py-2 px-3 rounded-full border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            >
+              <option value="">Todos os status</option>
+              <option value="new">Novo</option>
+              <option value="contacted">Contatado</option>
+              <option value="visit">Visita</option>
+              <option value="proposal">Proposta</option>
+            </select>
           </div>
         </div>
       </div>
