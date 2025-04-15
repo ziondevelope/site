@@ -335,6 +335,14 @@ export default function Home() {
                           
                           <div className="p-4">
                             <h3 className="text-md mb-1 line-clamp-1">{property.title}</h3>
+                            <div className="flex justify-start items-center mb-2">
+                              <div 
+                                className="text-lg font-bold text-gray-700"
+                              >
+                                R$ {property.price.toLocaleString('pt-BR')}
+                                {property.purpose === 'rent' && <span className="text-xs font-normal text-gray-500">/mês</span>}
+                              </div>
+                            </div>
                             <p className="text-gray-500 text-sm mb-4 line-clamp-1">{property.address}</p>
                             
                             <div className="flex items-center justify-between mb-4 text-sm text-gray-600">
@@ -358,15 +366,6 @@ export default function Home() {
                                 <i className="fas fa-car fa-sm mr-1"></i>
                                 {property.parkingSpots || 0}
                               </span>
-                            </div>
-                            
-                            <div className="flex justify-start items-center">
-                              <div 
-                                className="text-lg font-bold text-gray-700"
-                              >
-                                R$ {property.price.toLocaleString('pt-BR')}
-                                {property.purpose === 'rent' && <span className="text-xs font-normal text-gray-500">/mês</span>}
-                              </div>
                             </div>
                           </div>
                           
