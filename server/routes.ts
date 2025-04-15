@@ -149,6 +149,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Error updating lead status" });
     }
   });
+  
+  // Rota para excluir um lead
+  apiRouter.delete("/leads/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const result = await storageInstance.deleteLead(id);
+      
+      if (!result) {
+        return res.status(404).json({ message: "Lead not found" });
+      }
+      
+      res.status(200).json({ success: true });
+    } catch (error) {
+      console.error("Error deleting lead:", error);
+      res.status(500).json({ message: "Error deleting lead" });
+    }
+  });
 
   // Agents (users) endpoints
   apiRouter.get("/agents", async (req, res) => {
