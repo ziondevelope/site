@@ -49,7 +49,7 @@ export default function AllProperties() {
   // Efeito para monitorar o scroll
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 80) {
+      if (window.scrollY > 20) {
         setScrolled(true);
       } else {
         setScrolled(false);
