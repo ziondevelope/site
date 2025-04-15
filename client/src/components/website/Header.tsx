@@ -44,7 +44,7 @@ export default function Header({ config, isLoadingConfig }: HeaderProps) {
       <div className="container mx-auto px-4 flex justify-between items-center">
         <div className="flex items-center">
           {/* Logo à esquerda */}
-          <div className="flex items-center mr-8">
+          <div className="flex items-center mr-2 md:mr-8">
             {isLoadingConfig ? (
               // Placeholder durante o carregamento - mantém o mesmo tamanho
               <div className={`${scrolled ? 'h-12 w-28' : 'h-16 w-36'} bg-gray-100 rounded animate-pulse transition-all duration-300`}></div>
@@ -72,11 +72,11 @@ export default function Header({ config, isLoadingConfig }: HeaderProps) {
             )}
           </div>
           
-          {/* Menu ao lado da logo */}
-          <nav className="hidden md:flex space-x-8">
+          {/* Menu ao lado da logo - visível em todos os tamanhos de tela */}
+          <nav className="flex space-x-2 sm:space-x-3 md:space-x-8 text-xs sm:text-sm md:text-base">
             <a href="/#home" className={`${isPropertiesPage || scrolled ? 'text-gray-700' : 'text-white'} hover:text-primary font-medium transition-colors duration-300`}>Início</a>
-            <a href="/#properties" className={`${isPropertiesPage || scrolled ? 'text-gray-700' : 'text-white'} hover:text-primary font-medium transition-colors duration-300`}>Destaques</a>
-            <Link href="/properties" className={`${isPropertiesPage || scrolled ? 'text-gray-700' : 'text-white'} hover:text-primary font-medium transition-colors duration-300`}>Todos Imóveis</Link>
+            <a href="/#properties" className={`${isPropertiesPage || scrolled ? 'text-gray-700' : 'text-white'} hover:text-primary font-medium transition-colors duration-300 hidden sm:inline`}>Destaques</a>
+            <Link href="/properties" className={`${isPropertiesPage || scrolled ? 'text-gray-700' : 'text-white'} hover:text-primary font-medium transition-colors duration-300`}>Imóveis</Link>
             <a href="/#about" className={`${isPropertiesPage || scrolled ? 'text-gray-700' : 'text-white'} hover:text-primary font-medium transition-colors duration-300`}>Sobre</a>
             <a href="/#contact" className={`${isPropertiesPage || scrolled ? 'text-gray-700' : 'text-white'} hover:text-primary font-medium transition-colors duration-300`}>Contato</a>
           </nav>
@@ -88,7 +88,7 @@ export default function Header({ config, isLoadingConfig }: HeaderProps) {
             href={config?.phone ? `https://wa.me/${config.phone.replace(/\D/g, '')}` : "#"} 
             target="_blank" 
             rel="noopener noreferrer"
-            className={`inline-flex items-center px-4 py-1 rounded-full border border-solid transition-all hover:bg-white ${
+            className={`inline-flex items-center px-2 md:px-4 py-1 rounded-full border border-solid transition-all hover:bg-white ${
               isPropertiesPage || scrolled ? 'text-primary' : 'text-white'
             }`}
             style={{ 
@@ -104,7 +104,7 @@ export default function Header({ config, isLoadingConfig }: HeaderProps) {
               e.currentTarget.style.color = isPropertiesPage || scrolled ? (config?.primaryColor || 'var(--primary)') : 'white';
             }}
           >
-            {config?.phone && <span className="mr-2">{config.phone}</span>}
+            {config?.phone && <span className="hidden md:inline mr-2">{config.phone}</span>}
             <i 
               className="fab fa-whatsapp text-lg transition-colors" 
               style={{ color: isPropertiesPage || scrolled ? "#25D366" : "white" }}
