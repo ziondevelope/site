@@ -571,7 +571,7 @@ export default function CRM() {
                             <i className="fas fa-eye mr-1 text-xs"></i> Detalhes
                           </Button>
                         </DialogTrigger>
-                        <DialogContent className="max-w-4xl w-full overflow-y-auto">
+                        <DialogContent className="max-w-4xl w-full max-h-[90vh] overflow-y-auto">
                           <DialogHeader>
                             <DialogTitle className="flex justify-between items-center">
                               <div className="flex items-center">
@@ -595,10 +595,10 @@ export default function CRM() {
                           
                           <div className="mt-4">
                             {/* Indicadores de progresso */}
-                            <div className="relative mb-10">
+                            <div className="relative mb-6">
                               <div className="grid grid-cols-4 gap-0">
                                 <div 
-                                  className={`flex justify-center items-center py-2 
+                                  className={`flex justify-center items-center py-2 rounded-l 
                                     ${lead.status === 'new' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-500'}`}
                                 >
                                   Contato
@@ -616,7 +616,7 @@ export default function CRM() {
                                   Agendamento
                                 </div>
                                 <div 
-                                  className={`flex justify-center items-center py-2 
+                                  className={`flex justify-center items-center py-2 rounded-r
                                     ${lead.status === 'proposal' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-500'}`}
                                 >
                                   Perdido
@@ -624,7 +624,7 @@ export default function CRM() {
                               </div>
                             </div>
                             
-                            <div className="grid grid-cols-3 gap-6">
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pb-6">
                               {/* Informações de Contato */}
                               <div>
                                 <h3 className="text-base font-semibold mb-4">Informações de Contato</h3>
