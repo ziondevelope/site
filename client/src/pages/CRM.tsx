@@ -543,7 +543,16 @@ export default function CRM() {
                             className={`flex justify-center items-center py-2 cursor-pointer hover:opacity-90
                               ${index === 0 ? 'rounded-l' : ''}
                               ${index === filteredStages.length - 1 ? 'rounded-r' : ''}
-                              ${lead.stageId === stage.id ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-500'}`}
+                              ${
+                                // Estágio atual
+                                lead.stageId === stage.id 
+                                  ? 'bg-blue-600 text-white font-medium' 
+                                  // Estágios anteriores (já concluídos)
+                                  : sortedStages.findIndex(s => s.id === lead.stageId) > index
+                                    ? 'bg-blue-400 text-white' 
+                                    // Estágios futuros (ainda não alcançados)
+                                    : 'bg-gray-200 text-gray-500'
+                              }`}
                             onClick={() => {
                               // Atualizar o estágio do lead ao clicar
                               apiRequest(`/api/leads/${lead.id}/stage`, {
