@@ -41,6 +41,16 @@ export default function CRM() {
   const [openLeadId, setOpenLeadId] = useState<number | null>(null);
   const { toast } = useToast();
   const queryClient = useQueryClient();
+
+  // Quando um lead é aberto, carregar seus dados de funil
+  useEffect(() => {
+    if (openLeadId !== null && allLeads) {
+      const openLead = allLeads.find(lead => lead.id === openLeadId);
+      if (openLead && openLead.funnelId) {
+        setCurrentLeadFunnelId(openLead.funnelId);
+      }
+    }
+  }, [openLeadId, allLeads]);
   
   // Função para abrir o modal de adicionar novo lead
   const handleAddClick = () => {
@@ -59,14 +69,18 @@ export default function CRM() {
     queryKey: ['/api/sales-funnels'],
   });
   
+  // Estado para armazenar o ID do funil selecionado para um lead específico quando a modal abrir
+  const [currentLeadFunnelId, setCurrentLeadFunnelId] = useState<number | null>(null);
+  
   // Fetch funnel stages when a funnel is selected
   const { data: stages, isLoading: stagesLoading } = useQuery<FunnelStage[]>({
-    queryKey: ['/api/funnel-stages', selectedFunnelId],
+    queryKey: ['/api/funnel-stages', selectedFunnelId || currentLeadFunnelId],
     queryFn: async () => {
-      if (!selectedFunnelId) throw new Error("Nenhum funil selecionado");
-      return apiRequest(`/api/funnel-stages?funnelId=${selectedFunnelId}`);
+      const funnelIdToUse = selectedFunnelId || currentLeadFunnelId;
+      if (!funnelIdToUse) throw new Error("Nenhum funil selecionado");
+      return apiRequest(`/api/funnel-stages?funnelId=${funnelIdToUse}`);
     },
-    enabled: selectedFunnelId !== null,
+    enabled: (selectedFunnelId !== null || currentLeadFunnelId !== null),
   });
   
   // Set default funnel when data is loaded
@@ -440,32 +454,82 @@ export default function CRM() {
             <div className="mt-4">
               {/* Indicadores de progresso */}
               <div className="relative mb-6">
-                <div className="grid grid-cols-4 gap-0">
-                  <div 
-                    className={`flex justify-center items-center py-2 rounded-l 
-                      ${lead.status === 'new' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-500'}`}
-                  >
-                    Contato
+                {lead.funnelId && stages && stages.length > 0 ? (
+                  <div className={`grid gap-0 ${
+                    stages.filter(s => s.funnelId === lead.funnelId).length === 1 ? 'grid-cols-1' :
+                    stages.filter(s => s.funnelId === lead.funnelId).length === 2 ? 'grid-cols-2' :
+                    stages.filter(s => s.funnelId === lead.funnelId).length === 3 ? 'grid-cols-3' :
+                    stages.filter(s => s.funnelId === lead.funnelId).length === 4 ? 'grid-cols-4' :
+                    'grid-cols-5'
+                  }`}>
+                    {stages
+                      .filter(stage => stage.funnelId === lead.funnelId)
+                      .sort((a, b) => a.position - b.position)
+                      .map((stage, index, filteredStages) => (
+                        <div 
+                          key={stage.id}
+                          className={`flex justify-center items-center py-2 cursor-pointer hover:opacity-90
+                            ${index === 0 ? 'rounded-l' : ''}
+                            ${index === filteredStages.length - 1 ? 'rounded-r' : ''}
+                            ${lead.stageId === stage.id ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-500'}`}
+                          onClick={() => {
+                            // Atualizar o estágio do lead ao clicar
+                            apiRequest(`/api/leads/${lead.id}/stage`, {
+                              method: "PATCH",
+                              body: JSON.stringify({ stageId: stage.id }),
+                            })
+                              .then(() => {
+                                // Atualizar a lista de leads
+                                queryClient.invalidateQueries({ queryKey: ['/api/leads'] });
+                                toast({
+                                  title: "Estágio atualizado",
+                                  description: "O estágio do lead foi atualizado com sucesso.",
+                                });
+                              })
+                              .catch((error) => {
+                                console.error("Erro ao atualizar estágio:", error);
+                                toast({
+                                  title: "Erro ao atualizar estágio",
+                                  description: "Não foi possível atualizar o estágio. Tente novamente.",
+                                  variant: "destructive",
+                                });
+                              });
+                          }}
+                        >
+                          {stage.name}
+                        </div>
+                      ))
+                    }
                   </div>
-                  <div 
-                    className={`flex justify-center items-center py-2 
-                      ${lead.status === 'contacted' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-500'}`}
-                  >
-                    Follow up
+                ) : (
+                  // Fallback para o sistema anterior se não houver estágios definidos
+                  <div className="grid grid-cols-4 gap-0">
+                    <div 
+                      className={`flex justify-center items-center py-2 rounded-l 
+                        ${lead.status === 'new' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-500'}`}
+                    >
+                      Contato
+                    </div>
+                    <div 
+                      className={`flex justify-center items-center py-2 
+                        ${lead.status === 'contacted' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-500'}`}
+                    >
+                      Follow up
+                    </div>
+                    <div 
+                      className={`flex justify-center items-center py-2 
+                        ${lead.status === 'visit' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-500'}`}
+                    >
+                      Agendamento
+                    </div>
+                    <div 
+                      className={`flex justify-center items-center py-2 rounded-r
+                        ${lead.status === 'proposal' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-500'}`}
+                    >
+                      Perdido
+                    </div>
                   </div>
-                  <div 
-                    className={`flex justify-center items-center py-2 
-                      ${lead.status === 'visit' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-500'}`}
-                  >
-                    Agendamento
-                  </div>
-                  <div 
-                    className={`flex justify-center items-center py-2 rounded-r
-                      ${lead.status === 'proposal' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-500'}`}
-                  >
-                    Perdido
-                  </div>
-                </div>
+                )}
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-12 gap-6 pb-6">
