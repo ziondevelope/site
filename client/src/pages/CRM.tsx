@@ -626,7 +626,7 @@ export default function CRM() {
                             
                             <div className="grid grid-cols-1 md:grid-cols-12 gap-6 pb-6">
                               {/* Informações de Contato */}
-                              <div className="md:col-span-4">
+                              <div className="md:col-span-3">
                                 <h3 className="text-base font-semibold mb-4">Informações de Contato</h3>
                                 <div className="space-y-4">
                                   <div>
@@ -666,7 +666,7 @@ export default function CRM() {
                               </div>
                               
                               {/* Funil de Vendas */}
-                              <div className="md:col-span-5 px-8">
+                              <div className="md:col-span-6 px-8">
                                 <div className="flex justify-between items-center mb-4">
                                   <h3 className="text-base font-semibold">Funil de Vendas</h3>
                                   <div className="text-sm text-gray-500">
