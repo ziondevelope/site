@@ -556,25 +556,128 @@ export default function CRM() {
                 <div className="md:col-span-6 px-8">
                   <div className="flex justify-between items-center mb-4">
                     <h3 className="text-base font-semibold">Funil de Vendas</h3>
-                    <div className="text-sm text-gray-500">
-                      Estágio atual: 
-                      <span className={`ml-2 font-medium px-2 py-1 rounded-full 
-                        ${lead.status === 'new' ? 'bg-amber-100 text-amber-800' : 
-                        lead.status === 'contacted' ? 'bg-amber-100 text-amber-800' : 
-                        lead.status === 'visit' ? 'bg-amber-100 text-amber-800' : 
-                        lead.status === 'proposal' ? 'bg-amber-100 text-amber-800' : 
-                        'bg-gray-100 text-gray-800'}`}
-                      >
-                        {lead.status === 'new' ? 'Envio de proposta' : 
-                        lead.status === 'contacted' ? 'Envio de proposta' :
-                        lead.status === 'visit' ? 'Agendamento Visita' :
-                        lead.status === 'proposal' ? 'Visita' :
-                        lead.status}
-                      </span>
+                  </div>
+                  
+                  <div className="bg-white p-4 rounded-md border border-gray-100 mb-8">
+                    <div className="grid grid-cols-1 gap-4">
+                      {/* Seletor de Funil */}
+                      <div>
+                        <label className="text-sm font-bold text-gray-700 mb-2 block">
+                          Selecionar Funil
+                        </label>
+                        <Select
+                          value={String(lead.funnelId || "")}
+                          onValueChange={(value) => {
+                            // Armazenar o ID do funil selecionado temporariamente
+                            const funnelId = Number(value);
+                            
+                            // Atualizar o lead na API com o novo funnelId
+                            apiRequest(`/api/leads/${lead.id}/funnel`, {
+                              method: "PATCH",
+                              body: JSON.stringify({ funnelId }),
+                            })
+                              .then(() => {
+                                // Atualizar a lista de leads
+                                queryClient.invalidateQueries({ queryKey: ['/api/leads'] });
+                                toast({
+                                  title: "Funil atualizado",
+                                  description: "O funil de vendas foi atualizado com sucesso.",
+                                });
+                              })
+                              .catch((error) => {
+                                console.error("Erro ao atualizar funil:", error);
+                                toast({
+                                  title: "Erro ao atualizar funil",
+                                  description: "Não foi possível atualizar o funil. Tente novamente.",
+                                  variant: "destructive",
+                                });
+                              });
+                          }}
+                        >
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Selecione um funil" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {funnels?.map((funnel) => (
+                              <SelectItem key={funnel.id} value={String(funnel.id)}>
+                                {funnel.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      
+                      {/* Seletor de Estágio */}
+                      <div>
+                        <label className="text-sm font-bold text-gray-700 mb-2 block">
+                          Estágio Atual
+                        </label>
+                        <Select
+                          value={String(lead.stageId || "")}
+                          onValueChange={(value) => {
+                            // Armazenar o ID do estágio selecionado temporariamente
+                            const stageId = Number(value);
+                            
+                            // Atualizar o lead na API com o novo stageId
+                            apiRequest(`/api/leads/${lead.id}/stage`, {
+                              method: "PATCH",
+                              body: JSON.stringify({ stageId }),
+                            })
+                              .then(() => {
+                                // Atualizar a lista de leads
+                                queryClient.invalidateQueries({ queryKey: ['/api/leads'] });
+                                toast({
+                                  title: "Estágio atualizado",
+                                  description: "O estágio do lead foi atualizado com sucesso.",
+                                });
+                              })
+                              .catch((error) => {
+                                console.error("Erro ao atualizar estágio:", error);
+                                toast({
+                                  title: "Erro ao atualizar estágio",
+                                  description: "Não foi possível atualizar o estágio. Tente novamente.",
+                                  variant: "destructive",
+                                });
+                              });
+                          }}
+                          disabled={!lead.funnelId}
+                        >
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder={lead.funnelId ? "Selecione um estágio" : "Selecione um funil primeiro"} />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {stages?.filter(stage => stage.funnelId === lead.funnelId).map((stage) => (
+                              <SelectItem key={stage.id} value={String(stage.id)}>
+                                {stage.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      
+                      {/* Status atual do funil */}
+                      <div className="mt-2">
+                        <div className="text-sm text-gray-500 flex items-center">
+                          Status legado: 
+                          <span className={`ml-2 font-medium px-2 py-1 rounded-full 
+                            ${lead.status === 'new' ? 'bg-amber-100 text-amber-800' : 
+                            lead.status === 'contacted' ? 'bg-amber-100 text-amber-800' : 
+                            lead.status === 'visit' ? 'bg-amber-100 text-amber-800' : 
+                            lead.status === 'proposal' ? 'bg-amber-100 text-amber-800' : 
+                            'bg-gray-100 text-gray-800'}`}
+                          >
+                            {lead.status === 'new' ? 'Novo' : 
+                            lead.status === 'contacted' ? 'Contatado' :
+                            lead.status === 'visit' ? 'Visita' :
+                            lead.status === 'proposal' ? 'Proposta' :
+                            lead.status}
+                          </span>
+                        </div>
+                      </div>
                     </div>
                   </div>
                   
-                  <div className="mt-8">
+                  <div>
                     <h3 className="text-sm font-medium text-gray-500 mb-3">Nota Rápida</h3>
                     <div className="bg-gray-50 p-4 rounded-md border border-gray-200">
                       <Textarea 

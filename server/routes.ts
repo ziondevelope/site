@@ -166,6 +166,52 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
+  // Rota para atualizar o funil de um lead
+  apiRouter.patch("/leads/:id/funnel", async (req, res) => {
+    try {
+      const leadId = parseInt(req.params.id);
+      const { funnelId } = req.body;
+      
+      if (typeof funnelId !== 'number') {
+        return res.status(400).json({ message: "funnelId deve ser um número" });
+      }
+      
+      const lead = await storageInstance.assignLeadToFunnel(leadId, funnelId);
+      
+      if (!lead) {
+        return res.status(404).json({ message: "Lead not found" });
+      }
+      
+      res.json(lead);
+    } catch (error) {
+      console.error("Error updating lead funnel:", error);
+      res.status(500).json({ message: "Erro ao atualizar o funil do lead" });
+    }
+  });
+  
+  // Rota para atualizar o estágio de um lead
+  apiRouter.patch("/leads/:id/stage", async (req, res) => {
+    try {
+      const leadId = parseInt(req.params.id);
+      const { stageId } = req.body;
+      
+      if (typeof stageId !== 'number') {
+        return res.status(400).json({ message: "stageId deve ser um número" });
+      }
+      
+      const lead = await storageInstance.updateLeadStage(leadId, stageId);
+      
+      if (!lead) {
+        return res.status(404).json({ message: "Lead not found" });
+      }
+      
+      res.json(lead);
+    } catch (error) {
+      console.error("Error updating lead stage:", error);
+      res.status(500).json({ message: "Erro ao atualizar o estágio do lead" });
+    }
+  });
+  
   // Rota para excluir um lead
   apiRouter.delete("/leads/:id", async (req, res) => {
     try {
