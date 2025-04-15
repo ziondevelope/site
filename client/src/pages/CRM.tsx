@@ -767,56 +767,7 @@ export default function CRM() {
                         </Select>
                       </div>
                       
-                      {/* Seletor de Estágio */}
-                      <div>
-                        <label className="text-sm font-bold text-gray-700 mb-2 block">
-                          Estágio Atual
-                        </label>
-                        <Select
-                          value={String(lead.stageId || "")}
-                          onValueChange={(value) => {
-                            // Armazenar o ID do estágio selecionado temporariamente
-                            const stageId = Number(value);
-                            
-                            // Atualizar o lead na API com o novo stageId
-                            apiRequest(`/api/leads/${lead.id}/stage`, {
-                              method: "PATCH",
-                              body: JSON.stringify({ stageId }),
-                            })
-                              .then(() => {
-                                // Atualizar a lista de leads
-                                queryClient.invalidateQueries({ queryKey: ['/api/leads'] });
-                                toast({
-                                  title: "Estágio atualizado",
-                                  description: "O estágio do lead foi atualizado com sucesso.",
-                                });
-                              })
-                              .catch((error) => {
-                                console.error("Erro ao atualizar estágio:", error);
-                                toast({
-                                  title: "Erro ao atualizar estágio",
-                                  description: "Não foi possível atualizar o estágio. Tente novamente.",
-                                  variant: "destructive",
-                                });
-                              });
-                          }}
-                          disabled={!lead.funnelId && !funnels?.length}
-                        >
-                          <SelectTrigger className="w-full">
-                            <SelectValue placeholder={(lead.funnelId || (funnels?.length > 0)) ? "Selecione um estágio" : "Selecione um funil primeiro"} />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {stages?.filter(stage => stage.funnelId === (lead.funnelId || funnels?.find(f => f.isDefault)?.id || funnels?.[0]?.id))
-                              .sort((a, b) => a.position - b.position)
-                              .map((stage) => (
-                                <SelectItem key={stage.id} value={String(stage.id)}>
-                                  {stage.name}
-                                </SelectItem>
-                              ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      
+
 
                     </div>
                   </div>
