@@ -419,17 +419,17 @@ export default function Home() {
                             {/* Características do imóvel em linha com separadores */}
                             <div className="flex items-center space-x-3 text-sm text-gray-600">
                               <span className="flex items-center">
-                                <i className="fas fa-bed fa-sm mr-1.5"></i>
+                                <i className="fas fa-bed fa-sm mr-1.5 text-gray-500"></i>
                                 {property.bedrooms || 0} quartos
                               </span>
                               <span className="w-1 h-1 rounded-full bg-gray-300"></span>
                               <span className="flex items-center">
-                                <i className="fas fa-shower fa-sm mr-1.5"></i>
+                                <i className="fas fa-shower fa-sm mr-1.5 text-gray-500"></i>
                                 {property.bathrooms || 0} banhs
                               </span>
                               <span className="w-1 h-1 rounded-full bg-gray-300"></span>
                               <span className="flex items-center">
-                                <i className="fas fa-car fa-sm mr-1.5"></i>
+                                <i className="fas fa-car fa-sm mr-1.5 text-gray-500"></i>
                                 {property.parkingSpots || 0} vagas
                               </span>
                             </div>
