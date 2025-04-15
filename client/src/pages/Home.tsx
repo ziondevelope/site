@@ -303,7 +303,7 @@ export default function Home() {
                     {featuredProperties.map((property) => (
                       <div key={property.id} className="carousel-item flex-shrink-0 w-full sm:w-1/2 md:w-1/3 lg:w-1/4 px-2">
                         <div 
-                          className="property-card h-full bg-white rounded-lg border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-lg cursor-pointer relative"
+                          className="property-card h-full bg-white rounded-lg border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-lg hover:bg-white cursor-pointer relative"
                           onClick={() => openPropertyModal(property.id)}
                         >
                           {/* Property Image */}
@@ -382,9 +382,7 @@ export default function Home() {
                           </div>
                           
                           {/* Overlay de hover para indicar que é clicável */}
-                          <div className="absolute inset-0 bg-primary opacity-0 transition-opacity duration-300 hover:opacity-5" 
-                            style={{ backgroundColor: config?.primaryColor || 'var(--primary)' }}
-                          ></div>
+                          <div className="absolute inset-0 bg-white opacity-0 transition-opacity duration-300 hover:opacity-5"></div>
                         </div>
                       </div>
                     ))}
