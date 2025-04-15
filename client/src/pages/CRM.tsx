@@ -42,18 +42,22 @@ export default function CRM() {
   // Fetch leads with different status
   const { data: newLeads, isLoading: newLeadsLoading } = useQuery<Lead[]>({
     queryKey: ['/api/leads', 'new'],
+    queryFn: () => apiRequest(`/api/leads?status=new`),
   });
   
   const { data: contactedLeads, isLoading: contactedLeadsLoading } = useQuery<Lead[]>({
     queryKey: ['/api/leads', 'contacted'],
+    queryFn: () => apiRequest(`/api/leads?status=contacted`),
   });
   
   const { data: visitLeads, isLoading: visitLeadsLoading } = useQuery<Lead[]>({
     queryKey: ['/api/leads', 'visit'],
+    queryFn: () => apiRequest(`/api/leads?status=visit`),
   });
   
   const { data: proposalLeads, isLoading: proposalLeadsLoading } = useQuery<Lead[]>({
     queryKey: ['/api/leads', 'proposal'],
+    queryFn: () => apiRequest(`/api/leads?status=proposal`),
   });
   
   const isLoading = newLeadsLoading || contactedLeadsLoading || visitLeadsLoading || proposalLeadsLoading;
@@ -92,7 +96,12 @@ export default function CRM() {
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/leads'] });
+      // Invalidar apenas as consultas específicas por status
+      queryClient.invalidateQueries({ queryKey: ['/api/leads', 'new'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/leads', 'contacted'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/leads', 'visit'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/leads', 'proposal'] });
+      
       toast({
         title: "Status atualizado",
         description: "O status do lead foi atualizado com sucesso.",
@@ -116,10 +125,7 @@ export default function CRM() {
       });
     },
     onSuccess: () => {
-      // Invalidar todas as consultas relacionadas a leads para atualizar a UI
-      queryClient.invalidateQueries({ queryKey: ['/api/leads'] });
-      
-      // Invalidar consultas específicas por status
+      // Invalidar apenas as consultas específicas por status
       queryClient.invalidateQueries({ queryKey: ['/api/leads', 'new'] });
       queryClient.invalidateQueries({ queryKey: ['/api/leads', 'contacted'] });
       queryClient.invalidateQueries({ queryKey: ['/api/leads', 'visit'] });
@@ -152,8 +158,12 @@ export default function CRM() {
       });
     },
     onSuccess: () => {
-      // Invalidate leads queries to update the UI
-      queryClient.invalidateQueries({ queryKey: ['/api/leads'] });
+      // Invalidar apenas as consultas específicas por status
+      queryClient.invalidateQueries({ queryKey: ['/api/leads', 'new'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/leads', 'contacted'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/leads', 'visit'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/leads', 'proposal'] });
+      
       toast({
         title: "Lead criado com sucesso",
         description: "O lead foi adicionado ao CRM.",
