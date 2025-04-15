@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import SimplifiedKanbanBoard from "@/components/crm/SimplifiedKanbanBoard";
+import LeadsList from "@/components/crm/LeadsList";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { InsertLead, Lead, insertLeadSchema } from "@shared/schema";
@@ -62,7 +62,7 @@ export default function CRM() {
   });
 
   const createLeadMutation = useMutation({
-    mutationFn: async (data: LeadFormValues) => {
+    mutationFn: (data: LeadFormValues) => {
       return apiRequest('POST', '/api/leads', data);
     },
     onSuccess: () => {
@@ -363,11 +363,20 @@ export default function CRM() {
         </div>
       ) : (
         <div className="bg-white p-6">
-          <SimplifiedKanbanBoard 
-            newLeads={newLeads || []}
-            contactedLeads={contactedLeads || []}
-            visitLeads={visitLeads || []}
-            proposalLeads={proposalLeads || []}
+          {/* Combinamos todos os leads em uma única lista */}
+          <LeadsList 
+            leads={[
+              ...(newLeads || []), 
+              ...(contactedLeads || []), 
+              ...(visitLeads || []), 
+              ...(proposalLeads || [])
+            ].sort((a, b) => {
+              // Ordenar por data (do mais recente para o mais antigo)
+              const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+              const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+              return dateB - dateA;
+            })}
+            isLoading={isLoading}
           />
         </div>
       )}
