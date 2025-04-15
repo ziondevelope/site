@@ -175,58 +175,44 @@ export default function AllProperties() {
           
           {/* Filtros - Estilo Aprimorado */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-8 overflow-hidden">
-            {/* Barra de busca principal com finalidade - Seção destacada */}
-            <div className="bg-gray-50 p-5 border-b border-gray-200">
-              <div className="flex flex-col lg:flex-row gap-4">
-                <div className="flex-grow">
-                  <div className="relative">
-                    <i className="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-                    <Input
-                      id="search"
-                      className="pl-12 py-6 text-lg border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                      placeholder="Busque por endereço, bairro ou cidade"
-                      value={filters.search}
-                      onChange={(e) => setFilters({...filters, search: e.target.value})}
-                    />
-                  </div>
-                </div>
-                
-                {/* Finalidade com design destacado */}
-                <div className="w-full lg:w-52">
-                  <Select 
-                    value={filters.purpose} 
-                    onValueChange={(value) => setFilters({...filters, purpose: value})}
-                  >
-                    <SelectTrigger id="purpose" className="h-14 text-base border-gray-300 rounded-lg">
-                      <div className="flex items-center">
-                        <i className="fas fa-home mr-2 text-gray-500"></i>
-                        <SelectValue placeholder="Finalidade" />
-                      </div>
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all-purposes">Comprar ou Alugar</SelectItem>
-                      <SelectItem value="sale">Comprar</SelectItem>
-                      <SelectItem value="rent">Alugar</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                
-                {/* Botão de busca */}
-                <Button 
-                  className="h-14 px-6 text-base"
-                  onClick={() => {}}
-                  style={{ 
-                    backgroundColor: config?.primaryColor || 'var(--primary)',
-                  }}
-                >
-                  <i className="fas fa-search mr-2"></i>
-                  Buscar
-                </Button>
-              </div>
-            </div>
             
             {/* Filtros rápidos em linha */}
             <div className="p-4 flex flex-wrap items-center gap-3">
+              {/* Campo de busca integrado */}
+              <div className="filter-item mr-1">
+                <div className="text-xs font-medium text-gray-500 mb-1 ml-1">Busca</div>
+                <div className="relative">
+                  <i className="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm"></i>
+                  <Input
+                    id="search"
+                    className="h-10 pl-9 border-gray-300 rounded-lg min-w-[220px]"
+                    placeholder="Endereço, bairro ou cidade"
+                    value={filters.search}
+                    onChange={(e) => setFilters({...filters, search: e.target.value})}
+                  />
+                </div>
+              </div>
+              
+              {/* Finalidade (Comprar/Alugar) */}
+              <div className="filter-item">
+                <div className="text-xs font-medium text-gray-500 mb-1 ml-1">Finalidade</div>
+                <Select 
+                  value={filters.purpose} 
+                  onValueChange={(value) => setFilters({...filters, purpose: value})}
+                >
+                  <SelectTrigger className="h-10 w-auto min-w-[140px] border-gray-300 rounded-lg">
+                    <div className="flex items-center">
+                      <i className="fas fa-home mr-2 text-gray-400 text-sm"></i>
+                      <SelectValue placeholder="Finalidade" />
+                    </div>
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all-purposes">Comprar ou Alugar</SelectItem>
+                    <SelectItem value="sale">Comprar</SelectItem>
+                    <SelectItem value="rent">Alugar</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
               {/* Tipo de imóvel */}
               <div className="filter-item">
                 <div className="text-xs font-medium text-gray-500 mb-1 ml-1">Tipo</div>
