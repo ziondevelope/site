@@ -265,6 +265,16 @@ export default function CRM() {
       // Encontrar o funil padrão ou usar o primeiro da lista
       const defaultFunnel = funnels?.find(f => f.isDefault) || funnels?.[0];
       
+      // Encontrar o primeiro estágio do funil padrão
+      let firstStageId = null;
+      if (defaultFunnel && stages) {
+        const filteredStages = stages.filter(stage => stage.funnelId === defaultFunnel.id);
+        const sortedStages = [...filteredStages].sort((a, b) => a.position - b.position);
+        if (sortedStages.length > 0) {
+          firstStageId = sortedStages[0].id;
+        }
+      }
+      
       const leadData = {
         name: data.name,
         email: data.email,
@@ -279,6 +289,8 @@ export default function CRM() {
         region: data.region, // Adicionar região
         // Incluir automaticamente um funil padrão para novos leads
         funnelId: defaultFunnel?.id,
+        // Definir o primeiro estágio do funil como o estágio atual do lead
+        stageId: firstStageId,
         // Outros campos específicos que não estão no schema padrão
         whatsapp: data.whatsapp,
         priceRangeMin: data.priceRange?.min,
@@ -763,8 +775,11 @@ export default function CRM() {
                                   // Estágios anteriores (já concluídos)
                                   : sortedStages.findIndex(s => s.id === lead.stageId) > index
                                     ? 'bg-blue-400 text-white' 
-                                    // Estágios futuros (ainda não alcançados)
-                                    : 'bg-gray-200 text-gray-500'
+                                    // Para leads novos que não têm stageId, mostrar o primeiro estágio como ativo
+                                    : (!lead.stageId && index === 0)
+                                      ? 'bg-blue-600 text-white font-medium'
+                                      // Estágios futuros (ainda não alcançados)
+                                      : 'bg-gray-200 text-gray-500'
                               }`}
                             onClick={() => {
                               // Atualizar o estágio do lead ao clicar
