@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import LeadsList from "@/components/crm/LeadsList";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { InsertLead, Lead, insertLeadSchema } from "@shared/schema";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -365,22 +365,238 @@ export default function CRM() {
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
         </div>
       ) : (
-        <div className="bg-white p-6">
-          {/* Combinamos todos os leads em uma única lista */}
-          <LeadsList 
-            leads={[
-              ...(newLeads || []), 
-              ...(contactedLeads || []), 
-              ...(visitLeads || []), 
-              ...(proposalLeads || [])
-            ].sort((a, b) => {
-              // Ordenar por data (do mais recente para o mais antigo)
-              const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
-              const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
-              return dateB - dateA;
-            })}
-            isLoading={isLoading}
-          />
+        <div className="bg-white p-6 rounded-md shadow-sm border border-gray-100">
+          <div className="rounded-md border">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-[300px]">Nome / Contato</TableHead>
+                  <TableHead>Interesse</TableHead>
+                  <TableHead>Origem</TableHead>
+                  <TableHead>Orçamento</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead className="text-right">Ações</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {[
+                  ...(newLeads || []), 
+                  ...(contactedLeads || []), 
+                  ...(visitLeads || []), 
+                  ...(proposalLeads || [])
+                ]
+                .sort((a, b) => {
+                  // Ordenar por data (do mais recente para o mais antigo)
+                  const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+                  const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+                  return dateB - dateA;
+                })
+                .map((lead) => (
+                  <TableRow key={lead.id}>
+                    <TableCell>
+                      <div className="flex items-center gap-3">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 text-gray-600">
+                          <i className="fas fa-user-alt"></i>
+                        </div>
+                        <div>
+                          <div className="font-medium">{lead.name}</div>
+                          <div className="text-xs text-gray-500 mt-0.5">
+                            {lead.email || lead.phone || 'Sem contato'}
+                          </div>
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <span className="capitalize">
+                        {lead.interestType === 'purchase' ? 'Compra' :
+                        lead.interestType === 'rent' ? 'Aluguel' :
+                        lead.interestType || 'Não informado'}
+                      </span>
+                    </TableCell>
+                    <TableCell>
+                      <span className="capitalize">
+                        {lead.source === 'manual' ? 'Manual' :
+                        lead.source === 'website' ? 'Website' :
+                        lead.source === 'whatsapp' ? 'WhatsApp' :
+                        lead.source === 'instagram' ? 'Instagram' :
+                        lead.source === 'facebook' ? 'Facebook' :
+                        lead.source === 'indicacao' ? 'Indicação' :
+                        lead.source || 'Não informado'}
+                      </span>
+                    </TableCell>
+                    <TableCell className="font-medium">
+                      {lead.budget ? lead.budget.toLocaleString('pt-BR', {
+                        style: 'currency',
+                        currency: 'BRL',
+                        minimumFractionDigits: 0,
+                        maximumFractionDigits: 0,
+                      }) : 'Não informado'}
+                    </TableCell>
+                    <TableCell>
+                      <div className={`text-xs font-medium rounded-full px-2.5 py-1 inline-flex items-center justify-center w-24
+                        ${lead.status === 'new' ? 'bg-blue-50 text-blue-700' : 
+                          lead.status === 'contacted' ? 'bg-yellow-50 text-yellow-700' : 
+                          lead.status === 'visit' ? 'bg-green-50 text-green-700' : 
+                          lead.status === 'proposal' ? 'bg-purple-50 text-purple-700' : 
+                          'bg-gray-50 text-gray-700'}`}
+                      >
+                        {lead.status === 'new' ? 'Novo' : 
+                        lead.status === 'contacted' ? 'Contatado' :
+                        lead.status === 'visit' ? 'Visita' :
+                        lead.status === 'proposal' ? 'Proposta' :
+                        lead.status}
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button variant="ghost" size="sm" className="mr-2">
+                            <i className="fas fa-eye mr-1 text-xs"></i> Detalhes
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-[550px]">
+                          <DialogHeader>
+                            <DialogTitle className="flex items-center gap-2">
+                              Detalhes do Lead
+                              <div className={`text-xs font-medium rounded-full px-2.5 py-0.5 inline-flex items-center ml-2
+                                ${lead.status === 'new' ? 'bg-blue-50 text-blue-700' : 
+                                  lead.status === 'contacted' ? 'bg-yellow-50 text-yellow-700' : 
+                                  lead.status === 'visit' ? 'bg-green-50 text-green-700' : 
+                                  lead.status === 'proposal' ? 'bg-purple-50 text-purple-700' : 
+                                  'bg-gray-50 text-gray-700'}`}
+                              >
+                                {lead.status === 'new' ? 'Novo' : 
+                                lead.status === 'contacted' ? 'Contatado' :
+                                lead.status === 'visit' ? 'Visita' :
+                                lead.status === 'proposal' ? 'Proposta' :
+                                lead.status}
+                              </div>
+                            </DialogTitle>
+                          </DialogHeader>
+                          
+                          <div className="grid gap-4 py-4">
+                            <div className="grid grid-cols-2 gap-4">
+                              <div>
+                                <h4 className="text-sm font-medium text-gray-700 mb-1">Nome</h4>
+                                <p className="text-gray-900">{lead.name}</p>
+                              </div>
+                              <div>
+                                <h4 className="text-sm font-medium text-gray-700 mb-1">Status</h4>
+                                <Select 
+                                  value={lead.status}
+                                  onValueChange={(value) => {
+                                    // Implementar alteração de status
+                                  }}
+                                >
+                                  <SelectTrigger className="h-9">
+                                    <SelectValue placeholder="Selecione o status" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectItem value="new">Novo</SelectItem>
+                                    <SelectItem value="contacted">Contatado</SelectItem>
+                                    <SelectItem value="visit">Visita</SelectItem>
+                                    <SelectItem value="proposal">Proposta</SelectItem>
+                                  </SelectContent>
+                                </Select>
+                              </div>
+                            </div>
+                            
+                            <div className="grid grid-cols-2 gap-4">
+                              <div>
+                                <h4 className="text-sm font-medium text-gray-700 mb-1">Email</h4>
+                                <p className="text-gray-900">{lead.email || "Não informado"}</p>
+                              </div>
+                              <div>
+                                <h4 className="text-sm font-medium text-gray-700 mb-1">Telefone</h4>
+                                <p className="text-gray-900">{lead.phone || "Não informado"}</p>
+                              </div>
+                            </div>
+                            
+                            <div className="grid grid-cols-2 gap-4">
+                              <div>
+                                <h4 className="text-sm font-medium text-gray-700 mb-1">Tipo de Interesse</h4>
+                                <p className="text-gray-900">
+                                  {lead.interestType === 'purchase' ? 'Compra' :
+                                  lead.interestType === 'rent' ? 'Aluguel' :
+                                  lead.interestType || 'Não informado'}
+                                </p>
+                              </div>
+                              <div>
+                                <h4 className="text-sm font-medium text-gray-700 mb-1">Orçamento</h4>
+                                <p className="text-gray-900">
+                                  {lead.budget ? lead.budget.toLocaleString('pt-BR', {
+                                    style: 'currency',
+                                    currency: 'BRL',
+                                    minimumFractionDigits: 0,
+                                    maximumFractionDigits: 0,
+                                  }) : 'Não informado'}
+                                </p>
+                              </div>
+                            </div>
+                            
+                            <div>
+                              <h4 className="text-sm font-medium text-gray-700 mb-1">Origem</h4>
+                              <p className="text-gray-900">
+                                {lead.source === 'manual' ? 'Manual' :
+                                lead.source === 'website' ? 'Website' :
+                                lead.source === 'whatsapp' ? 'WhatsApp' :
+                                lead.source === 'instagram' ? 'Instagram' :
+                                lead.source === 'facebook' ? 'Facebook' :
+                                lead.source === 'indicacao' ? 'Indicação' :
+                                lead.source || 'Não informado'}
+                              </p>
+                            </div>
+                            
+                            {lead.message && (
+                              <div>
+                                <h4 className="text-sm font-medium text-gray-700 mb-1">Mensagem</h4>
+                                <div className="bg-gray-50 p-3 rounded border border-gray-200 text-gray-700">
+                                  {lead.message}
+                                </div>
+                              </div>
+                            )}
+                            
+                            {lead.notes && (
+                              <div>
+                                <h4 className="text-sm font-medium text-gray-700 mb-1">Observações</h4>
+                                <div className="bg-gray-50 p-3 rounded border border-gray-200 text-gray-700">
+                                  {lead.notes}
+                                </div>
+                              </div>
+                            )}
+                            
+                            <div className="mt-2">
+                              <h4 className="text-sm font-medium text-gray-700 mb-1">Data de Criação</h4>
+                              <p className="text-gray-900">
+                                {lead.createdAt ? new Date(lead.createdAt).toLocaleDateString('pt-BR') : "Data não disponível"}
+                              </p>
+                            </div>
+                          </div>
+                        </DialogContent>
+                      </Dialog>
+                      
+                      <Select 
+                        value={lead.status}
+                        onValueChange={(value) => {
+                          // Implementar alteração de status
+                        }}
+                      >
+                        <SelectTrigger className="w-[140px] h-9 inline-flex">
+                          <SelectValue placeholder="Atualizar status" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="new">Novo</SelectItem>
+                          <SelectItem value="contacted">Contatado</SelectItem>
+                          <SelectItem value="visit">Visita</SelectItem>
+                          <SelectItem value="proposal">Proposta</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         </div>
       )}
     </div>
