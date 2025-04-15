@@ -396,20 +396,25 @@ export default function AllProperties() {
           
           {/* Resultados da busca */}
           {isLoadingProperties ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {[1, 2, 3, 4, 5, 6, 7, 8].map((item) => (
-                <div key={item} className="bg-white rounded-lg overflow-hidden border border-gray-200">
+                <div key={item} className="h-full bg-white rounded-lg border border-gray-200 overflow-hidden">
                   {/* Skeleton da imagem */}
-                  <Skeleton className="h-52 w-full" />
+                  <Skeleton className="h-48 w-full" />
                   {/* Skeleton das informações */}
                   <div className="p-4">
-                    <Skeleton className="h-7 w-36 mb-3" /> {/* Preço */}
                     <Skeleton className="h-6 w-4/5 mb-2" /> {/* Título */}
                     <Skeleton className="h-4 w-full mb-4" /> {/* Endereço */}
-                    <div className="flex justify-between mb-2">
-                      <Skeleton className="h-4 w-20" /> {/* Quarto */}
-                      <Skeleton className="h-4 w-20" /> {/* Banheiro */}
-                      <Skeleton className="h-4 w-20" /> {/* Vagas */}
+                    <div className="flex justify-between mb-4">
+                      <Skeleton className="h-4 w-10" /> {/* Área */}
+                      <Skeleton className="h-4 w-10" /> {/* Quarto */}
+                      <Skeleton className="h-4 w-10" /> {/* Banheiro */}
+                      <Skeleton className="h-4 w-10" /> {/* Suíte */}
+                      <Skeleton className="h-4 w-10" /> {/* Vagas */}
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <Skeleton className="h-7 w-24" /> {/* Preço */}
+                      <Skeleton className="h-9 w-14 rounded-md" /> {/* Botão */}
                     </div>
                   </div>
                 </div>
