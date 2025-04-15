@@ -9,6 +9,7 @@ import AllProperties from "@/pages/AllProperties";
 import CRM from "@/pages/CRM";
 import Agents from "@/pages/Agents";
 import Website from "@/pages/Website";
+import Settings from "@/pages/Settings";
 import Home from "@/pages/Home";
 import AppLayout from "@/components/layout/AppLayout";
 import { queryClient } from "./lib/queryClient";
@@ -32,6 +33,8 @@ function AdminRouter() {
     CurrentComponent = Agents;
   } else if (location.includes("/admin/site")) {
     CurrentComponent = Website;
+  } else if (location.includes("/admin/configuracoes")) {
+    CurrentComponent = Settings;
   } else if (location !== "/admin") {
     CurrentComponent = NotFound;
   }
