@@ -126,42 +126,114 @@ export default function Header({ config, isLoadingConfig }: HeaderProps) {
           {/* Menu hamburger - apenas mobile */}
           <Sheet>
             <SheetTrigger asChild>
-              <button className="md:hidden flex flex-col items-center justify-center gap-1.5 w-8 h-8">
-                <span className={`w-5 h-0.5 rounded-full transition-all ${isPropertiesPage || scrolled ? 'bg-gray-800' : 'bg-white'}`}></span>
-                <span className={`w-5 h-0.5 rounded-full transition-all ${isPropertiesPage || scrolled ? 'bg-gray-800' : 'bg-white'}`}></span>
-                <span className={`w-5 h-0.5 rounded-full transition-all ${isPropertiesPage || scrolled ? 'bg-gray-800' : 'bg-white'}`}></span>
+              <button 
+                className="md:hidden flex items-center justify-center w-10 h-10 rounded-md border relative overflow-hidden group"
+                style={{ 
+                  backgroundColor: isPropertiesPage || scrolled ? 'white' : 'rgba(255, 255, 255, 0.1)',
+                  borderColor: isPropertiesPage || scrolled ? 'rgba(0, 0, 0, 0.1)' : 'rgba(255, 255, 255, 0.2)'
+                }}
+              >
+                <div className="relative z-10 flex flex-col items-center justify-center gap-1.5 w-6 h-6">
+                  <span 
+                    className={`w-4 h-0.5 rounded-full transform origin-center transition-all duration-300 ${isPropertiesPage || scrolled ? 'bg-primary' : 'bg-white'}`}
+                    style={{ width: '16px' }}
+                  ></span>
+                  <span 
+                    className={`w-6 h-0.5 rounded-full transform origin-center transition-all duration-300 ${isPropertiesPage || scrolled ? 'bg-primary' : 'bg-white'}`}
+                    style={{ width: '22px' }}
+                  ></span>
+                  <span 
+                    className={`w-5 h-0.5 rounded-full transform origin-center transition-all duration-300 ${isPropertiesPage || scrolled ? 'bg-primary' : 'bg-white'}`}
+                    style={{ width: '18px' }}
+                  ></span>
+                </div>
+                <div 
+                  className="absolute inset-0 bg-primary opacity-0 transition-opacity duration-300 group-hover:opacity-10"
+                  style={{ 
+                    backgroundColor: config?.primaryColor || 'var(--primary)'
+                  }}
+                ></div>
               </button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-[250px] sm:w-[280px] p-6">
+            <SheetContent side="right" className="w-[300px] sm:w-[320px] p-0 border-0" title="Menu de navegação" description="Navegue pelo site">
               <div className="flex flex-col h-full">
-                <div className="flex flex-col">
-                  <a href="/#home" className="py-3 text-lg hover:text-primary">
-                    Início
+                {/* Área do logo no topo do menu */}
+                <div 
+                  className="p-6 border-b"
+                  style={{ borderColor: 'rgba(0, 0, 0, 0.06)' }}
+                >
+                  {config?.logo ? (
+                    <img src={config.logo} alt="Logo" className="h-10 object-contain" />
+                  ) : (
+                    <div className="flex items-center">
+                      <div className="h-8 w-8 rounded bg-primary flex items-center justify-center text-white">
+                        <i className="fas fa-home text-sm"></i>
+                      </div>
+                      <span className="text-xl font-bold ml-2">Imobiliária</span>
+                    </div>
+                  )}
+                </div>
+                
+                {/* Links do menu com efeito hover */}
+                <div className="px-6 py-8 flex flex-col space-y-1">
+                  <a 
+                    href="/#home" 
+                    className="flex items-center py-3 px-4 rounded-md transition-all hover:bg-gray-50 relative overflow-hidden group"
+                  >
+                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary opacity-0 group-hover:opacity-100 transition-opacity" style={{ backgroundColor: config?.primaryColor || 'var(--primary)' }}></div>
+                    <i className="fas fa-home text-gray-400 w-6 group-hover:text-primary transition-colors" style={{ color: 'rgba(0,0,0,0.3)' }}></i>
+                    <span className="ml-3 text-gray-700 font-medium group-hover:text-primary transition-colors">Início</span>
                   </a>
-                  <a href="/#properties" className="py-3 text-lg hover:text-primary">
-                    Destaques
+                  
+                  <a 
+                    href="/#properties" 
+                    className="flex items-center py-3 px-4 rounded-md transition-all hover:bg-gray-50 relative overflow-hidden group"
+                  >
+                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary opacity-0 group-hover:opacity-100 transition-opacity" style={{ backgroundColor: config?.primaryColor || 'var(--primary)' }}></div>
+                    <i className="fas fa-star text-gray-400 w-6 group-hover:text-primary transition-colors" style={{ color: 'rgba(0,0,0,0.3)' }}></i>
+                    <span className="ml-3 text-gray-700 font-medium group-hover:text-primary transition-colors">Destaques</span>
                   </a>
-                  <Link href="/properties" className="py-3 text-lg hover:text-primary">
-                    Todos Imóveis
+                  
+                  <Link 
+                    href="/properties" 
+                    className="flex items-center py-3 px-4 rounded-md transition-all hover:bg-gray-50 relative overflow-hidden group"
+                  >
+                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary opacity-0 group-hover:opacity-100 transition-opacity" style={{ backgroundColor: config?.primaryColor || 'var(--primary)' }}></div>
+                    <i className="fas fa-building text-gray-400 w-6 group-hover:text-primary transition-colors" style={{ color: 'rgba(0,0,0,0.3)' }}></i>
+                    <span className="ml-3 text-gray-700 font-medium group-hover:text-primary transition-colors">Todos Imóveis</span>
                   </Link>
-                  <a href="/#about" className="py-3 text-lg hover:text-primary">
-                    Sobre
+                  
+                  <a 
+                    href="/#about" 
+                    className="flex items-center py-3 px-4 rounded-md transition-all hover:bg-gray-50 relative overflow-hidden group"
+                  >
+                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary opacity-0 group-hover:opacity-100 transition-opacity" style={{ backgroundColor: config?.primaryColor || 'var(--primary)' }}></div>
+                    <i className="fas fa-info-circle text-gray-400 w-6 group-hover:text-primary transition-colors" style={{ color: 'rgba(0,0,0,0.3)' }}></i>
+                    <span className="ml-3 text-gray-700 font-medium group-hover:text-primary transition-colors">Sobre</span>
                   </a>
-                  <a href="/#contact" className="py-3 text-lg hover:text-primary">
-                    Contato
+                  
+                  <a 
+                    href="/#contact" 
+                    className="flex items-center py-3 px-4 rounded-md transition-all hover:bg-gray-50 relative overflow-hidden group"
+                  >
+                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary opacity-0 group-hover:opacity-100 transition-opacity" style={{ backgroundColor: config?.primaryColor || 'var(--primary)' }}></div>
+                    <i className="fas fa-envelope text-gray-400 w-6 group-hover:text-primary transition-colors" style={{ color: 'rgba(0,0,0,0.3)' }}></i>
+                    <span className="ml-3 text-gray-700 font-medium group-hover:text-primary transition-colors">Contato</span>
                   </a>
                 </div>
                 
+                {/* Botão de contato na parte inferior */}
                 {config?.phone && (
-                  <div className="mt-auto pt-6">
+                  <div className="mt-auto border-t p-6" style={{ borderColor: 'rgba(0, 0, 0, 0.06)' }}>
                     <a 
                       href={`https://wa.me/${config.phone.replace(/\D/g, '')}`} 
-                      className="flex items-center justify-center py-3 px-4 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors"
+                      className="flex items-center justify-center py-3 px-4 bg-primary text-white rounded-md hover:opacity-90 transition-all shadow-sm"
                       target="_blank"
                       rel="noopener noreferrer"
+                      style={{ backgroundColor: config?.primaryColor || 'var(--primary)' }}
                     >
-                      <i className="fab fa-whatsapp mr-2"></i>
-                      <span>Fale conosco</span>
+                      <i className="fab fa-whatsapp mr-2 text-lg"></i>
+                      <span className="font-medium tracking-wide">FALAR COM CORRETOR</span>
                     </a>
                   </div>
                 )}
