@@ -91,6 +91,10 @@ export default function ConfigTabs({
             onConfigChange={onConfigChange}
           />
         </TabsContent>
+        
+        <TabsContent value="salesfunnel" className="p-6 bg-white">
+          <SalesFunnelSettings />
+        </TabsContent>
       </Tabs>
     </div>
   );

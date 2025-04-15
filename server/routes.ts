@@ -7,7 +7,9 @@ import {
   insertPropertySchema,
   insertLeadSchema,
   insertTaskSchema,
-  updateWebsiteConfigSchema
+  updateWebsiteConfigSchema,
+  insertSalesFunnelSchema,
+  insertFunnelStageSchema
 } from "@shared/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -309,6 +311,219 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "Invalid config data", errors: error.errors });
       }
       res.status(500).json({ message: "Error updating website configuration" });
+    }
+  });
+
+  // Sales Funnels endpoints
+  apiRouter.get("/sales-funnels", async (req, res) => {
+    try {
+      const funnels = await storageInstance.getAllSalesFunnels();
+      res.json(funnels);
+    } catch (error) {
+      console.error("Error fetching sales funnels:", error);
+      res.status(500).json({ message: "Error fetching sales funnels" });
+    }
+  });
+
+  apiRouter.get("/sales-funnels/:id", async (req, res) => {
+    try {
+      const funnel = await storageInstance.getSalesFunnel(parseInt(req.params.id));
+      if (!funnel) {
+        return res.status(404).json({ message: "Sales funnel not found" });
+      }
+      res.json(funnel);
+    } catch (error) {
+      console.error("Error fetching sales funnel:", error);
+      res.status(500).json({ message: "Error fetching sales funnel" });
+    }
+  });
+
+  apiRouter.post("/sales-funnels", async (req, res) => {
+    try {
+      const validatedData = insertSalesFunnelSchema.parse(req.body);
+      const funnel = await storageInstance.createSalesFunnel(validatedData);
+      res.status(201).json(funnel);
+    } catch (error) {
+      console.error("Error creating sales funnel:", error);
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Invalid sales funnel data", errors: error.errors });
+      }
+      res.status(500).json({ message: "Error creating sales funnel" });
+    }
+  });
+
+  apiRouter.patch("/sales-funnels/:id", async (req, res) => {
+    try {
+      const validatedData = insertSalesFunnelSchema.partial().parse(req.body);
+      const funnel = await storageInstance.updateSalesFunnel(parseInt(req.params.id), validatedData);
+      if (!funnel) {
+        return res.status(404).json({ message: "Sales funnel not found" });
+      }
+      res.json(funnel);
+    } catch (error) {
+      console.error("Error updating sales funnel:", error);
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Invalid sales funnel data", errors: error.errors });
+      }
+      res.status(500).json({ message: "Error updating sales funnel" });
+    }
+  });
+
+  apiRouter.delete("/sales-funnels/:id", async (req, res) => {
+    try {
+      const success = await storageInstance.deleteSalesFunnel(parseInt(req.params.id));
+      if (!success) {
+        return res.status(404).json({ message: "Sales funnel not found or cannot be deleted (default funnel)" });
+      }
+      res.status(204).send();
+    } catch (error) {
+      console.error("Error deleting sales funnel:", error);
+      res.status(500).json({ message: "Error deleting sales funnel" });
+    }
+  });
+
+  apiRouter.post("/sales-funnels/:id/set-default", async (req, res) => {
+    try {
+      const success = await storageInstance.setDefaultSalesFunnel(parseInt(req.params.id));
+      if (!success) {
+        return res.status(404).json({ message: "Sales funnel not found" });
+      }
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error setting default sales funnel:", error);
+      res.status(500).json({ message: "Error setting default sales funnel" });
+    }
+  });
+
+  // Funnel Stages endpoints
+  apiRouter.get("/funnel-stages", async (req, res) => {
+    try {
+      const { funnelId } = req.query;
+      if (!funnelId) {
+        return res.status(400).json({ message: "Funnel ID is required" });
+      }
+      const stages = await storageInstance.getFunnelStagesByFunnelId(parseInt(funnelId as string));
+      res.json(stages);
+    } catch (error) {
+      console.error("Error fetching funnel stages:", error);
+      res.status(500).json({ message: "Error fetching funnel stages" });
+    }
+  });
+
+  apiRouter.get("/funnel-stages/:id", async (req, res) => {
+    try {
+      const stage = await storageInstance.getFunnelStage(parseInt(req.params.id));
+      if (!stage) {
+        return res.status(404).json({ message: "Funnel stage not found" });
+      }
+      res.json(stage);
+    } catch (error) {
+      console.error("Error fetching funnel stage:", error);
+      res.status(500).json({ message: "Error fetching funnel stage" });
+    }
+  });
+
+  apiRouter.post("/funnel-stages", async (req, res) => {
+    try {
+      const validatedData = insertFunnelStageSchema.parse(req.body);
+      const stage = await storageInstance.createFunnelStage(validatedData);
+      res.status(201).json(stage);
+    } catch (error) {
+      console.error("Error creating funnel stage:", error);
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Invalid funnel stage data", errors: error.errors });
+      }
+      res.status(500).json({ message: "Error creating funnel stage" });
+    }
+  });
+
+  apiRouter.patch("/funnel-stages/:id", async (req, res) => {
+    try {
+      const validatedData = insertFunnelStageSchema.partial().parse(req.body);
+      const stage = await storageInstance.updateFunnelStage(parseInt(req.params.id), validatedData);
+      if (!stage) {
+        return res.status(404).json({ message: "Funnel stage not found" });
+      }
+      res.json(stage);
+    } catch (error) {
+      console.error("Error updating funnel stage:", error);
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Invalid funnel stage data", errors: error.errors });
+      }
+      res.status(500).json({ message: "Error updating funnel stage" });
+    }
+  });
+
+  apiRouter.delete("/funnel-stages/:id", async (req, res) => {
+    try {
+      const success = await storageInstance.deleteFunnelStage(parseInt(req.params.id));
+      if (!success) {
+        return res.status(404).json({ message: "Funnel stage not found" });
+      }
+      res.status(204).send();
+    } catch (error) {
+      console.error("Error deleting funnel stage:", error);
+      res.status(500).json({ message: "Error deleting funnel stage" });
+    }
+  });
+
+  apiRouter.post("/sales-funnels/:id/reorder-stages", async (req, res) => {
+    try {
+      const { stageIds } = req.body;
+      if (!stageIds || !Array.isArray(stageIds)) {
+        return res.status(400).json({ message: "Stage IDs array is required" });
+      }
+      const stages = await storageInstance.reorderFunnelStages(parseInt(req.params.id), stageIds);
+      res.json(stages);
+    } catch (error) {
+      console.error("Error reordering funnel stages:", error);
+      res.status(500).json({ message: "Error reordering funnel stages" });
+    }
+  });
+
+  // Lead funnel management
+  apiRouter.patch("/leads/:id/funnel/:funnelId", async (req, res) => {
+    try {
+      const lead = await storageInstance.assignLeadToFunnel(
+        parseInt(req.params.id),
+        parseInt(req.params.funnelId)
+      );
+      if (!lead) {
+        return res.status(404).json({ message: "Lead or funnel not found" });
+      }
+      res.json(lead);
+    } catch (error) {
+      console.error("Error assigning lead to funnel:", error);
+      res.status(500).json({ message: "Error assigning lead to funnel" });
+    }
+  });
+
+  apiRouter.patch("/leads/:id/stage/:stageId", async (req, res) => {
+    try {
+      const lead = await storageInstance.updateLeadStage(
+        parseInt(req.params.id),
+        parseInt(req.params.stageId)
+      );
+      if (!lead) {
+        return res.status(404).json({ message: "Lead or stage not found" });
+      }
+      res.json(lead);
+    } catch (error) {
+      console.error("Error updating lead stage:", error);
+      res.status(500).json({ message: "Error updating lead stage" });
+    }
+  });
+
+  apiRouter.get("/funnel-stages/:funnelId/:stageId/leads", async (req, res) => {
+    try {
+      const leads = await storageInstance.getLeadsByFunnelStage(
+        parseInt(req.params.funnelId),
+        parseInt(req.params.stageId)
+      );
+      res.json(leads);
+    } catch (error) {
+      console.error("Error fetching leads by funnel stage:", error);
+      res.status(500).json({ message: "Error fetching leads by funnel stage" });
     }
   });
 
