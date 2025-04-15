@@ -24,7 +24,7 @@ export default function SalesFunnelSettings({}: SalesFunnelSettingsProps) {
   const [isEditStageDialogOpen, setIsEditStageDialogOpen] = useState(false);
   const [editingStageId, setEditingStageId] = useState<number | null>(null);
   const [newFunnelData, setNewFunnelData] = useState({ name: "", description: "", isDefault: false });
-  const [newStageData, setNewStageData] = useState({ name: "", description: "", color: "#E5E7EB" });
+  const [newStageData, setNewStageData] = useState({ name: "", description: "", color: "#E5E7EB", position: 0 });
   const [editStageData, setEditStageData] = useState({ name: "", description: "", color: "#E5E7EB" });
   const { toast } = useToast();
 
@@ -129,7 +129,7 @@ export default function SalesFunnelSettings({}: SalesFunnelSettingsProps) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/funnel-stages', activeFunnelId] });
       setIsNewStageDialogOpen(false);
-      setNewStageData({ name: "", description: "", color: "#E5E7EB" });
+      setNewStageData({ name: "", description: "", color: "#E5E7EB", position: 0 });
       toast({
         title: "Sucesso!",
         description: "Estágio criado com sucesso.",
@@ -612,8 +612,15 @@ export default function SalesFunnelSettings({}: SalesFunnelSettingsProps) {
                   });
                   return;
                 }
+                
+                // Calcular a próxima posição com base nos estágios existentes
+                const nextPosition = stages && stages.length > 0
+                  ? Math.max(...stages.map(s => s.position)) + 1
+                  : 1;
+                
                 createStageMutation.mutate({
                   ...newStageData,
+                  position: nextPosition,
                   funnelId: activeFunnelId
                 });
               }}
