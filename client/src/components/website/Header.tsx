@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Link, useLocation } from 'wouter';
+import { useLocation } from 'wouter';
 import { WebsiteConfig } from '@shared/schema';
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet';
+import NavigationLink from '@/components/ui/navigation-link';
 
 interface HeaderProps {
   config?: WebsiteConfig;
@@ -77,7 +78,7 @@ export default function Header({ config, isLoadingConfig }: HeaderProps) {
           <nav className="hidden md:flex space-x-8">
             <a href="/#home" className={`${isPropertiesPage || scrolled ? 'text-gray-700' : 'text-white'} hover:text-primary font-medium transition-colors duration-300`}>Início</a>
             <a href="/#properties" className={`${isPropertiesPage || scrolled ? 'text-gray-700' : 'text-white'} hover:text-primary font-medium transition-colors duration-300`}>Destaques</a>
-            <Link href="/properties" className={`${isPropertiesPage || scrolled ? 'text-gray-700' : 'text-white'} hover:text-primary font-medium transition-colors duration-300`}>Todos Imóveis</Link>
+            <NavigationLink href="/properties" className={`${isPropertiesPage || scrolled ? 'text-gray-700' : 'text-white'} hover:text-primary font-medium transition-colors duration-300`}>Todos Imóveis</NavigationLink>
             <a href="/#about" className={`${isPropertiesPage || scrolled ? 'text-gray-700' : 'text-white'} hover:text-primary font-medium transition-colors duration-300`}>Sobre</a>
             <a href="/#contact" className={`${isPropertiesPage || scrolled ? 'text-gray-700' : 'text-white'} hover:text-primary font-medium transition-colors duration-300`}>Contato</a>
           </nav>
@@ -193,13 +194,13 @@ export default function Header({ config, isLoadingConfig }: HeaderProps) {
                     <span className="text-gray-700 font-medium text-[17px] group-hover:text-primary transition-colors">Destaques</span>
                   </a>
                   
-                  <Link 
+                  <NavigationLink 
                     href="/properties" 
                     className="flex items-center py-4 px-6 rounded-md transition-all hover:bg-gray-50 relative overflow-hidden group"
                   >
                     <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary opacity-0 group-hover:opacity-100 transition-opacity" style={{ backgroundColor: config?.primaryColor || 'var(--primary)' }}></div>
                     <span className="text-gray-700 font-medium text-[17px] group-hover:text-primary transition-colors">Todos Imóveis</span>
-                  </Link>
+                  </NavigationLink>
                   
                   <a 
                     href="/#about" 

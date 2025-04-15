@@ -24,10 +24,8 @@ export default function NavigationLink({ href, children, className = '', onClick
   };
 
   return (
-    <Link href={href}>
-      <a className={className} onClick={handleClick}>
-        {children}
-      </a>
+    <Link href={href} onClick={handleClick} className={className}>
+      {children}
     </Link>
   );
 }
