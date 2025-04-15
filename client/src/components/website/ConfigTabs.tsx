@@ -4,7 +4,6 @@ import GeneralSettings from "@/components/website/GeneralSettings";
 import HomepageSettings from "@/components/website/HomepageSettings";
 import SeoSettings from "@/components/website/SeoSettings";
 import InformationSettings from "@/components/website/InformationSettings";
-import SalesFunnelSettings from "@/components/website/SalesFunnelSettings";
 import { WebsiteConfig, UpdateWebsiteConfig } from "@shared/schema";
 
 interface ConfigTabsProps {
@@ -51,12 +50,6 @@ export default function ConfigTabs({
             >
               SEO
             </TabsTrigger>
-            <TabsTrigger 
-              value="salesfunnel" 
-              className="px-6 py-4 data-[state=active]:border-b-2 data-[state=active]:border-indigo-600 rounded-none data-[state=active]:bg-white"
-            >
-              Funil de Vendas
-            </TabsTrigger>
           </TabsList>
         </div>
         
@@ -90,10 +83,6 @@ export default function ConfigTabs({
             configData={configData}
             onConfigChange={onConfigChange}
           />
-        </TabsContent>
-        
-        <TabsContent value="salesfunnel" className="p-6 bg-white">
-          <SalesFunnelSettings />
         </TabsContent>
       </Tabs>
     </div>
