@@ -46,6 +46,8 @@ export default function SalesFunnel({ isLoading: initialLoading, data }: SalesFu
 
   const isLoading = initialLoading || funnelsLoading || stagesLoading;
 
+  console.log("Estado de carregamento:", { isLoading, dataExists: !!data, defaultFunnel, stagesCount: sortedStages.length });
+  
   if (isLoading || !data || !defaultFunnel || !sortedStages.length) {
     return (
       <div className="h-80 w-full space-y-6 p-4">

@@ -44,6 +44,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const proposals = allLeads.filter(lead => lead.status === 'proposal').length;
         const sales = allLeads.filter(lead => lead.status === 'closed').length;
         
+        console.log("Retornando dados processados do funil:", {leads, contacts, visits, proposals, sales});
+        
         res.json({
           leads,
           contacts,
