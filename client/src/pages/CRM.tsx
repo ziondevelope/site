@@ -571,195 +571,167 @@ export default function CRM() {
                             <i className="fas fa-eye mr-1 text-xs"></i> Detalhes
                           </Button>
                         </DialogTrigger>
-                        <DialogContent className="max-w-6xl w-full h-[90vh] overflow-y-auto">
+                        <DialogContent className="max-w-4xl w-full overflow-y-auto">
                           <DialogHeader>
-                            <DialogTitle className="flex justify-between items-center text-lg mb-2">
+                            <DialogTitle className="flex justify-between items-center">
                               <div className="flex items-center">
-                                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-100 text-blue-600 mr-3">
+                                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 text-blue-600 mr-3">
                                   <i className="fas fa-user-alt"></i>
                                 </div>
                                 <div>
-                                  {lead.name}
-                                  <div className="text-sm font-normal text-gray-500">
+                                  <p className="font-medium">{lead.name}</p>
+                                  <p className="text-sm font-normal text-gray-500">
                                     Criado em {lead.createdAt ? new Date(lead.createdAt).toLocaleDateString('pt-BR') : "Data não disponível"}
-                                  </div>
+                                  </p>
                                 </div>
                               </div>
+                              <button className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
+                                <i className="fas fa-times"></i>
+                                <span className="sr-only">Fechar</span>
+                              </button>
                             </DialogTitle>
-                            {/* Conteúdo descritivo oculto */}
                             <div className="sr-only">Detalhes do lead</div>
                           </DialogHeader>
                           
-                          <div className="grid grid-cols-3 gap-6 mt-2">
-                            {/* Coluna da esquerda com informações de contato */}
-                            <div className="bg-white p-6 rounded border border-gray-200">
-                              <h3 className="text-base font-semibold mb-4">Informações de Contato</h3>
-                              
-                              <div className="space-y-4">
-                                <div>
-                                  <h4 className="text-sm font-medium text-gray-700 mb-1">Nome</h4>
-                                  <p className="text-gray-900">{lead.name}</p>
+                          <div className="mt-4">
+                            {/* Indicadores de progresso */}
+                            <div className="relative mb-10">
+                              <div className="grid grid-cols-4 gap-0">
+                                <div 
+                                  className={`flex justify-center items-center py-2 
+                                    ${lead.status === 'new' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-500'}`}
+                                >
+                                  Contato
                                 </div>
-                                
-                                <div>
-                                  <h4 className="text-sm font-medium text-gray-700 mb-1">Email</h4>
-                                  <p className="text-gray-900">{lead.email || "Não informado"}</p>
+                                <div 
+                                  className={`flex justify-center items-center py-2 
+                                    ${lead.status === 'contacted' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-500'}`}
+                                >
+                                  Follow up
                                 </div>
-                                
-                                <div>
-                                  <h4 className="text-sm font-medium text-gray-700 mb-1">Telefone</h4>
-                                  <p className="text-gray-900">{lead.phone || "Não informado"}</p>
+                                <div 
+                                  className={`flex justify-center items-center py-2 
+                                    ${lead.status === 'visit' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-500'}`}
+                                >
+                                  Agendamento
                                 </div>
-
-                                {/* Esconder o campo WhatsApp para evitar erros de tipo */}
-                                <div>
-                                  <h4 className="text-sm font-medium text-gray-700 mb-1">WhatsApp</h4>
-                                  <p className="text-gray-900">{"Não informado"}</p>
+                                <div 
+                                  className={`flex justify-center items-center py-2 
+                                    ${lead.status === 'proposal' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-500'}`}
+                                >
+                                  Perdido
                                 </div>
                               </div>
-                              
-                              <div className="mt-4">
-                                <h3 className="text-base font-semibold my-4">Campos Personalizados</h3>
+                            </div>
+                            
+                            <div className="grid grid-cols-3 gap-6">
+                              {/* Informações de Contato */}
+                              <div>
+                                <h3 className="text-base font-semibold mb-4">Informações de Contato</h3>
                                 <div className="space-y-4">
                                   <div>
-                                    <h4 className="text-sm font-medium text-gray-700 mb-1">Valor</h4>
+                                    <h4 className="text-sm font-medium text-gray-500 mb-1">Nome</h4>
+                                    <p className="text-gray-900">{lead.name}</p>
+                                  </div>
+                                  
+                                  <div>
+                                    <h4 className="text-sm font-medium text-gray-500 mb-1">Email</h4>
+                                    <p className="text-gray-900">{lead.email || "Não informado"}</p>
+                                  </div>
+                                  
+                                  <div>
+                                    <h4 className="text-sm font-medium text-gray-500 mb-1">Telefone</h4>
+                                    <p className="text-gray-900">{lead.phone || "Não informado"}</p>
+                                  </div>
+                                  
+                                  <div>
+                                    <h4 className="text-sm font-medium text-gray-500 mb-1">WhatsApp</h4>
+                                    <p className="text-gray-900">Não informado</p>
+                                  </div>
+                                  
+                                  <h3 className="text-base font-semibold mt-8 mb-4">Campos Personalizados</h3>
+                                  
+                                  <div>
+                                    <h4 className="text-sm font-medium text-gray-500 mb-1">Valor</h4>
                                     <p className="text-gray-900">
-                                      {lead.budget ? lead.budget.toLocaleString('pt-BR', {
-                                        style: 'currency',
-                                        currency: 'BRL',
-                                        minimumFractionDigits: 0,
-                                        maximumFractionDigits: 0,
-                                      }) : 'R$ 0,00'}
+                                      {lead.budget ? 'R$ ' + lead.budget.toLocaleString('pt-BR') : 'R$ 0'}
                                     </p>
                                   </div>
                                   
                                   <div>
-                                    <h4 className="text-sm font-medium text-gray-700 mb-1">Data Prevista</h4>
+                                    <h4 className="text-sm font-medium text-gray-500 mb-1">Data Prevista</h4>
                                     <p className="text-gray-900">Não informado</p>
                                   </div>
                                 </div>
                               </div>
-                            </div>
-                            
-                            {/* Coluna central com funil de vendas */}
-                            <div className="bg-white p-6 rounded border border-gray-200">
-                              <div className="flex justify-between items-center mb-4">
-                                <h3 className="text-base font-semibold">Funil de Vendas</h3>
-                                <div className="text-sm text-gray-500">
-                                  Estágio atual: 
-                                  <span className={`ml-2 font-medium px-2 py-1 rounded-full 
-                                    ${lead.status === 'new' ? 'bg-blue-50 text-blue-700' : 
-                                    lead.status === 'contacted' ? 'bg-yellow-50 text-yellow-700' : 
-                                    lead.status === 'visit' ? 'bg-green-50 text-green-700' : 
-                                    lead.status === 'proposal' ? 'bg-purple-50 text-purple-700' : 
-                                    'bg-gray-50 text-gray-700'}`}
-                                  >
-                                    {lead.status === 'new' ? 'Contato' : 
-                                    lead.status === 'contacted' ? 'Envio de proposta' :
-                                    lead.status === 'visit' ? 'Follow-up' :
-                                    lead.status === 'proposal' ? 'Fechamento' :
-                                    lead.status}
-                                  </span>
-                                </div>
-                              </div>
                               
-                              <div className="relative mt-4">
-                                <div className="flex justify-between items-center">
-                                  <div className={`w-10 h-10 rounded-full flex items-center justify-center 
-                                    ${lead.status === 'new' || lead.status === 'contacted' || lead.status === 'visit' || lead.status === 'proposal' 
-                                      ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-600'}`}>
-                                    <i className="fas fa-check text-sm"></i>
-                                  </div>
-                                  <div className={`w-10 h-10 rounded-full flex items-center justify-center
-                                    ${lead.status === 'contacted' || lead.status === 'visit' || lead.status === 'proposal' 
-                                      ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-600'}`}>
-                                    <i className="fas fa-check text-sm"></i>
-                                  </div>
-                                  <div className={`w-10 h-10 rounded-full flex items-center justify-center
-                                    ${lead.status === 'visit' || lead.status === 'proposal' 
-                                      ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-600'}`}>
-                                    <i className="fas fa-check text-sm"></i>
-                                  </div>
-                                  <div className={`w-10 h-10 rounded-full flex items-center justify-center relative
-                                    ${lead.status === 'proposal' 
-                                      ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-600'}`}>
-                                    {lead.status === 'proposal' ? (
-                                      <i className="fas fa-check text-sm"></i>
-                                    ) : (
-                                      <span className="text-sm">4</span>
-                                    )}
+                              {/* Funil de Vendas */}
+                              <div>
+                                <div className="flex justify-between items-center mb-4">
+                                  <h3 className="text-base font-semibold">Funil de Vendas</h3>
+                                  <div className="text-sm text-gray-500">
+                                    Estágio atual: 
+                                    <span className={`ml-2 font-medium px-2 py-1 rounded-full 
+                                      ${lead.status === 'new' ? 'bg-amber-100 text-amber-800' : 
+                                      lead.status === 'contacted' ? 'bg-amber-100 text-amber-800' : 
+                                      lead.status === 'visit' ? 'bg-amber-100 text-amber-800' : 
+                                      lead.status === 'proposal' ? 'bg-amber-100 text-amber-800' : 
+                                      'bg-gray-100 text-gray-800'}`}
+                                    >
+                                      {lead.status === 'new' ? 'Envio de proposta' : 
+                                      lead.status === 'contacted' ? 'Envio de proposta' :
+                                      lead.status === 'visit' ? 'Agendamento Visita' :
+                                      lead.status === 'proposal' ? 'Visita' :
+                                      lead.status}
+                                    </span>
                                   </div>
                                 </div>
                                 
-                                <div className="absolute top-5 left-0 right-0 h-0.5 bg-gray-200 -z-10"></div>
-                                
-                                <div className="flex justify-between items-center mt-2 text-xs text-gray-700">
-                                  <div className="text-center w-16 -ml-3">Contato<br/>Feito</div>
-                                  <div className="text-center w-16">Follow<br/>Up</div>
-                                  <div className="text-center w-16">Agendamento<br/>Visita</div>
-                                  <div className="text-center w-16 -mr-3">Perdido</div>
+                                <div className="mt-8">
+                                  <h3 className="text-sm font-medium text-gray-500 mb-3">Nota Rápida</h3>
+                                  <div className="bg-gray-50 p-4 rounded-md border border-gray-200">
+                                    <Textarea 
+                                      placeholder="Digite uma anotação rápida sobre este lead..." 
+                                      className="resize-none border-0 bg-transparent p-0 focus-visible:ring-0 text-sm" 
+                                      rows={8}
+                                      defaultValue={lead.notes || ""}
+                                    />
+                                  </div>
+                                  <div className="flex justify-end mt-4">
+                                    <Button className="bg-blue-600 hover:bg-blue-700 text-sm">
+                                      Salvar Nota
+                                    </Button>
+                                  </div>
                                 </div>
                               </div>
                               
-                              <div className="mt-8">
-                                <h3 className="text-sm font-medium text-gray-700 mb-3">Nota Rápida</h3>
-                                <div className="bg-gray-50 p-4 rounded-md border border-gray-200">
-                                  <Textarea 
-                                    placeholder="Digite uma anotação rápida sobre este lead..." 
-                                    className="resize-none border-0 bg-transparent p-0 focus-visible:ring-0 text-sm" 
-                                    rows={8}
-                                    defaultValue={lead.notes || ""}
-                                  />
-                                </div>
-                                <div className="flex justify-end mt-2">
-                                  <Button className="bg-blue-600 hover:bg-blue-700 text-sm">
-                                    Salvar Nota
-                                  </Button>
-                                </div>
-                              </div>
-                            </div>
-                            
-                            {/* Coluna da direita com ações */}
-                            <div className="space-y-6">
-                              <div className="bg-white p-6 rounded border border-gray-200">
+                              {/* Ações e Atividades */}
+                              <div>
                                 <h3 className="text-base font-semibold mb-4">Ações</h3>
-                                <div className="space-y-2">
-                                  <Button variant="outline" className="w-full justify-start text-gray-700 border-gray-300">
+                                <div className="space-y-2 mb-8">
+                                  <Button variant="outline" className="w-full justify-start text-gray-700 border-gray-300 h-10">
                                     <i className="fas fa-pen mr-2 text-gray-500"></i> Editar Lead
                                   </Button>
-                                  <Button variant="outline" className="w-full justify-start text-gray-700 border-gray-300">
+                                  <Button variant="outline" className="w-full justify-start text-gray-700 border-gray-300 h-10">
                                     <i className="far fa-calendar-alt mr-2 text-gray-500"></i> Agendar Atividade
                                   </Button>
-                                  <Button variant="outline" className="w-full justify-start text-red-600 hover:text-red-700 border-gray-300">
+                                  <Button variant="outline" className="w-full justify-start text-red-600 hover:text-red-700 border-gray-300 h-10">
                                     <i className="fas fa-trash-alt mr-2"></i> Excluir Lead
                                   </Button>
                                 </div>
-                              </div>
-                              
-                              <div className="bg-white p-6 rounded border border-gray-200">
+                                
                                 <h3 className="text-base font-semibold mb-4">Próximas Atividades</h3>
-                                <div className="flex flex-col items-center justify-center py-4">
+                                <div className="flex flex-col items-center justify-center py-4 bg-gray-50 rounded-md border border-gray-200">
                                   <p className="text-gray-500 text-sm mb-4">Nenhuma atividade agendada.</p>
                                   <Button variant="outline" className="border-dashed border-gray-300 text-gray-600">
                                     <i className="fas fa-plus mr-2"></i> Agendar Nova Atividade
                                   </Button>
                                 </div>
-                              </div>
-                              
-                              {lead.message && (
-                                <div className="bg-white p-6 rounded border border-gray-200">
-                                  <h3 className="text-base font-semibold mb-4">Mensagem Original</h3>
-                                  <div className="bg-gray-50 p-3 rounded border border-gray-200 text-gray-700">
-                                    {lead.message}
-                                  </div>
-                                </div>
-                              )}
-                              
-                              <div className="bg-white p-6 rounded border border-gray-200">
-                                <h3 className="text-base font-semibold mb-4">Interesse do Lead</h3>
+                                
+                                <h3 className="text-base font-semibold mt-8 mb-4">Interesse do Lead</h3>
                                 <div className="space-y-4">
                                   <div>
-                                    <h4 className="text-sm font-medium text-gray-700 mb-1">Tipo de Negócio</h4>
+                                    <h4 className="text-sm font-medium text-gray-500 mb-1">Tipo de Negócio</h4>
                                     <p className="text-gray-900">
                                       {lead.interestType === 'purchase' ? 'Compra' :
                                       lead.interestType === 'rent' ? 'Aluguel' :
@@ -768,29 +740,24 @@ export default function CRM() {
                                   </div>
                                   
                                   <div>
-                                    <h4 className="text-sm font-medium text-gray-700 mb-1">Tipo de Imóvel</h4>
+                                    <h4 className="text-sm font-medium text-gray-500 mb-1">Tipo de Imóvel</h4>
                                     <p className="text-gray-900">Não informado</p>
                                   </div>
                                   
                                   <div>
-                                    <h4 className="text-sm font-medium text-gray-700 mb-1">Região</h4>
+                                    <h4 className="text-sm font-medium text-gray-500 mb-1">Região</h4>
                                     <p className="text-gray-900">Não informado</p>
                                   </div>
                                   
                                   <div>
-                                    <h4 className="text-sm font-medium text-gray-700 mb-1">Faixa de Preço</h4>
+                                    <h4 className="text-sm font-medium text-gray-500 mb-1">Faixa de Preço</h4>
                                     <p className="text-gray-900">
-                                      {lead.budget ? lead.budget.toLocaleString('pt-BR', {
-                                        style: 'currency',
-                                        currency: 'BRL',
-                                        minimumFractionDigits: 0,
-                                        maximumFractionDigits: 0,
-                                      }) : 'Não informado'}
+                                      {lead.budget ? 'R$ ' + lead.budget.toLocaleString('pt-BR') : 'Não informado'}
                                     </p>
                                   </div>
                                   
                                   <div>
-                                    <h4 className="text-sm font-medium text-gray-700 mb-1">Origem</h4>
+                                    <h4 className="text-sm font-medium text-gray-500 mb-1">Origem</h4>
                                     <p className="text-gray-900">
                                       {lead.source === 'manual' ? 'Manual' :
                                       lead.source === 'website' ? 'Website' :
