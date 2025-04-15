@@ -428,20 +428,35 @@ export default function AllProperties() {
                   {filteredProperties.map((property) => (
                     <div 
                       key={property.id} 
-                      className="h-full bg-white rounded-lg border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-lg cursor-pointer group"
+                      className="h-full bg-white rounded-lg border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-lg cursor-pointer property-card"
                       onClick={() => openPropertyModal(property.id)}
                     >
                       {/* Imagem do imóvel */}
-                      <div className="h-48 bg-gray-200 relative">
+                      <div className="image-container">
                         {getFeaturedImage(property) ? (
                           <>
                             <img 
                               src={getFeaturedImage(property)} 
-                              alt={property.title} 
-                              className="w-full h-full object-cover transition-transform duration-500 hover-zoom"
+                              alt={property.title}
+                              style={{ 
+                                width: '100%', 
+                                height: '100%', 
+                                objectFit: 'cover',
+                                transition: 'transform 0.5s',
+                                transform: `scale(1.0)`
+                              }}
+                              className="property-image"
                               loading="lazy"
+                              onMouseEnter={(e) => {
+                                (e.target as HTMLImageElement).style.transform = 'scale(1.1)';
+                                e.currentTarget.nextElementSibling?.classList.add('opacity-100');
+                              }}
+                              onMouseLeave={(e) => {
+                                (e.target as HTMLImageElement).style.transform = 'scale(1.0)';
+                                e.currentTarget.nextElementSibling?.classList.remove('opacity-100');
+                              }}
                             />
-                            <div className="absolute inset-0 bg-black bg-opacity-30 opacity-0 hover-overlay transition-opacity duration-300"></div>
+                            <div className="absolute inset-0 bg-black bg-opacity-30 opacity-0 transition-opacity duration-300"></div>
                           </>
                         ) : (
                           <div className="flex items-center justify-center h-full bg-gray-200 text-gray-400">
