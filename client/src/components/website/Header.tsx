@@ -77,8 +77,7 @@ export default function Header({ config, isLoadingConfig }: HeaderProps) {
           {/* Menu ao lado da logo */}
           <nav className="hidden md:flex space-x-8">
             <a href="/#home" className={`${isPropertiesPage || scrolled ? 'text-gray-700' : 'text-white'} hover:text-primary font-medium transition-colors duration-300`}>Início</a>
-            <a href="/#properties" className={`${isPropertiesPage || scrolled ? 'text-gray-700' : 'text-white'} hover:text-primary font-medium transition-colors duration-300`}>Destaques</a>
-            <NavigationLink href="/properties" className={`${isPropertiesPage || scrolled ? 'text-gray-700' : 'text-white'} hover:text-primary font-medium transition-colors duration-300`}>Todos Imóveis</NavigationLink>
+            <NavigationLink href="/properties" className={`${isPropertiesPage || scrolled ? 'text-gray-700' : 'text-white'} hover:text-primary font-medium transition-colors duration-300`}>Imóveis</NavigationLink>
             <a href="/#about" className={`${isPropertiesPage || scrolled ? 'text-gray-700' : 'text-white'} hover:text-primary font-medium transition-colors duration-300`}>Sobre</a>
             <a href="/#contact" className={`${isPropertiesPage || scrolled ? 'text-gray-700' : 'text-white'} hover:text-primary font-medium transition-colors duration-300`}>Contato</a>
           </nav>
@@ -205,20 +204,14 @@ export default function Header({ config, isLoadingConfig }: HeaderProps) {
                     <span className="text-gray-700 font-medium text-[19px]">Início</span>
                   </a>
                   
-                  <a 
-                    href="/#properties" 
-                    className="flex items-center py-3 px-6 relative overflow-hidden"
-                  >
-                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary opacity-0" style={{ backgroundColor: config?.primaryColor || 'var(--primary)' }}></div>
-                    <span className="text-gray-700 font-medium text-[19px]">Destaques</span>
-                  </a>
+
                   
                   <NavigationLink 
                     href="/properties" 
                     className="flex items-center py-3 px-6 relative overflow-hidden"
                   >
                     <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary opacity-0" style={{ backgroundColor: config?.primaryColor || 'var(--primary)' }}></div>
-                    <span className="text-gray-700 font-medium text-[19px]">Todos Imóveis</span>
+                    <span className="text-gray-700 font-medium text-[19px]">Imóveis</span>
                   </NavigationLink>
                   
                   <a 
