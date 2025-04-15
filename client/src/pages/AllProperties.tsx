@@ -423,92 +423,74 @@ export default function AllProperties() {
                   {filteredProperties.map((property) => (
                     <div 
                       key={property.id} 
-                      className="bg-white rounded-lg border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-xl group"
+                      className="property-card h-full bg-white rounded-lg border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-lg hover:bg-white cursor-pointer relative"
                       onClick={() => openPropertyModal(property.id)}
-                      style={{ cursor: 'pointer' }}
                     >
-                      {/* Imagem do imóvel com efeito hover */}
-                      <div className="h-52 bg-gray-100 relative overflow-hidden">
+                      {/* Property Image */}
+                      <div className="property-image-container h-48 bg-gray-200 relative overflow-hidden">
                         {getFeaturedImage(property) ? (
-                          <>
-                            <img 
-                              src={getFeaturedImage(property)} 
-                              alt={property.title} 
-                              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                              loading="lazy"
-                            />
-                            <div className="absolute inset-0 bg-black bg-opacity-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                          </>
-                        ) : (
-                          <div className="flex items-center justify-center h-full bg-gray-200 text-gray-400">
-                            <i className="fas fa-home text-3xl"></i>
+                          <img 
+                            src={getFeaturedImage(property)} 
+                            alt={property.title} 
+                            className="property-image w-full h-full object-cover transition-transform duration-500"
+                            loading="lazy"
+                          />
+                        ) : null}
+                        {/* Botão Ver Detalhes que aparece no hover */}
+                        <div className="eye-icon absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300">
+                          <div className="rounded-md bg-white/90 px-4 py-2 backdrop-blur-sm flex items-center gap-2">
+                            <i className="fas fa-eye text-sm" style={{ color: config?.primaryColor || 'var(--primary)' }}></i>
+                            <span className="text-sm font-medium" style={{ color: config?.primaryColor || 'var(--primary)' }}>Ver Detalhes</span>
                           </div>
-                        )}
-                        {/* Badge de finalidade (venda/aluguel) */}
+                        </div>
                         <div 
-                          className="absolute top-3 left-3 text-white text-sm px-3 py-1 rounded-full font-medium shadow-md"
+                          className="absolute bottom-0 left-0 text-white px-3 py-1 rounded-tr-lg"
                           style={{
                             backgroundColor: config?.primaryColor || 'var(--primary)'
                           }}
                         >
                           {property.purpose === 'sale' ? 'Venda' : 'Aluguel'}
                         </div>
-                        
-                        {/* Badge de área com ícone */}
-                        <div className="absolute bottom-3 left-3 bg-white bg-opacity-90 rounded-full px-3 py-1 text-sm font-medium shadow-sm flex items-center">
-                          <i className="fas fa-ruler-combined text-gray-600 mr-1.5"></i>
-                          <span>{property.area}m²</span>
-                        </div>
-                        
-                        {/* Botão ver detalhes sobreposto */}
-                        <div className="absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                          <Button 
-                            size="sm"
-                            variant="secondary"
-                            className="bg-white text-gray-800 hover:bg-gray-50 shadow-md"
+                      </div>
+                      
+                      <div className="p-4">
+                        <h3 className="text-md mb-1 line-clamp-1">{property.title}</h3>
+                        <div className="flex justify-start items-center mb-2">
+                          <div 
+                            className="text-lg font-bold text-gray-700"
                           >
-                            <i className="fas fa-eye mr-1.5"></i>
-                            Ver detalhes
-                          </Button>
+                            R$ {property.price.toLocaleString('pt-BR')}
+                            {property.purpose === 'rent' && <span className="text-xs font-normal text-gray-500">/mês</span>}
+                          </div>
+                        </div>
+                        <p className="text-gray-500 text-sm mb-4 line-clamp-1">{property.address}</p>
+                        
+                        <div className="flex items-center justify-between mb-4 text-sm text-gray-600">
+                          <span className="flex items-center">
+                            <i className="fas fa-ruler-combined fa-sm mr-1"></i>
+                            {property.area}m²
+                          </span>
+                          <span className="flex items-center">
+                            <i className="fas fa-bed fa-sm mr-1"></i>
+                            {property.bedrooms}
+                          </span>
+                          <span className="flex items-center">
+                            <i className="fas fa-shower fa-sm mr-1"></i>
+                            {property.bathrooms}
+                          </span>
+                          <span className="flex items-center">
+                            <i className="fas fa-bath fa-sm mr-1" style={{ color: config?.primaryColor || 'var(--primary)' }}></i>
+                            {property.suites || 0}
+                          </span>
+                          <span className="flex items-center">
+                            <i className="fas fa-car fa-sm mr-1"></i>
+                            {property.parkingSpots || 0}
+                          </span>
                         </div>
                       </div>
                       
-                      {/* Informações do imóvel */}
-                      <div className="p-4">
-                        {/* Preço em destaque */}
-                        <div 
-                          className="text-xl font-bold mb-2"
-                          style={{ color: config?.primaryColor || 'var(--primary)' }}
-                        >
-                          R$ {property.price.toLocaleString('pt-BR')}
-                          {property.purpose === 'rent' && <span className="text-xs font-normal text-gray-500">/mês</span>}
-                        </div>
-                        
-                        {/* Título e endereço */}
-                        <h3 className="text-lg font-semibold mb-1 line-clamp-1 group-hover:text-primary transition-colors">{property.title}</h3>
-                        <p className="text-gray-500 text-sm mb-3 line-clamp-1">
-                          <i className="fas fa-map-marker-alt mr-1 text-gray-400"></i>
-                          {property.address}
-                        </p>
-                        
-                        {/* Características do imóvel em linha com separadores */}
-                        <div className="flex items-center space-x-3 text-sm text-gray-600">
-                          <span className="flex items-center">
-                            <i className="fas fa-bed fa-sm mr-1.5"></i>
-                            {property.bedrooms || 0} quartos
-                          </span>
-                          <span className="w-1 h-1 rounded-full bg-gray-300"></span>
-                          <span className="flex items-center">
-                            <i className="fas fa-shower fa-sm mr-1.5"></i>
-                            {property.bathrooms || 0} banhs
-                          </span>
-                          <span className="w-1 h-1 rounded-full bg-gray-300"></span>
-                          <span className="flex items-center">
-                            <i className="fas fa-car fa-sm mr-1.5"></i>
-                            {property.parkingSpots || 0} vagas
-                          </span>
-                        </div>
-                      </div>
+                      {/* Overlay de hover para indicar que é clicável */}
+                      <div className="absolute inset-0 bg-white opacity-0 transition-opacity duration-300 hover:opacity-5"></div>
                     </div>
                   ))}
                 </div>
