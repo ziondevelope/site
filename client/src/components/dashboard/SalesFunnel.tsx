@@ -83,52 +83,62 @@ export default function SalesFunnel({ isLoading: initialLoading, data }: SalesFu
           Funil: {defaultFunnel.name}
         </span>
       </div>
-      <div className="mt-6 flex items-center justify-center">
-        <div className="w-full px-8 relative">
+      <div className="mt-10 flex items-center justify-center">
+        <div className="w-full max-w-2xl px-4 lg:px-0 relative">
           {/* Total leads no topo do funil */}
-          <div className="text-center mb-3">
-            <span className="text-sm font-medium bg-blue-50 px-3 py-1 rounded-full">
+          <div className="text-center mb-4">
+            <span className="text-sm font-medium bg-blue-50 px-4 py-1.5 rounded-full shadow-sm">
               Total de Leads: {funnel.leads}
             </span>
           </div>
           
           {/* Desenho visual do funil */}
-          <div className="relative flex flex-col items-center">
+          <div className="relative flex flex-col items-center space-y-6">
             {sortedStages.map((stage, index) => {
               const count = stageCounts[stage.id] || 0;
               const percentage = getPercentage(count);
               const isLastStage = index === sortedStages.length - 1;
               
               // Calcular a largura do funil - diminui gradualmente
-              const width = 100 - (index * (70 / sortedStages.length));
+              // Primeira etapa mais larga, última mais estreita
+              const maxWidth = 85;
+              const minWidth = 40;
+              const width = maxWidth - (index * ((maxWidth - minWidth) / (sortedStages.length - 1 || 1)));
+              
               // Altura fixa para cada estágio
-              const height = 50;
+              const height = 65;
               
               const color = getStageBackgroundColor(index, sortedStages.length);
               
               return (
                 <div 
                   key={stage.id}
-                  className="relative mb-1 flex flex-col items-center justify-center text-center transition-all"
+                  className="relative flex flex-col items-center justify-center text-center"
                   style={{ 
                     width: `${width}%`,
                     height: `${height}px`,
-                    backgroundColor: color,
-                    borderRadius: '4px',
-                    marginBottom: '8px',
-                    transition: 'all 0.3s ease',
-                    // Conectar os estágios com linhas trapezoidais
-                    clipPath: isLastStage 
-                      ? 'polygon(0 0, 100% 0, 100% 100%, 0 100%)' 
-                      : `polygon(0 0, 100% 0, ${100 - (60 / sortedStages.length)}% 100%, ${(60 / sortedStages.length)}% 100%)`,
-                    zIndex: sortedStages.length - index
+                    marginBottom: '5px',
                   }}
                 >
-                  <div className="z-10 text-white font-medium">
-                    {stage.name} ({count})
-                  </div>
-                  <div className="z-10 text-white text-xs">
-                    {percentage}%
+                  {/* Forma do trapézio */}
+                  <div 
+                    className="absolute inset-0 shadow-md transition-all duration-300"
+                    style={{
+                      backgroundColor: color,
+                      clipPath: 'polygon(0% 0%, 100% 0%, 85% 100%, 15% 100%)',
+                      borderRadius: '3px',
+                    }}
+                  />
+                  
+                  {/* Conteúdo do estágio */}
+                  <div className="z-10 flex flex-col items-center">
+                    <div className="text-white font-medium text-base">
+                      {stage.name}
+                    </div>
+                    <div className="text-white text-sm mt-1 flex items-center">
+                      <span className="mr-2 font-bold">{count}</span>
+                      <span className="opacity-80">({percentage}%)</span>
+                    </div>
                   </div>
                 </div>
               );
@@ -136,8 +146,8 @@ export default function SalesFunnel({ isLoading: initialLoading, data }: SalesFu
           </div>
           
           {/* Legenda abaixo do funil */}
-          <div className="mt-6 text-center text-xs text-gray-500">
-            As porcentagens mostram a taxa de conversão em cada estágio
+          <div className="mt-8 text-center text-xs text-gray-500">
+            As porcentagens mostram a taxa de conversão em cada estágio do funil
           </div>
         </div>
       </div>
@@ -147,27 +157,31 @@ export default function SalesFunnel({ isLoading: initialLoading, data }: SalesFu
 
 // Helper function to get a background color based on stage position
 function getStageBackgroundColor(index: number, totalStages: number): string {
-  // Se for o último estágio (conversão), usar verde
-  if (index === totalStages - 1) return "#16a34a"; // Verde para o último estágio
-  
-  // Cores do funil em gradiente de azul para azul mais claro, depois laranja
+  // Cores baseadas na imagem de referência (Cobrefácil)
   if (totalStages <= 3) {
-    // Para funis pequenos, usar cores mais distintas
-    const colors = ["#2563eb", "#3b82f6", "#f59e0b"];
+    // Se tiver 3 ou menos estágios, usar as cores exatas da imagem de referência
+    const colors = ["#0066ff", "#4d94ff", "#2ecc71"];
     return colors[Math.min(index, colors.length - 1)];
   } else {
-    // Para funis maiores, criar um gradiente
-    if (index < totalStages / 2) {
-      // Primeira metade - tons de azul
-      const blueValue = 120 + Math.round((120 * index) / (totalStages / 2));
-      return `rgb(14, ${blueValue}, 246)`;
+    // Para mais estágios, criar gradiente similar
+    if (index === totalStages - 1) {
+      // Último estágio sempre verde
+      return "#2ecc71";
+    } else if (index === 0) {
+      // Primeiro estágio sempre azul forte
+      return "#0066ff";
     } else {
-      // Segunda metade - transição para laranja/âmbar
-      const progress = (index - totalStages / 2) / (totalStages / 2);
-      // Interpolação de azul para laranja
-      const r = Math.round(14 + (245 - 14) * progress);
-      const g = Math.round(165 + (158 - 165) * progress);
-      const b = Math.round(233 + (11 - 233) * progress);
+      // Estágios do meio em degradê de azul
+      // Quanto mais próximo do final, mais claro o azul
+      const totalBlueStages = totalStages - 1; // Excluindo o último estágio (verde)
+      const blueIndex = index;
+      const blueRatio = blueIndex / (totalBlueStages - 1);
+      
+      // Interpolação entre azul escuro e azul mais claro
+      const r = Math.round(0 + (77 - 0) * blueRatio);
+      const g = Math.round(102 + (148 - 102) * blueRatio);
+      const b = Math.round(255 + (255 - 255) * blueRatio);
+      
       return `rgb(${r}, ${g}, ${b})`;
     }
   }
