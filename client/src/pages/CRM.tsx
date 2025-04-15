@@ -34,6 +34,8 @@ type LeadFormValues = z.infer<typeof leadFormSchema>;
 
 export default function CRM() {
   const [isAddLeadOpen, setIsAddLeadOpen] = useState(false);
+  const [leadToDelete, setLeadToDelete] = useState<Lead | null>(null);
+  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
   const { toast } = useToast();
   const queryClient = useQueryClient();
   
@@ -101,6 +103,32 @@ export default function CRM() {
       toast({
         title: "Erro ao atualizar status",
         description: "Não foi possível atualizar o status do lead. Tente novamente.",
+        variant: "destructive",
+      });
+    },
+  });
+  
+  // Mutação para excluir um lead
+  const deleteLeadMutation = useMutation({
+    mutationFn: (id: number) => {
+      return apiRequest(`/api/leads/${id}`, {
+        method: 'DELETE',
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/leads'] });
+      toast({
+        title: "Lead excluído",
+        description: "O lead foi excluído com sucesso.",
+      });
+      setIsDeleteConfirmOpen(false);
+      setLeadToDelete(null);
+    },
+    onError: (error) => {
+      console.error("Erro ao excluir lead:", error);
+      toast({
+        title: "Erro ao excluir lead",
+        description: "Não foi possível excluir o lead. Tente novamente.",
         variant: "destructive",
       });
     },
