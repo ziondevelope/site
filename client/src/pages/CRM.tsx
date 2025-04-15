@@ -743,10 +743,8 @@ export default function CRM() {
                                   </div>
                                 </div>
                               </div>
-                            </div>
-                            
-                            {/* Segunda grid apenas para Informações de Interesse */}
-                            <div className="grid grid-cols-1 md:grid-cols-12 gap-6 mt-6 pb-6">
+
+                              {/* Detalhes do Interesse */}
                               <div className="md:col-span-3">
                                 <h3 className="text-base font-semibold mb-4">Detalhes do Interesse</h3>
                                 <div className="space-y-4">
