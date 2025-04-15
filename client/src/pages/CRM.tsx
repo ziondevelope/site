@@ -233,15 +233,13 @@ export default function CRM() {
           </div>
         </DialogContent>
       </Dialog>
-      <div className="bg-white p-6">
+      <div className="bg-white p-6 rounded-lg shadow-sm">
         <div className="flex justify-between items-center mb-6">
           <div>
-            <p className="text-sm text-gray-500 mb-1">Cadastre aqui leads, clientes potenciais, ou pessoas interessadas no seu produto/serviço. No CRM você poderá gerenciar seus leads de forma eficiente.</p>
+            <h2 className="text-lg font-semibold text-gray-800 mb-1">Gerenciamento de Leads</h2>
+            <p className="text-sm text-gray-500">Cadastre aqui leads, clientes potenciais, ou pessoas interessadas no seu produto/serviço.</p>
           </div>
           <div className="flex space-x-2">
-            <Button variant="outline" className="border border-gray-300">
-              <i className="ri-filter-line mr-1"></i> Filtros
-            </Button>
             <Dialog open={isAddLeadOpen} onOpenChange={setIsAddLeadOpen}>
               <DialogTrigger asChild>
                 <Button className="bg-indigo-600 hover:bg-indigo-700">
@@ -517,58 +515,63 @@ export default function CRM() {
           </div>
         </div>
 
-        <div className="grid grid-cols-5 gap-4 mb-2">
-          <div className="col-span-2">
-            <div className="flex items-center">
-              <div className="mr-2">
-                <span className="text-sm font-medium text-gray-700">Nome</span>
-              </div>
-              <div className="relative rounded-md shadow-sm">
-                <input 
-                  type="text" 
-                  placeholder="Filtrar por nome"
-                  className="border border-gray-300 rounded-md w-full py-1.5 px-3 text-sm"
-                />
-              </div>
-            </div>
-          </div>
-          <div>
-            <div className="flex items-center">
-              <div className="mr-2">
-                <span className="text-sm font-medium text-gray-700">E-mail</span>
-              </div>
-              <div className="relative rounded-md shadow-sm">
-                <input 
-                  type="text" 
-                  placeholder="Filtrar por e-mail"
-                  className="border border-gray-300 rounded-md w-full py-1.5 px-3 text-sm"
-                />
-              </div>
-            </div>
-          </div>
-          <div>
-            <div className="flex items-center justify-between">
-              <div className="mr-2">
-                <span className="text-sm font-medium text-gray-700">Situação</span>
-              </div>
-              <div className="relative flex-1">
-                <select className="border border-gray-300 rounded-md w-full py-1.5 px-3 text-sm appearance-none bg-white">
-                  <option>Situação</option>
-                  <option value="new">Novo</option>
-                  <option value="contacted">Contatado</option>
-                  <option value="visit">Visita</option>
-                  <option value="proposal">Proposta</option>
-                </select>
-                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                  <i className="ri-arrow-down-s-line"></i>
+        <div className="bg-gray-50 p-4 rounded-lg mb-6">
+          <div className="grid md:grid-cols-4 gap-4">
+            <div className="col-span-1">
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700 block">Nome</label>
+                <div className="relative">
+                  <input 
+                    type="text" 
+                    placeholder="Filtrar por nome"
+                    className="border border-gray-300 rounded-md w-full py-2 px-3 text-sm focus:ring-2 focus:ring-indigo-100 focus:border-indigo-300"
+                  />
+                  <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-gray-400">
+                    <i className="ri-user-search-line"></i>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div className="text-right">
-            <Button className="h-9 bg-indigo-600 hover:bg-indigo-700">
-              <i className="ri-search-line mr-1"></i> Buscar
-            </Button>
+            
+            <div className="col-span-1">
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700 block">E-mail</label>
+                <div className="relative">
+                  <input 
+                    type="text" 
+                    placeholder="Filtrar por e-mail"
+                    className="border border-gray-300 rounded-md w-full py-2 px-3 text-sm focus:ring-2 focus:ring-indigo-100 focus:border-indigo-300"
+                  />
+                  <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-gray-400">
+                    <i className="ri-mail-line"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="col-span-1">
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700 block">Situação</label>
+                <Select>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Todas situações" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todas situações</SelectItem>
+                    <SelectItem value="new">Novo</SelectItem>
+                    <SelectItem value="contacted">Contatado</SelectItem>
+                    <SelectItem value="visit">Visita</SelectItem>
+                    <SelectItem value="proposal">Proposta</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            
+            <div className="col-span-1 flex items-end">
+              <Button className="w-full py-2 bg-indigo-600 hover:bg-indigo-700">
+                <i className="ri-search-line mr-2"></i> Buscar
+              </Button>
+            </div>
           </div>
         </div>
       </div>
