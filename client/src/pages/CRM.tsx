@@ -39,6 +39,12 @@ export default function CRM() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   
+  // Função para abrir o modal de adicionar novo lead
+  const handleAddClick = () => {
+    form.reset();
+    setIsAddLeadOpen(true);
+  };
+  
   // Fetch all leads at once to avoid Firestore index issues
   const { data: allLeads, isLoading: leadsLoading } = useQuery<Lead[]>({
     queryKey: ['/api/leads'],
@@ -241,11 +247,6 @@ export default function CRM() {
           </div>
           <div className="flex space-x-2">
             <Dialog open={isAddLeadOpen} onOpenChange={setIsAddLeadOpen}>
-              <DialogTrigger asChild>
-                <Button className="bg-indigo-600 hover:bg-indigo-700">
-                  <i className="ri-add-line mr-1"></i> Novo Lead
-                </Button>
-              </DialogTrigger>
               <DialogContent className="sm:max-w-[850px] max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
                   <DialogTitle>Adicionar Novo Lead</DialogTitle>
