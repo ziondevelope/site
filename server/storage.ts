@@ -437,14 +437,21 @@ export class FirebaseStorage implements IStorage {
 
   async deleteLead(id: number): Promise<boolean> {
     try {
-      const leadRef = db.collection('leads').doc(id.toString());
-      const leadDoc = await leadRef.get();
+      // Usando a nova API do Firebase
+      const leadsRef = collection(db, 'leads');
+      const q = query(leadsRef, where('id', '==', id), limit(1));
+      const leadSnapshot = await getDocs(q);
       
-      if (!leadDoc.exists) {
+      if (leadSnapshot.empty) {
+        console.log(`Lead com ID ${id} não encontrado para exclusão`);
         return false;
       }
       
-      await leadRef.delete();
+      const leadDoc = leadSnapshot.docs[0];
+      const leadRef = doc(db, 'leads', leadDoc.id);
+      
+      await deleteDoc(leadRef);
+      console.log(`Lead com ID ${id} excluído com sucesso`);
       return true;
     } catch (error) {
       console.error('Error deleting lead:', error);
