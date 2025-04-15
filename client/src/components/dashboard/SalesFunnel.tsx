@@ -3,6 +3,7 @@ import { Progress } from "@/components/ui/progress";
 import { useQuery } from "@tanstack/react-query";
 import { FunnelStage, SalesFunnel as SalesFunnelType } from "@shared/schema";
 import { useMemo } from "react";
+import { apiRequest } from "@/lib/queryClient";
 
 interface SalesFunnelProps {
   isLoading: boolean;
@@ -30,6 +31,10 @@ export default function SalesFunnel({ isLoading: initialLoading, data }: SalesFu
   // Fetch funnel stages for the default funnel
   const { data: stages, isLoading: stagesLoading } = useQuery<FunnelStage[]>({
     queryKey: ['/api/funnel-stages', defaultFunnel?.id],
+    queryFn: async () => {
+      if (!defaultFunnel?.id) throw new Error("No default funnel ID");
+      return apiRequest(`/api/funnel-stages?funnelId=${defaultFunnel.id}`);
+    },
     enabled: !!defaultFunnel,
   });
 
