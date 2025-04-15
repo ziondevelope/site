@@ -166,8 +166,48 @@ export default function CRM() {
     createLeadMutation.mutate(data);
   }
   
+  // Diálogo de confirmação de exclusão
+  const handleConfirmDelete = () => {
+    if (leadToDelete) {
+      deleteLeadMutation.mutate(leadToDelete.id);
+    }
+  };
+
   return (
     <div className="space-y-2">
+      {/* Diálogo de confirmação de exclusão */}
+      <Dialog open={isDeleteConfirmOpen} onOpenChange={setIsDeleteConfirmOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Excluir Lead</DialogTitle>
+            <DialogDescription>
+              Você tem certeza que deseja excluir este lead? Esta ação não pode ser desfeita.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex justify-end space-x-2 pt-4">
+            <Button
+              variant="outline"
+              onClick={() => setIsDeleteConfirmOpen(false)}
+            >
+              Cancelar
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={handleConfirmDelete}
+              disabled={deleteLeadMutation.isPending}
+            >
+              {deleteLeadMutation.isPending ? (
+                <>
+                  <div className="animate-spin mr-2 h-4 w-4 border-2 border-b-transparent border-white rounded-full"></div>
+                  Excluindo...
+                </>
+              ) : (
+                'Excluir Lead'
+              )}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
       <div className="bg-white p-6">
         <div className="flex justify-between items-center mb-6">
           <div>
@@ -740,7 +780,14 @@ export default function CRM() {
                                   <Button variant="outline" className="w-full justify-start text-gray-700 border-gray-300 h-10">
                                     <i className="far fa-calendar-alt mr-2 text-gray-500"></i> Agendar Atividade
                                   </Button>
-                                  <Button variant="outline" className="w-full justify-start text-red-600 hover:text-red-700 border-gray-300 h-10">
+                                  <Button 
+                                    variant="outline" 
+                                    className="w-full justify-start text-red-600 hover:text-red-700 border-gray-300 h-10"
+                                    onClick={() => {
+                                      setLeadToDelete(lead);
+                                      setIsDeleteConfirmOpen(true);
+                                    }}
+                                  >
                                     <i className="fas fa-trash-alt mr-2"></i> Excluir Lead
                                   </Button>
                                 </div>
