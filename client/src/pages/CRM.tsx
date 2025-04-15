@@ -817,25 +817,7 @@ export default function CRM() {
                         </Select>
                       </div>
                       
-                      {/* Status atual do funil */}
-                      <div className="mt-2">
-                        <div className="text-sm text-gray-500 flex items-center">
-                          Status legado: 
-                          <span className={`ml-2 font-medium px-2 py-1 rounded-full 
-                            ${lead.status === 'new' ? 'bg-amber-100 text-amber-800' : 
-                            lead.status === 'contacted' ? 'bg-amber-100 text-amber-800' : 
-                            lead.status === 'visit' ? 'bg-amber-100 text-amber-800' : 
-                            lead.status === 'proposal' ? 'bg-amber-100 text-amber-800' : 
-                            'bg-gray-100 text-gray-800'}`}
-                          >
-                            {lead.status === 'new' ? 'Novo' : 
-                            lead.status === 'contacted' ? 'Contatado' :
-                            lead.status === 'visit' ? 'Visita' :
-                            lead.status === 'proposal' ? 'Proposta' :
-                            lead.status}
-                          </span>
-                        </div>
-                      </div>
+
                     </div>
                   </div>
                   
