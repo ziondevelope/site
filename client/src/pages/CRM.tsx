@@ -752,91 +752,152 @@ export default function CRM() {
                     const filteredStages = stages.filter(stage => stage.funnelId === currentFunnelId) || [];
                     const sortedStages = [...filteredStages].sort((a, b) => a.position - b.position);
                     
-                    // Determinamos o número de colunas com base na quantidade de estágios
-                    const gridCols = 
-                      sortedStages.length === 1 ? 'grid-cols-1' :
-                      sortedStages.length === 2 ? 'grid-cols-2' :
-                      sortedStages.length === 3 ? 'grid-cols-3' :
-                      sortedStages.length === 4 ? 'grid-cols-4' :
-                      'grid-cols-5';
+                    // Função para obter cor de estágio similar ao dashboard do funil
+                    const getStageColor = (index: number, isActive: boolean, isCompleted: boolean) => {
+                      const totalStages = sortedStages.length;
+                      
+                      // Se for o último estágio
+                      if (index === totalStages - 1) {
+                        return isActive ? "#2ecc71" : isCompleted ? "#2ecc71" : "#e2f8ed";
+                      }
+                      
+                      // Primeiro estágio (azul)
+                      if (index === 0) {
+                        return isActive ? "#0066ff" : isCompleted ? "#0066ff" : "#e6f0ff";
+                      }
+                      
+                      // Estágios do meio
+                      const ratio = index / (totalStages - 2);
+                      if (isActive) {
+                        return `rgb(${Math.round(0 + (77 - 0) * ratio)}, ${Math.round(102 + (148 - 102) * ratio)}, 255)`;
+                      } else if (isCompleted) {
+                        return `rgb(${Math.round(0 + (77 - 0) * ratio)}, ${Math.round(102 + (148 - 102) * ratio)}, 255)`;
+                      }
+                      
+                      // Cor de fundo para estágios inativos
+                      return `rgba(${Math.round(0 + (77 - 0) * ratio)}, ${Math.round(102 + (148 - 102) * ratio)}, 255, 0.15)`;
+                    };
                     
                     return (
-                      <div className={`grid gap-0 ${gridCols}`}>
-                        {sortedStages.map((stage, index) => (
-                          <div 
-                            key={stage.id}
-                            className={`flex justify-center items-center py-2 cursor-pointer hover:opacity-90
-                              ${index === 0 ? 'rounded-l' : ''}
-                              ${index === filteredStages.length - 1 ? 'rounded-r' : ''}
-                              ${
-                                // Estágio atual
-                                lead.stageId === stage.id 
-                                  ? 'bg-blue-600 text-white font-medium' 
-                                  // Estágios anteriores (já concluídos)
-                                  : sortedStages.findIndex(s => s.id === lead.stageId) > index
-                                    ? 'bg-blue-400 text-white' 
-                                    // Para leads novos que não têm stageId, mostrar o primeiro estágio como ativo
-                                    : (!lead.stageId && index === 0)
-                                      ? 'bg-blue-600 text-white font-medium'
-                                      // Estágios futuros (ainda não alcançados)
-                                      : 'bg-gray-200 text-gray-500'
-                              }`}
-                            onClick={() => {
-                              // Atualizar o estágio do lead ao clicar
-                              apiRequest(`/api/leads/${lead.id}/stage`, {
-                                method: "PATCH",
-                                body: JSON.stringify({ stageId: stage.id }),
-                              })
-                                .then(() => {
-                                  // Atualizar a lista de leads
-                                  queryClient.invalidateQueries({ queryKey: ['/api/leads'] });
-                                  toast({
-                                    title: "Estágio atualizado",
-                                    description: "O estágio do lead foi atualizado com sucesso.",
-                                  });
-                                })
-                                .catch((error) => {
-                                  console.error("Erro ao atualizar estágio:", error);
-                                  toast({
-                                    title: "Erro ao atualizar estágio",
-                                    description: "Não foi possível atualizar o estágio. Tente novamente.",
-                                    variant: "destructive",
-                                  });
-                                });
-                            }}
-                          >
-                            {stage.name}
-                          </div>
-                        ))}
+                      <div className="relative mb-4 pt-1 pb-2">
+                        {/* Linha conectora por baixo dos estágios */}
+                        <div className="absolute left-0 right-0 h-[3px] bg-gray-200 top-[25px] -z-0"></div>
+                        
+                        {/* Estágios do funil */}
+                        <div className="flex justify-between items-center relative z-10">
+                          {sortedStages.map((stage, index) => {
+                            const isActive = lead.stageId === stage.id || (!lead.stageId && index === 0);
+                            const isCompleted = sortedStages.findIndex(s => s.id === lead.stageId) > index;
+                            const color = getStageColor(index, isActive, isCompleted);
+                            
+                            return (
+                              <div 
+                                key={stage.id}
+                                className="flex flex-col items-center cursor-pointer group"
+                                onClick={() => {
+                                  // Atualizar o estágio do lead ao clicar
+                                  apiRequest(`/api/leads/${lead.id}/stage`, {
+                                    method: "PATCH",
+                                    body: JSON.stringify({ stageId: stage.id }),
+                                  })
+                                    .then(() => {
+                                      // Atualizar a lista de leads
+                                      queryClient.invalidateQueries({ queryKey: ['/api/leads'] });
+                                      toast({
+                                        title: "Estágio atualizado",
+                                        description: "O estágio do lead foi atualizado com sucesso.",
+                                      });
+                                    })
+                                    .catch((error) => {
+                                      console.error("Erro ao atualizar estágio:", error);
+                                      toast({
+                                        title: "Erro ao atualizar estágio",
+                                        description: "Não foi possível atualizar o estágio. Tente novamente.",
+                                        variant: "destructive",
+                                      });
+                                    });
+                                }}
+                              >
+                                {/* Círculo do estágio */}
+                                <div 
+                                  className={`
+                                    w-12 h-12 rounded-full mb-2 flex items-center justify-center 
+                                    shadow-sm transition-all duration-200 
+                                    group-hover:shadow-md relative
+                                    ${isActive || isCompleted ? 'text-white' : 'text-gray-600'}
+                                  `}
+                                  style={{ 
+                                    backgroundColor: color,
+                                    transform: isActive ? 'scale(1.05)' : 'scale(1)',
+                                  }}
+                                >
+                                  {/* Indicador de conclusão (checkmark) */}
+                                  {isCompleted ? (
+                                    <i className="fas fa-check text-sm"></i>
+                                  ) : (
+                                    <span className="text-sm font-semibold">{index + 1}</span>
+                                  )}
+                                </div>
+                                
+                                {/* Nome do estágio */}
+                                <span 
+                                  className={`text-xs font-medium ${isActive ? 'text-gray-900' : 'text-gray-500'}`}
+                                  style={{
+                                    maxWidth: '80px',
+                                    textAlign: 'center',
+                                    whiteSpace: 'nowrap',
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis'
+                                  }}
+                                >
+                                  {stage.name}
+                                </span>
+                              </div>
+                            );
+                          })}
+                        </div>
                       </div>
                     );
                   })()
                 ) : (
                   // Fallback para o sistema anterior se não houver estágios definidos
-                  <div className="grid grid-cols-4 gap-0">
-                    <div 
-                      className={`flex justify-center items-center py-2 rounded-l 
-                        ${lead.status === 'new' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-500'}`}
-                    >
-                      Contato
-                    </div>
-                    <div 
-                      className={`flex justify-center items-center py-2 
-                        ${lead.status === 'contacted' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-500'}`}
-                    >
-                      Follow up
-                    </div>
-                    <div 
-                      className={`flex justify-center items-center py-2 
-                        ${lead.status === 'visit' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-500'}`}
-                    >
-                      Agendamento
-                    </div>
-                    <div 
-                      className={`flex justify-center items-center py-2 rounded-r
-                        ${lead.status === 'proposal' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-500'}`}
-                    >
-                      Perdido
+                  <div className="flex justify-between items-center bg-gray-50 p-3 rounded-lg">
+                    <div className="flex space-x-8">
+                      <div 
+                        className={`flex flex-col items-center cursor-pointer ${lead.status === 'new' ? 'text-blue-600 font-medium' : 'text-gray-500'}`}
+                      >
+                        <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-1 ${lead.status === 'new' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}>
+                          <i className="fas fa-user-plus text-sm"></i>
+                        </div>
+                        <span className="text-xs">Contato</span>
+                      </div>
+                      
+                      <div 
+                        className={`flex flex-col items-center cursor-pointer ${lead.status === 'contacted' ? 'text-blue-600 font-medium' : 'text-gray-500'}`}
+                      >
+                        <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-1 ${lead.status === 'contacted' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}>
+                          <i className="fas fa-phone-alt text-sm"></i>
+                        </div>
+                        <span className="text-xs">Follow up</span>
+                      </div>
+                      
+                      <div 
+                        className={`flex flex-col items-center cursor-pointer ${lead.status === 'visit' ? 'text-blue-600 font-medium' : 'text-gray-500'}`}
+                      >
+                        <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-1 ${lead.status === 'visit' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}>
+                          <i className="fas fa-calendar-check text-sm"></i>
+                        </div>
+                        <span className="text-xs">Agendamento</span>
+                      </div>
+                      
+                      <div 
+                        className={`flex flex-col items-center cursor-pointer ${lead.status === 'proposal' ? 'text-green-600 font-medium' : 'text-gray-500'}`}
+                      >
+                        <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-1 ${lead.status === 'proposal' ? 'bg-green-600 text-white' : 'bg-gray-200'}`}>
+                          <i className="fas fa-check-circle text-sm"></i>
+                        </div>
+                        <span className="text-xs">Fechado</span>
+                      </div>
                     </div>
                   </div>
                 )}
