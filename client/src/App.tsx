@@ -12,6 +12,9 @@ import Website from "@/pages/Website";
 import Home from "@/pages/Home";
 import AppLayout from "@/components/layout/AppLayout";
 import { queryClient } from "./lib/queryClient";
+import { LoadingProvider } from "./contexts/LoadingContext";
+import PageLoading from "@/components/ui/page-loading";
+import ScrollToTop from "@/components/ui/scroll-to-top";
 
 function AdminRouter() {
   // Usando useLocation para determinar a rota atual
@@ -56,8 +59,12 @@ function Router() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <Router />
-      <Toaster />
+      <LoadingProvider>
+        <Router />
+        <ScrollToTop />
+        <PageLoading isLoading={false} /> {/* Será controlado pelo useLoading */}
+        <Toaster />
+      </LoadingProvider>
     </QueryClientProvider>
   );
 }
