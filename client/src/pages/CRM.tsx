@@ -846,7 +846,7 @@ export default function CRM() {
                                   </Button>
                                 </div>
                                 
-                                <h3 className="text-base font-semibold mt-8 mb-4">Interesse do Lead</h3>
+                                <h3 className="text-base font-semibold mt-8 mb-4">Detalhes do Interesse</h3>
                                 <div className="space-y-4">
                                   <div>
                                     <h4 className="text-sm font-medium text-gray-500 mb-1">Tipo de Negócio</h4>
