@@ -1,6 +1,6 @@
 import React from 'react';
 import { useLoading } from '../../contexts/LoadingContext';
-import PageLoading from './page-loading';
+import PageLoading from '@/components/ui/page-loading';
 
 export default function PageLoadingController() {
   const { isLoading } = useLoading();

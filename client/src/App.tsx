@@ -13,7 +13,7 @@ import Home from "@/pages/Home";
 import AppLayout from "@/components/layout/AppLayout";
 import { queryClient } from "./lib/queryClient";
 import { LoadingProvider } from "./contexts/LoadingContext";
-import PageLoading from "@/components/ui/page-loading";
+import PageLoadingController from "@/components/ui/PageLoadingController";
 import ScrollToTop from "@/components/ui/scroll-to-top";
 
 function AdminRouter() {
@@ -62,7 +62,7 @@ function App() {
       <LoadingProvider>
         <Router />
         <ScrollToTop />
-        <PageLoading isLoading={false} /> {/* Será controlado pelo useLoading */}
+        <PageLoadingController />
         <Toaster />
       </LoadingProvider>
     </QueryClientProvider>
