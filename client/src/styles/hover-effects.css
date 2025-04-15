@@ -1,0 +1,13 @@
+/* Estilos para os efeitos de hover nos cards */
+
+.h-48 {
+  overflow: hidden;
+}
+
+.h-48:hover .hover-zoom {
+  transform: scale(1.1);
+}
+
+.h-48:hover .hover-overlay {
+  opacity: 1 !important;
+}
