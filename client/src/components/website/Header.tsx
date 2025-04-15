@@ -193,46 +193,46 @@ export default function Header({ config, isLoadingConfig }: HeaderProps) {
                   )}
                 </div>
                 
-                {/* Links do menu com efeito hover */}
-                <div className="px-6 py-8 flex flex-col space-y-3" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                {/* Links do menu simplificados */}
+                <div className="px-6 py-5 flex flex-col space-y-1" style={{ fontFamily: 'Poppins, sans-serif' }}>
                   <a 
                     href="/#home" 
-                    className="flex items-center py-4 px-6 rounded-md transition-all hover:bg-gray-50 relative overflow-hidden group"
+                    className="flex items-center py-3 px-6 relative overflow-hidden"
                   >
-                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary opacity-0 group-hover:opacity-100 transition-opacity" style={{ backgroundColor: config?.primaryColor || 'var(--primary)' }}></div>
-                    <span className="text-gray-700 font-medium text-[17px] group-hover:text-primary transition-colors">Início</span>
+                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary opacity-0" style={{ backgroundColor: config?.primaryColor || 'var(--primary)' }}></div>
+                    <span className="text-gray-700 font-medium text-[19px]">Início</span>
                   </a>
                   
                   <a 
                     href="/#properties" 
-                    className="flex items-center py-4 px-6 rounded-md transition-all hover:bg-gray-50 relative overflow-hidden group"
+                    className="flex items-center py-3 px-6 relative overflow-hidden"
                   >
-                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary opacity-0 group-hover:opacity-100 transition-opacity" style={{ backgroundColor: config?.primaryColor || 'var(--primary)' }}></div>
-                    <span className="text-gray-700 font-medium text-[17px] group-hover:text-primary transition-colors">Destaques</span>
+                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary opacity-0" style={{ backgroundColor: config?.primaryColor || 'var(--primary)' }}></div>
+                    <span className="text-gray-700 font-medium text-[19px]">Destaques</span>
                   </a>
                   
                   <NavigationLink 
                     href="/properties" 
-                    className="flex items-center py-4 px-6 rounded-md transition-all hover:bg-gray-50 relative overflow-hidden group"
+                    className="flex items-center py-3 px-6 relative overflow-hidden"
                   >
-                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary opacity-0 group-hover:opacity-100 transition-opacity" style={{ backgroundColor: config?.primaryColor || 'var(--primary)' }}></div>
-                    <span className="text-gray-700 font-medium text-[17px] group-hover:text-primary transition-colors">Todos Imóveis</span>
+                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary opacity-0" style={{ backgroundColor: config?.primaryColor || 'var(--primary)' }}></div>
+                    <span className="text-gray-700 font-medium text-[19px]">Todos Imóveis</span>
                   </NavigationLink>
                   
                   <a 
                     href="/#about" 
-                    className="flex items-center py-4 px-6 rounded-md transition-all hover:bg-gray-50 relative overflow-hidden group"
+                    className="flex items-center py-3 px-6 relative overflow-hidden"
                   >
-                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary opacity-0 group-hover:opacity-100 transition-opacity" style={{ backgroundColor: config?.primaryColor || 'var(--primary)' }}></div>
-                    <span className="text-gray-700 font-medium text-[17px] group-hover:text-primary transition-colors">Sobre</span>
+                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary opacity-0" style={{ backgroundColor: config?.primaryColor || 'var(--primary)' }}></div>
+                    <span className="text-gray-700 font-medium text-[19px]">Sobre</span>
                   </a>
                   
                   <a 
                     href="/#contact" 
-                    className="flex items-center py-4 px-6 rounded-md transition-all hover:bg-gray-50 relative overflow-hidden group"
+                    className="flex items-center py-3 px-6 relative overflow-hidden"
                   >
-                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary opacity-0 group-hover:opacity-100 transition-opacity" style={{ backgroundColor: config?.primaryColor || 'var(--primary)' }}></div>
-                    <span className="text-gray-700 font-medium text-[17px] group-hover:text-primary transition-colors">Contato</span>
+                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary opacity-0" style={{ backgroundColor: config?.primaryColor || 'var(--primary)' }}></div>
+                    <span className="text-gray-700 font-medium text-[19px]">Contato</span>
                   </a>
                 </div>
                 
@@ -241,17 +241,16 @@ export default function Header({ config, isLoadingConfig }: HeaderProps) {
                   <div className="mt-auto border-t p-6" style={{ borderColor: 'rgba(0, 0, 0, 0.06)' }}>
                     <a 
                       href={`https://wa.me/${config.phone.replace(/\D/g, '')}`} 
-                      className="flex items-center justify-center py-3 px-5 rounded-full border border-solid transition-all"
+                      className="flex items-center justify-center py-3 px-5 rounded-full bg-primary text-white border-0 transition-all"
                       target="_blank"
                       rel="noopener noreferrer"
                       style={{
-                        borderColor: config?.primaryColor ? `${config.primaryColor}33` : 'var(--primary-33)',
-                        color: config?.primaryColor || 'var(--primary)',
+                        backgroundColor: config?.primaryColor || 'var(--primary)',
                         fontFamily: 'Poppins, sans-serif'
                       }}
                     >
-                      {config?.phone && <span className="mr-2 text-[16px]" style={{ fontFamily: 'Poppins, sans-serif' }}>{config.phone}</span>}
-                      <i className="fab fa-whatsapp text-lg" style={{ color: "#25D366" }}></i>
+                      {config?.phone && <span className="mr-2 text-[18px]" style={{ fontFamily: 'Poppins, sans-serif' }}>{config.phone}</span>}
+                      <i className="fab fa-whatsapp text-xl text-white"></i>
                     </a>
                   </div>
                 )}
