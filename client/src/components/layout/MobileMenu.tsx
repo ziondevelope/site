@@ -14,6 +14,7 @@ const navItems: NavItem[] = [
   { href: "/admin/crm", label: "CRM", icon: "ri-customer-service-line" },
   { href: "/admin/corretores", label: "Corretores", icon: "ri-user-line" },
   { href: "/admin/site", label: "Site", icon: "ri-global-line" },
+  { href: "/admin/configuracoes", label: "Configurações", icon: "ri-settings-line" },
   { href: "/", label: "Voltar ao Site", icon: "ri-arrow-left-line" },
 ];
 
