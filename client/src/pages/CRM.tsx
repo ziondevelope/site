@@ -718,60 +718,85 @@ export default function CRM() {
                             </div>
                             
                             <div className="grid grid-cols-1 md:grid-cols-12 gap-6 pb-6">
-                              {/* Informações de Contato */}
+                              {/* Coluna 1 - Dividida em 2 grids */}
                               <div className="md:col-span-3">
-                                <h3 className="text-base font-semibold mb-4">Informações de Contato</h3>
-                                <div className="space-y-4">
-                                  <div>
-                                    <h4 className="text-sm font-medium text-gray-500 mb-1">Nome</h4>
-                                    <p className="text-gray-900">{lead.name}</p>
+                                <div className="grid gap-6">
+                                  {/* Grid 1: Informações de Contato */}
+                                  <div className="bg-white p-4 rounded-md border border-gray-100">
+                                    <h3 className="text-base font-semibold mb-4">Informações de Contato</h3>
+                                    <div className="space-y-4">
+                                      <div>
+                                        <h4 className="text-sm font-medium text-gray-500 mb-1">Nome</h4>
+                                        <p className="text-gray-900">{lead.name}</p>
+                                      </div>
+                                      
+                                      <div>
+                                        <h4 className="text-sm font-medium text-gray-500 mb-1">Email</h4>
+                                        <p className="text-gray-900">{lead.email || "Não informado"}</p>
+                                      </div>
+                                      
+                                      <div>
+                                        <h4 className="text-sm font-medium text-gray-500 mb-1">Telefone</h4>
+                                        <p className="text-gray-900">{lead.phone || "Não informado"}</p>
+                                      </div>
+                                      
+                                      <div>
+                                        <h4 className="text-sm font-medium text-gray-500 mb-1">WhatsApp</h4>
+                                        <p className="text-gray-900">{(lead as any).whatsapp || "Não informado"}</p>
+                                      </div>
+                                    </div>
                                   </div>
                                   
-                                  <div>
-                                    <h4 className="text-sm font-medium text-gray-500 mb-1">Email</h4>
-                                    <p className="text-gray-900">{lead.email || "Não informado"}</p>
-                                  </div>
-                                  
-                                  <div>
-                                    <h4 className="text-sm font-medium text-gray-500 mb-1">Telefone</h4>
-                                    <p className="text-gray-900">{lead.phone || "Não informado"}</p>
-                                  </div>
-                                  
-                                  <div>
-                                    <h4 className="text-sm font-medium text-gray-500 mb-1">WhatsApp</h4>
-                                    <p className="text-gray-900">{(lead as any).whatsapp || "Não informado"}</p>
-                                  </div>
-                                  
-                                  <h3 className="text-base font-semibold mt-8 mb-4">Detalhes do Interesse</h3>
-                                  
-                                  <div>
-                                    <h4 className="text-sm font-medium text-gray-500 mb-1">Valor Orçado</h4>
-                                    <p className="text-gray-900">
-                                      {lead.budget ? 'R$ ' + lead.budget.toLocaleString('pt-BR') : 
-                                      (lead as any).priceRangeMax ? 'R$ ' + (lead as any).priceRangeMax.toLocaleString('pt-BR') : 'Não informado'}
-                                    </p>
-                                  </div>
-                                  
-                                  <div>
-                                    <h4 className="text-sm font-medium text-gray-500 mb-1">Valor Mínimo</h4>
-                                    <p className="text-gray-900">
-                                      {(lead as any).priceRangeMin ? 'R$ ' + (lead as any).priceRangeMin.toLocaleString('pt-BR') : 'Não informado'}
-                                    </p>
-                                  </div>
-                                  
-                                  <div>
-                                    <h4 className="text-sm font-medium text-gray-500 mb-1">Região</h4>
-                                    <p className="text-gray-900">{(lead as any).region || "Não informado"}</p>
-                                  </div>
-                                  
-                                  <div>
-                                    <h4 className="text-sm font-medium text-gray-500 mb-1">Tipo de Imóvel</h4>
-                                    <p className="text-gray-900">
-                                      {(lead as any).propertyType === 'apartment' ? 'Apartamento' : 
-                                      (lead as any).propertyType === 'house' ? 'Casa' : 
-                                      (lead as any).propertyType === 'commercial' ? 'Comercial' : 
-                                      'Não informado'}
-                                    </p>
+                                  {/* Grid 2: Detalhes do Interesse */}
+                                  <div className="bg-white p-4 rounded-md border border-gray-100">
+                                    <h3 className="text-base font-semibold mb-4">Detalhes do Interesse</h3>
+                                    <div className="space-y-4">
+                                      <div>
+                                        <h4 className="text-sm font-medium text-gray-500 mb-1">Tipo de Negócio</h4>
+                                        <p className="text-gray-900">
+                                          {lead.interestType === 'purchase' ? 'Compra' :
+                                          lead.interestType === 'rent' ? 'Aluguel' :
+                                          lead.interestType || 'Não informado'}
+                                        </p>
+                                      </div>
+                                      
+                                      <div>
+                                        <h4 className="text-sm font-medium text-gray-500 mb-1">Tipo de Imóvel</h4>
+                                        <p className="text-gray-900">
+                                          {(lead as any).propertyType === 'apartment' ? 'Apartamento' : 
+                                          (lead as any).propertyType === 'house' ? 'Casa' : 
+                                          (lead as any).propertyType === 'commercial' ? 'Comercial' : 
+                                          'Não informado'}
+                                        </p>
+                                      </div>
+                                      
+                                      <div>
+                                        <h4 className="text-sm font-medium text-gray-500 mb-1">Região</h4>
+                                        <p className="text-gray-900">{(lead as any).region || "Não informado"}</p>
+                                      </div>
+                                      
+                                      <div>
+                                        <h4 className="text-sm font-medium text-gray-500 mb-1">Faixa de Preço</h4>
+                                        <p className="text-gray-900">
+                                          {(lead as any).priceRangeMin && (lead as any).priceRangeMax ? 
+                                            `R$ ${(lead as any).priceRangeMin.toLocaleString('pt-BR')} - R$ ${(lead as any).priceRangeMax.toLocaleString('pt-BR')}` : 
+                                            lead.budget ? 'R$ ' + lead.budget.toLocaleString('pt-BR') : 'Não informado'}
+                                        </p>
+                                      </div>
+                                      
+                                      <div>
+                                        <h4 className="text-sm font-medium text-gray-500 mb-1">Origem</h4>
+                                        <p className="text-gray-900">
+                                          {lead.source === 'manual' ? 'Manual' :
+                                          lead.source === 'website' ? 'Website' :
+                                          lead.source === 'whatsapp' ? 'WhatsApp' :
+                                          lead.source === 'instagram' ? 'Instagram' :
+                                          lead.source === 'facebook' ? 'Facebook' :
+                                          lead.source === 'indicacao' ? 'Indicação' :
+                                          lead.source || 'Não informado'}
+                                        </p>
+                                      </div>
+                                    </div>
                                   </div>
                                 </div>
                               </div>
@@ -846,54 +871,7 @@ export default function CRM() {
                                   </Button>
                                 </div>
                                 
-                                <h3 className="text-base font-semibold mt-8 mb-4">Detalhes do Interesse</h3>
-                                <div className="space-y-4">
-                                  <div>
-                                    <h4 className="text-sm font-medium text-gray-500 mb-1">Tipo de Negócio</h4>
-                                    <p className="text-gray-900">
-                                      {lead.interestType === 'purchase' ? 'Compra' :
-                                      lead.interestType === 'rent' ? 'Aluguel' :
-                                      lead.interestType || 'Não informado'}
-                                    </p>
-                                  </div>
-                                  
-                                  <div>
-                                    <h4 className="text-sm font-medium text-gray-500 mb-1">Tipo de Imóvel</h4>
-                                    <p className="text-gray-900">
-                                      {(lead as any).propertyType === 'apartment' ? 'Apartamento' : 
-                                      (lead as any).propertyType === 'house' ? 'Casa' : 
-                                      (lead as any).propertyType === 'commercial' ? 'Comercial' : 
-                                      'Não informado'}
-                                    </p>
-                                  </div>
-                                  
-                                  <div>
-                                    <h4 className="text-sm font-medium text-gray-500 mb-1">Região</h4>
-                                    <p className="text-gray-900">{(lead as any).region || "Não informado"}</p>
-                                  </div>
-                                  
-                                  <div>
-                                    <h4 className="text-sm font-medium text-gray-500 mb-1">Faixa de Preço</h4>
-                                    <p className="text-gray-900">
-                                      {(lead as any).priceRangeMin && (lead as any).priceRangeMax ? 
-                                        `R$ ${(lead as any).priceRangeMin.toLocaleString('pt-BR')} - R$ ${(lead as any).priceRangeMax.toLocaleString('pt-BR')}` : 
-                                        lead.budget ? 'R$ ' + lead.budget.toLocaleString('pt-BR') : 'Não informado'}
-                                    </p>
-                                  </div>
-                                  
-                                  <div>
-                                    <h4 className="text-sm font-medium text-gray-500 mb-1">Origem</h4>
-                                    <p className="text-gray-900">
-                                      {lead.source === 'manual' ? 'Manual' :
-                                      lead.source === 'website' ? 'Website' :
-                                      lead.source === 'whatsapp' ? 'WhatsApp' :
-                                      lead.source === 'instagram' ? 'Instagram' :
-                                      lead.source === 'facebook' ? 'Facebook' :
-                                      lead.source === 'indicacao' ? 'Indicação' :
-                                      lead.source || 'Não informado'}
-                                    </p>
-                                  </div>
-                                </div>
+
                               </div>
                             </div>
                           </div>
