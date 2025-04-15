@@ -9,6 +9,7 @@ import { Property } from "@shared/schema";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShower, faBed, faRulerCombined, faCar, faBath } from "@fortawesome/free-solid-svg-icons";
 import PropertyDetailsModal from '@/components/website/PropertyDetailsModal';
+import { useLoading } from "@/contexts/LoadingContext";
 
 // Função utilitária para obter a imagem de destaque do imóvel
 const getFeaturedImage = (property: Property): string | undefined => {
@@ -40,6 +41,7 @@ export default function Home() {
   const headerRef = useRef<HTMLElement>(null);
   const carouselTrackRef = useRef<HTMLDivElement>(null);
   const [carouselPage, setCarouselPage] = useState(0);
+  const { stopLoading } = useLoading();
   
   // Estado para o modal de detalhes do imóvel
   const [selectedPropertyId, setSelectedPropertyId] = useState<number | null>(null);
@@ -118,6 +120,13 @@ export default function Home() {
       console.log('Telefone:', config.phone);
     }
   }, [config]);
+  
+  // Parar a animação de carregamento quando os dados forem carregados
+  useEffect(() => {
+    if (!isLoadingProperties && !isLoadingConfig) {
+      stopLoading();
+    }
+  }, [isLoadingProperties, isLoadingConfig, stopLoading]);
 
   return (
     <div className="min-h-screen flex flex-col">
