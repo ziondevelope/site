@@ -179,29 +179,26 @@ export default function Header({ config, isLoadingConfig }: HeaderProps) {
                 <div className="px-6 py-8 flex flex-col space-y-3" style={{ fontFamily: 'Poppins, sans-serif' }}>
                   <a 
                     href="/#home" 
-                    className="flex items-center py-4 px-4 rounded-md transition-all hover:bg-gray-50 relative overflow-hidden group"
+                    className="flex items-center py-4 px-6 rounded-md transition-all hover:bg-gray-50 relative overflow-hidden group"
                   >
                     <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary opacity-0 group-hover:opacity-100 transition-opacity" style={{ backgroundColor: config?.primaryColor || 'var(--primary)' }}></div>
-                    <i className="fas fa-home text-gray-400 w-6 group-hover:text-primary transition-colors" style={{ color: 'rgba(0,0,0,0.3)' }}></i>
-                    <span className="ml-3 text-gray-700 font-medium text-[17px] group-hover:text-primary transition-colors">Início</span>
+                    <span className="text-gray-700 font-medium text-[17px] group-hover:text-primary transition-colors">Início</span>
                   </a>
                   
                   <a 
                     href="/#properties" 
-                    className="flex items-center py-3 px-4 rounded-md transition-all hover:bg-gray-50 relative overflow-hidden group"
+                    className="flex items-center py-4 px-6 rounded-md transition-all hover:bg-gray-50 relative overflow-hidden group"
                   >
                     <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary opacity-0 group-hover:opacity-100 transition-opacity" style={{ backgroundColor: config?.primaryColor || 'var(--primary)' }}></div>
-                    <i className="fas fa-star text-gray-400 w-6 group-hover:text-primary transition-colors" style={{ color: 'rgba(0,0,0,0.3)' }}></i>
-                    <span className="ml-3 text-gray-700 font-medium text-[17px] group-hover:text-primary transition-colors">Destaques</span>
+                    <span className="text-gray-700 font-medium text-[17px] group-hover:text-primary transition-colors">Destaques</span>
                   </a>
                   
                   <Link 
                     href="/properties" 
-                    className="flex items-center py-3 px-4 rounded-md transition-all hover:bg-gray-50 relative overflow-hidden group"
+                    className="flex items-center py-4 px-6 rounded-md transition-all hover:bg-gray-50 relative overflow-hidden group"
                   >
                     <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary opacity-0 group-hover:opacity-100 transition-opacity" style={{ backgroundColor: config?.primaryColor || 'var(--primary)' }}></div>
-                    <i className="fas fa-building text-gray-400 w-6 group-hover:text-primary transition-colors" style={{ color: 'rgba(0,0,0,0.3)' }}></i>
-                    <span className="ml-3 text-gray-700 font-medium text-[17px] group-hover:text-primary transition-colors">Todos Imóveis</span>
+                    <span className="text-gray-700 font-medium text-[17px] group-hover:text-primary transition-colors">Todos Imóveis</span>
                   </Link>
                   
                   <a 
