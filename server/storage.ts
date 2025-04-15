@@ -4,8 +4,10 @@ import { leads, type Lead, type InsertLead } from "@shared/schema";
 import { tasks, type Task, type InsertTask } from "@shared/schema";
 import { websiteConfig, type WebsiteConfig, type UpdateWebsiteConfig } from "@shared/schema";
 import { testimonials, type Testimonial, type InsertTestimonial } from "@shared/schema";
+import { salesFunnels, type SalesFunnel, type InsertSalesFunnel } from "@shared/schema";
+import { funnelStages, type FunnelStage, type InsertFunnelStage } from "@shared/schema";
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, doc, getDocs, getDoc, setDoc, updateDoc, deleteDoc, query, where, orderBy, limit } from "firebase/firestore";
+import { getFirestore, collection, doc, getDocs, getDoc, setDoc, updateDoc, deleteDoc, query, where, orderBy, limit, writeBatch } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 // Initialize Firebase - usando o SDK cliente
@@ -745,12 +747,11 @@ export class FirebaseStorage implements IStorage {
 
   async getRecentContacts(): Promise<any[]> {
     try {
-      const recentContactsSnapshot = await db.collection('leads')
-        .orderBy('createdAt', 'desc')
-        .limit(5)
-        .get();
-        
-      return recentContactsSnapshot.docs.map(doc => {
+      const leadsRef = collection(db, 'leads');
+      const q = query(leadsRef, orderBy('createdAt', 'desc'), limit(5));
+      const leadsSnapshot = await getDocs(q);
+      
+      return leadsSnapshot.docs.map(doc => {
         const lead = doc.data() as Lead;
         return {
           id: lead.id,
@@ -764,6 +765,500 @@ export class FirebaseStorage implements IStorage {
     } catch (error) {
       console.error('Error fetching recent contacts:', error);
       return [];
+    }
+  }
+
+  // Sales Funnel methods
+  async getSalesFunnel(id: number): Promise<SalesFunnel | undefined> {
+    try {
+      const funnelsRef = collection(db, 'sales_funnels');
+      const q = query(funnelsRef, where('id', '==', id), limit(1));
+      const funnelSnapshot = await getDocs(q);
+      
+      if (funnelSnapshot.empty) {
+        return undefined;
+      }
+      
+      return funnelSnapshot.docs[0].data() as SalesFunnel;
+    } catch (error) {
+      console.error('Error fetching sales funnel:', error);
+      return undefined;
+    }
+  }
+
+  async getAllSalesFunnels(): Promise<SalesFunnel[]> {
+    try {
+      const funnelsRef = collection(db, 'sales_funnels');
+      const q = query(funnelsRef, orderBy('name', 'asc'));
+      const funnelsSnapshot = await getDocs(q);
+      return funnelsSnapshot.docs.map(doc => doc.data() as SalesFunnel);
+    } catch (error) {
+      console.error('Error fetching all sales funnels:', error);
+      return [];
+    }
+  }
+
+  async getDefaultSalesFunnel(): Promise<SalesFunnel | undefined> {
+    try {
+      const funnelsRef = collection(db, 'sales_funnels');
+      const q = query(funnelsRef, where('isDefault', '==', true), limit(1));
+      const funnelSnapshot = await getDocs(q);
+      
+      if (funnelSnapshot.empty) {
+        // Se não houver um funil padrão, tenta pegar o primeiro funil disponível
+        const allFunnelsRef = collection(db, 'sales_funnels');
+        const allQ = query(allFunnelsRef, limit(1));
+        const allFunnelSnapshot = await getDocs(allQ);
+        
+        if (allFunnelSnapshot.empty) {
+          return undefined;
+        }
+        
+        return allFunnelSnapshot.docs[0].data() as SalesFunnel;
+      }
+      
+      return funnelSnapshot.docs[0].data() as SalesFunnel;
+    } catch (error) {
+      console.error('Error fetching default sales funnel:', error);
+      return undefined;
+    }
+  }
+
+  async createSalesFunnel(funnel: InsertSalesFunnel): Promise<SalesFunnel> {
+    try {
+      // Find the highest ID to increment
+      const funnelsRef = collection(db, 'sales_funnels');
+      const q = query(funnelsRef, orderBy('id', 'desc'), limit(1));
+      const funnelsSnapshot = await getDocs(q);
+      
+      let highestId = 0;
+      if (!funnelsSnapshot.empty) {
+        const data = funnelsSnapshot.docs[0].data();
+        highestId = data.id || 0;
+      }
+      
+      const now = new Date().toISOString();
+      const newFunnel: SalesFunnel = {
+        ...funnel,
+        id: highestId + 1,
+        createdAt: now,
+        updatedAt: now,
+      };
+      
+      // Se for o primeiro funil ou configurado como padrão, garantir que seja o padrão
+      if (funnel.isDefault || highestId === 0) {
+        // Se for definido como padrão, remover a flag de padrão de quaisquer outros funis
+        if (funnel.isDefault) {
+          const defaultFunnelsRef = collection(db, 'sales_funnels');
+          const defaultQ = query(defaultFunnelsRef, where('isDefault', '==', true));
+          const defaultFunnelsSnapshot = await getDocs(defaultQ);
+          
+          const batch = writeBatch(db);
+          defaultFunnelsSnapshot.docs.forEach(doc => {
+            batch.update(doc.ref, { isDefault: false });
+          });
+          await batch.commit();
+        }
+        
+        newFunnel.isDefault = true;
+      }
+      
+      await setDoc(doc(db, 'sales_funnels', newFunnel.id.toString()), newFunnel);
+      return newFunnel;
+    } catch (error) {
+      console.error('Error creating sales funnel:', error);
+      throw new Error('Failed to create sales funnel');
+    }
+  }
+
+  async updateSalesFunnel(id: number, funnelData: Partial<InsertSalesFunnel>): Promise<SalesFunnel | undefined> {
+    try {
+      const funnelRef = doc(db, 'sales_funnels', id.toString());
+      const funnelDoc = await getDoc(funnelRef);
+      
+      if (!funnelDoc.exists()) {
+        return undefined;
+      }
+      
+      const currentFunnel = funnelDoc.data() as SalesFunnel;
+      const updatedFunnel = {
+        ...currentFunnel,
+        ...funnelData,
+        updatedAt: new Date().toISOString(),
+      };
+      
+      // Se esse funil estiver sendo definido como padrão, atualizar outros funis
+      if (funnelData.isDefault && !currentFunnel.isDefault) {
+        const defaultFunnelsRef = collection(db, 'sales_funnels');
+        const defaultQ = query(defaultFunnelsRef, where('isDefault', '==', true));
+        const defaultFunnelsSnapshot = await getDocs(defaultQ);
+        
+        const batch = writeBatch(db);
+        defaultFunnelsSnapshot.docs.forEach(doc => {
+          batch.update(doc.ref, { isDefault: false });
+        });
+        await batch.commit();
+      }
+      
+      await updateDoc(funnelRef, updatedFunnel);
+      return updatedFunnel as SalesFunnel;
+    } catch (error) {
+      console.error('Error updating sales funnel:', error);
+      return undefined;
+    }
+  }
+
+  async deleteSalesFunnel(id: number): Promise<boolean> {
+    try {
+      const funnelRef = doc(db, 'sales_funnels', id.toString());
+      const funnelDoc = await getDoc(funnelRef);
+      
+      if (!funnelDoc.exists()) {
+        return false;
+      }
+      
+      const funnel = funnelDoc.data() as SalesFunnel;
+      
+      // Se for o funil padrão, não permitir exclusão
+      if (funnel.isDefault) {
+        throw new Error('Cannot delete the default sales funnel');
+      }
+      
+      // Excluir todos os estágios associados a este funil
+      const stagesRef = collection(db, 'funnel_stages');
+      const stagesQ = query(stagesRef, where('funnelId', '==', id));
+      const stagesSnapshot = await getDocs(stagesQ);
+      
+      const batch = writeBatch(db);
+      stagesSnapshot.docs.forEach(doc => {
+        batch.delete(doc.ref);
+      });
+      
+      // Excluir o funil
+      batch.delete(funnelRef);
+      await batch.commit();
+      
+      return true;
+    } catch (error) {
+      console.error('Error deleting sales funnel:', error);
+      return false;
+    }
+  }
+
+  async setDefaultSalesFunnel(id: number): Promise<boolean> {
+    try {
+      // Verificar se o funil existe
+      const funnelRef = doc(db, 'sales_funnels', id.toString());
+      const funnelDoc = await getDoc(funnelRef);
+      
+      if (!funnelDoc.exists()) {
+        return false;
+      }
+      
+      // Remover a flag de padrão de todos os funis
+      const funnelsRef = collection(db, 'sales_funnels');
+      const funnelsSnapshot = await getDocs(funnelsRef);
+      
+      const batch = writeBatch(db);
+      funnelsSnapshot.docs.forEach(doc => {
+        batch.update(doc.ref, { isDefault: false });
+      });
+      
+      // Definir o novo funil padrão
+      batch.update(funnelRef, { 
+        isDefault: true,
+        updatedAt: new Date().toISOString()
+      });
+      
+      await batch.commit();
+      return true;
+    } catch (error) {
+      console.error('Error setting default sales funnel:', error);
+      return false;
+    }
+  }
+
+  // Funnel Stage methods
+  async getFunnelStage(id: number): Promise<FunnelStage | undefined> {
+    try {
+      const stagesRef = collection(db, 'funnel_stages');
+      const q = query(stagesRef, where('id', '==', id), limit(1));
+      const stageSnapshot = await getDocs(q);
+      
+      if (stageSnapshot.empty) {
+        return undefined;
+      }
+      
+      return stageSnapshot.docs[0].data() as FunnelStage;
+    } catch (error) {
+      console.error('Error fetching funnel stage:', error);
+      return undefined;
+    }
+  }
+
+  async getFunnelStagesByFunnelId(funnelId: number): Promise<FunnelStage[]> {
+    try {
+      const stagesRef = collection(db, 'funnel_stages');
+      const q = query(stagesRef, where('funnelId', '==', funnelId), orderBy('position', 'asc'));
+      const stagesSnapshot = await getDocs(q);
+      return stagesSnapshot.docs.map(doc => doc.data() as FunnelStage);
+    } catch (error) {
+      console.error('Error fetching funnel stages:', error);
+      return [];
+    }
+  }
+
+  async createFunnelStage(stage: InsertFunnelStage): Promise<FunnelStage> {
+    try {
+      // Find the highest ID to increment
+      const stagesRef = collection(db, 'funnel_stages');
+      const q = query(stagesRef, orderBy('id', 'desc'), limit(1));
+      const stagesSnapshot = await getDocs(q);
+      
+      let highestId = 0;
+      if (!stagesSnapshot.empty) {
+        const data = stagesSnapshot.docs[0].data();
+        highestId = data.id || 0;
+      }
+      
+      // Find the highest position for this funnel if not provided
+      let position = stage.position;
+      if (position === undefined) {
+        const posQ = query(
+          stagesRef, 
+          where('funnelId', '==', stage.funnelId), 
+          orderBy('position', 'desc'), 
+          limit(1)
+        );
+        const posSnapshot = await getDocs(posQ);
+        
+        position = 0;
+        if (!posSnapshot.empty) {
+          const data = posSnapshot.docs[0].data();
+          position = (data.position || 0) + 1;
+        }
+      }
+      
+      const now = new Date().toISOString();
+      const newStage: FunnelStage = {
+        ...stage,
+        id: highestId + 1,
+        position,
+        createdAt: now,
+        updatedAt: now,
+      };
+      
+      await setDoc(doc(db, 'funnel_stages', newStage.id.toString()), newStage);
+      return newStage;
+    } catch (error) {
+      console.error('Error creating funnel stage:', error);
+      throw new Error('Failed to create funnel stage');
+    }
+  }
+
+  async updateFunnelStage(id: number, stageData: Partial<InsertFunnelStage>): Promise<FunnelStage | undefined> {
+    try {
+      const stageRef = doc(db, 'funnel_stages', id.toString());
+      const stageDoc = await getDoc(stageRef);
+      
+      if (!stageDoc.exists()) {
+        return undefined;
+      }
+      
+      const updatedStage = {
+        ...stageDoc.data(),
+        ...stageData,
+        updatedAt: new Date().toISOString(),
+      };
+      
+      await updateDoc(stageRef, updatedStage);
+      return updatedStage as FunnelStage;
+    } catch (error) {
+      console.error('Error updating funnel stage:', error);
+      return undefined;
+    }
+  }
+
+  async deleteFunnelStage(id: number): Promise<boolean> {
+    try {
+      const stageRef = doc(db, 'funnel_stages', id.toString());
+      const stageDoc = await getDoc(stageRef);
+      
+      if (!stageDoc.exists()) {
+        return false;
+      }
+      
+      await deleteDoc(stageRef);
+      
+      // Atualizar posições dos estágios restantes
+      const stage = stageDoc.data() as FunnelStage;
+      const stagesRef = collection(db, 'funnel_stages');
+      const q = query(
+        stagesRef, 
+        where('funnelId', '==', stage.funnelId),
+        where('position', '>', stage.position)
+      );
+      const stagesSnapshot = await getDocs(q);
+      
+      const batch = writeBatch(db);
+      stagesSnapshot.docs.forEach(doc => {
+        const stageData = doc.data();
+        batch.update(doc.ref, { position: stageData.position - 1 });
+      });
+      
+      await batch.commit();
+      return true;
+    } catch (error) {
+      console.error('Error deleting funnel stage:', error);
+      return false;
+    }
+  }
+
+  async reorderFunnelStages(funnelId: number, stageIds: number[]): Promise<FunnelStage[]> {
+    try {
+      // Verificar se todos os estágios existem e pertencem a este funil
+      const stagesRef = collection(db, 'funnel_stages');
+      const q = query(stagesRef, where('funnelId', '==', funnelId));
+      const stagesSnapshot = await getDocs(q);
+      
+      const currentStages = stagesSnapshot.docs.map(doc => doc.data() as FunnelStage);
+      const allIds = currentStages.map(stage => stage.id);
+      
+      // Validar se todos os IDs fornecidos são válidos e pertencem a este funil
+      const hasInvalidId = stageIds.some(id => !allIds.includes(id));
+      if (hasInvalidId) {
+        throw new Error('Invalid stage ids provided');
+      }
+      
+      // Atualizar as posições
+      const batch = writeBatch(db);
+      stageIds.forEach((id, index) => {
+        const stageDoc = stagesSnapshot.docs.find(doc => (doc.data() as FunnelStage).id === id);
+        if (stageDoc) {
+          batch.update(stageDoc.ref, { 
+            position: index,
+            updatedAt: new Date().toISOString()
+          });
+        }
+      });
+      
+      await batch.commit();
+      
+      // Retornar os estágios atualizados
+      const updatedQ = query(
+        stagesRef, 
+        where('funnelId', '==', funnelId),
+        orderBy('position', 'asc')
+      );
+      const updatedSnapshot = await getDocs(updatedQ);
+      return updatedSnapshot.docs.map(doc => doc.data() as FunnelStage);
+    } catch (error) {
+      console.error('Error reordering funnel stages:', error);
+      throw new Error('Failed to reorder funnel stages');
+    }
+  }
+
+  // Lead funnel management
+  async updateLeadStage(leadId: number, stageId: number): Promise<Lead | undefined> {
+    try {
+      // Verificar se o estágio existe
+      const stageRef = doc(db, 'funnel_stages', stageId.toString());
+      const stageDoc = await getDoc(stageRef);
+      
+      if (!stageDoc.exists()) {
+        throw new Error('Stage not found');
+      }
+      
+      const stage = stageDoc.data() as FunnelStage;
+      
+      // Obter o lead
+      const leadRef = doc(db, 'leads', leadId.toString());
+      const leadDoc = await getDoc(leadRef);
+      
+      if (!leadDoc.exists()) {
+        return undefined;
+      }
+      
+      // Atualizar o lead
+      const updatedLead = {
+        ...leadDoc.data(),
+        stageId,
+        funnelId: stage.funnelId,
+        updatedAt: new Date().toISOString()
+      };
+      
+      await updateDoc(leadRef, updatedLead);
+      return updatedLead as Lead;
+    } catch (error) {
+      console.error('Error updating lead stage:', error);
+      return undefined;
+    }
+  }
+
+  async getLeadsByFunnelStage(funnelId: number, stageId: number): Promise<Lead[]> {
+    try {
+      const leadsRef = collection(db, 'leads');
+      const q = query(
+        leadsRef, 
+        where('funnelId', '==', funnelId),
+        where('stageId', '==', stageId),
+        orderBy('createdAt', 'desc')
+      );
+      const leadsSnapshot = await getDocs(q);
+      return leadsSnapshot.docs.map(doc => doc.data() as Lead);
+    } catch (error) {
+      console.error('Error fetching leads by funnel stage:', error);
+      return [];
+    }
+  }
+
+  async assignLeadToFunnel(leadId: number, funnelId: number): Promise<Lead | undefined> {
+    try {
+      // Verificar se o funil existe
+      const funnelRef = doc(db, 'sales_funnels', funnelId.toString());
+      const funnelDoc = await getDoc(funnelRef);
+      
+      if (!funnelDoc.exists()) {
+        throw new Error('Funnel not found');
+      }
+      
+      // Obter o primeiro estágio do funil
+      const stagesRef = collection(db, 'funnel_stages');
+      const q = query(
+        stagesRef, 
+        where('funnelId', '==', funnelId),
+        orderBy('position', 'asc'),
+        limit(1)
+      );
+      const stagesSnapshot = await getDocs(q);
+      
+      if (stagesSnapshot.empty) {
+        throw new Error('Funnel has no stages');
+      }
+      
+      const firstStage = stagesSnapshot.docs[0].data() as FunnelStage;
+      
+      // Obter o lead
+      const leadRef = doc(db, 'leads', leadId.toString());
+      const leadDoc = await getDoc(leadRef);
+      
+      if (!leadDoc.exists()) {
+        return undefined;
+      }
+      
+      // Atualizar o lead
+      const updatedLead = {
+        ...leadDoc.data(),
+        funnelId,
+        stageId: firstStage.id,
+        updatedAt: new Date().toISOString()
+      };
+      
+      await updateDoc(leadRef, updatedLead);
+      return updatedLead as Lead;
+    } catch (error) {
+      console.error('Error assigning lead to funnel:', error);
+      return undefined;
     }
   }
 }
