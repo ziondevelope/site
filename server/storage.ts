@@ -1029,18 +1029,22 @@ export class FirebaseStorage implements IStorage {
       // Find the highest position for this funnel if not provided
       let position = stage.position;
       if (position === undefined) {
+        // Buscar todos os estágios deste funil sem orderBy para evitar necessidade de índice composto
         const posQ = query(
           stagesRef, 
-          where('funnelId', '==', stage.funnelId), 
-          orderBy('position', 'desc'), 
-          limit(1)
+          where('funnelId', '==', stage.funnelId)
         );
         const posSnapshot = await getDocs(posQ);
         
         position = 0;
+        // Se há estágios, ordenamos manualmente e pegamos a maior posição
         if (!posSnapshot.empty) {
-          const data = posSnapshot.docs[0].data();
-          position = (data.position || 0) + 1;
+          const stages = posSnapshot.docs.map(doc => doc.data() as FunnelStage);
+          if (stages.length > 0) {
+            // Encontrar a maior posição e adicionar 1
+            const maxPosition = Math.max(...stages.map(s => s.position || 0));
+            position = maxPosition + 1;
+          }
         }
       }
       
@@ -1207,11 +1211,18 @@ export class FirebaseStorage implements IStorage {
       const q = query(
         leadsRef, 
         where('funnelId', '==', funnelId),
-        where('stageId', '==', stageId),
-        orderBy('createdAt', 'desc')
+        where('stageId', '==', stageId)
+        // Removido orderBy para evitar necessidade de índice composto
       );
       const leadsSnapshot = await getDocs(q);
-      return leadsSnapshot.docs.map(doc => doc.data() as Lead);
+      
+      // Ordenação manual por data de criação
+      const leads = leadsSnapshot.docs.map(doc => doc.data() as Lead);
+      return leads.sort((a, b) => {
+        const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+        const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+        return dateB - dateA; // ordem decrescente (mais recentes primeiro)
+      });
     } catch (error) {
       console.error('Error fetching leads by funnel stage:', error);
       return [];
