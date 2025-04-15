@@ -720,8 +720,13 @@ export default function CRM() {
                               body: JSON.stringify({ funnelId }),
                             })
                               .then(() => {
+                                // Definir o funil atual para o lead
+                                setCurrentLeadFunnelId(funnelId);
                                 // Atualizar a lista de leads
                                 queryClient.invalidateQueries({ queryKey: ['/api/leads'] });
+                                // Recarregar a lista de estágios para o novo funil
+                                queryClient.invalidateQueries({ queryKey: ['/api/funnel-stages', funnelId] });
+                                
                                 toast({
                                   title: "Funil atualizado",
                                   description: "O funil de vendas foi atualizado com sucesso.",
