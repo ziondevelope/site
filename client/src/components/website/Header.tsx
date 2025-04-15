@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Link } from 'wouter';
+import { Link, useLocation } from 'wouter';
 import { WebsiteConfig } from '@shared/schema';
 
 interface HeaderProps {
@@ -10,6 +10,10 @@ interface HeaderProps {
 export default function Header({ config, isLoadingConfig }: HeaderProps) {
   const [scrolled, setScrolled] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
+  const [locationPath] = useLocation();
+  
+  // Determinamos se estamos na página de propriedades para aplicar o estilo escuro no menu
+  const isPropertiesPage = locationPath === "/properties";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -32,7 +36,7 @@ export default function Header({ config, isLoadingConfig }: HeaderProps) {
     <header 
       ref={headerRef}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled 
+        isPropertiesPage || scrolled 
           ? 'bg-white shadow-lg py-2' 
           : 'bg-transparent py-6'
       }`}
@@ -60,21 +64,21 @@ export default function Header({ config, isLoadingConfig }: HeaderProps) {
               </div>
             ) : (
               <>
-                <div className={`${scrolled ? 'h-8 w-8' : 'h-10 w-10'} rounded bg-primary flex items-center justify-center text-white transition-all duration-300`}>
+                <div className={`${isPropertiesPage || scrolled ? 'h-8 w-8' : 'h-10 w-10'} rounded bg-primary flex items-center justify-center text-white transition-all duration-300`}>
                   <i className="fas fa-home text-xl"></i>
                 </div>
-                <h1 className={`${scrolled ? 'text-xl' : 'text-2xl'} font-bold ${scrolled ? 'text-gray-800' : 'text-white'} ml-3 transition-all duration-300`}>Imobiliária</h1>
+                <h1 className={`${isPropertiesPage || scrolled ? 'text-xl' : 'text-2xl'} font-bold ${isPropertiesPage || scrolled ? 'text-gray-800' : 'text-white'} ml-3 transition-all duration-300`}>Imobiliária</h1>
               </>
             )}
           </div>
           
           {/* Menu ao lado da logo */}
           <nav className="hidden md:flex space-x-8">
-            <a href="/#home" className={`${scrolled ? 'text-gray-700' : 'text-white'} hover:text-primary font-medium transition-colors duration-300`}>Início</a>
-            <a href="/#properties" className={`${scrolled ? 'text-gray-700' : 'text-white'} hover:text-primary font-medium transition-colors duration-300`}>Destaques</a>
-            <Link href="/properties" className={`${scrolled ? 'text-gray-700' : 'text-white'} hover:text-primary font-medium transition-colors duration-300`}>Todos Imóveis</Link>
-            <a href="/#about" className={`${scrolled ? 'text-gray-700' : 'text-white'} hover:text-primary font-medium transition-colors duration-300`}>Sobre</a>
-            <a href="/#contact" className={`${scrolled ? 'text-gray-700' : 'text-white'} hover:text-primary font-medium transition-colors duration-300`}>Contato</a>
+            <a href="/#home" className={`${isPropertiesPage || scrolled ? 'text-gray-700' : 'text-white'} hover:text-primary font-medium transition-colors duration-300`}>Início</a>
+            <a href="/#properties" className={`${isPropertiesPage || scrolled ? 'text-gray-700' : 'text-white'} hover:text-primary font-medium transition-colors duration-300`}>Destaques</a>
+            <Link href="/properties" className={`${isPropertiesPage || scrolled ? 'text-gray-700' : 'text-white'} hover:text-primary font-medium transition-colors duration-300`}>Todos Imóveis</Link>
+            <a href="/#about" className={`${isPropertiesPage || scrolled ? 'text-gray-700' : 'text-white'} hover:text-primary font-medium transition-colors duration-300`}>Sobre</a>
+            <a href="/#contact" className={`${isPropertiesPage || scrolled ? 'text-gray-700' : 'text-white'} hover:text-primary font-medium transition-colors duration-300`}>Contato</a>
           </nav>
         </div>
         
@@ -85,32 +89,32 @@ export default function Header({ config, isLoadingConfig }: HeaderProps) {
             target="_blank" 
             rel="noopener noreferrer"
             className={`inline-flex items-center px-4 py-1 rounded-full border border-solid transition-all hover:bg-white ${
-              scrolled ? 'text-primary' : 'text-white'
+              isPropertiesPage || scrolled ? 'text-primary' : 'text-white'
             }`}
             style={{ 
-              borderColor: scrolled 
+              borderColor: isPropertiesPage || scrolled 
                 ? (config?.primaryColor ? `${config.primaryColor}33` : 'var(--primary-33)') 
                 : 'rgba(255, 255, 255, 0.3)',
-              color: scrolled ? (config?.primaryColor || 'var(--primary)') : 'white'
+              color: isPropertiesPage || scrolled ? (config?.primaryColor || 'var(--primary)') : 'white'
             }}
             onMouseOver={(e) => {
               e.currentTarget.style.color = config?.primaryColor || 'var(--primary)';
             }}
             onMouseOut={(e) => {
-              e.currentTarget.style.color = scrolled ? (config?.primaryColor || 'var(--primary)') : 'white';
+              e.currentTarget.style.color = isPropertiesPage || scrolled ? (config?.primaryColor || 'var(--primary)') : 'white';
             }}
           >
             {config?.phone && <span className="mr-2">{config.phone}</span>}
             <i 
               className="fab fa-whatsapp text-lg transition-colors" 
-              style={{ color: scrolled ? "#25D366" : "white" }}
+              style={{ color: isPropertiesPage || scrolled ? "#25D366" : "white" }}
               ref={(el) => {
                 if (el) {
                   el.parentElement?.addEventListener('mouseover', () => {
                     el.style.color = "#25D366";
                   });
                   el.parentElement?.addEventListener('mouseout', () => {
-                    el.style.color = scrolled ? "#25D366" : "white";
+                    el.style.color = isPropertiesPage || scrolled ? "#25D366" : "white";
                   });
                 }
               }}
