@@ -49,9 +49,10 @@ export interface IStorage {
   getLead(id: number): Promise<Lead | undefined>;
   getAllLeads(): Promise<Lead[]>;
   getLeadsByStatus(status: string): Promise<Lead[]>;
-  createLead(lead: InsertLead): Promise<Lead>;
+  // Permite campos extras além do InsertLead para preservar whatsapp, preços, etc.
+  createLead(lead: any): Promise<Lead>;
   updateLeadStatus(id: number, status: string): Promise<Lead | undefined>;
-  updateLead(id: number, leadData: Partial<InsertLead>): Promise<Lead | undefined>;
+  updateLead(id: number, leadData: any): Promise<Lead | undefined>;
   deleteLead(id: number): Promise<boolean>;
 
   // Task methods
@@ -347,9 +348,9 @@ export class FirebaseStorage implements IStorage {
     }
   }
 
-  async createLead(lead: InsertLead): Promise<Lead> {
+  async createLead(lead: any): Promise<Lead> {
     try {
-      console.log('Criando lead:', lead);
+      console.log('Criando lead com todos os campos:', lead);
       
       // Find the highest ID to increment
       const leadsRef = collection(db, 'leads');
@@ -366,28 +367,17 @@ export class FirebaseStorage implements IStorage {
       
       const now = new Date().toISOString();
       
-      // Garantir que todos os campos extras sejam preservados mesmo que não estejam no schema
+      // Criamos um objeto lead com todos os campos que vieram na requisição
+      // Não filtramos nenhum campo, preservando whatsapp, region, propertyType, etc.
       const leadData = {
-        ...lead,
+        ...lead,  // Preserva todos os campos extras
         id: highestId + 1,
         status: lead.status || 'new',
         createdAt: now,
         updatedAt: now,
       };
       
-      // Verificar e incluir todos os campos adicionais que podem ter sido enviados
-      // @ts-ignore - Permitir campos adicionais
-      if (lead.whatsapp) leadData.whatsapp = lead.whatsapp;
-      // @ts-ignore
-      if (lead.propertyType) leadData.propertyType = lead.propertyType;
-      // @ts-ignore
-      if (lead.region) leadData.region = lead.region;
-      // @ts-ignore
-      if (lead.priceRangeMin !== undefined) leadData.priceRangeMin = lead.priceRangeMin;
-      // @ts-ignore
-      if (lead.priceRangeMax !== undefined) leadData.priceRangeMax = lead.priceRangeMax;
-      
-      console.log('Novo lead para salvar (com campos extras):', leadData);
+      console.log('Novo lead para salvar (com TODOS os campos extras):', leadData);
       
       // Salvar no Firestore como plain object para incluir todos os campos
       const leadDocRef = doc(db, 'leads', leadData.id.toString());

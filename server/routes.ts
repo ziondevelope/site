@@ -123,10 +123,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   apiRouter.post("/leads", async (req, res) => {
     try {
-      const validatedData = insertLeadSchema.parse(req.body);
-      const lead = await storageInstance.createLead(validatedData);
+      console.log("Recebendo request para criar lead:", req.body);
+      
+      // Validar apenas os campos principais do schema, permitindo campos extras
+      const baseValidatedData = insertLeadSchema.parse(req.body);
+      
+      // Preservar todos os dados do request, não apenas os validados pelo schema
+      const fullLeadData = {
+        ...req.body,
+        // Garantir que pelo menos os campos validados estejam presentes
+        ...baseValidatedData
+      };
+      
+      console.log("Dados completos do lead após validação:", fullLeadData);
+      
+      const lead = await storageInstance.createLead(fullLeadData);
       res.status(201).json(lead);
     } catch (error) {
+      console.error("Erro ao criar lead:", error);
       if (error instanceof z.ZodError) {
         return res.status(400).json({ message: "Invalid lead data", errors: error.errors });
       }
