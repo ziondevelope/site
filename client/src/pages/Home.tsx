@@ -300,22 +300,42 @@ export default function Home() {
                     }}
                   >
                     {featuredProperties.map((property) => (
-                      <div key={property.id} className="carousel-item flex-shrink-0 w-full sm:w-1/2 md:w-1/3 lg:w-1/4 px-2">
+                      <div key={property.id} className="carousel-item flex-shrink-0 w-full sm:w-1/2 md:w-1/3 lg:w-1/4 px-2 cursor-pointer">
                         <div 
-                          className="h-full bg-white rounded-lg border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-xl group cursor-pointer"
+                          className="h-full bg-white rounded-lg border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-xl group"
                           onClick={() => openPropertyModal(property.id)}
                         >
-                          {/* Imagem do imóvel com efeito hover */}
+                          {/* Imagem do imóvel com efeito hover individual */}
                           <div className="h-52 bg-gray-100 relative overflow-hidden">
                             {getFeaturedImage(property) ? (
                               <>
                                 <img 
                                   src={getFeaturedImage(property)} 
                                   alt={property.title} 
-                                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                  className="w-full h-full object-cover transition-transform duration-500"
+                                  style={{ transform: 'scale(1)' }}
+                                  onMouseEnter={(e) => {
+                                    e.currentTarget.style.transform = 'scale(1.1)';
+                                  }}
+                                  onMouseLeave={(e) => {
+                                    e.currentTarget.style.transform = 'scale(1)';
+                                  }}
                                   loading="lazy"
                                 />
-                                <div className="absolute inset-0 bg-black bg-opacity-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                <div 
+                                  className="absolute inset-0 bg-black bg-opacity-20 opacity-0 transition-opacity duration-300"
+                                  ref={(el) => {
+                                    if (el) {
+                                      const parent = el.parentElement;
+                                      parent?.addEventListener('mouseenter', () => {
+                                        el.style.opacity = '1';
+                                      });
+                                      parent?.addEventListener('mouseleave', () => {
+                                        el.style.opacity = '0';
+                                      });
+                                    }
+                                  }}
+                                ></div>
                               </>
                             ) : (
                               <div className="flex items-center justify-center h-full bg-gray-200 text-gray-400">
@@ -340,7 +360,20 @@ export default function Home() {
                             </div>
                             
                             {/* Botão ver detalhes sobreposto */}
-                            <div className="absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <div 
+                              className="absolute bottom-3 right-3 opacity-0 transition-opacity duration-300"
+                              ref={(el) => {
+                                if (el) {
+                                  const parent = el.parentElement;
+                                  parent?.addEventListener('mouseenter', () => {
+                                    el.style.opacity = '1';
+                                  });
+                                  parent?.addEventListener('mouseleave', () => {
+                                    el.style.opacity = '0';
+                                  });
+                                }
+                              }}
+                            >
                               <Button 
                                 size="sm"
                                 variant="secondary"
@@ -364,7 +397,20 @@ export default function Home() {
                             </div>
                             
                             {/* Título e endereço */}
-                            <h3 className="text-lg font-semibold mb-1 line-clamp-1 group-hover:text-primary transition-colors">{property.title}</h3>
+                            <h3 
+                              className="text-lg font-semibold mb-1 line-clamp-1 transition-colors"
+                              ref={(el) => {
+                                if (el) {
+                                  const card = el.closest('.h-full');
+                                  card?.addEventListener('mouseenter', () => {
+                                    el.style.color = config?.primaryColor || 'var(--primary)';
+                                  });
+                                  card?.addEventListener('mouseleave', () => {
+                                    el.style.color = '';
+                                  });
+                                }
+                              }}
+                            >{property.title}</h3>
                             <p className="text-gray-500 text-sm mb-3 line-clamp-1">
                               <i className="fas fa-map-marker-alt mr-1 text-gray-400"></i>
                               {property.address}
