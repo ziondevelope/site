@@ -300,38 +300,17 @@ export default function Home() {
                     }}
                   >
                     {featuredProperties.map((property) => (
-                      <div key={property.id} className="carousel-item flex-shrink-0 w-full sm:w-1/2 md:w-1/3 lg:w-1/4 px-2 group">
-                        <div 
-                          className="h-full bg-white rounded-lg border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-lg cursor-pointer"
-                          onClick={() => openPropertyModal(property.id)}
-                        >
+                      <div key={property.id} className="carousel-item flex-shrink-0 w-full sm:w-1/2 md:w-1/3 lg:w-1/4 px-2">
+                        <div className="h-full bg-white rounded-lg border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-lg">
                           {/* Property Image */}
                           <div className="h-48 bg-gray-200 relative">
                             {getFeaturedImage(property) ? (
-                              <>
-                                <img 
-                                  src={getFeaturedImage(property)} 
-                                  alt={property.title} 
-                                  style={{ 
-                                    width: '100%', 
-                                    height: '100%', 
-                                    objectFit: 'cover',
-                                    transition: 'transform 0.5s',
-                                    transform: `scale(1.0)`
-                                  }}
-                                  className="property-image"
-                                  loading="lazy"
-                                  onMouseEnter={(e) => {
-                                    (e.target as HTMLImageElement).style.transform = 'scale(1.1)';
-                                    e.currentTarget.nextElementSibling?.classList.add('opacity-100');
-                                  }}
-                                  onMouseLeave={(e) => {
-                                    (e.target as HTMLImageElement).style.transform = 'scale(1.0)';
-                                    e.currentTarget.nextElementSibling?.classList.remove('opacity-100');
-                                  }}
-                                />
-                                <div className="absolute inset-0 bg-black bg-opacity-30 opacity-0 transition-opacity duration-300"></div>
-                              </>
+                              <img 
+                                src={getFeaturedImage(property)} 
+                                alt={property.title} 
+                                className="w-full h-full object-cover"
+                                loading="lazy"
+                              />
                             ) : null}
                             <div 
                               className="absolute bottom-0 left-0 text-white px-3 py-1 rounded-tr-lg"
@@ -381,10 +360,7 @@ export default function Home() {
                               <Button 
                                 variant="outline" 
                                 size="sm" 
-                                onClick={(e) => {
-                                  e.stopPropagation(); // Evita que o clique propague para o card
-                                  openPropertyModal(property.id);
-                                }}
+                                onClick={() => openPropertyModal(property.id)}
                               >
                                 Ver
                               </Button>

@@ -396,25 +396,20 @@ export default function AllProperties() {
           
           {/* Resultados da busca */}
           {isLoadingProperties ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {[1, 2, 3, 4, 5, 6, 7, 8].map((item) => (
-                <div key={item} className="h-full bg-white rounded-lg border border-gray-200 overflow-hidden">
+                <div key={item} className="bg-white rounded-lg overflow-hidden border border-gray-200">
                   {/* Skeleton da imagem */}
-                  <Skeleton className="h-48 w-full" />
+                  <Skeleton className="h-52 w-full" />
                   {/* Skeleton das informações */}
                   <div className="p-4">
+                    <Skeleton className="h-7 w-36 mb-3" /> {/* Preço */}
                     <Skeleton className="h-6 w-4/5 mb-2" /> {/* Título */}
                     <Skeleton className="h-4 w-full mb-4" /> {/* Endereço */}
-                    <div className="flex justify-between mb-4">
-                      <Skeleton className="h-4 w-10" /> {/* Área */}
-                      <Skeleton className="h-4 w-10" /> {/* Quarto */}
-                      <Skeleton className="h-4 w-10" /> {/* Banheiro */}
-                      <Skeleton className="h-4 w-10" /> {/* Suíte */}
-                      <Skeleton className="h-4 w-10" /> {/* Vagas */}
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <Skeleton className="h-7 w-24" /> {/* Preço */}
-                      <Skeleton className="h-9 w-14 rounded-md" /> {/* Botão */}
+                    <div className="flex justify-between mb-2">
+                      <Skeleton className="h-4 w-20" /> {/* Quarto */}
+                      <Skeleton className="h-4 w-20" /> {/* Banheiro */}
+                      <Skeleton className="h-4 w-20" /> {/* Vagas */}
                     </div>
                   </div>
                 </div>
@@ -424,39 +419,25 @@ export default function AllProperties() {
             <>
               {/* Grid de imóveis com design aprimorado */}
               {filteredProperties && filteredProperties.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                   {filteredProperties.map((property) => (
                     <div 
                       key={property.id} 
-                      className="h-full bg-white rounded-lg border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-lg cursor-pointer property-card"
+                      className="bg-white rounded-lg border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-xl group"
                       onClick={() => openPropertyModal(property.id)}
+                      style={{ cursor: 'pointer' }}
                     >
-                      {/* Imagem do imóvel */}
-                      <div className="image-container">
+                      {/* Imagem do imóvel com efeito hover */}
+                      <div className="h-52 bg-gray-100 relative overflow-hidden">
                         {getFeaturedImage(property) ? (
                           <>
                             <img 
                               src={getFeaturedImage(property)} 
-                              alt={property.title}
-                              style={{ 
-                                width: '100%', 
-                                height: '100%', 
-                                objectFit: 'cover',
-                                transition: 'transform 0.5s',
-                                transform: `scale(1.0)`
-                              }}
-                              className="property-image"
+                              alt={property.title} 
+                              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                               loading="lazy"
-                              onMouseEnter={(e) => {
-                                (e.target as HTMLImageElement).style.transform = 'scale(1.1)';
-                                e.currentTarget.nextElementSibling?.classList.add('opacity-100');
-                              }}
-                              onMouseLeave={(e) => {
-                                (e.target as HTMLImageElement).style.transform = 'scale(1.0)';
-                                e.currentTarget.nextElementSibling?.classList.remove('opacity-100');
-                              }}
                             />
-                            <div className="absolute inset-0 bg-black bg-opacity-30 opacity-0 transition-opacity duration-300"></div>
+                            <div className="absolute inset-0 bg-black bg-opacity-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                           </>
                         ) : (
                           <div className="flex items-center justify-center h-full bg-gray-200 text-gray-400">
@@ -465,63 +446,67 @@ export default function AllProperties() {
                         )}
                         {/* Badge de finalidade (venda/aluguel) */}
                         <div 
-                          className="absolute bottom-0 left-0 text-white px-3 py-1 rounded-tr-lg"
+                          className="absolute top-3 left-3 text-white text-sm px-3 py-1 rounded-full font-medium shadow-md"
                           style={{
                             backgroundColor: config?.primaryColor || 'var(--primary)'
                           }}
                         >
                           {property.purpose === 'sale' ? 'Venda' : 'Aluguel'}
                         </div>
+                        
+                        {/* Badge de área com ícone */}
+                        <div className="absolute bottom-3 left-3 bg-white bg-opacity-90 rounded-full px-3 py-1 text-sm font-medium shadow-sm flex items-center">
+                          <i className="fas fa-ruler-combined text-gray-600 mr-1.5"></i>
+                          <span>{property.area}m²</span>
+                        </div>
+                        
+                        {/* Botão ver detalhes sobreposto */}
+                        <div className="absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                          <Button 
+                            size="sm"
+                            variant="secondary"
+                            className="bg-white text-gray-800 hover:bg-gray-50 shadow-md"
+                          >
+                            <i className="fas fa-eye mr-1.5"></i>
+                            Ver detalhes
+                          </Button>
+                        </div>
                       </div>
                       
                       {/* Informações do imóvel */}
                       <div className="p-4">
-                        <h3 className="text-lg font-semibold mb-2 line-clamp-1">{property.title}</h3>
-                        <p className="text-gray-500 text-sm mb-4 line-clamp-1">{property.address}</p>
-                        
-                        {/* Características do imóvel */}
-                        <div className="flex items-center justify-between mb-4 text-sm text-gray-600">
-                          <span className="flex items-center">
-                            <i className="fas fa-ruler-combined fa-sm mr-1"></i>
-                            {property.area}m²
-                          </span>
-                          <span className="flex items-center">
-                            <i className="fas fa-bed fa-sm mr-1"></i>
-                            {property.bedrooms}
-                          </span>
-                          <span className="flex items-center">
-                            <i className="fas fa-shower fa-sm mr-1"></i>
-                            {property.bathrooms}
-                          </span>
-                          <span className="flex items-center">
-                            <i className="fas fa-bath fa-sm mr-1" style={{ color: config?.primaryColor || 'var(--primary)' }}></i>
-                            {property.suites || 0}
-                          </span>
-                          <span className="flex items-center">
-                            <i className="fas fa-car fa-sm mr-1"></i>
-                            {property.parkingSpots || 0}
-                          </span>
+                        {/* Preço em destaque */}
+                        <div 
+                          className="text-xl font-bold mb-2"
+                          style={{ color: config?.primaryColor || 'var(--primary)' }}
+                        >
+                          R$ {property.price.toLocaleString('pt-BR')}
+                          {property.purpose === 'rent' && <span className="text-xs font-normal text-gray-500">/mês</span>}
                         </div>
                         
-                        {/* Preço e botão Ver */}
-                        <div className="flex justify-between items-center">
-                          <div 
-                            className="text-xl font-bold"
-                            style={{ color: config?.primaryColor || 'var(--primary)' }}
-                          >
-                            R$ {property.price.toLocaleString('pt-BR')}
-                            {property.purpose === 'rent' && <span className="text-xs font-normal text-gray-500">/mês</span>}
-                          </div>
-                          <Button 
-                            variant="outline" 
-                            size="sm" 
-                            onClick={(e) => {
-                              e.stopPropagation(); // Evita que o clique propague para o card
-                              openPropertyModal(property.id);
-                            }}
-                          >
-                            Ver
-                          </Button>
+                        {/* Título e endereço */}
+                        <h3 className="text-lg font-semibold mb-1 line-clamp-1 group-hover:text-primary transition-colors">{property.title}</h3>
+                        <p className="text-gray-500 text-sm mb-3 line-clamp-1">
+                          <i className="fas fa-map-marker-alt mr-1 text-gray-400"></i>
+                          {property.address}
+                        </p>
+                        
+                        {/* Características do imóvel em linha com separadores */}
+                        <div className="flex items-center space-x-3 text-sm text-gray-600">
+                          <span className="flex items-center">
+                            <i className="fas fa-bed fa-sm mr-1.5"></i>
+                            {property.bedrooms || 0} quartos
+                          </span>
+                          <span className="w-1 h-1 rounded-full bg-gray-300"></span>
+                          <span className="flex items-center">
+                            <i className="fas fa-shower fa-sm mr-1.5"></i>
+                            {property.bathrooms || 0} banhs
+                          </span>
+                          <span className="w-1 h-1 rounded-full bg-gray-300"></span>
+                          <span className="flex items-center">
+                            <i className="fas fa-car fa-sm mr-1.5"></i>
+                            {property.parkingSpots || 0} vagas
+                          </span>
                         </div>
                       </div>
                     </div>

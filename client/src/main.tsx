@@ -1,7 +1,6 @@
 import { createRoot } from "react-dom/client";
 import App from "./App";
 import "./index.css";
-import "./styles/hover-effects.css";
 import { initializeApp } from "firebase/app";
 
 // Firebase configuration 
