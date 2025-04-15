@@ -233,9 +233,12 @@ export default function CRM() {
                   <i className="ri-add-line mr-1"></i> Novo Lead
                 </Button>
               </DialogTrigger>
-              <DialogContent className="sm:max-w-[500px]">
+              <DialogContent className="sm:max-w-[850px] max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
                   <DialogTitle>Adicionar Novo Lead</DialogTitle>
+                  <DialogDescription>
+                    Preencha as informações do novo lead para cadastrá-lo no sistema.
+                  </DialogDescription>
                 </DialogHeader>
                 <Form {...form}>
                   <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
