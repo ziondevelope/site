@@ -69,6 +69,8 @@ export const leads = pgTable("leads", {
   budget: integer("budget"),
   notes: text("notes"),
   agentId: integer("agent_id"),
+  funnelId: integer("funnel_id"), // Referência ao funil de vendas associado
+  stageId: integer("stage_id"), // Referência ao estágio atual no funil
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -152,6 +154,39 @@ export const insertTestimonialSchema = createInsertSchema(testimonials).omit({
   createdAt: true
 });
 
+// Schemas do funil de vendas
+export const salesFunnels = pgTable("sales_funnels", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  description: text("description"),
+  isDefault: boolean("is_default").default(false),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const insertSalesFunnelSchema = createInsertSchema(salesFunnels).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true
+});
+
+export const funnelStages = pgTable("funnel_stages", {
+  id: serial("id").primaryKey(),
+  funnelId: integer("funnel_id").notNull(),
+  name: text("name").notNull(),
+  description: text("description"),
+  color: text("color").default("#E5E7EB"),
+  position: integer("position").notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const insertFunnelStageSchema = createInsertSchema(funnelStages).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true
+});
+
 // Define types from schemas
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
@@ -170,3 +205,9 @@ export type WebsiteConfig = typeof websiteConfig.$inferSelect;
 
 export type InsertTestimonial = z.infer<typeof insertTestimonialSchema>;
 export type Testimonial = typeof testimonials.$inferSelect;
+
+export type InsertSalesFunnel = z.infer<typeof insertSalesFunnelSchema>;
+export type SalesFunnel = typeof salesFunnels.$inferSelect;
+
+export type InsertFunnelStage = z.infer<typeof insertFunnelStageSchema>;
+export type FunnelStage = typeof funnelStages.$inferSelect;

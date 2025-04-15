@@ -67,6 +67,28 @@ export interface IStorage {
   getWebsiteConfig(): Promise<WebsiteConfig | undefined>;
   updateWebsiteConfig(config: UpdateWebsiteConfig): Promise<WebsiteConfig>;
 
+  // Sales Funnel methods
+  getSalesFunnel(id: number): Promise<SalesFunnel | undefined>;
+  getAllSalesFunnels(): Promise<SalesFunnel[]>;
+  getDefaultSalesFunnel(): Promise<SalesFunnel | undefined>;
+  createSalesFunnel(funnel: InsertSalesFunnel): Promise<SalesFunnel>;
+  updateSalesFunnel(id: number, funnelData: Partial<InsertSalesFunnel>): Promise<SalesFunnel | undefined>;
+  deleteSalesFunnel(id: number): Promise<boolean>;
+  setDefaultSalesFunnel(id: number): Promise<boolean>;
+
+  // Funnel Stage methods
+  getFunnelStage(id: number): Promise<FunnelStage | undefined>;
+  getFunnelStagesByFunnelId(funnelId: number): Promise<FunnelStage[]>;
+  createFunnelStage(stage: InsertFunnelStage): Promise<FunnelStage>;
+  updateFunnelStage(id: number, stageData: Partial<InsertFunnelStage>): Promise<FunnelStage | undefined>;
+  deleteFunnelStage(id: number): Promise<boolean>;
+  reorderFunnelStages(funnelId: number, stageIds: number[]): Promise<FunnelStage[]>;
+
+  // Lead funnel management
+  updateLeadStage(leadId: number, stageId: number): Promise<Lead | undefined>;
+  getLeadsByFunnelStage(funnelId: number, stageId: number): Promise<Lead[]>;
+  assignLeadToFunnel(leadId: number, funnelId: number): Promise<Lead | undefined>;
+
   // Dashboard data
   getDashboardStats(): Promise<any>;
   getSalesFunnel(): Promise<any>;
