@@ -66,11 +66,23 @@ export default function CRM() {
   const { data: stages, isLoading: stagesLoading } = useQuery<FunnelStage[]>({
     queryKey: ['/api/funnel-stages', selectedFunnelId || currentLeadFunnelId],
     queryFn: async () => {
-      const funnelIdToUse = selectedFunnelId || currentLeadFunnelId;
+      // Se não tiver funil selecionado mas tiver funis disponíveis, usar o padrão ou o primeiro
+      let funnelIdToUse = selectedFunnelId || currentLeadFunnelId;
+      
+      if (!funnelIdToUse && funnels && funnels.length > 0) {
+        const defaultFunnel = funnels.find(f => f.isDefault) || funnels[0];
+        funnelIdToUse = defaultFunnel.id;
+        
+        // Atualizar o estado para manter a consistência
+        if (selectedFunnelId === null) {
+          setSelectedFunnelId(funnelIdToUse);
+        }
+      }
+      
       if (!funnelIdToUse) throw new Error("Nenhum funil selecionado");
       return apiRequest(`/api/funnel-stages?funnelId=${funnelIdToUse}`);
     },
-    enabled: (selectedFunnelId !== null || currentLeadFunnelId !== null),
+    enabled: (selectedFunnelId !== null || currentLeadFunnelId !== null || (funnels && funnels.length > 0)),
   });
   
   // Set default funnel when data is loaded
