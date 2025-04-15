@@ -70,11 +70,41 @@ export default function Header({ config, isLoadingConfig }: HeaderProps) {
           
           {/* Menu ao lado da logo */}
           <nav className="hidden md:flex space-x-8">
-            <a href="/#home" className={`${scrolled ? 'text-gray-700' : 'text-white'} hover:text-primary font-medium transition-colors duration-300`}>Início</a>
-            <a href="/#properties" className={`${scrolled ? 'text-gray-700' : 'text-white'} hover:text-primary font-medium transition-colors duration-300`}>Destaques</a>
-            <Link href="/properties" className={`${scrolled ? 'text-gray-700' : 'text-white'} hover:text-primary font-medium transition-colors duration-300`}>Todos Imóveis</Link>
-            <a href="/#about" className={`${scrolled ? 'text-gray-700' : 'text-white'} hover:text-primary font-medium transition-colors duration-300`}>Sobre</a>
-            <a href="/#contact" className={`${scrolled ? 'text-gray-700' : 'text-white'} hover:text-primary font-medium transition-colors duration-300`}>Contato</a>
+            <a 
+              href="/#home" 
+              className={`${scrolled ? 'text-gray-700' : 'text-white'} font-medium transition-colors duration-300`}
+              style={{ ':hover': { color: config?.primaryColor || 'var(--primary)' } } as React.CSSProperties}
+              onMouseOver={(e) => { e.currentTarget.style.color = config?.primaryColor || 'var(--primary)' }}
+              onMouseOut={(e) => { e.currentTarget.style.color = scrolled ? '#374151' : 'white' }}
+            >Início</a>
+            <a 
+              href="/#properties" 
+              className={`${scrolled ? 'text-gray-700' : 'text-white'} font-medium transition-colors duration-300`}
+              style={{ ':hover': { color: config?.primaryColor || 'var(--primary)' } } as React.CSSProperties}
+              onMouseOver={(e) => { e.currentTarget.style.color = config?.primaryColor || 'var(--primary)' }}
+              onMouseOut={(e) => { e.currentTarget.style.color = scrolled ? '#374151' : 'white' }}
+            >Destaques</a>
+            <Link 
+              href="/properties" 
+              className={`${scrolled ? 'text-gray-700' : 'text-white'} font-medium transition-colors duration-300`}
+              style={{ ':hover': { color: config?.primaryColor || 'var(--primary)' } } as React.CSSProperties}
+              onMouseOver={(e) => { e.currentTarget.style.color = config?.primaryColor || 'var(--primary)' }}
+              onMouseOut={(e) => { e.currentTarget.style.color = scrolled ? '#374151' : 'white' }}
+            >Todos Imóveis</Link>
+            <a 
+              href="/#about" 
+              className={`${scrolled ? 'text-gray-700' : 'text-white'} font-medium transition-colors duration-300`}
+              style={{ ':hover': { color: config?.primaryColor || 'var(--primary)' } } as React.CSSProperties}
+              onMouseOver={(e) => { e.currentTarget.style.color = config?.primaryColor || 'var(--primary)' }}
+              onMouseOut={(e) => { e.currentTarget.style.color = scrolled ? '#374151' : 'white' }}
+            >Sobre</a>
+            <a 
+              href="/#contact" 
+              className={`${scrolled ? 'text-gray-700' : 'text-white'} font-medium transition-colors duration-300`}
+              style={{ ':hover': { color: config?.primaryColor || 'var(--primary)' } } as React.CSSProperties}
+              onMouseOver={(e) => { e.currentTarget.style.color = config?.primaryColor || 'var(--primary)' }}
+              onMouseOut={(e) => { e.currentTarget.style.color = scrolled ? '#374151' : 'white' }}
+            >Contato</a>
           </nav>
         </div>
         
