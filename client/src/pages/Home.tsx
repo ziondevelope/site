@@ -302,18 +302,21 @@ export default function Home() {
                     {featuredProperties.map((property) => (
                       <div key={property.id} className="carousel-item flex-shrink-0 w-full sm:w-1/2 md:w-1/3 lg:w-1/4 px-2">
                         <div 
-                          className="h-full bg-white rounded-lg border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-lg cursor-pointer"
+                          className="h-full bg-white rounded-lg border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-lg cursor-pointer group"
                           onClick={() => openPropertyModal(property.id)}
                         >
                           {/* Property Image */}
                           <div className="h-48 bg-gray-200 relative">
                             {getFeaturedImage(property) ? (
-                              <img 
-                                src={getFeaturedImage(property)} 
-                                alt={property.title} 
-                                className="w-full h-full object-cover"
-                                loading="lazy"
-                              />
+                              <>
+                                <img 
+                                  src={getFeaturedImage(property)} 
+                                  alt={property.title} 
+                                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                  loading="lazy"
+                                />
+                                <div className="absolute inset-0 bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                              </>
                             ) : null}
                             <div 
                               className="absolute bottom-0 left-0 text-white px-3 py-1 rounded-tr-lg"

@@ -428,18 +428,21 @@ export default function AllProperties() {
                   {filteredProperties.map((property) => (
                     <div 
                       key={property.id} 
-                      className="h-full bg-white rounded-lg border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-lg cursor-pointer"
+                      className="h-full bg-white rounded-lg border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-lg cursor-pointer group"
                       onClick={() => openPropertyModal(property.id)}
                     >
                       {/* Imagem do imóvel */}
                       <div className="h-48 bg-gray-200 relative">
                         {getFeaturedImage(property) ? (
-                          <img 
-                            src={getFeaturedImage(property)} 
-                            alt={property.title} 
-                            className="w-full h-full object-cover"
-                            loading="lazy"
-                          />
+                          <>
+                            <img 
+                              src={getFeaturedImage(property)} 
+                              alt={property.title} 
+                              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                              loading="lazy"
+                            />
+                            <div className="absolute inset-0 bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                          </>
                         ) : (
                           <div className="flex items-center justify-center h-full bg-gray-200 text-gray-400">
                             <i className="fas fa-home text-3xl"></i>
