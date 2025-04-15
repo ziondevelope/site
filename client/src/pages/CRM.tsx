@@ -624,9 +624,9 @@ export default function CRM() {
                               </div>
                             </div>
                             
-                            <div className="grid grid-cols-1 md:grid-cols-5 gap-6 pb-6">
+                            <div className="grid grid-cols-1 md:grid-cols-12 gap-6 pb-6">
                               {/* Informações de Contato */}
-                              <div className="md:col-span-2">
+                              <div className="md:col-span-4">
                                 <h3 className="text-base font-semibold mb-4">Informações de Contato</h3>
                                 <div className="space-y-4">
                                   <div>
@@ -666,7 +666,7 @@ export default function CRM() {
                               </div>
                               
                               {/* Funil de Vendas */}
-                              <div className="md:col-span-3 px-8">
+                              <div className="md:col-span-5 px-8">
                                 <div className="flex justify-between items-center mb-4">
                                   <h3 className="text-base font-semibold">Funil de Vendas</h3>
                                   <div className="text-sm text-gray-500">
@@ -706,7 +706,7 @@ export default function CRM() {
                               </div>
                               
                               {/* Ações e Atividades */}
-                              <div className="md:col-span-1">
+                              <div className="md:col-span-3">
                                 <h3 className="text-base font-semibold mb-4">Ações</h3>
                                 <div className="space-y-2 mb-8">
                                   <Button variant="outline" className="w-full justify-start text-gray-700 border-gray-300 h-10">
