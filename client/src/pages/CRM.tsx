@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { InsertLead, Lead, insertLeadSchema } from "@shared/schema";
+import { InsertLead, Lead, FunnelStage, SalesFunnel, insertLeadSchema } from "@shared/schema";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { apiRequest } from "@/lib/queryClient";
+import { apiRequest, queryClient } from "@/lib/queryClient";
 
 const leadFormSchema = insertLeadSchema.extend({
   name: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
@@ -36,6 +36,8 @@ export default function CRM() {
   const [isAddLeadOpen, setIsAddLeadOpen] = useState(false);
   const [leadToDelete, setLeadToDelete] = useState<Lead | null>(null);
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
+  const [selectedFunnelId, setSelectedFunnelId] = useState<number | null>(null);
+  const [selectedStageId, setSelectedStageId] = useState<number | null>(null);
   const { toast } = useToast();
   const queryClient = useQueryClient();
   
@@ -51,13 +53,54 @@ export default function CRM() {
     queryFn: () => apiRequest(`/api/leads`),
   });
   
-  // Filter leads by status on the client side
+  // Fetch all sales funnels
+  const { data: funnels, isLoading: funnelsLoading } = useQuery<SalesFunnel[]>({
+    queryKey: ['/api/sales-funnels'],
+  });
+  
+  // Fetch funnel stages when a funnel is selected
+  const { data: stages, isLoading: stagesLoading } = useQuery<FunnelStage[]>({
+    queryKey: ['/api/funnel-stages', selectedFunnelId],
+    queryFn: async () => {
+      if (!selectedFunnelId) throw new Error("Nenhum funil selecionado");
+      return apiRequest(`/api/funnel-stages?funnelId=${selectedFunnelId}`);
+    },
+    enabled: selectedFunnelId !== null,
+  });
+  
+  // Set default funnel when data is loaded
+  React.useEffect(() => {
+    if (funnels && funnels.length > 0 && !selectedFunnelId) {
+      const defaultFunnel = funnels.find(f => f.isDefault) || funnels[0];
+      setSelectedFunnelId(defaultFunnel.id);
+    }
+  }, [funnels, selectedFunnelId]);
+  
+  // Filter leads by status on the client side (for backward compatibility)
   const newLeads = allLeads?.filter(lead => lead.status === 'new') || [];
   const contactedLeads = allLeads?.filter(lead => lead.status === 'contacted') || [];
   const visitLeads = allLeads?.filter(lead => lead.status === 'visit') || [];
   const proposalLeads = allLeads?.filter(lead => lead.status === 'proposal') || [];
   
-  const isLoading = leadsLoading;
+  // Filter leads by funnel and stage if selected
+  const filteredLeads = React.useMemo(() => {
+    if (!allLeads) return [];
+    
+    if (selectedFunnelId && selectedStageId) {
+      return allLeads.filter(lead => 
+        lead.funnelId === selectedFunnelId && 
+        lead.stageId === selectedStageId
+      );
+    }
+    
+    if (selectedFunnelId) {
+      return allLeads.filter(lead => lead.funnelId === selectedFunnelId);
+    }
+    
+    return allLeads;
+  }, [allLeads, selectedFunnelId, selectedStageId]);
+  
+  const isLoading = leadsLoading || funnelsLoading || (selectedFunnelId !== null && stagesLoading);
 
   const form = useForm<LeadFormValues>({
     resolver: zodResolver(leadFormSchema),
