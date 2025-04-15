@@ -12,3 +12,23 @@
 .carousel-item:hover .property-image {
   transform: scale(1.15);
 }
+
+/* Efeito para o ícone de olho */
+.eye-icon {
+  z-index: 10;
+}
+
+/* Mostra o ícone de olho no hover */
+.carousel-item:hover .eye-icon {
+  opacity: 1;
+}
+
+/* Efeito de crescimento do ícone de olho */
+.carousel-item .eye-icon div {
+  transform: scale(0.8);
+  transition: transform 0.3s ease;
+}
+
+.carousel-item:hover .eye-icon div {
+  transform: scale(1);
+}

@@ -316,6 +316,12 @@ export default function Home() {
                                 loading="lazy"
                               />
                             ) : null}
+                            {/* Ícone de olho que aparece no hover */}
+                            <div className="eye-icon absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300">
+                              <div className="rounded-full bg-white/80 p-3 backdrop-blur-sm">
+                                <i className="fas fa-eye text-xl" style={{ color: config?.primaryColor || 'var(--primary)' }}></i>
+                              </div>
+                            </div>
                             <div 
                               className="absolute bottom-0 left-0 text-white px-3 py-1 rounded-tr-lg"
                               style={{
