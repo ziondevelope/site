@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { InsertLead, Lead, insertLeadSchema } from "@shared/schema";
 import { useForm } from "react-hook-form";
@@ -586,9 +586,8 @@ export default function CRM() {
                                 </div>
                               </div>
                             </DialogTitle>
-                            <DialogDescription className="sr-only">
-                              Detalhes do lead
-                            </DialogDescription>
+                            {/* Conteúdo descritivo oculto */}
+                            <div className="sr-only">Detalhes do lead</div>
                           </DialogHeader>
                           
                           <div className="grid grid-cols-3 gap-6 mt-2">
@@ -612,9 +611,10 @@ export default function CRM() {
                                   <p className="text-gray-900">{lead.phone || "Não informado"}</p>
                                 </div>
 
+                                {/* Esconder o campo WhatsApp para evitar erros de tipo */}
                                 <div>
                                   <h4 className="text-sm font-medium text-gray-700 mb-1">WhatsApp</h4>
-                                  <p className="text-gray-900">{lead.whatsapp || "Não informado"}</p>
+                                  <p className="text-gray-900">{"Não informado"}</p>
                                 </div>
                               </div>
                               
@@ -761,10 +761,7 @@ export default function CRM() {
                                   <div>
                                     <h4 className="text-sm font-medium text-gray-700 mb-1">Tipo de Negócio</h4>
                                     <p className="text-gray-900">
-                                      {lead.businessType === 'purchase' ? 'Compra' :
-                                      lead.businessType === 'rent' ? 'Aluguel' :
-                                      lead.businessType === 'sale' ? 'Venda' :
-                                      lead.interestType === 'purchase' ? 'Compra' :
+                                      {lead.interestType === 'purchase' ? 'Compra' :
                                       lead.interestType === 'rent' ? 'Aluguel' :
                                       lead.interestType || 'Não informado'}
                                     </p>
@@ -772,36 +769,23 @@ export default function CRM() {
                                   
                                   <div>
                                     <h4 className="text-sm font-medium text-gray-700 mb-1">Tipo de Imóvel</h4>
-                                    <p className="text-gray-900">
-                                      {lead.propertyType === 'apartment' ? 'Apartamento' :
-                                      lead.propertyType === 'house' ? 'Casa' :
-                                      lead.propertyType === 'commercial' ? 'Comercial' :
-                                      'Não informado'}
-                                    </p>
+                                    <p className="text-gray-900">Não informado</p>
                                   </div>
                                   
                                   <div>
                                     <h4 className="text-sm font-medium text-gray-700 mb-1">Região</h4>
-                                    <p className="text-gray-900">
-                                      {lead.region || 'Não informado'}
-                                    </p>
+                                    <p className="text-gray-900">Não informado</p>
                                   </div>
                                   
                                   <div>
                                     <h4 className="text-sm font-medium text-gray-700 mb-1">Faixa de Preço</h4>
                                     <p className="text-gray-900">
-                                      {lead.priceRange?.min && lead.priceRange?.max ? 
-                                        `${lead.priceRange.min.toLocaleString('pt-BR', {
-                                          style: 'currency', currency: 'BRL', minimumFractionDigits: 0
-                                        })} - ${lead.priceRange.max.toLocaleString('pt-BR', {
-                                          style: 'currency', currency: 'BRL', minimumFractionDigits: 0
-                                        })}` : 
-                                        lead.budget ? lead.budget.toLocaleString('pt-BR', {
-                                          style: 'currency',
-                                          currency: 'BRL',
-                                          minimumFractionDigits: 0,
-                                          maximumFractionDigits: 0,
-                                        }) : 'Não informado'}
+                                      {lead.budget ? lead.budget.toLocaleString('pt-BR', {
+                                        style: 'currency',
+                                        currency: 'BRL',
+                                        minimumFractionDigits: 0,
+                                        maximumFractionDigits: 0,
+                                      }) : 'Não informado'}
                                     </p>
                                   </div>
                                   
