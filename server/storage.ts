@@ -330,9 +330,17 @@ export class FirebaseStorage implements IStorage {
   async getLeadsByStatus(status: string): Promise<Lead[]> {
     try {
       const leadsRef = collection(db, 'leads');
-      const q = query(leadsRef, where('status', '==', status), orderBy('createdAt', 'desc'));
+      // Usando apenas o filtro por status sem ordenação para evitar necessidade de índices compostos
+      const q = query(leadsRef, where('status', '==', status));
       const leadsSnapshot = await getDocs(q);
-      return leadsSnapshot.docs.map(doc => doc.data() as Lead);
+      
+      // Ordenar no lado do servidor após obter os dados
+      const leads = leadsSnapshot.docs.map(doc => doc.data() as Lead);
+      return leads.sort((a, b) => {
+        const dateA = new Date(a.createdAt || 0).getTime();
+        const dateB = new Date(b.createdAt || 0).getTime();
+        return dateB - dateA; // Ordem decrescente
+      });
     } catch (error) {
       console.error(`Error fetching leads with status ${status}:`, error);
       return [];

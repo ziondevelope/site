@@ -39,28 +39,19 @@ export default function CRM() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   
-  // Fetch leads with different status
-  const { data: newLeads, isLoading: newLeadsLoading } = useQuery<Lead[]>({
-    queryKey: ['/api/leads', 'new'],
-    queryFn: () => apiRequest(`/api/leads?status=new`),
+  // Fetch all leads at once to avoid Firestore index issues
+  const { data: allLeads, isLoading: leadsLoading } = useQuery<Lead[]>({
+    queryKey: ['/api/leads'],
+    queryFn: () => apiRequest(`/api/leads`),
   });
   
-  const { data: contactedLeads, isLoading: contactedLeadsLoading } = useQuery<Lead[]>({
-    queryKey: ['/api/leads', 'contacted'],
-    queryFn: () => apiRequest(`/api/leads?status=contacted`),
-  });
+  // Filter leads by status on the client side
+  const newLeads = allLeads?.filter(lead => lead.status === 'new') || [];
+  const contactedLeads = allLeads?.filter(lead => lead.status === 'contacted') || [];
+  const visitLeads = allLeads?.filter(lead => lead.status === 'visit') || [];
+  const proposalLeads = allLeads?.filter(lead => lead.status === 'proposal') || [];
   
-  const { data: visitLeads, isLoading: visitLeadsLoading } = useQuery<Lead[]>({
-    queryKey: ['/api/leads', 'visit'],
-    queryFn: () => apiRequest(`/api/leads?status=visit`),
-  });
-  
-  const { data: proposalLeads, isLoading: proposalLeadsLoading } = useQuery<Lead[]>({
-    queryKey: ['/api/leads', 'proposal'],
-    queryFn: () => apiRequest(`/api/leads?status=proposal`),
-  });
-  
-  const isLoading = newLeadsLoading || contactedLeadsLoading || visitLeadsLoading || proposalLeadsLoading;
+  const isLoading = leadsLoading;
 
   const form = useForm<LeadFormValues>({
     resolver: zodResolver(leadFormSchema),
@@ -96,11 +87,8 @@ export default function CRM() {
       });
     },
     onSuccess: () => {
-      // Invalidar apenas as consultas específicas por status
-      queryClient.invalidateQueries({ queryKey: ['/api/leads', 'new'] });
-      queryClient.invalidateQueries({ queryKey: ['/api/leads', 'contacted'] });
-      queryClient.invalidateQueries({ queryKey: ['/api/leads', 'visit'] });
-      queryClient.invalidateQueries({ queryKey: ['/api/leads', 'proposal'] });
+      // Invalidar a consulta principal que busca todos os leads
+      queryClient.invalidateQueries({ queryKey: ['/api/leads'] });
       
       toast({
         title: "Status atualizado",
@@ -125,11 +113,8 @@ export default function CRM() {
       });
     },
     onSuccess: () => {
-      // Invalidar apenas as consultas específicas por status
-      queryClient.invalidateQueries({ queryKey: ['/api/leads', 'new'] });
-      queryClient.invalidateQueries({ queryKey: ['/api/leads', 'contacted'] });
-      queryClient.invalidateQueries({ queryKey: ['/api/leads', 'visit'] });
-      queryClient.invalidateQueries({ queryKey: ['/api/leads', 'proposal'] });
+      // Invalidar a consulta principal que busca todos os leads
+      queryClient.invalidateQueries({ queryKey: ['/api/leads'] });
       
       toast({
         title: "Lead excluído",
@@ -158,11 +143,8 @@ export default function CRM() {
       });
     },
     onSuccess: () => {
-      // Invalidar apenas as consultas específicas por status
-      queryClient.invalidateQueries({ queryKey: ['/api/leads', 'new'] });
-      queryClient.invalidateQueries({ queryKey: ['/api/leads', 'contacted'] });
-      queryClient.invalidateQueries({ queryKey: ['/api/leads', 'visit'] });
-      queryClient.invalidateQueries({ queryKey: ['/api/leads', 'proposal'] });
+      // Invalidar a consulta principal que busca todos os leads
+      queryClient.invalidateQueries({ queryKey: ['/api/leads'] });
       
       toast({
         title: "Lead criado com sucesso",
