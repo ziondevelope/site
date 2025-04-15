@@ -626,7 +626,7 @@ export default function CRM() {
                             
                             <div className="grid grid-cols-1 md:grid-cols-5 gap-6 pb-6">
                               {/* Informações de Contato */}
-                              <div className="md:col-span-1">
+                              <div className="md:col-span-2 pr-4">
                                 <h3 className="text-base font-semibold mb-4">Informações de Contato</h3>
                                 <div className="space-y-4">
                                   <div>
