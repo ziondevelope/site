@@ -572,8 +572,8 @@ export default function CRM() {
                           </Button>
                         </DialogTrigger>
                         <DialogContent className="max-w-6xl w-full h-[90vh] overflow-y-auto">
-                          <DialogHeader>
-                            <DialogTitle className="flex justify-between items-center text-lg mb-2">
+                          <DialogHeader className="flex justify-between items-start">
+                            <DialogTitle className="flex items-center text-lg mb-2">
                               <div className="flex items-center">
                                 <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-100 text-blue-600 mr-3">
                                   <i className="fas fa-user-alt"></i>
@@ -586,6 +586,74 @@ export default function CRM() {
                                 </div>
                               </div>
                             </DialogTitle>
+                            
+                            {/* Etapas do funil lateral */}
+                            <div className="w-64 p-3 bg-white rounded-md border border-gray-200 shadow-sm">
+                              <h3 className="text-sm font-medium text-gray-700 mb-2">Etapas do Funil</h3>
+                              <ul className="space-y-2 text-sm">
+                                <li className={`flex items-center p-2 rounded-md ${lead.status === 'new' ? 'bg-blue-50 border-l-4 border-blue-500' : ''}`}>
+                                  <div className={`w-6 h-6 rounded-full flex items-center justify-center mr-2 ${lead.status === 'new' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}>
+                                    {lead.status === 'new' ? <i className="fas fa-check text-xs"></i> : <span>1</span>}
+                                  </div>
+                                  <span className={lead.status === 'new' ? 'font-medium text-blue-700' : 'text-gray-600'}>
+                                    Novo contato
+                                  </span>
+                                </li>
+                                <li className={`flex items-center p-2 rounded-md ${lead.status === 'contacted' ? 'bg-yellow-50 border-l-4 border-yellow-500' : ''}`}>
+                                  <div className={`w-6 h-6 rounded-full flex items-center justify-center mr-2 ${lead.status === 'contacted' ? 'bg-yellow-500 text-white' : 'bg-gray-200'}`}>
+                                    {lead.status === 'contacted' ? <i className="fas fa-check text-xs"></i> : <span>2</span>}
+                                  </div>
+                                  <span className={lead.status === 'contacted' ? 'font-medium text-yellow-700' : 'text-gray-600'}>
+                                    Contatado
+                                  </span>
+                                </li>
+                                <li className={`flex items-center p-2 rounded-md ${lead.status === 'visit' ? 'bg-green-50 border-l-4 border-green-500' : ''}`}>
+                                  <div className={`w-6 h-6 rounded-full flex items-center justify-center mr-2 ${lead.status === 'visit' ? 'bg-green-500 text-white' : 'bg-gray-200'}`}>
+                                    {lead.status === 'visit' ? <i className="fas fa-check text-xs"></i> : <span>3</span>}
+                                  </div>
+                                  <span className={lead.status === 'visit' ? 'font-medium text-green-700' : 'text-gray-600'}>
+                                    Agendamento
+                                  </span>
+                                </li>
+                                <li className={`flex items-center p-2 rounded-md ${lead.status === 'proposal' ? 'bg-purple-50 border-l-4 border-purple-500' : ''}`}>
+                                  <div className={`w-6 h-6 rounded-full flex items-center justify-center mr-2 ${lead.status === 'proposal' ? 'bg-purple-500 text-white' : 'bg-gray-200'}`}>
+                                    {lead.status === 'proposal' ? <i className="fas fa-check text-xs"></i> : <span>4</span>}
+                                  </div>
+                                  <span className={lead.status === 'proposal' ? 'font-medium text-purple-700' : 'text-gray-600'}>
+                                    Proposta
+                                  </span>
+                                </li>
+                                <li className="flex items-center p-2 rounded-md">
+                                  <div className="w-6 h-6 rounded-full flex items-center justify-center mr-2 bg-gray-200">
+                                    <span>5</span>
+                                  </div>
+                                  <span className="text-gray-600">
+                                    Fechamento
+                                  </span>
+                                </li>
+                              </ul>
+                              
+                              <div className="mt-4">
+                                <h4 className="text-xs text-gray-500 mb-1">Status atual</h4>
+                                <Select 
+                                  value={lead.status}
+                                  onValueChange={(value) => {
+                                    updateLeadStatusMutation.mutate({ id: lead.id, status: value });
+                                  }}
+                                >
+                                  <SelectTrigger className="h-8 text-sm">
+                                    <SelectValue placeholder="Selecione o status" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectItem value="new">Novo</SelectItem>
+                                    <SelectItem value="contacted">Contatado</SelectItem>
+                                    <SelectItem value="visit">Visita</SelectItem>
+                                    <SelectItem value="proposal">Proposta</SelectItem>
+                                  </SelectContent>
+                                </Select>
+                              </div>
+                            </div>
+                            
                             {/* Conteúdo descritivo oculto */}
                             <div className="sr-only">Detalhes do lead</div>
                           </DialogHeader>
