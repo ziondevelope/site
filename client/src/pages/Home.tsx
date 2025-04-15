@@ -10,6 +10,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShower, faBed, faRulerCombined, faCar, faBath } from "@fortawesome/free-solid-svg-icons";
 import PropertyDetailsModal from '@/components/website/PropertyDetailsModal';
 import { useLoading } from "@/contexts/LoadingContext";
+import '../styles/hover-effects.css';
 
 // Função utilitária para obter a imagem de destaque do imóvel
 const getFeaturedImage = (property: Property): string | undefined => {
@@ -306,12 +307,12 @@ export default function Home() {
                           onClick={() => openPropertyModal(property.id)}
                         >
                           {/* Property Image */}
-                          <div className="h-48 bg-gray-200 relative overflow-hidden">
+                          <div className="h-48 bg-gray-200 relative overflow-hidden group">
                             {getFeaturedImage(property) ? (
                               <img 
                                 src={getFeaturedImage(property)} 
                                 alt={property.title} 
-                                className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+                                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                                 loading="lazy"
                               />
                             ) : null}

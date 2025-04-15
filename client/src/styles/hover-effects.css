@@ -1,0 +1,9 @@
+/* Efeitos de hover para as imagens dos cards */
+/* Aumenta a especificidade do seletor para garantir que o efeito seja aplicado */
+.h-48.bg-gray-200.relative.overflow-hidden.group img {
+  transition: transform 0.5s ease !important;
+}
+
+.h-48.bg-gray-200.relative.overflow-hidden.group:hover img {
+  transform: scale(1.15) !important;
+}
