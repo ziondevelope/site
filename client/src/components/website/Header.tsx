@@ -203,20 +203,18 @@ export default function Header({ config, isLoadingConfig }: HeaderProps) {
                   
                   <a 
                     href="/#about" 
-                    className="flex items-center py-3 px-4 rounded-md transition-all hover:bg-gray-50 relative overflow-hidden group"
+                    className="flex items-center py-4 px-6 rounded-md transition-all hover:bg-gray-50 relative overflow-hidden group"
                   >
                     <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary opacity-0 group-hover:opacity-100 transition-opacity" style={{ backgroundColor: config?.primaryColor || 'var(--primary)' }}></div>
-                    <i className="fas fa-info-circle text-gray-400 w-6 group-hover:text-primary transition-colors" style={{ color: 'rgba(0,0,0,0.3)' }}></i>
-                    <span className="ml-3 text-gray-700 font-medium text-[17px] group-hover:text-primary transition-colors">Sobre</span>
+                    <span className="text-gray-700 font-medium text-[17px] group-hover:text-primary transition-colors">Sobre</span>
                   </a>
                   
                   <a 
                     href="/#contact" 
-                    className="flex items-center py-3 px-4 rounded-md transition-all hover:bg-gray-50 relative overflow-hidden group"
+                    className="flex items-center py-4 px-6 rounded-md transition-all hover:bg-gray-50 relative overflow-hidden group"
                   >
                     <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary opacity-0 group-hover:opacity-100 transition-opacity" style={{ backgroundColor: config?.primaryColor || 'var(--primary)' }}></div>
-                    <i className="fas fa-envelope text-gray-400 w-6 group-hover:text-primary transition-colors" style={{ color: 'rgba(0,0,0,0.3)' }}></i>
-                    <span className="ml-3 text-gray-700 font-medium text-[17px] group-hover:text-primary transition-colors">Contato</span>
+                    <span className="text-gray-700 font-medium text-[17px] group-hover:text-primary transition-colors">Contato</span>
                   </a>
                 </div>
                 
@@ -225,13 +223,17 @@ export default function Header({ config, isLoadingConfig }: HeaderProps) {
                   <div className="mt-auto border-t p-6" style={{ borderColor: 'rgba(0, 0, 0, 0.06)' }}>
                     <a 
                       href={`https://wa.me/${config.phone.replace(/\D/g, '')}`} 
-                      className="flex items-center justify-center py-3 px-4 bg-primary text-white rounded-md hover:opacity-90 transition-all shadow-sm"
+                      className="flex items-center justify-center py-3 px-5 rounded-full border border-solid transition-all"
                       target="_blank"
                       rel="noopener noreferrer"
-                      style={{ backgroundColor: config?.primaryColor || 'var(--primary)' }}
+                      style={{
+                        borderColor: config?.primaryColor ? `${config.primaryColor}33` : 'var(--primary-33)',
+                        color: config?.primaryColor || 'var(--primary)',
+                        fontFamily: 'Poppins, sans-serif'
+                      }}
                     >
-                      <i className="fab fa-whatsapp mr-2 text-lg"></i>
-                      <span className="font-medium tracking-wide" style={{ fontFamily: 'Poppins, sans-serif', letterSpacing: '0.5px', fontSize: '16px' }}>FALAR COM CORRETOR</span>
+                      {config?.phone && <span className="mr-2 text-[16px]" style={{ fontFamily: 'Poppins, sans-serif' }}>{config.phone}</span>}
+                      <i className="fab fa-whatsapp text-lg" style={{ color: "#25D366" }}></i>
                     </a>
                   </div>
                 )}
