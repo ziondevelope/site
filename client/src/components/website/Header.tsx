@@ -126,43 +126,44 @@ export default function Header({ config, isLoadingConfig }: HeaderProps) {
           {/* Menu hamburger - apenas mobile */}
           <Sheet>
             <SheetTrigger asChild>
-              <button className="md:hidden flex items-center justify-center w-10 h-10 rounded-full bg-white bg-opacity-10 hover:bg-opacity-20 transition-all">
-                <i className={`fas fa-bars text-lg ${isPropertiesPage || scrolled ? 'text-gray-800' : 'text-white'}`}></i>
+              <button className="md:hidden flex flex-col items-center justify-center gap-1.5 w-8 h-8">
+                <span className={`w-5 h-0.5 rounded-full transition-all ${isPropertiesPage || scrolled ? 'bg-gray-800' : 'bg-white'}`}></span>
+                <span className={`w-5 h-0.5 rounded-full transition-all ${isPropertiesPage || scrolled ? 'bg-gray-800' : 'bg-white'}`}></span>
+                <span className={`w-5 h-0.5 rounded-full transition-all ${isPropertiesPage || scrolled ? 'bg-gray-800' : 'bg-white'}`}></span>
               </button>
             </SheetTrigger>
-            <SheetContent className="w-[280px] sm:w-[350px]">
-              <div className="py-6 flex flex-col space-y-4">
-                <h3 className="text-lg font-bold mb-2">Menu</h3>
-                <a href="/#home" className="flex items-center py-2 border-b border-gray-100">
-                  <i className="fas fa-home mr-3 text-primary"></i>
-                  <span>Início</span>
-                </a>
-                <a href="/#properties" className="flex items-center py-2 border-b border-gray-100">
-                  <i className="fas fa-star mr-3 text-primary"></i>
-                  <span>Destaques</span>
-                </a>
-                <Link href="/properties" className="flex items-center py-2 border-b border-gray-100">
-                  <i className="fas fa-building mr-3 text-primary"></i>
-                  <span>Todos Imóveis</span>
-                </Link>
-                <a href="/#about" className="flex items-center py-2 border-b border-gray-100">
-                  <i className="fas fa-info-circle mr-3 text-primary"></i>
-                  <span>Sobre</span>
-                </a>
-                <a href="/#contact" className="flex items-center py-2 border-b border-gray-100">
-                  <i className="fas fa-envelope mr-3 text-primary"></i>
-                  <span>Contato</span>
-                </a>
-                {config?.phone && (
-                  <a 
-                    href={`https://wa.me/${config.phone.replace(/\D/g, '')}`} 
-                    className="flex items-center py-2 mt-4"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <i className="fab fa-whatsapp mr-3 text-green-500"></i>
-                    <span>{config.phone}</span>
+            <SheetContent side="right" className="w-[250px] sm:w-[280px] p-6">
+              <div className="flex flex-col h-full">
+                <div className="flex flex-col">
+                  <a href="/#home" className="py-3 text-lg hover:text-primary">
+                    Início
                   </a>
+                  <a href="/#properties" className="py-3 text-lg hover:text-primary">
+                    Destaques
+                  </a>
+                  <Link href="/properties" className="py-3 text-lg hover:text-primary">
+                    Todos Imóveis
+                  </Link>
+                  <a href="/#about" className="py-3 text-lg hover:text-primary">
+                    Sobre
+                  </a>
+                  <a href="/#contact" className="py-3 text-lg hover:text-primary">
+                    Contato
+                  </a>
+                </div>
+                
+                {config?.phone && (
+                  <div className="mt-auto pt-6">
+                    <a 
+                      href={`https://wa.me/${config.phone.replace(/\D/g, '')}`} 
+                      className="flex items-center justify-center py-3 px-4 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <i className="fab fa-whatsapp mr-2"></i>
+                      <span>Fale conosco</span>
+                    </a>
+                  </div>
                 )}
               </div>
             </SheetContent>
