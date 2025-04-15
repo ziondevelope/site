@@ -19,7 +19,10 @@ const LeadCard = ({ lead }: { lead: Lead }) => {
   // Mutação para atualizar o status do lead
   const updateLeadStatusMutation = useMutation({
     mutationFn: (newStatus: string) => {
-      return apiRequest('PATCH', `/api/leads/${lead.id}/status`, { status: newStatus });
+      return apiRequest(`/api/leads/${lead.id}/status`, { 
+    method: 'PATCH',
+    body: JSON.stringify({ status: newStatus })
+  });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/leads'] });
