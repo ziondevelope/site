@@ -859,18 +859,25 @@ export default function CRM() {
                                   
                                   <div>
                                     <h4 className="text-sm font-medium text-gray-500 mb-1">Tipo de Imóvel</h4>
-                                    <p className="text-gray-900">Não informado</p>
+                                    <p className="text-gray-900">
+                                      {(lead as any).propertyType === 'apartment' ? 'Apartamento' : 
+                                      (lead as any).propertyType === 'house' ? 'Casa' : 
+                                      (lead as any).propertyType === 'commercial' ? 'Comercial' : 
+                                      'Não informado'}
+                                    </p>
                                   </div>
                                   
                                   <div>
                                     <h4 className="text-sm font-medium text-gray-500 mb-1">Região</h4>
-                                    <p className="text-gray-900">Não informado</p>
+                                    <p className="text-gray-900">{(lead as any).region || "Não informado"}</p>
                                   </div>
                                   
                                   <div>
                                     <h4 className="text-sm font-medium text-gray-500 mb-1">Faixa de Preço</h4>
                                     <p className="text-gray-900">
-                                      {lead.budget ? 'R$ ' + lead.budget.toLocaleString('pt-BR') : 'Não informado'}
+                                      {(lead as any).priceRangeMin && (lead as any).priceRangeMax ? 
+                                        `R$ ${(lead as any).priceRangeMin.toLocaleString('pt-BR')} - R$ ${(lead as any).priceRangeMax.toLocaleString('pt-BR')}` : 
+                                        lead.budget ? 'R$ ' + lead.budget.toLocaleString('pt-BR') : 'Não informado'}
                                     </p>
                                   </div>
                                   
