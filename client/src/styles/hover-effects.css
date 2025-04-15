@@ -1,9 +1,14 @@
 /* Efeitos de hover para as imagens dos cards */
-/* Aumenta a especificidade do seletor para garantir que o efeito seja aplicado */
-.h-48.bg-gray-200.relative.overflow-hidden.group img {
-  transition: transform 0.5s ease !important;
+.property-image-container {
+  overflow: hidden;
+  position: relative;
 }
 
-.h-48.bg-gray-200.relative.overflow-hidden.group:hover img {
-  transform: scale(1.15) !important;
+.property-image {
+  transition: transform 0.5s ease;
+}
+
+/* Usa a estrutura do card para aplicar o efeito apenas no card atual */
+.carousel-item:hover .property-image {
+  transform: scale(1.15);
 }
