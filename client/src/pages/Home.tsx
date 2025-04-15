@@ -300,138 +300,70 @@ export default function Home() {
                     }}
                   >
                     {featuredProperties.map((property) => (
-                      <div key={property.id} className="carousel-item flex-shrink-0 w-full sm:w-1/2 md:w-1/3 lg:w-1/4 px-2 cursor-pointer">
-                        <div 
-                          className="h-full bg-white rounded-lg border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-xl group"
-                          onClick={() => openPropertyModal(property.id)}
-                        >
-                          {/* Imagem do imóvel com efeito hover individual */}
-                          <div className="h-52 bg-gray-100 relative overflow-hidden">
+                      <div key={property.id} className="carousel-item flex-shrink-0 w-full sm:w-1/2 md:w-1/3 lg:w-1/4 px-2">
+                        <div className="h-full bg-white rounded-lg border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-lg">
+                          {/* Property Image */}
+                          <div className="h-48 bg-gray-200 relative">
                             {getFeaturedImage(property) ? (
-                              <>
-                                <img 
-                                  src={getFeaturedImage(property)} 
-                                  alt={property.title} 
-                                  className="w-full h-full object-cover transition-transform duration-500"
-                                  style={{ transform: 'scale(1)' }}
-                                  onMouseEnter={(e) => {
-                                    e.currentTarget.style.transform = 'scale(1.1)';
-                                  }}
-                                  onMouseLeave={(e) => {
-                                    e.currentTarget.style.transform = 'scale(1)';
-                                  }}
-                                  loading="lazy"
-                                />
-                                <div 
-                                  className="absolute inset-0 bg-black bg-opacity-20 opacity-0 transition-opacity duration-300"
-                                  ref={(el) => {
-                                    if (el) {
-                                      const parent = el.parentElement;
-                                      parent?.addEventListener('mouseenter', () => {
-                                        el.style.opacity = '1';
-                                      });
-                                      parent?.addEventListener('mouseleave', () => {
-                                        el.style.opacity = '0';
-                                      });
-                                    }
-                                  }}
-                                ></div>
-                              </>
-                            ) : (
-                              <div className="flex items-center justify-center h-full bg-gray-200 text-gray-400">
-                                <i className="fas fa-home text-3xl"></i>
-                              </div>
-                            )}
-                            
-                            {/* Badge de finalidade (venda/aluguel) */}
+                              <img 
+                                src={getFeaturedImage(property)} 
+                                alt={property.title} 
+                                className="w-full h-full object-cover"
+                                loading="lazy"
+                              />
+                            ) : null}
                             <div 
-                              className="absolute top-3 left-3 text-white text-sm px-3 py-1 rounded-full font-medium shadow-md"
+                              className="absolute bottom-0 left-0 text-white px-3 py-1 rounded-tr-lg"
                               style={{
                                 backgroundColor: config?.primaryColor || 'var(--primary)'
                               }}
                             >
                               {property.purpose === 'sale' ? 'Venda' : 'Aluguel'}
                             </div>
-                            
-                            {/* Badge de área com ícone */}
-                            <div className="absolute bottom-3 left-3 bg-white bg-opacity-90 rounded-full px-3 py-1 text-sm font-medium shadow-sm flex items-center">
-                              <i className="fas fa-ruler-combined text-gray-600 mr-1.5"></i>
-                              <span>{property.area}m²</span>
-                            </div>
-                            
-                            {/* Botão ver detalhes sobreposto */}
-                            <div 
-                              className="absolute bottom-3 right-3 opacity-0 transition-opacity duration-300"
-                              ref={(el) => {
-                                if (el) {
-                                  const parent = el.parentElement;
-                                  parent?.addEventListener('mouseenter', () => {
-                                    el.style.opacity = '1';
-                                  });
-                                  parent?.addEventListener('mouseleave', () => {
-                                    el.style.opacity = '0';
-                                  });
-                                }
-                              }}
-                            >
-                              <Button 
-                                size="sm"
-                                variant="secondary"
-                                className="bg-white text-gray-800 hover:bg-gray-50 shadow-md"
-                              >
-                                <i className="fas fa-eye mr-1.5"></i>
-                                Ver detalhes
-                              </Button>
-                            </div>
                           </div>
                           
-                          {/* Informações do imóvel */}
                           <div className="p-4">
-                            {/* Preço em destaque */}
-                            <div 
-                              className="text-xl font-bold mb-2"
-                              style={{ color: config?.primaryColor || 'var(--primary)' }}
-                            >
-                              R$ {property.price.toLocaleString('pt-BR')}
-                              {property.purpose === 'rent' && <span className="text-xs font-normal text-gray-500">/mês</span>}
+                            <h3 className="text-lg font-semibold mb-2 line-clamp-1">{property.title}</h3>
+                            <p className="text-gray-500 text-sm mb-4 line-clamp-1">{property.address}</p>
+                            
+                            <div className="flex items-center justify-between mb-4 text-sm text-gray-600">
+                              <span className="flex items-center">
+                                <i className="fas fa-ruler-combined fa-sm mr-1"></i>
+                                {property.area}m²
+                              </span>
+                              <span className="flex items-center">
+                                <i className="fas fa-bed fa-sm mr-1"></i>
+                                {property.bedrooms}
+                              </span>
+                              <span className="flex items-center">
+                                <i className="fas fa-shower fa-sm mr-1"></i>
+                                {property.bathrooms}
+                              </span>
+                              <span className="flex items-center">
+                                <i className="fas fa-bath fa-sm mr-1" style={{ color: config?.primaryColor || 'var(--primary)' }}></i>
+                                {property.suites || 0}
+                              </span>
+                              <span className="flex items-center">
+                                <i className="fas fa-car fa-sm mr-1"></i>
+                                {property.parkingSpots || 0}
+                              </span>
                             </div>
                             
-                            {/* Título e endereço */}
-                            <h3 
-                              className="text-lg font-semibold mb-1 line-clamp-1 transition-colors"
-                              ref={(el) => {
-                                if (el) {
-                                  const card = el.closest('.h-full');
-                                  card?.addEventListener('mouseenter', () => {
-                                    el.style.color = config?.primaryColor || 'var(--primary)';
-                                  });
-                                  card?.addEventListener('mouseleave', () => {
-                                    el.style.color = '';
-                                  });
-                                }
-                              }}
-                            >{property.title}</h3>
-                            <p className="text-gray-500 text-sm mb-3 line-clamp-1">
-                              <i className="fas fa-map-marker-alt mr-1 text-gray-400"></i>
-                              {property.address}
-                            </p>
-                            
-                            {/* Características do imóvel em linha com separadores */}
-                            <div className="flex items-center space-x-3 text-sm text-gray-600">
-                              <span className="flex items-center">
-                                <i className="fas fa-bed fa-sm mr-1.5 text-gray-500"></i>
-                                {property.bedrooms || 0} quartos
-                              </span>
-                              <span className="w-1 h-1 rounded-full bg-gray-300"></span>
-                              <span className="flex items-center">
-                                <i className="fas fa-shower fa-sm mr-1.5 text-gray-500"></i>
-                                {property.bathrooms || 0} banhs
-                              </span>
-                              <span className="w-1 h-1 rounded-full bg-gray-300"></span>
-                              <span className="flex items-center">
-                                <i className="fas fa-car fa-sm mr-1.5 text-gray-500"></i>
-                                {property.parkingSpots || 0} vagas
-                              </span>
+                            <div className="flex justify-between items-center">
+                              <div 
+                                className="text-xl font-bold"
+                                style={{ color: config?.primaryColor || 'var(--primary)' }}
+                              >
+                                R$ {property.price.toLocaleString('pt-BR')}
+                                {property.purpose === 'rent' && <span className="text-xs font-normal text-gray-500">/mês</span>}
+                              </div>
+                              <Button 
+                                variant="outline" 
+                                size="sm" 
+                                onClick={() => openPropertyModal(property.id)}
+                              >
+                                Ver
+                              </Button>
                             </div>
                           </div>
                         </div>
