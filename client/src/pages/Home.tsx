@@ -334,7 +334,7 @@ export default function Home() {
                           </div>
                           
                           <div className="p-4">
-                            <h3 className="text-lg font-semibold mb-2 line-clamp-1">{property.title}</h3>
+                            <h3 className="text-md mb-1 line-clamp-1">{property.title}</h3>
                             <p className="text-gray-500 text-sm mb-4 line-clamp-1">{property.address}</p>
                             
                             <div className="flex items-center justify-between mb-4 text-sm text-gray-600">
@@ -360,10 +360,9 @@ export default function Home() {
                               </span>
                             </div>
                             
-                            <div className="flex justify-center items-center">
+                            <div className="flex justify-start items-center">
                               <div 
-                                className="text-xl font-bold"
-                                style={{ color: config?.primaryColor || 'var(--primary)' }}
+                                className="text-lg font-bold text-gray-700"
                               >
                                 R$ {property.price.toLocaleString('pt-BR')}
                                 {property.purpose === 'rent' && <span className="text-xs font-normal text-gray-500">/mês</span>}
