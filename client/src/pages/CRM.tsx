@@ -37,6 +37,8 @@ const leadFormSchema = insertLeadSchema.extend({
 type LeadFormValues = z.infer<typeof leadFormSchema>;
 
 export default function CRM() {
+  // Estilo sutil para os campos editáveis
+  const editableFieldStyle = "border-gray-200 bg-gray-50 focus-visible:ring-1 focus-visible:ring-gray-300";
   const [isAddLeadOpen, setIsAddLeadOpen] = useState(false);
   const [leadToDelete, setLeadToDelete] = useState<Lead | null>(null);
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
@@ -1300,7 +1302,7 @@ export default function CRM() {
                                   value={editingValue}
                                   onValueChange={(value) => setEditingValue(value)}
                                 >
-                                  <SelectTrigger className="h-8 text-sm" style={{ fontSize: '12px' }}>
+                                  <SelectTrigger className="h-8 text-sm border-gray-200 bg-gray-50 focus-visible:ring-1 focus-visible:ring-gray-300" style={{ fontSize: '12px' }}>
                                     <SelectValue placeholder="Selecione o tipo de negócio" />
                                   </SelectTrigger>
                                   <SelectContent>
@@ -1355,7 +1357,7 @@ export default function CRM() {
                                   value={editingValue}
                                   onValueChange={(value) => setEditingValue(value)}
                                 >
-                                  <SelectTrigger className="h-8 text-sm" style={{ fontSize: '12px' }}>
+                                  <SelectTrigger className="h-8 text-sm border-gray-200 bg-gray-50 focus-visible:ring-1 focus-visible:ring-gray-300" style={{ fontSize: '12px' }}>
                                     <SelectValue placeholder="Selecione o tipo de imóvel" />
                                   </SelectTrigger>
                                   <SelectContent>
@@ -1510,7 +1512,7 @@ export default function CRM() {
                                   value={editingValue}
                                   onValueChange={(value) => setEditingValue(value)}
                                 >
-                                  <SelectTrigger className="h-8 text-sm" style={{ fontSize: '12px' }}>
+                                  <SelectTrigger className="h-8 text-sm border-gray-200 bg-gray-50 focus-visible:ring-1 focus-visible:ring-gray-300" style={{ fontSize: '12px' }}>
                                     <SelectValue placeholder="Selecione a origem" />
                                   </SelectTrigger>
                                   <SelectContent>
