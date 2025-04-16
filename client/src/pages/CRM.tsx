@@ -1033,23 +1033,23 @@ export default function CRM() {
                       <div className="w-full h-px mb-4 -mx-5" style={{ marginLeft: '-20px', marginRight: '-20px', width: 'calc(100% + 40px)', backgroundColor: 'rgb(245, 245, 245)' }}></div>
                       <div className="space-y-5">
                         <div>
-                          <p className="text-sm text-left" style={{ fontSize: '12px', color: '#878484', marginBottom: '4px' }}>{lead.name}</p>
-                          <h4 className="text-xs font-semibold" style={{ fontSize: '14px' }}>Nome:</h4>
+                          <h4 className="text-xs font-semibold mb-1" style={{ fontSize: '14px' }}>Nome:</h4>
+                          <p className="text-sm text-left" style={{ fontSize: '12px', color: '#878484' }}>{lead.name}</p>
                         </div>
                         
                         <div>
-                          <p className="text-sm text-left" style={{ fontSize: '12px', color: '#878484', marginBottom: '4px' }}>{lead.email || "Não informado"}</p>
-                          <h4 className="text-xs font-semibold" style={{ fontSize: '14px' }}>Email:</h4>
+                          <h4 className="text-xs font-semibold mb-1" style={{ fontSize: '14px' }}>Email:</h4>
+                          <p className="text-sm text-left" style={{ fontSize: '12px', color: '#878484' }}>{lead.email || "Não informado"}</p>
                         </div>
                         
                         <div>
-                          <p className="text-sm text-left" style={{ fontSize: '12px', color: '#878484', marginBottom: '4px' }}>{lead.phone || "Não informado"}</p>
-                          <h4 className="text-xs font-semibold" style={{ fontSize: '14px' }}>Telefone:</h4>
+                          <h4 className="text-xs font-semibold mb-1" style={{ fontSize: '14px' }}>Telefone:</h4>
+                          <p className="text-sm text-left" style={{ fontSize: '12px', color: '#878484' }}>{lead.phone || "Não informado"}</p>
                         </div>
                         
                         <div>
-                          <p className="text-sm text-left" style={{ fontSize: '12px', color: '#878484', marginBottom: '4px' }}>{(lead as any).whatsapp || "Não informado"}</p>
-                          <h4 className="text-xs font-semibold" style={{ fontSize: '14px' }}>WhatsApp:</h4>
+                          <h4 className="text-xs font-semibold mb-1" style={{ fontSize: '14px' }}>WhatsApp:</h4>
+                          <p className="text-sm text-left" style={{ fontSize: '12px', color: '#878484' }}>{(lead as any).whatsapp || "Não informado"}</p>
                         </div>
                       </div>
                     </div>
