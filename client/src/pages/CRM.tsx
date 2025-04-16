@@ -851,7 +851,7 @@ export default function CRM() {
                                 className="relative flex-grow flex h-10 items-center cursor-pointer"
                                 style={{
                                   zIndex: sortedStages.length - index,
-                                  marginRight: !isLastStage ? '-12px' : '0',
+                                  marginRight: !isLastStage ? '-20px' : '0',
                                 }}
                               >
                                 {/* Container principal */}
