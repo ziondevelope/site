@@ -723,10 +723,9 @@ export default function CRM() {
           }}
         >
           <DialogContent className="max-w-6xl w-[90vw] max-h-[90vh] overflow-y-auto p-0">
-            {/* Remove o header padrão e implementa um header personalizado */}
-            <div className="mt-0">
-              {/* Novo layout baseado no Agendor */}
-              {/* Barra superior com nome do lead e agente responsável */}
+            {/* Cabeçalho no estilo RD Station */}
+            <div className="bg-white border-b border-gray-200">
+              {/* Barra superior com nome do lead e detalhes */}
               <div className="flex justify-between items-center bg-white p-6 rounded-t-lg border-b border-gray-100">
                 <div className="flex items-center space-x-4">
                   <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600">
