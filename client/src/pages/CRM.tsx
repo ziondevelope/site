@@ -41,8 +41,70 @@ export default function CRM() {
   const [selectedFunnelId, setSelectedFunnelId] = useState<number | null>(null);
   const [selectedStageId, setSelectedStageId] = useState<number | null>(null);
   const [openLeadId, setOpenLeadId] = useState<number | null>(null);
+  const [leadNotes, setLeadNotes] = useState<{[leadId: number]: string}>({});
+  const [savedNotes, setSavedNotes] = useState<{[leadId: number]: Array<{text: string, date: Date}>}>({});
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  
+  // Funções auxiliares para formatação de data
+  const formatDate = (date: Date) => {
+    return new Intl.DateTimeFormat('pt-BR', { 
+      day: '2-digit', 
+      month: '2-digit', 
+      year: 'numeric' 
+    }).format(date);
+  };
+  
+  const formatTime = (date: Date) => {
+    return new Intl.DateTimeFormat('pt-BR', { 
+      hour: '2-digit', 
+      minute: '2-digit' 
+    }).format(date);
+  };
+  
+  // Função para salvar a nota
+  const handleSaveNote = (leadId: number) => {
+    const noteText = leadNotes[leadId] || "";
+    
+    if (noteText.trim() === "") {
+      toast({
+        title: "Nota vazia",
+        description: "Por favor, digite algum texto para salvar uma nota.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    // Adiciona a nova nota ao array de notas salvas para o lead específico
+    setSavedNotes(prev => {
+      const leadNotes = prev[leadId] || [];
+      return {
+        ...prev,
+        [leadId]: [...leadNotes, {
+          text: noteText,
+          date: new Date()
+        }]
+      };
+    });
+    
+    // Limpa o campo de texto
+    setLeadNotes(prev => ({
+      ...prev,
+      [leadId]: ""
+    }));
+    
+    toast({
+      title: "Nota salva",
+      description: "Sua nota foi salva com sucesso!",
+    });
+    
+    // Aqui você também poderia fazer uma chamada para a API para salvar a nota no servidor
+    // apiRequest({
+    //   url: `/api/leads/${leadId}/notes`,
+    //   method: 'POST',
+    //   data: { note: noteText }
+    // });
+  };
   
   // Função para abrir o modal de adicionar novo lead
   const handleAddClick = () => {
@@ -1062,12 +1124,42 @@ export default function CRM() {
                           background: '#fff',
                           padding: '20px 20px 0'
                         }}
+                        onChange={(e) => setCurrentNote(e.target.value)}
                       />
                     </div>
                     <div className="flex justify-end mt-4">
-                      <Button className="bg-[#3565E7] hover:bg-[#2955CC] text-sm">
+                      <Button 
+                        className="bg-[#3565E7] hover:bg-[#2955CC] text-sm"
+                        onClick={handleSaveNote}
+                      >
                         Salvar Nota
                       </Button>
+                    </div>
+                    
+                    {/* Histórico de atividades/notas */}
+                    <div className="mt-8">
+                      <div className="p-5 border border-[#f5f5f5] rounded-[5px]" style={{ background: '#F9FAFB' }}>
+                        <h3 className="text-base font-bold mb-4">Histórico de Atividades</h3>
+                        <div className="w-full h-px mb-4 -mx-5" style={{ marginLeft: '-20px', marginRight: '-20px', width: 'calc(100% + 40px)', backgroundColor: 'rgb(245, 245, 245)' }}></div>
+                        
+                        {savedNotes.length > 0 ? (
+                          <div className="space-y-4">
+                            {savedNotes.map((note, index) => (
+                              <div key={index} className="p-4 border border-[#f5f5f5] rounded-[5px] bg-white">
+                                <div className="flex justify-between items-start mb-2">
+                                  <span className="text-sm font-semibold">{formatDate(note.date)}</span>
+                                  <span className="text-xs text-gray-500">{formatTime(note.date)}</span>
+                                </div>
+                                <p className="text-sm">{note.text}</p>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <div className="text-center py-6 text-gray-500 text-sm">
+                            Nenhuma nota foi adicionada ainda.
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
