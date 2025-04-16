@@ -43,6 +43,8 @@ export default function CRM() {
   const [openLeadId, setOpenLeadId] = useState<number | null>(null);
   const [leadNotes, setLeadNotes] = useState<{[leadId: number]: string}>({});
   const [savedNotes, setSavedNotes] = useState<{[leadId: number]: Array<{text: string, date: Date}>}>({});
+  const [editingField, setEditingField] = useState<{leadId: number, field: string} | null>(null);
+  const [editingValue, setEditingValue] = useState<string>("");
   const { toast } = useToast();
   const queryClient = useQueryClient();
   
