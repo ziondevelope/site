@@ -46,7 +46,10 @@ export default function SalesFunnel({ isLoading: initialLoading, data }: SalesFu
 
   const isLoading = initialLoading || funnelsLoading || stagesLoading;
 
-  console.log("Estado de carregamento:", { isLoading, dataExists: !!data, defaultFunnel, stagesCount: sortedStages.length });
+  console.log("Estado de carregamento:", { isLoading, dataExists: !!data, defaultFunnel, stagesCount: sortedStages.length, stages });
+  
+  // Forçar renderização de exemplo se não houver estágios
+  let hasStages = stages && stages.length > 0;
   
   // Verificar se temos dados suficientes para renderizar o funil
   if (isLoading || !defaultFunnel || !sortedStages.length) {
@@ -157,45 +160,71 @@ export default function SalesFunnel({ isLoading: initialLoading, data }: SalesFu
 
 // Helper function to get a background color based on stage position
 function getStageBackgroundColor(index: number, totalStages: number): string {
-  // Nova paleta de cores com transição mais suave
-  // Começa com azul profundo, passa por tons de azul mais claros e termina em verde
-  if (totalStages <= 1) {
-    return "#3565E7"; // Azul principal
+  // Usar uma paleta fixa e mais simples para maior contraste e melhor visualização
+  const colors = [
+    "#3565E7", // Azul principal (primeiro estágio)
+    "#4B74E8", // Azul ligeiramente mais claro
+    "#6183EA", // Azul médio
+    "#7692EC", // Azul claro
+    "#8BA1ED", // Azul muito claro
+    "#34C38F", // Verde (último estágio)
+  ];
+  
+  // Se tivermos menos estágios que cores, usar apenas as cores necessárias
+  if (totalStages <= colors.length) {
+    // Para poucos estágios, usar cores específicas
+    if (index === totalStages - 1 && totalStages > 1) {
+      // Último estágio sempre verde
+      return colors[colors.length - 1];
+    }
+    
+    // Mapear o índice para cores disponíveis excluindo o verde (último)
+    const availableColors = colors.slice(0, colors.length - 1);
+    const colorIndex = Math.min(index, availableColors.length - 1);
+    return availableColors[colorIndex];
+  } 
+  
+  // Para muitos estágios, calcular cores intermediárias
+  if (index === 0) {
+    return colors[0]; // Primeiro estágio: azul escuro
   }
   
-  // Progressão de cores do início ao fim do funil
   if (index === totalStages - 1) {
-    // Último estágio: verde suave
-    return "#34C38F";
-  } else if (index === 0) {
-    // Primeiro estágio: azul escuro
-    return "#3565E7";
-  } else {
-    // Estágios intermediários com progressão de cor
-    const stageProgress = index / (totalStages - 1);
-    
-    if (stageProgress < 0.5) {
-      // Primeira metade: transição de azul escuro para azul médio
-      const ratio = stageProgress * 2; // Normalizado para 0-1 na primeira metade
-      
-      // Transição do azul principal (#3565E7) para azul médio (#5E87EA)
-      const r = Math.round(53 + (94 - 53) * ratio);
-      const g = Math.round(101 + (135 - 101) * ratio);
-      const b = Math.round(231 + (234 - 231) * ratio);
-      
-      return `rgb(${r}, ${g}, ${b})`;
-    } else {
-      // Segunda metade: transição de azul médio para verde claro
-      const ratio = (stageProgress - 0.5) * 2; // Normalizado para 0-1 na segunda metade
-      
-      // Transição do azul médio (#5E87EA) para verde (#34C38F)
-      const r = Math.round(94 - (94 - 52) * ratio);
-      const g = Math.round(135 + (195 - 135) * ratio);
-      const b = Math.round(234 - (234 - 143) * ratio);
-      
-      return `rgb(${r}, ${g}, ${b})`;
-    }
+    return colors[colors.length - 1]; // Último estágio: verde
   }
+  
+  // Estágios intermediários: interpolação entre cores disponíveis
+  const nonEdgeColors = colors.slice(0, colors.length - 1); // Todas as cores exceto o verde
+  const segmentCount = nonEdgeColors.length - 1;
+  const progress = (index / (totalStages - 1)) * segmentCount;
+  
+  const lowerIndex = Math.floor(progress);
+  const upperIndex = Math.ceil(progress);
+  
+  // Se estivermos exatamente em uma cor definida
+  if (lowerIndex === upperIndex) {
+    return nonEdgeColors[lowerIndex];
+  }
+  
+  // Interpolar entre as duas cores mais próximas
+  const weight = progress - lowerIndex;
+  
+  // Função para converter hex em RGB
+  const hexToRgb = (hex: string) => {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    return { r, g, b };
+  };
+  
+  const color1 = hexToRgb(nonEdgeColors[lowerIndex]);
+  const color2 = hexToRgb(nonEdgeColors[upperIndex]);
+  
+  const r = Math.round(color1.r * (1 - weight) + color2.r * weight);
+  const g = Math.round(color1.g * (1 - weight) + color2.g * weight);
+  const b = Math.round(color1.b * (1 - weight) + color2.b * weight);
+  
+  return `rgb(${r}, ${g}, ${b})`;
 }
 
 // Helper function to estimate stage counts based on existing data
