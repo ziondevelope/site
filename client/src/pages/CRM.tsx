@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from "@/components/ui/dialog";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { InsertLead, Lead, FunnelStage, SalesFunnel, insertLeadSchema } from "@shared/schema";
 import { useForm } from "react-hook-form";
@@ -723,7 +724,10 @@ export default function CRM() {
           }}
         >
           <DialogContent className="max-w-6xl w-[90vw] max-h-[90vh] overflow-y-auto p-0">
-            {/* Cabeçalho no estilo RD Station */}
+            {/* Cabeçalho no estilo RD Station - INVISIBLE TITLE para acessibilidade */}
+            <VisuallyHidden>
+              <DialogTitle>Detalhes do Lead</DialogTitle>
+            </VisuallyHidden>
             <div className="bg-white border-b border-gray-200">
               {/* Barra superior com nome do lead e detalhes */}
               <div className="flex justify-between items-center bg-white p-6 rounded-t-lg border-b border-gray-100">
