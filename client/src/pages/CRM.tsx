@@ -868,7 +868,7 @@ export default function CRM() {
                                 
                                 {/* Container principal */}
                                 <div 
-                                  className={`h-12 w-full flex items-center justify-center ${textColor} px-3 shadow-sm transition-all duration-200 relative`}
+                                  className={`h-10 w-full flex items-center justify-center ${textColor} px-3 shadow-sm transition-all duration-200 relative rounded-md`}
                                   style={{
                                     backgroundColor: bgColor,
                                   }}
