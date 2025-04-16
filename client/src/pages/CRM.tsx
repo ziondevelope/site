@@ -819,96 +819,111 @@ export default function CRM() {
                     };
                     
                     return (
-                      <div className="relative mb-2 pt-1 pb-1">
-                        {/* Linha conectora por baixo dos estágios */}
-                        <div className="absolute left-0 right-0 h-[3px] bg-gray-200 top-[25px] -z-0"></div>
-                        
-                        {/* Estágios do funil */}
-                        <div className="flex justify-between items-center relative z-10">
+                      <div className="w-full py-6">
+                        {/* Estágios do funil - Design de trapézio moderno */}
+                        <div className="flex w-full">
                           {sortedStages.map((stage, index) => {
                             const isActive = lead.stageId === stage.id || (!lead.stageId && index === 0);
                             const isCompleted = sortedStages.findIndex(s => s.id === lead.stageId) > index;
-                            const color = getStageColor(index, isActive, isCompleted);
+                            
+                            // Definir gradientes específicos para cada etapa baseado na posição
+                            let bgColor;
+                            let borderColor;
+                            let textColor = 'text-white';
+                            
+                            if (isCompleted) {
+                              // Estágio completado - verde
+                              bgColor = 'bg-gradient-to-br from-green-500 to-green-600';
+                              borderColor = 'border-green-400';
+                            } else if (isActive) {
+                              // Estágio atual - azul
+                              bgColor = 'bg-gradient-to-br from-blue-500 to-blue-600';
+                              borderColor = 'border-blue-400';
+                            } else {
+                              // Estágio futuro - cinza
+                              bgColor = 'bg-gradient-to-br from-gray-200 to-gray-300';
+                              borderColor = 'border-gray-200';
+                              textColor = 'text-gray-600';
+                            }
+                            
+                            // Último item tem formato diferente (mais estreito na direita)
                             const isLastStage = index === sortedStages.length - 1;
                             
+                            // Determinar o formato do trapézio com clip-path
+                            let clipPath;
+                            if (sortedStages.length === 1) {
+                              clipPath = 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)'; // Retângulo para 1 item
+                            } else if (index === 0) {
+                              clipPath = 'polygon(0% 0%, 95% 0%, 100% 100%, 0% 100%)'; // Primeiro: direita inclinada
+                            } else if (isLastStage) {
+                              clipPath = 'polygon(0% 0%, 100% 0%, 100% 100%, 5% 100%)'; // Último: esquerda inclinada
+                            } else {
+                              clipPath = 'polygon(0% 0%, 95% 0%, 100% 100%, 5% 100%)'; // Meio: ambos lados inclinados
+                            }
+                            
                             return (
-                              <div key={stage.id} className="flex flex-col items-center relative">
-                                {/* Elemento principal com círculo e seta */}
-                                <div className="flex items-center">
-                                  {/* Círculo do estágio */}
-                                  <div 
-                                    className={`
-                                      w-12 h-12 rounded-full mb-2 flex items-center justify-center 
-                                      shadow-sm transition-all duration-200 hover:shadow-md
-                                      cursor-pointer
-                                      ${isActive || isCompleted ? 'text-white' : 'text-gray-600'}
-                                    `}
-                                    style={{ 
-                                      backgroundColor: color,
-                                      transform: isActive ? 'scale(1.05)' : 'scale(1)',
-                                    }}
-                                    onClick={() => {
-                                      // Atualizar o estágio do lead ao clicar
-                                      apiRequest(`/api/leads/${lead.id}/stage`, {
-                                        method: "PATCH",
-                                        body: JSON.stringify({ stageId: stage.id }),
-                                      })
-                                        .then(() => {
-                                          // Atualizar a lista de leads
-                                          queryClient.invalidateQueries({ queryKey: ['/api/leads'] });
-                                          toast({
-                                            title: "Estágio atualizado",
-                                            description: "O estágio do lead foi atualizado com sucesso.",
-                                          });
-                                        })
-                                        .catch((error) => {
-                                          console.error("Erro ao atualizar estágio:", error);
-                                          toast({
-                                            title: "Erro ao atualizar estágio",
-                                            description: "Não foi possível atualizar o estágio. Tente novamente.",
-                                            variant: "destructive",
-                                          });
-                                        });
-                                    }}
-                                  >
-                                    {/* Indicador de conclusão (checkmark) */}
+                              <div
+                                key={stage.id}
+                                className={`relative flex-1 h-16 cursor-pointer transition-all duration-200 hover:shadow-lg mx-0.5 
+                                  ${bgColor} ${textColor} border-t-2 ${borderColor} `}
+                                style={{
+                                  clipPath: clipPath,
+                                  zIndex: sortedStages.length - index, // Criar efeito de sobreposição
+                                  marginRight: isLastStage ? 0 : '-8px' // Sobreposição
+                                }}
+                                onClick={() => {
+                                  apiRequest(`/api/leads/${lead.id}/stage`, {
+                                    method: "PATCH",
+                                    body: JSON.stringify({ stageId: stage.id }),
+                                  })
+                                    .then(() => {
+                                      queryClient.invalidateQueries({ queryKey: ['/api/leads'] });
+                                      toast({
+                                        title: "Estágio atualizado",
+                                        description: "O estágio do lead foi atualizado com sucesso.",
+                                      });
+                                    })
+                                    .catch((error) => {
+                                      console.error("Erro ao atualizar estágio:", error);
+                                      toast({
+                                        title: "Erro ao atualizar estágio",
+                                        description: "Não foi possível atualizar o estágio.",
+                                        variant: "destructive",
+                                      });
+                                    });
+                                }}
+                              >
+                                <div className="flex flex-col items-center justify-center h-full px-2">
+                                  {/* Ícone ou número */}
+                                  <div className="flex items-center mb-1">
                                     {isCompleted ? (
                                       <i className="fas fa-check text-sm"></i>
                                     ) : (
-                                      <span className="text-sm font-semibold">{index + 1}</span>
+                                      <span className="font-semibold">{index + 1}</span>
                                     )}
                                   </div>
                                   
-                                  {/* Seta apontando para o próximo estágio (exceto no último) */}
-                                  {!isLastStage && (
-                                    <div 
-                                      className="w-8 h-8 flex items-center justify-center mx-1"
-                                      style={{
-                                        marginLeft: '0.5rem',
-                                        marginRight: '-2rem', // Para compensar o espaçamento 
-                                        zIndex: 5,
-                                        color: isCompleted ? '#0066ff' : '#94a3b8'
-                                      }}
-                                    >
-                                      <i className="fas fa-chevron-right"></i>
-                                    </div>
-                                  )}
+                                  {/* Nome do estágio */}
+                                  <span 
+                                    className="text-xs font-medium"
+                                    style={{
+                                      maxWidth: '100%',
+                                      textAlign: 'center',
+                                      whiteSpace: 'nowrap',
+                                      overflow: 'hidden',
+                                      textOverflow: 'ellipsis'
+                                    }}
+                                  >
+                                    {stage.name}
+                                  </span>
                                 </div>
                                 
-                                {/* Nome do estágio */}
-                                <span 
-                                  className={`text-xs font-medium ${isActive ? 'text-gray-900' : 'text-gray-500'}`}
-                                  style={{
-                                    maxWidth: '80px',
-                                    textAlign: 'center',
-                                    whiteSpace: 'nowrap',
-                                    overflow: 'hidden',
-                                    textOverflow: 'ellipsis',
-                                    marginTop: '-0.25rem'
-                                  }}
-                                >
-                                  {stage.name}
-                                </span>
+                                {/* Seta indicativa para o próximo estágio */}
+                                {!isLastStage && (
+                                  <div className="absolute right-[-1px] top-1/2 transform -translate-y-1/2 text-white z-10">
+                                    <i className="fas fa-angle-right"></i>
+                                  </div>
+                                )}
                               </div>
                             );
                           })}
