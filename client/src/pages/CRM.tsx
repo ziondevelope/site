@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { Pencil, Check, X, User, Mail, Phone } from "lucide-react";
+import { Pencil, Check, X, User, Mail, Phone, Store, Home, MapPin, DollarSign, Tag } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -1292,7 +1292,7 @@ export default function CRM() {
                       <div className="w-full h-px mb-4 -mx-5" style={{ marginLeft: '-20px', marginRight: '-20px', width: 'calc(100% + 40px)', backgroundColor: 'rgb(245, 245, 245)' }}></div>
                       <div className="space-y-5">
                         <div>
-                          <h4 className="text-xs font-semibold mb-1" style={{ fontSize: '14px' }}>Tipo de Negócio:</h4>
+                          <h4 className="text-xs font-semibold mb-1 flex items-center" style={{ fontSize: '14px' }}><Store className="h-4 w-4 mr-1 text-gray-500" /> Tipo de Negócio:</h4>
                           <div className="group relative">
                             {editingField && editingField.leadId === lead.id && editingField.field === 'interestType' ? (
                               <div className="flex items-center">
@@ -1347,7 +1347,7 @@ export default function CRM() {
                         </div>
                         
                         <div>
-                          <h4 className="text-xs font-semibold mb-1" style={{ fontSize: '14px' }}>Tipo de Imóvel:</h4>
+                          <h4 className="text-xs font-semibold mb-1 flex items-center" style={{ fontSize: '14px' }}><Home className="h-4 w-4 mr-1 text-gray-500" /> Tipo de Imóvel:</h4>
                           <div className="group relative">
                             {editingField && editingField.leadId === lead.id && editingField.field === 'propertyType' ? (
                               <div className="flex items-center">
@@ -1404,7 +1404,7 @@ export default function CRM() {
                         </div>
                         
                         <div>
-                          <h4 className="text-xs font-semibold mb-1" style={{ fontSize: '14px' }}>Região:</h4>
+                          <h4 className="text-xs font-semibold mb-1 flex items-center" style={{ fontSize: '14px' }}><MapPin className="h-4 w-4 mr-1 text-gray-500" /> Região:</h4>
                           <div className="group relative">
                             {editingField && editingField.leadId === lead.id && editingField.field === 'region' ? (
                               <div className="flex items-center">
@@ -1450,7 +1450,7 @@ export default function CRM() {
                         </div>
                         
                         <div>
-                          <h4 className="text-xs font-semibold mb-1" style={{ fontSize: '14px' }}>Faixa de Preço:</h4>
+                          <h4 className="text-xs font-semibold mb-1 flex items-center" style={{ fontSize: '14px' }}><DollarSign className="h-4 w-4 mr-1 text-gray-500" /> Faixa de Preço:</h4>
                           <div className="group relative">
                             {editingField && editingField.leadId === lead.id && editingField.field === 'budget' ? (
                               <div className="flex items-center">
@@ -1502,7 +1502,7 @@ export default function CRM() {
                         </div>
                         
                         <div>
-                          <h4 className="text-xs font-semibold mb-1" style={{ fontSize: '14px' }}>Origem:</h4>
+                          <h4 className="text-xs font-semibold mb-1 flex items-center" style={{ fontSize: '14px' }}><Tag className="h-4 w-4 mr-1 text-gray-500" /> Origem:</h4>
                           <div className="group relative">
                             {editingField && editingField.leadId === lead.id && editingField.field === 'source' ? (
                               <div className="flex items-center">
