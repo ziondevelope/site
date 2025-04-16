@@ -837,21 +837,21 @@ export default function CRM() {
                             const isCompleted = sortedStages.findIndex(s => s.id === lead.stageId) > index;
                             const isLastStage = index === sortedStages.length - 1;
                             
-                            // Cores mais modernas
+                            // Degradê azul baseado na cor do botão (bg-blue-600)
                             let bgColor;
                             let textColor;
                             
                             if (isCompleted) {
                               // Estágio completado
-                              bgColor = '#3498db';
+                              bgColor = '#3b82f6'; // blue-500
                               textColor = 'text-white';
                             } else if (isActive) {
-                              // Estágio atual
-                              bgColor = '#2ecc71';
+                              // Estágio atual - degradê azul
+                              bgColor = 'linear-gradient(135deg, #2563eb, #1d4ed8)'; // blue-600 para blue-700
                               textColor = 'text-white';
                             } else {
                               // Estágio futuro
-                              bgColor = '#ecf0f1';
+                              bgColor = '#f1f5f9'; // slate-100
                               textColor = 'text-gray-700';
                             }
                             
