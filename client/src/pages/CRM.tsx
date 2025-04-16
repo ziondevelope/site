@@ -829,53 +829,69 @@ export default function CRM() {
                             const isActive = lead.stageId === stage.id || (!lead.stageId && index === 0);
                             const isCompleted = sortedStages.findIndex(s => s.id === lead.stageId) > index;
                             const color = getStageColor(index, isActive, isCompleted);
+                            const isLastStage = index === sortedStages.length - 1;
                             
                             return (
-                              <div 
-                                key={stage.id}
-                                className="flex flex-col items-center cursor-pointer group"
-                                onClick={() => {
-                                  // Atualizar o estágio do lead ao clicar
-                                  apiRequest(`/api/leads/${lead.id}/stage`, {
-                                    method: "PATCH",
-                                    body: JSON.stringify({ stageId: stage.id }),
-                                  })
-                                    .then(() => {
-                                      // Atualizar a lista de leads
-                                      queryClient.invalidateQueries({ queryKey: ['/api/leads'] });
-                                      toast({
-                                        title: "Estágio atualizado",
-                                        description: "O estágio do lead foi atualizado com sucesso.",
-                                      });
-                                    })
-                                    .catch((error) => {
-                                      console.error("Erro ao atualizar estágio:", error);
-                                      toast({
-                                        title: "Erro ao atualizar estágio",
-                                        description: "Não foi possível atualizar o estágio. Tente novamente.",
-                                        variant: "destructive",
-                                      });
-                                    });
-                                }}
-                              >
-                                {/* Círculo do estágio */}
-                                <div 
-                                  className={`
-                                    w-12 h-12 rounded-full mb-2 flex items-center justify-center 
-                                    shadow-sm transition-all duration-200 
-                                    group-hover:shadow-md relative
-                                    ${isActive || isCompleted ? 'text-white' : 'text-gray-600'}
-                                  `}
-                                  style={{ 
-                                    backgroundColor: color,
-                                    transform: isActive ? 'scale(1.05)' : 'scale(1)',
-                                  }}
-                                >
-                                  {/* Indicador de conclusão (checkmark) */}
-                                  {isCompleted ? (
-                                    <i className="fas fa-check text-sm"></i>
-                                  ) : (
-                                    <span className="text-sm font-semibold">{index + 1}</span>
+                              <div key={stage.id} className="flex flex-col items-center relative">
+                                {/* Elemento principal com círculo e seta */}
+                                <div className="flex items-center">
+                                  {/* Círculo do estágio */}
+                                  <div 
+                                    className={`
+                                      w-12 h-12 rounded-full mb-2 flex items-center justify-center 
+                                      shadow-sm transition-all duration-200 hover:shadow-md
+                                      cursor-pointer
+                                      ${isActive || isCompleted ? 'text-white' : 'text-gray-600'}
+                                    `}
+                                    style={{ 
+                                      backgroundColor: color,
+                                      transform: isActive ? 'scale(1.05)' : 'scale(1)',
+                                    }}
+                                    onClick={() => {
+                                      // Atualizar o estágio do lead ao clicar
+                                      apiRequest(`/api/leads/${lead.id}/stage`, {
+                                        method: "PATCH",
+                                        body: JSON.stringify({ stageId: stage.id }),
+                                      })
+                                        .then(() => {
+                                          // Atualizar a lista de leads
+                                          queryClient.invalidateQueries({ queryKey: ['/api/leads'] });
+                                          toast({
+                                            title: "Estágio atualizado",
+                                            description: "O estágio do lead foi atualizado com sucesso.",
+                                          });
+                                        })
+                                        .catch((error) => {
+                                          console.error("Erro ao atualizar estágio:", error);
+                                          toast({
+                                            title: "Erro ao atualizar estágio",
+                                            description: "Não foi possível atualizar o estágio. Tente novamente.",
+                                            variant: "destructive",
+                                          });
+                                        });
+                                    }}
+                                  >
+                                    {/* Indicador de conclusão (checkmark) */}
+                                    {isCompleted ? (
+                                      <i className="fas fa-check text-sm"></i>
+                                    ) : (
+                                      <span className="text-sm font-semibold">{index + 1}</span>
+                                    )}
+                                  </div>
+                                  
+                                  {/* Seta apontando para o próximo estágio (exceto no último) */}
+                                  {!isLastStage && (
+                                    <div 
+                                      className="w-8 h-8 flex items-center justify-center mx-1"
+                                      style={{
+                                        marginLeft: '0.5rem',
+                                        marginRight: '-2rem', // Para compensar o espaçamento 
+                                        zIndex: 5,
+                                        color: isCompleted ? '#0066ff' : '#94a3b8'
+                                      }}
+                                    >
+                                      <i className="fas fa-chevron-right"></i>
+                                    </div>
                                   )}
                                 </div>
                                 
@@ -887,7 +903,8 @@ export default function CRM() {
                                     textAlign: 'center',
                                     whiteSpace: 'nowrap',
                                     overflow: 'hidden',
-                                    textOverflow: 'ellipsis'
+                                    textOverflow: 'ellipsis',
+                                    marginTop: '-0.25rem'
                                   }}
                                 >
                                   {stage.name}
