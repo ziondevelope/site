@@ -1034,22 +1034,22 @@ export default function CRM() {
                       <div className="space-y-5">
                         <div>
                           <h4 className="text-xs font-semibold mb-0.5" style={{ fontSize: '14px' }}>Nome</h4>
-                          <p className="text-gray-900 text-sm">{lead.name}</p>
+                          <p className="text-gray-900 text-sm text-left">{lead.name}</p>
                         </div>
                         
                         <div>
                           <h4 className="text-xs font-semibold mb-0.5" style={{ fontSize: '14px' }}>Email</h4>
-                          <p className="text-gray-900 text-sm">{lead.email || "Não informado"}</p>
+                          <p className="text-gray-900 text-sm text-left">{lead.email || "Não informado"}</p>
                         </div>
                         
                         <div>
                           <h4 className="text-xs font-semibold mb-0.5" style={{ fontSize: '14px' }}>Telefone</h4>
-                          <p className="text-gray-900 text-sm">{lead.phone || "Não informado"}</p>
+                          <p className="text-gray-900 text-sm text-left">{lead.phone || "Não informado"}</p>
                         </div>
                         
                         <div>
                           <h4 className="text-xs font-semibold mb-0.5" style={{ fontSize: '14px' }}>WhatsApp</h4>
-                          <p className="text-gray-900 text-sm">{(lead as any).whatsapp || "Não informado"}</p>
+                          <p className="text-gray-900 text-sm text-left">{(lead as any).whatsapp || "Não informado"}</p>
                         </div>
                       </div>
                     </div>
@@ -1061,7 +1061,7 @@ export default function CRM() {
                       <div className="space-y-5">
                         <div>
                           <h4 className="text-xs font-semibold mb-0.5" style={{ fontSize: '14px' }}>Tipo de Negócio</h4>
-                          <p className="text-gray-900 text-sm">
+                          <p className="text-gray-900 text-sm text-left">
                             {lead.interestType === 'purchase' ? 'Compra' :
                             lead.interestType === 'rent' ? 'Aluguel' :
                             lead.interestType || 'Não informado'}
@@ -1070,7 +1070,7 @@ export default function CRM() {
                         
                         <div>
                           <h4 className="text-xs font-semibold mb-0.5" style={{ fontSize: '14px' }}>Tipo de Imóvel</h4>
-                          <p className="text-gray-900 text-sm">
+                          <p className="text-gray-900 text-sm text-left">
                             {(lead as any).propertyType === 'apartment' ? 'Apartamento' : 
                             (lead as any).propertyType === 'house' ? 'Casa' : 
                             (lead as any).propertyType === 'commercial' ? 'Comercial' : 
@@ -1080,12 +1080,12 @@ export default function CRM() {
                         
                         <div>
                           <h4 className="text-xs font-semibold mb-0.5" style={{ fontSize: '14px' }}>Região</h4>
-                          <p className="text-gray-900 text-sm">{(lead as any).region || "Não informado"}</p>
+                          <p className="text-gray-900 text-sm text-left">{(lead as any).region || "Não informado"}</p>
                         </div>
                         
                         <div>
                           <h4 className="text-xs font-semibold mb-0.5" style={{ fontSize: '14px' }}>Faixa de Preço</h4>
-                          <p className="text-gray-900 text-sm">
+                          <p className="text-gray-900 text-sm text-left">
                             {(lead as any).priceRangeMin && (lead as any).priceRangeMax ? 
                               `R$ ${(lead as any).priceRangeMin.toLocaleString('pt-BR')} - R$ ${(lead as any).priceRangeMax.toLocaleString('pt-BR')}` : 
                               lead.budget ? 'R$ ' + lead.budget.toLocaleString('pt-BR') : 'Não informado'}
@@ -1094,7 +1094,7 @@ export default function CRM() {
                         
                         <div>
                           <h4 className="text-xs font-semibold mb-0.5" style={{ fontSize: '14px' }}>Origem</h4>
-                          <p className="text-gray-900 text-sm">
+                          <p className="text-gray-900 text-sm text-left">
                             {lead.source === 'manual' ? 'Manual' :
                             lead.source === 'website' ? 'Website' :
                             lead.source === 'whatsapp' ? 'WhatsApp' :
@@ -1153,7 +1153,7 @@ export default function CRM() {
                                   <span className="text-sm font-semibold">{formatDate(note.date)}</span>
                                   <span className="text-xs text-gray-500">{formatTime(note.date)}</span>
                                 </div>
-                                <p className="text-sm">{note.text}</p>
+                                <p className="text-sm text-left">{note.text}</p>
                               </div>
                             ))}
                           </div>
