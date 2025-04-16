@@ -851,19 +851,10 @@ export default function CRM() {
                                 className="relative flex items-center justify-center cursor-pointer"
                                 style={{
                                   width: `${100 / sortedStages.length}%`,
-                                  padding: '0 4px',
+                                  padding: '0 6px',
                                 }}
                               >
-                                {/* Indicador de conexão */}
-                                {index > 0 && (
-                                  <div 
-                                    className="absolute left-0 w-4 h-0.5 z-10" 
-                                    style={{
-                                      backgroundColor: isCompleted || isActive ? '#3498db' : '#d1d5db',
-                                      left: '-2px'
-                                    }}
-                                  />
-                                )}
+
                                 
                                 {/* Container principal */}
                                 <div 
