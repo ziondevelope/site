@@ -1032,23 +1032,23 @@ export default function CRM() {
                       <h3 className="text-base font-bold mb-4">Dados do Cliente</h3>
                       <div className="w-full h-px mb-4 -mx-5" style={{ marginLeft: '-20px', marginRight: '-20px', width: 'calc(100% + 40px)', backgroundColor: 'rgb(245, 245, 245)' }}></div>
                       <div className="space-y-5">
-                        <div>
-                          <h4 className="text-xs font-semibold mb-0.5" style={{ fontSize: '14px' }}>Nome</h4>
+                        <div className="flex items-center">
+                          <h4 className="text-xs font-semibold mr-2" style={{ fontSize: '14px', minWidth: "80px" }}>Nome:</h4>
                           <p className="text-gray-900 text-sm text-left">{lead.name}</p>
                         </div>
                         
-                        <div>
-                          <h4 className="text-xs font-semibold mb-0.5" style={{ fontSize: '14px' }}>Email</h4>
+                        <div className="flex items-center">
+                          <h4 className="text-xs font-semibold mr-2" style={{ fontSize: '14px', minWidth: "80px" }}>Email:</h4>
                           <p className="text-gray-900 text-sm text-left">{lead.email || "Não informado"}</p>
                         </div>
                         
-                        <div>
-                          <h4 className="text-xs font-semibold mb-0.5" style={{ fontSize: '14px' }}>Telefone</h4>
+                        <div className="flex items-center">
+                          <h4 className="text-xs font-semibold mr-2" style={{ fontSize: '14px', minWidth: "80px" }}>Telefone:</h4>
                           <p className="text-gray-900 text-sm text-left">{lead.phone || "Não informado"}</p>
                         </div>
                         
-                        <div>
-                          <h4 className="text-xs font-semibold mb-0.5" style={{ fontSize: '14px' }}>WhatsApp</h4>
+                        <div className="flex items-center">
+                          <h4 className="text-xs font-semibold mr-2" style={{ fontSize: '14px', minWidth: "80px" }}>WhatsApp:</h4>
                           <p className="text-gray-900 text-sm text-left">{(lead as any).whatsapp || "Não informado"}</p>
                         </div>
                       </div>
@@ -1059,8 +1059,8 @@ export default function CRM() {
                       <h3 className="text-base font-bold mb-4">Detalhes do Interesse</h3>
                       <div className="w-full h-px mb-4 -mx-5" style={{ marginLeft: '-20px', marginRight: '-20px', width: 'calc(100% + 40px)', backgroundColor: 'rgb(245, 245, 245)' }}></div>
                       <div className="space-y-5">
-                        <div>
-                          <h4 className="text-xs font-semibold mb-0.5" style={{ fontSize: '14px' }}>Tipo de Negócio</h4>
+                        <div className="flex items-center">
+                          <h4 className="text-xs font-semibold mr-2" style={{ fontSize: '14px', minWidth: "120px" }}>Tipo de Negócio:</h4>
                           <p className="text-gray-900 text-sm text-left">
                             {lead.interestType === 'purchase' ? 'Compra' :
                             lead.interestType === 'rent' ? 'Aluguel' :
