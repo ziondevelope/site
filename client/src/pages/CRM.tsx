@@ -820,25 +820,46 @@ export default function CRM() {
                     
                     return (
                       <div className="w-full mb-4">
-                        {/* Estágios do funil - Design com setas como na imagem de referência */}
+                        {/* Estágios do funil - Design simples com setas */}
                         <div className="flex w-full">
                           {sortedStages.map((stage, index) => {
                             const isActive = lead.stageId === stage.id || (!lead.stageId && index === 0);
                             const isCompleted = sortedStages.findIndex(s => s.id === lead.stageId) > index;
                             const isLastStage = index === sortedStages.length - 1;
                             
+                            // Definir cores para cada etapa baseado no status
+                            let bgColor;
+                            let textColor;
+                            
+                            if (isCompleted) {
+                              // Estágio completado - azul mais escuro
+                              bgColor = '#00bcd4';
+                              textColor = 'text-white';
+                            } else if (isActive) {
+                              // Estágio atual - azul mais claro
+                              bgColor = '#80deea';
+                              textColor = 'text-gray-800';
+                            } else {
+                              // Estágio futuro - azul bem claro
+                              bgColor = '#e0f7fa';
+                              textColor = 'text-gray-800';
+                            }
+                            
                             return (
                               <div
                                 key={stage.id}
-                                className="relative"
+                                className="relative flex-grow flex h-10 items-center cursor-pointer"
                                 style={{
                                   zIndex: sortedStages.length - index,
-                                  flex: 1,
                                 }}
                               >
                                 {/* Container principal */}
                                 <div 
-                                  className="h-8 flex items-center justify-center px-2 relative bg-black text-white cursor-pointer"
+                                  className={`h-full w-full flex items-center justify-center ${textColor} px-2`}
+                                  style={{
+                                    backgroundColor: bgColor,
+                                    clipPath: 'polygon(0 0, 85% 0, 100% 50%, 85% 100%, 0 100%)',
+                                  }}
                                   onClick={() => {
                                     apiRequest(`/api/leads/${lead.id}/stage`, {
                                       method: "PATCH",
@@ -873,17 +894,6 @@ export default function CRM() {
                                   >
                                     {stage.name}
                                   </span>
-                                  
-                                  {/* Seta branca à direita, exceto no último estágio */}
-                                  {!isLastStage && (
-                                    <div 
-                                      className="absolute right-[-10px] top-0 h-full w-[20px] z-10"
-                                      style={{
-                                        clipPath: 'polygon(0 0, 0 100%, 100% 50%)',
-                                        backgroundColor: 'white',
-                                      }}
-                                    />
-                                  )}
                                 </div>
                               </div>
                             );
