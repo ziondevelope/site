@@ -1121,7 +1121,7 @@ export default function CRM() {
                                   className="h-8 text-sm focus-visible:ring-0 focus-visible:ring-offset-0"
                                   style={{ 
                                     fontSize: '12px',
-                                    border: '1px solid #f0f0f0',
+                                    border: '1px solid #d0d0d0',
                                     boxShadow: 'none'
                                   }}
                                   autoFocus
@@ -1155,7 +1155,7 @@ export default function CRM() {
                                   className="ml-2 invisible group-hover:visible"
                                   onClick={() => handleStartEditing(lead.id, 'name', lead.name)}
                                 >
-                                  <Pencil className="h-3 w-3 text-blue-500 hover:text-blue-700" />
+                                  <Pencil className="h-3 w-3 text-gray-500 hover:text-gray-700" />
                                 </button>
                               </div>
                             )}
@@ -1173,7 +1173,7 @@ export default function CRM() {
                                   className="h-8 text-sm focus-visible:ring-0 focus-visible:ring-offset-0"
                                   style={{ 
                                     fontSize: '12px',
-                                    border: '1px solid #f0f0f0',
+                                    border: '1px solid #d0d0d0',
                                     boxShadow: 'none'
                                   }}
                                   autoFocus
@@ -1207,7 +1207,7 @@ export default function CRM() {
                                   className="ml-2 invisible group-hover:visible"
                                   onClick={() => handleStartEditing(lead.id, 'email', lead.email)}
                                 >
-                                  <Pencil className="h-3 w-3 text-blue-500 hover:text-blue-700" />
+                                  <Pencil className="h-3 w-3 text-gray-500 hover:text-gray-700" />
                                 </button>
                               </div>
                             )}
@@ -1225,7 +1225,7 @@ export default function CRM() {
                                   className="h-8 text-sm focus-visible:ring-0 focus-visible:ring-offset-0"
                                   style={{ 
                                     fontSize: '12px',
-                                    border: '1px solid #f0f0f0',
+                                    border: '1px solid #d0d0d0',
                                     boxShadow: 'none'
                                   }}
                                   autoFocus
@@ -1259,7 +1259,7 @@ export default function CRM() {
                                   className="ml-2 invisible group-hover:visible"
                                   onClick={() => handleStartEditing(lead.id, 'phone', lead.phone)}
                                 >
-                                  <Pencil className="h-3 w-3 text-blue-500 hover:text-blue-700" />
+                                  <Pencil className="h-3 w-3 text-gray-500 hover:text-gray-700" />
                                 </button>
                               </div>
                             )}
@@ -1277,7 +1277,7 @@ export default function CRM() {
                                   className="h-8 text-sm focus-visible:ring-0 focus-visible:ring-offset-0"
                                   style={{ 
                                     fontSize: '12px',
-                                    border: '1px solid #f0f0f0',
+                                    border: '1px solid #d0d0d0',
                                     boxShadow: 'none'
                                   }}
                                   autoFocus
@@ -1311,7 +1311,7 @@ export default function CRM() {
                                   className="ml-2 invisible group-hover:visible"
                                   onClick={() => handleStartEditing(lead.id, 'whatsapp', (lead as any).whatsapp)}
                                 >
-                                  <Pencil className="h-3 w-3 text-blue-500 hover:text-blue-700" />
+                                  <Pencil className="h-3 w-3 text-gray-500 hover:text-gray-700" />
                                 </button>
                               </div>
                             )}
@@ -1337,7 +1337,7 @@ export default function CRM() {
                                   <SelectTrigger className="h-8 text-sm focus-visible:ring-0 focus-visible:ring-offset-0" 
                                   style={{ 
                                     fontSize: '12px',
-                                    border: '1px solid #f0f0f0',
+                                    border: '1px solid #d0d0d0',
                                     boxShadow: 'none'
                                   }}>
                                     <SelectValue placeholder="Selecione o tipo de negócio" />
@@ -1378,7 +1378,7 @@ export default function CRM() {
                                   className="ml-2 invisible group-hover:visible"
                                   onClick={() => handleStartEditing(lead.id, 'interestType', lead.interestType)}
                                 >
-                                  <Pencil className="h-3 w-3 text-blue-500 hover:text-blue-700" />
+                                  <Pencil className="h-3 w-3 text-gray-500 hover:text-gray-700" />
                                 </button>
                               </div>
                             )}
@@ -1397,7 +1397,7 @@ export default function CRM() {
                                   <SelectTrigger className="h-8 text-sm focus-visible:ring-0 focus-visible:ring-offset-0" 
                                   style={{ 
                                     fontSize: '12px',
-                                    border: '1px solid #f0f0f0',
+                                    border: '1px solid #d0d0d0',
                                     boxShadow: 'none'
                                   }}>
                                     <SelectValue placeholder="Selecione o tipo de imóvel" />
@@ -1440,7 +1440,7 @@ export default function CRM() {
                                   className="ml-2 invisible group-hover:visible"
                                   onClick={() => handleStartEditing(lead.id, 'propertyType', (lead as any).propertyType)}
                                 >
-                                  <Pencil className="h-3 w-3 text-blue-500 hover:text-blue-700" />
+                                  <Pencil className="h-3 w-3 text-gray-500 hover:text-gray-700" />
                                 </button>
                               </div>
                             )}
@@ -1458,7 +1458,7 @@ export default function CRM() {
                                   className="h-8 text-sm focus-visible:ring-0 focus-visible:ring-offset-0"
                                   style={{ 
                                     fontSize: '12px',
-                                    border: '1px solid #f0f0f0',
+                                    border: '1px solid #d0d0d0',
                                     boxShadow: 'none'
                                   }}
                                   autoFocus
@@ -1490,7 +1490,7 @@ export default function CRM() {
                                   className="ml-2 invisible group-hover:visible"
                                   onClick={() => handleStartEditing(lead.id, 'region', (lead as any).region)}
                                 >
-                                  <Pencil className="h-3 w-3 text-blue-500 hover:text-blue-700" />
+                                  <Pencil className="h-3 w-3 text-gray-500 hover:text-gray-700" />
                                 </button>
                               </div>
                             )}
@@ -1509,7 +1509,7 @@ export default function CRM() {
                                   className="h-8 text-sm focus-visible:ring-0 focus-visible:ring-offset-0"
                                   style={{ 
                                     fontSize: '12px',
-                                    border: '1px solid #f0f0f0',
+                                    border: '1px solid #d0d0d0',
                                     boxShadow: 'none'
                                   }}
                                   autoFocus
@@ -1546,7 +1546,7 @@ export default function CRM() {
                                   className="ml-2 invisible group-hover:visible"
                                   onClick={() => handleStartEditing(lead.id, 'budget', lead.budget)}
                                 >
-                                  <Pencil className="h-3 w-3 text-blue-500 hover:text-blue-700" />
+                                  <Pencil className="h-3 w-3 text-gray-500 hover:text-gray-700" />
                                 </button>
                               </div>
                             )}
@@ -1565,7 +1565,7 @@ export default function CRM() {
                                   <SelectTrigger className="h-8 text-sm focus-visible:ring-0 focus-visible:ring-offset-0" 
                                   style={{ 
                                     fontSize: '12px',
-                                    border: '1px solid #f0f0f0',
+                                    border: '1px solid #d0d0d0',
                                     boxShadow: 'none'
                                   }}>
                                     <SelectValue placeholder="Selecione a origem" />
@@ -1614,7 +1614,7 @@ export default function CRM() {
                                   className="ml-2 invisible group-hover:visible"
                                   onClick={() => handleStartEditing(lead.id, 'source', lead.source)}
                                 >
-                                  <Pencil className="h-3 w-3 text-blue-500 hover:text-blue-700" />
+                                  <Pencil className="h-3 w-3 text-gray-500 hover:text-gray-700" />
                                 </button>
                               </div>
                             )}
