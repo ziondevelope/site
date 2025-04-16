@@ -37,25 +37,6 @@ const leadFormSchema = insertLeadSchema.extend({
 type LeadFormValues = z.infer<typeof leadFormSchema>;
 
 export default function CRM() {
-  // Estilo sutil para os campos editáveis
-  const editableFieldStyle = "border-gray-200 bg-gray-50 focus-visible:ring-1 focus-visible:ring-gray-300";
-  
-  // Auxiliar para atualizar todos os campos de edição com o estilo
-  useEffect(() => {
-    const updateFormStyle = () => {
-      const inputs = document.querySelectorAll('input.h-8.text-sm');
-      inputs.forEach(input => {
-        if (!input.classList.contains('bg-gray-50')) {
-          input.classList.add('border-gray-200', 'bg-gray-50', 'focus-visible:ring-1', 'focus-visible:ring-gray-300');
-        }
-      });
-    };
-    
-    // Aplicar estilos quando o componente montar ou quando o estado de edição mudar
-    if (editingField) {
-      setTimeout(updateFormStyle, 50);
-    }
-  }, [editingField]);
   const [isAddLeadOpen, setIsAddLeadOpen] = useState(false);
   const [leadToDelete, setLeadToDelete] = useState<Lead | null>(null);
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
@@ -1319,7 +1300,7 @@ export default function CRM() {
                                   value={editingValue}
                                   onValueChange={(value) => setEditingValue(value)}
                                 >
-                                  <SelectTrigger className="h-8 text-sm border-gray-200 bg-gray-50 focus-visible:ring-1 focus-visible:ring-gray-300" style={{ fontSize: '12px' }}>
+                                  <SelectTrigger className="h-8 text-sm" style={{ fontSize: '12px' }}>
                                     <SelectValue placeholder="Selecione o tipo de negócio" />
                                   </SelectTrigger>
                                   <SelectContent>
@@ -1374,7 +1355,7 @@ export default function CRM() {
                                   value={editingValue}
                                   onValueChange={(value) => setEditingValue(value)}
                                 >
-                                  <SelectTrigger className="h-8 text-sm border-gray-200 bg-gray-50 focus-visible:ring-1 focus-visible:ring-gray-300" style={{ fontSize: '12px' }}>
+                                  <SelectTrigger className="h-8 text-sm" style={{ fontSize: '12px' }}>
                                     <SelectValue placeholder="Selecione o tipo de imóvel" />
                                   </SelectTrigger>
                                   <SelectContent>
@@ -1477,7 +1458,7 @@ export default function CRM() {
                                   type="number"
                                   value={editingValue}
                                   onChange={(e) => setEditingValue(e.target.value)}
-                                  className="h-8 text-sm border-gray-200 bg-gray-50 focus-visible:ring-1 focus-visible:ring-gray-300"
+                                  className="h-8 text-sm"
                                   style={{ fontSize: '12px' }}
                                   autoFocus
                                   placeholder="Valor do orçamento"
@@ -1529,7 +1510,7 @@ export default function CRM() {
                                   value={editingValue}
                                   onValueChange={(value) => setEditingValue(value)}
                                 >
-                                  <SelectTrigger className="h-8 text-sm border-gray-200 bg-gray-50 focus-visible:ring-1 focus-visible:ring-gray-300" style={{ fontSize: '12px' }}>
+                                  <SelectTrigger className="h-8 text-sm" style={{ fontSize: '12px' }}>
                                     <SelectValue placeholder="Selecione a origem" />
                                   </SelectTrigger>
                                   <SelectContent>
