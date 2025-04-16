@@ -820,80 +820,73 @@ export default function CRM() {
                     
                     return (
                       <div className="w-full mb-4">
-                        {/* Estágios do funil - Design simples com setas */}
+                        {/* Estágios do funil - Design de chevrons */}
                         <div className="flex w-full">
                           {sortedStages.map((stage, index) => {
                             const isActive = lead.stageId === stage.id || (!lead.stageId && index === 0);
                             const isCompleted = sortedStages.findIndex(s => s.id === lead.stageId) > index;
-                            const isLastStage = index === sortedStages.length - 1;
-                            
-                            // Definir cores para cada etapa baseado no status
-                            let bgColor;
-                            let textColor;
-                            
-                            if (isCompleted) {
-                              // Estágio completado - azul mais escuro
-                              bgColor = '#00bcd4';
-                              textColor = 'text-white';
-                            } else if (isActive) {
-                              // Estágio atual - azul mais claro
-                              bgColor = '#80deea';
-                              textColor = 'text-gray-800';
-                            } else {
-                              // Estágio futuro - azul bem claro
-                              bgColor = '#e0f7fa';
-                              textColor = 'text-gray-800';
-                            }
                             
                             return (
                               <div
                                 key={stage.id}
-                                className="relative flex-grow flex h-10 items-center cursor-pointer"
-                                style={{
-                                  zIndex: sortedStages.length - index,
+                                className="relative flex-1 cursor-pointer"
+                                onClick={() => {
+                                  apiRequest(`/api/leads/${lead.id}/stage`, {
+                                    method: "PATCH",
+                                    body: JSON.stringify({ stageId: stage.id }),
+                                  })
+                                    .then(() => {
+                                      queryClient.invalidateQueries({ queryKey: ['/api/leads'] });
+                                      toast({
+                                        title: "Estágio atualizado",
+                                        description: "O estágio do lead foi atualizado com sucesso.",
+                                      });
+                                    })
+                                    .catch((error) => {
+                                      console.error("Erro ao atualizar estágio:", error);
+                                      toast({
+                                        title: "Erro ao atualizar estágio",
+                                        description: "Não foi possível atualizar o estágio.",
+                                        variant: "destructive",
+                                      });
+                                    });
                                 }}
                               >
-                                {/* Container principal */}
-                                <div 
-                                  className={`h-full w-full flex items-center justify-center ${textColor} px-2`}
-                                  style={{
-                                    backgroundColor: bgColor,
-                                    clipPath: 'polygon(0 0, 85% 0, 100% 50%, 85% 100%, 0 100%)',
-                                  }}
-                                  onClick={() => {
-                                    apiRequest(`/api/leads/${lead.id}/stage`, {
-                                      method: "PATCH",
-                                      body: JSON.stringify({ stageId: stage.id }),
-                                    })
-                                      .then(() => {
-                                        queryClient.invalidateQueries({ queryKey: ['/api/leads'] });
-                                        toast({
-                                          title: "Estágio atualizado",
-                                          description: "O estágio do lead foi atualizado com sucesso.",
-                                        });
-                                      })
-                                      .catch((error) => {
-                                        console.error("Erro ao atualizar estágio:", error);
-                                        toast({
-                                          title: "Erro ao atualizar estágio",
-                                          description: "Não foi possível atualizar o estágio.",
-                                          variant: "destructive",
-                                        });
-                                      });
-                                  }}
-                                >
-                                  {/* Nome do estágio */}
-                                  <span 
-                                    className="text-xs font-medium text-center"
+                                {/* Chevron design - Uma barra com triângulo branco na direita */}
+                                <div className="flex items-center h-9">
+                                  {/* Barra principal */}
+                                  <div 
+                                    className="h-full flex-1 flex items-center justify-center"
                                     style={{
-                                      maxWidth: '100%',
-                                      whiteSpace: 'nowrap',
-                                      overflow: 'hidden',
-                                      textOverflow: 'ellipsis'
+                                      backgroundColor: isActive ? '#00bcd4' : 
+                                                       isCompleted ? '#00838f' : 
+                                                       '#e0f7fa',
+                                      color: isActive || isCompleted ? 'white' : '#37474f',
+                                      position: 'relative',
                                     }}
                                   >
-                                    {stage.name}
-                                  </span>
+                                    {/* Nome do estágio */}
+                                    <span 
+                                      className="text-xs font-medium text-center mx-2"
+                                      style={{
+                                        maxWidth: '100%',
+                                        whiteSpace: 'nowrap',
+                                        overflow: 'hidden',
+                                        textOverflow: 'ellipsis'
+                                      }}
+                                    >
+                                      {stage.name}
+                                    </span>
+                                  </div>
+                                  
+                                  {/* Triângulo branco à direita */}
+                                  <div
+                                    className="h-full w-7 relative z-10"
+                                    style={{
+                                      backgroundColor: 'black',
+                                      clipPath: 'polygon(0 0, 0% 100%, 100% 50%)',
+                                    }}
+                                  />
                                 </div>
                               </div>
                             );
