@@ -1562,7 +1562,12 @@ export default function CRM() {
                                   value={editingValue}
                                   onValueChange={(value) => setEditingValue(value)}
                                 >
-                                  <SelectTrigger className="h-8 text-sm" style={{ fontSize: '12px' }}>
+                                  <SelectTrigger className="h-8 text-sm focus-visible:ring-0 focus-visible:ring-offset-0" 
+                                  style={{ 
+                                    fontSize: '12px',
+                                    border: '1px solid #f0f0f0',
+                                    boxShadow: 'none'
+                                  }}>
                                     <SelectValue placeholder="Selecione a origem" />
                                   </SelectTrigger>
                                   <SelectContent>
