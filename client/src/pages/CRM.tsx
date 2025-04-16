@@ -1132,7 +1132,7 @@ export default function CRM() {
                                   className="ml-2 invisible group-hover:visible"
                                   onClick={() => handleStartEditing(lead.id, 'name', lead.name)}
                                 >
-                                  <Pencil className="h-3 w-3 text-gray-400 hover:text-gray-600" />
+                                  <Pencil className="h-3 w-3 text-green-500 hover:text-green-700" />
                                 </button>
                               </div>
                             )}
@@ -1180,7 +1180,7 @@ export default function CRM() {
                                   className="ml-2 invisible group-hover:visible"
                                   onClick={() => handleStartEditing(lead.id, 'email', lead.email)}
                                 >
-                                  <Pencil className="h-3 w-3 text-gray-400 hover:text-gray-600" />
+                                  <Pencil className="h-3 w-3 text-green-500 hover:text-green-700" />
                                 </button>
                               </div>
                             )}
@@ -1228,7 +1228,7 @@ export default function CRM() {
                                   className="ml-2 invisible group-hover:visible"
                                   onClick={() => handleStartEditing(lead.id, 'phone', lead.phone)}
                                 >
-                                  <Pencil className="h-3 w-3 text-gray-400 hover:text-gray-600" />
+                                  <Pencil className="h-3 w-3 text-green-500 hover:text-green-700" />
                                 </button>
                               </div>
                             )}
@@ -1276,7 +1276,7 @@ export default function CRM() {
                                   className="ml-2 invisible group-hover:visible"
                                   onClick={() => handleStartEditing(lead.id, 'whatsapp', (lead as any).whatsapp)}
                                 >
-                                  <Pencil className="h-3 w-3 text-gray-400 hover:text-gray-600" />
+                                  <Pencil className="h-3 w-3 text-green-500 hover:text-green-700" />
                                 </button>
                               </div>
                             )}
