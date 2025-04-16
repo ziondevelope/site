@@ -40,6 +40,17 @@ export default function CRM() {
   // Estilo sutil para os campos editáveis
   const editableFieldStyle = "border-gray-200 bg-gray-50 focus-visible:ring-1 focus-visible:ring-gray-300";
   
+  const [isAddLeadOpen, setIsAddLeadOpen] = useState(false);
+  const [leadToDelete, setLeadToDelete] = useState<Lead | null>(null);
+  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
+  const [selectedFunnelId, setSelectedFunnelId] = useState<number | null>(null);
+  const [selectedStageId, setSelectedStageId] = useState<number | null>(null);
+  const [openLeadId, setOpenLeadId] = useState<number | null>(null);
+  const [leadNotes, setLeadNotes] = useState<{[leadId: number]: string}>({});
+  const [savedNotes, setSavedNotes] = useState<{[leadId: number]: Array<{text: string, date: Date}>}>({});
+  const [editingField, setEditingField] = useState<{leadId: number, field: string} | null>(null);
+  const [editingValue, setEditingValue] = useState<string>("");
+  
   // Auxiliar para atualizar todos os campos de edição com o estilo
   useEffect(() => {
     const updateFormStyle = () => {
@@ -56,16 +67,6 @@ export default function CRM() {
       setTimeout(updateFormStyle, 50);
     }
   }, [editingField]);
-  const [isAddLeadOpen, setIsAddLeadOpen] = useState(false);
-  const [leadToDelete, setLeadToDelete] = useState<Lead | null>(null);
-  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
-  const [selectedFunnelId, setSelectedFunnelId] = useState<number | null>(null);
-  const [selectedStageId, setSelectedStageId] = useState<number | null>(null);
-  const [openLeadId, setOpenLeadId] = useState<number | null>(null);
-  const [leadNotes, setLeadNotes] = useState<{[leadId: number]: string}>({});
-  const [savedNotes, setSavedNotes] = useState<{[leadId: number]: Array<{text: string, date: Date}>}>({});
-  const [editingField, setEditingField] = useState<{leadId: number, field: string} | null>(null);
-  const [editingValue, setEditingValue] = useState<string>("");
   
   // Mutation para atualizar dados do lead
   const updateLeadFieldMutation = useMutation({
