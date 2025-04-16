@@ -1118,8 +1118,12 @@ export default function CRM() {
                                 <Input 
                                   value={editingValue}
                                   onChange={(e) => setEditingValue(e.target.value)}
-                                  className="h-8 text-sm"
-                                  style={{ fontSize: '12px' }}
+                                  className="h-8 text-sm focus-visible:ring-0 focus-visible:ring-offset-0"
+                                  style={{ 
+                                    fontSize: '12px',
+                                    border: '1px solid #f0f0f0',
+                                    boxShadow: 'none'
+                                  }}
                                   autoFocus
                                 />
                                 <div className="flex ml-2">
@@ -1166,8 +1170,12 @@ export default function CRM() {
                                 <Input 
                                   value={editingValue}
                                   onChange={(e) => setEditingValue(e.target.value)}
-                                  className="h-8 text-sm"
-                                  style={{ fontSize: '12px' }}
+                                  className="h-8 text-sm focus-visible:ring-0 focus-visible:ring-offset-0"
+                                  style={{ 
+                                    fontSize: '12px',
+                                    border: '1px solid #f0f0f0',
+                                    boxShadow: 'none'
+                                  }}
                                   autoFocus
                                 />
                                 <div className="flex ml-2">
@@ -1214,8 +1222,12 @@ export default function CRM() {
                                 <Input 
                                   value={editingValue}
                                   onChange={(e) => setEditingValue(e.target.value)}
-                                  className="h-8 text-sm"
-                                  style={{ fontSize: '12px' }}
+                                  className="h-8 text-sm focus-visible:ring-0 focus-visible:ring-offset-0"
+                                  style={{ 
+                                    fontSize: '12px',
+                                    border: '1px solid #f0f0f0',
+                                    boxShadow: 'none'
+                                  }}
                                   autoFocus
                                 />
                                 <div className="flex ml-2">
@@ -1262,8 +1274,12 @@ export default function CRM() {
                                 <Input 
                                   value={editingValue}
                                   onChange={(e) => setEditingValue(e.target.value)}
-                                  className="h-8 text-sm"
-                                  style={{ fontSize: '12px' }}
+                                  className="h-8 text-sm focus-visible:ring-0 focus-visible:ring-offset-0"
+                                  style={{ 
+                                    fontSize: '12px',
+                                    border: '1px solid #f0f0f0',
+                                    boxShadow: 'none'
+                                  }}
                                   autoFocus
                                 />
                                 <div className="flex ml-2">
@@ -1318,7 +1334,12 @@ export default function CRM() {
                                   value={editingValue}
                                   onValueChange={(value) => setEditingValue(value)}
                                 >
-                                  <SelectTrigger className="h-8 text-sm" style={{ fontSize: '12px' }}>
+                                  <SelectTrigger className="h-8 text-sm focus-visible:ring-0 focus-visible:ring-offset-0" 
+                                  style={{ 
+                                    fontSize: '12px',
+                                    border: '1px solid #f0f0f0',
+                                    boxShadow: 'none'
+                                  }}>
                                     <SelectValue placeholder="Selecione o tipo de negócio" />
                                   </SelectTrigger>
                                   <SelectContent>
@@ -1373,7 +1394,12 @@ export default function CRM() {
                                   value={editingValue}
                                   onValueChange={(value) => setEditingValue(value)}
                                 >
-                                  <SelectTrigger className="h-8 text-sm" style={{ fontSize: '12px' }}>
+                                  <SelectTrigger className="h-8 text-sm focus-visible:ring-0 focus-visible:ring-offset-0" 
+                                  style={{ 
+                                    fontSize: '12px',
+                                    border: '1px solid #f0f0f0',
+                                    boxShadow: 'none'
+                                  }}>
                                     <SelectValue placeholder="Selecione o tipo de imóvel" />
                                   </SelectTrigger>
                                   <SelectContent>
@@ -1429,8 +1455,12 @@ export default function CRM() {
                                 <Input 
                                   value={editingValue}
                                   onChange={(e) => setEditingValue(e.target.value)}
-                                  className="h-8 text-sm"
-                                  style={{ fontSize: '12px' }}
+                                  className="h-8 text-sm focus-visible:ring-0 focus-visible:ring-offset-0"
+                                  style={{ 
+                                    fontSize: '12px',
+                                    border: '1px solid #f0f0f0',
+                                    boxShadow: 'none'
+                                  }}
                                   autoFocus
                                 />
                                 <div className="flex ml-2">
@@ -1476,8 +1506,12 @@ export default function CRM() {
                                   type="number"
                                   value={editingValue}
                                   onChange={(e) => setEditingValue(e.target.value)}
-                                  className="h-8 text-sm"
-                                  style={{ fontSize: '12px' }}
+                                  className="h-8 text-sm focus-visible:ring-0 focus-visible:ring-offset-0"
+                                  style={{ 
+                                    fontSize: '12px',
+                                    border: '1px solid #f0f0f0',
+                                    boxShadow: 'none'
+                                  }}
                                   autoFocus
                                   placeholder="Valor do orçamento"
                                 />
