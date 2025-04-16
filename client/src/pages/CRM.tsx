@@ -966,7 +966,7 @@ export default function CRM() {
                 <div className="md:col-span-3">
                   <div className="grid gap-6">
                     {/* Grid 1: Informações de Contato */}
-                    <div className="bg-white p-5 rounded-lg shadow-sm">
+                    <div className="bg-white p-5">
                       <h3 className="text-base font-bold mb-4 border-b pb-2">Dados do Cliente</h3>
                       <div className="space-y-5">
                         <div>
@@ -992,7 +992,7 @@ export default function CRM() {
                     </div>
                     
                     {/* Grid 2: Detalhes do Interesse */}
-                    <div className="bg-white p-5 rounded-lg shadow-sm">
+                    <div className="bg-white p-5">
                       <h3 className="text-base font-bold mb-4 border-b pb-2">Detalhes do Interesse</h3>
                       <div className="space-y-5">
                         <div>
@@ -1048,7 +1048,7 @@ export default function CRM() {
                 {/* Coluna de Notas */}
                 <div className="md:col-span-9 px-8">                  
                   <div>
-                    <div className="bg-white p-5 rounded-lg shadow-sm">
+                    <div className="bg-white p-5">
                       <h3 className="text-base font-bold mb-4 border-b pb-2">Nota Rápida</h3>
                       <Textarea 
                         placeholder="Digite uma anotação rápida sobre este lead..." 
