@@ -827,50 +827,49 @@ export default function CRM() {
                             const isCompleted = sortedStages.findIndex(s => s.id === lead.stageId) > index;
                             const isLastStage = index === sortedStages.length - 1;
                             
-                            // Cores mais profissionais
+                            // Cores mais modernas
                             let bgColor;
                             let textColor;
-                            let borderColor;
                             
                             if (isCompleted) {
-                              // Estágio completado - azul escuro
-                              bgColor = '#1976d2';
+                              // Estágio completado
+                              bgColor = '#3498db';
                               textColor = 'text-white';
-                              borderColor = '#1565c0';
                             } else if (isActive) {
-                              // Estágio atual - azul médio
-                              bgColor = '#2196f3';
+                              // Estágio atual
+                              bgColor = '#2ecc71';
                               textColor = 'text-white';
-                              borderColor = '#1976d2';
                             } else {
-                              // Estágio futuro - cinza claro
-                              bgColor = '#f5f5f5';
+                              // Estágio futuro
+                              bgColor = '#ecf0f1';
                               textColor = 'text-gray-700';
-                              borderColor = '#e0e0e0';
                             }
                             
                             return (
                               <div
                                 key={stage.id}
-                                className="relative flex h-12 items-center justify-center cursor-pointer"
+                                className="relative flex items-center justify-center cursor-pointer"
                                 style={{
-                                  zIndex: sortedStages.length - index,
-                                  marginRight: '-15px',
                                   width: `${100 / sortedStages.length}%`,
+                                  padding: '0 4px',
                                 }}
                               >
+                                {/* Indicador de conexão */}
+                                {index > 0 && (
+                                  <div 
+                                    className="absolute left-0 w-4 h-0.5 z-10" 
+                                    style={{
+                                      backgroundColor: isCompleted || isActive ? '#3498db' : '#d1d5db',
+                                      left: '-2px'
+                                    }}
+                                  />
+                                )}
+                                
                                 {/* Container principal */}
                                 <div 
-                                  className={`h-full w-full flex items-center justify-center ${textColor} px-3 shadow-sm transition-all duration-200`}
+                                  className={`h-12 w-full rounded-lg flex items-center justify-center ${textColor} px-3 shadow-sm transition-all duration-200 relative`}
                                   style={{
                                     backgroundColor: bgColor,
-                                    borderLeft: index === 0 ? `1px solid ${borderColor}` : 'none',
-                                    borderTop: `1px solid ${borderColor}`,
-                                    borderBottom: `1px solid ${borderColor}`,
-                                    borderRight: `1px solid ${borderColor}`,
-                                    clipPath: index === 0 ? 'polygon(0px 0px, 85% 0px, 93% 50%, 85% 100%, 0px 100%)' : 
-                                              !isLastStage ? 'polygon(0px 0px, 85% 0px, 91% 50%, 85% 100%, 0px 100%, 6% 50%)' : 
-                                              'polygon(0px 0px, 85% 0px, 93% 50%, 85% 100%, 0px 100%)',
                                   }}
                                   onClick={() => {
                                     apiRequest(`/api/leads/${lead.id}/stage`, {
