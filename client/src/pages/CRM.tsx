@@ -965,7 +965,7 @@ export default function CRM() {
                 <div className="md:col-span-3">
                   <div className="grid gap-6">
                     {/* Grid 1: Informações de Contato */}
-                    <div className="bg-white p-4 rounded-md border border-gray-100">
+                    <div className="bg-[#F1F3F5] p-4 rounded-md border border-gray-100">
                       <h3 className="text-base font-semibold mb-4">Informações de Contato</h3>
                       <div className="space-y-4">
                         <div>
@@ -991,7 +991,7 @@ export default function CRM() {
                     </div>
                     
                     {/* Grid 2: Detalhes do Interesse */}
-                    <div className="bg-white p-4 rounded-md border border-gray-100">
+                    <div className="bg-[#F1F3F5] p-4 rounded-md border border-gray-100">
                       <h3 className="text-base font-semibold mb-4">Detalhes do Interesse</h3>
                       <div className="space-y-4">
                         <div>
@@ -1068,7 +1068,7 @@ export default function CRM() {
                 <div className="md:col-span-3">
                   {/* Funil de Vendas */}
                   <h3 className="text-base font-semibold mb-4">Funil de Vendas</h3>                  
-                  <div className="bg-white p-4 rounded-md border border-gray-100 mb-8">
+                  <div className="bg-[#F1F3F5] p-4 rounded-md border border-gray-100 mb-8">
                     <div className="grid grid-cols-1 gap-4">
                       {/* Seletor de Funil */}
                       <div>
