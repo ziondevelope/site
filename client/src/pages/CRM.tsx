@@ -860,7 +860,7 @@ export default function CRM() {
                                   style={{
                                     backgroundColor: bgColor,
                                     clipPath: index === 0 ? 'polygon(0px 0px, 85% 0px, 93% 50%, 85% 100%, 0px 100%)' : 
-                                              !isLastStage ? 'polygon(0px 0px, 85% 0px, 93% 50%, 85% 100%, 0px 100%, 6% 50%)' : 
+                                              !isLastStage ? 'polygon(0px 0px, 85% 0px, 91% 50%, 85% 100%, 0px 100%, 6% 50%)' : 
                                               'polygon(0px 0px, 85% 0px, 93% 50%, 85% 100%, 0px 100%)',
                                   }}
                                   onClick={() => {
