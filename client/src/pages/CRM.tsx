@@ -859,7 +859,9 @@ export default function CRM() {
                                   className={`h-full w-full flex items-center justify-center ${textColor} px-2`}
                                   style={{
                                     backgroundColor: bgColor,
-                                    clipPath: !isLastStage ? 'polygon(0px 0px, 85% 0px, 93% 50%, 85% 100%, 0px 100%, 6% 50%)' : 'polygon(0px 0px, 85% 0px, 93% 50%, 85% 100%, 0px 100%)',
+                                    clipPath: index === 0 ? 'polygon(0px 0px, 85% 0px, 93% 50%, 85% 100%, 0px 100%)' : 
+                                              !isLastStage ? 'polygon(0px 0px, 85% 0px, 93% 50%, 85% 100%, 0px 100%, 6% 50%)' : 
+                                              'polygon(0px 0px, 85% 0px, 93% 50%, 85% 100%, 0px 100%)',
                                   }}
                                   onClick={() => {
                                     apiRequest(`/api/leads/${lead.id}/stage`, {
