@@ -1588,14 +1588,14 @@ export default function CRM() {
                           [lead.id]: e.target.value
                         }))}
                       />
-                    </div>
-                    <div className="flex justify-end mt-4">
-                      <Button 
-                        className="bg-[#3565E7] hover:bg-[#2955CC] text-sm"
-                        onClick={() => handleSaveNote(lead.id)}
-                      >
-                        Salvar Nota
-                      </Button>
+                      <div className="flex justify-end mt-4 pr-5 pb-2">
+                        <Button 
+                          className="bg-[#3565E7] hover:bg-[#2955CC] text-sm"
+                          onClick={() => handleSaveNote(lead.id)}
+                        >
+                          Salvar Nota
+                        </Button>
+                      </div>
                     </div>
                     
                     {/* Histórico de atividades/notas */}
