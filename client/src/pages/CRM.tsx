@@ -848,10 +848,11 @@ export default function CRM() {
                             return (
                               <div
                                 key={stage.id}
-                                className="relative flex-grow flex h-10 items-center justify-center cursor-pointer"
+                                className="relative flex h-10 items-center justify-center cursor-pointer"
                                 style={{
                                   zIndex: sortedStages.length - index,
-                                  marginRight: !isLastStage ? '-20px' : '0',
+                                  marginRight: '-20px',
+                                  width: `${100 / sortedStages.length}%`,
                                 }}
                               >
                                 {/* Container principal */}
@@ -859,6 +860,7 @@ export default function CRM() {
                                   className={`h-full w-full flex items-center justify-center ${textColor} px-2`}
                                   style={{
                                     backgroundColor: bgColor,
+                                    marginRight: isLastStage ? '20px' : '0',
                                     clipPath: index === 0 ? 'polygon(0px 0px, 85% 0px, 93% 50%, 85% 100%, 0px 100%)' : 
                                               !isLastStage ? 'polygon(0px 0px, 85% 0px, 91% 50%, 85% 100%, 0px 100%, 6% 50%)' : 
                                               'polygon(0px 0px, 85% 0px, 93% 50%, 85% 100%, 0px 100%)',
