@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { Pencil, Check, X, User, Mail, Phone, MessageSquare } from "lucide-react";
+import { Pencil, Check, X, User, Mail, Phone } from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from "@/components/ui/dialog";
@@ -1236,7 +1237,7 @@ export default function CRM() {
                         </div>
                         
                         <div>
-                          <h4 className="text-xs font-semibold mb-1 flex items-center" style={{ fontSize: '14px' }}><MessageSquare className="h-4 w-4 mr-1 text-gray-500" /> WhatsApp:</h4>
+                          <h4 className="text-xs font-semibold mb-1 flex items-center" style={{ fontSize: '14px' }}><FaWhatsapp className="h-4 w-4 mr-1 text-gray-500" /> WhatsApp:</h4>
                           <div className="group relative">
                             {editingField && editingField.leadId === lead.id && editingField.field === 'whatsapp' ? (
                               <div className="flex items-center">
