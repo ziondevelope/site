@@ -17,6 +17,24 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 
+// Estilos personalizados para campos de edição com bordas mais sutis
+const subtleEditingStyles = {
+  input: {
+    boxShadow: 'none',
+    border: '1px solid #e5e7eb',
+    outline: 'none',
+    ringColor: 'transparent',
+    ringOffset: '0'
+  },
+  select: {
+    boxShadow: 'none',
+    border: '1px solid #e5e7eb',
+    outline: 'none',
+    ringColor: 'transparent',
+    ringOffset: '0'
+  }
+};
+
 const leadFormSchema = insertLeadSchema.extend({
   name: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
   phone: z.string().optional().nullable(),
