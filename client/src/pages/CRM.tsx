@@ -1058,6 +1058,10 @@ export default function CRM() {
                         className="resize-none border-0 bg-transparent p-0 focus-visible:ring-0 text-sm" 
                         rows={8}
                         defaultValue={lead.notes || ""}
+                        style={{
+                          background: '#fff',
+                          padding: '20px 20px 0'
+                        }}
                       />
                     </div>
                     <div className="flex justify-end mt-4">
