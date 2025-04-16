@@ -44,26 +44,6 @@ export default function CRM() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   
-  // Função para verificar se um estágio é o último no funil
-  const isLastStageId = (stageId: number | null | undefined): boolean => {
-    if (!stageId || !stages) return false;
-    
-    // Encontrar o estágio
-    const stage = stages.find(s => s.id === stageId);
-    if (!stage || !stage.funnelId) return false;
-    
-    // Filtrar estágios deste funil
-    const funnelStages = stages.filter(s => s.funnelId === stage.funnelId);
-    if (funnelStages.length === 0) return false;
-    
-    // Ordenar os estágios por posição
-    const sortedStages = [...funnelStages].sort((a, b) => a.position - b.position);
-    
-    // Verificar se é o último estágio
-    const lastStage = sortedStages[sortedStages.length - 1];
-    return lastStage.id === stageId;
-  };
-  
   // Função para abrir o modal de adicionar novo lead
   const handleAddClick = () => {
     form.reset();
@@ -668,24 +648,7 @@ export default function CRM() {
                     .map((lead) => (
                       <TableRow 
                         key={lead.id} 
-                        className={`cursor-pointer hover:bg-gray-50 ${lead.stageId && stages ? 
-                          (() => {
-                            // Verificar se está no último estágio
-                            const stage = stages.find(s => s.id === lead.stageId);
-                            if (!stage || !stage.funnelId) return '';
-                            
-                            // Filtrar estágios deste funil
-                            const funnelStages = stages.filter(s => s.funnelId === stage.funnelId);
-                            if (funnelStages.length === 0) return '';
-                            
-                            // Ordenar os estágios por posição
-                            const sortedStages = [...funnelStages].sort((a, b) => a.position - b.position);
-                            
-                            // Verificar se é o último estágio
-                            const lastStage = sortedStages[sortedStages.length - 1];
-                            return lastStage.id === lead.stageId ? 'bg-green-50' : '';
-                          })() 
-                          : ''}`}
+                        className="cursor-pointer hover:bg-gray-50" 
                         onClick={() => setOpenLeadId(lead.id)}
                       >
                         <TableCell>

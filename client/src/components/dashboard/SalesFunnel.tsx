@@ -179,13 +179,13 @@ function getStageBackgroundColor(index: number, totalStages: number): string {
   // Calcular o quão longe estamos no progresso (de 0 a 1)
   const progress = index / (totalStages - 1);
   
-  // Cores para interpolar entre azul escuro e verde
+  // Cores para interpolar entre azul escuro e azul claro
   if (progress < 0.33) {
     return "#4B74E8"; // Azul ligeiramente mais claro
   } else if (progress < 0.66) {
     return "#6183EA"; // Azul médio
   } else {
-    return "#7692EC"; // Azul claro em direção ao verde
+    return "#7692EC"; // Azul claro
   }
 }
 
