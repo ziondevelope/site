@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
+import { Pencil, Check, X } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from "@/components/ui/dialog";
@@ -45,6 +46,59 @@ export default function CRM() {
   const [savedNotes, setSavedNotes] = useState<{[leadId: number]: Array<{text: string, date: Date}>}>({});
   const [editingField, setEditingField] = useState<{leadId: number, field: string} | null>(null);
   const [editingValue, setEditingValue] = useState<string>("");
+  
+  // Mutation para atualizar dados do lead
+  const updateLeadFieldMutation = useMutation({
+    mutationFn: ({ id, field, value }: { id: number; field: string; value: string }) => {
+      return apiRequest(`/api/leads/${id}`, {
+        method: 'PATCH',
+        body: JSON.stringify({ [field]: value })
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/leads'] });
+      
+      toast({
+        title: "Campo atualizado",
+        description: "As informações do lead foram atualizadas com sucesso.",
+      });
+      
+      // Limpar estado de edição
+      setEditingField(null);
+      setEditingValue("");
+    },
+    onError: (error) => {
+      console.error("Erro ao atualizar campo:", error);
+      toast({
+        title: "Erro ao atualizar",
+        description: "Não foi possível atualizar as informações do lead. Tente novamente.",
+        variant: "destructive",
+      });
+    },
+  });
+  
+  // Função para iniciar edição de um campo
+  const handleStartEditing = (leadId: number, field: string, currentValue: string | null | undefined) => {
+    setEditingField({ leadId, field });
+    setEditingValue(currentValue || "");
+  };
+  
+  // Função para salvar o valor editado
+  const handleSaveEdit = () => {
+    if (editingField) {
+      updateLeadFieldMutation.mutate({
+        id: editingField.leadId,
+        field: editingField.field,
+        value: editingValue
+      });
+    }
+  };
+  
+  // Função para cancelar a edição
+  const handleCancelEdit = () => {
+    setEditingField(null);
+    setEditingValue("");
+  };
   const { toast } = useToast();
   const queryClient = useQueryClient();
   
@@ -1036,22 +1090,194 @@ export default function CRM() {
                       <div className="space-y-5">
                         <div>
                           <h4 className="text-xs font-semibold mb-1" style={{ fontSize: '14px' }}>Nome:</h4>
-                          <p className="text-sm text-left" style={{ fontSize: '12px', color: '#878484' }}>{lead.name}</p>
+                          <div className="group relative">
+                            {editingField && editingField.leadId === lead.id && editingField.field === 'name' ? (
+                              <div className="flex items-center">
+                                <Input 
+                                  value={editingValue}
+                                  onChange={(e) => setEditingValue(e.target.value)}
+                                  className="h-8 text-sm"
+                                  style={{ fontSize: '12px' }}
+                                  autoFocus
+                                />
+                                <div className="flex ml-2">
+                                  <Button 
+                                    size="icon" 
+                                    variant="ghost" 
+                                    className="h-6 w-6" 
+                                    onClick={handleSaveEdit}
+                                    disabled={updateLeadFieldMutation.isPending}
+                                  >
+                                    <Check className="h-4 w-4" />
+                                  </Button>
+                                  <Button 
+                                    size="icon" 
+                                    variant="ghost" 
+                                    className="h-6 w-6" 
+                                    onClick={handleCancelEdit}
+                                  >
+                                    <X className="h-4 w-4" />
+                                  </Button>
+                                </div>
+                              </div>
+                            ) : (
+                              <div className="flex items-center">
+                                <p className="text-sm text-left" style={{ fontSize: '12px', color: '#878484' }}>
+                                  {lead.name}
+                                </p>
+                                <button 
+                                  className="ml-2 invisible group-hover:visible"
+                                  onClick={() => handleStartEditing(lead.id, 'name', lead.name)}
+                                >
+                                  <Pencil className="h-3 w-3 text-gray-400 hover:text-gray-600" />
+                                </button>
+                              </div>
+                            )}
+                          </div>
                         </div>
                         
                         <div>
                           <h4 className="text-xs font-semibold mb-1" style={{ fontSize: '14px' }}>Email:</h4>
-                          <p className="text-sm text-left" style={{ fontSize: '12px', color: '#878484' }}>{lead.email || "Não informado"}</p>
+                          <div className="group relative">
+                            {editingField && editingField.leadId === lead.id && editingField.field === 'email' ? (
+                              <div className="flex items-center">
+                                <Input 
+                                  value={editingValue}
+                                  onChange={(e) => setEditingValue(e.target.value)}
+                                  className="h-8 text-sm"
+                                  style={{ fontSize: '12px' }}
+                                  autoFocus
+                                />
+                                <div className="flex ml-2">
+                                  <Button 
+                                    size="icon" 
+                                    variant="ghost" 
+                                    className="h-6 w-6" 
+                                    onClick={handleSaveEdit}
+                                    disabled={updateLeadFieldMutation.isPending}
+                                  >
+                                    <Check className="h-4 w-4" />
+                                  </Button>
+                                  <Button 
+                                    size="icon" 
+                                    variant="ghost" 
+                                    className="h-6 w-6" 
+                                    onClick={handleCancelEdit}
+                                  >
+                                    <X className="h-4 w-4" />
+                                  </Button>
+                                </div>
+                              </div>
+                            ) : (
+                              <div className="flex items-center">
+                                <p className="text-sm text-left" style={{ fontSize: '12px', color: '#878484' }}>
+                                  {lead.email || "Não informado"}
+                                </p>
+                                <button 
+                                  className="ml-2 invisible group-hover:visible"
+                                  onClick={() => handleStartEditing(lead.id, 'email', lead.email)}
+                                >
+                                  <Pencil className="h-3 w-3 text-gray-400 hover:text-gray-600" />
+                                </button>
+                              </div>
+                            )}
+                          </div>
                         </div>
                         
                         <div>
                           <h4 className="text-xs font-semibold mb-1" style={{ fontSize: '14px' }}>Telefone:</h4>
-                          <p className="text-sm text-left" style={{ fontSize: '12px', color: '#878484' }}>{lead.phone || "Não informado"}</p>
+                          <div className="group relative">
+                            {editingField && editingField.leadId === lead.id && editingField.field === 'phone' ? (
+                              <div className="flex items-center">
+                                <Input 
+                                  value={editingValue}
+                                  onChange={(e) => setEditingValue(e.target.value)}
+                                  className="h-8 text-sm"
+                                  style={{ fontSize: '12px' }}
+                                  autoFocus
+                                />
+                                <div className="flex ml-2">
+                                  <Button 
+                                    size="icon" 
+                                    variant="ghost" 
+                                    className="h-6 w-6" 
+                                    onClick={handleSaveEdit}
+                                    disabled={updateLeadFieldMutation.isPending}
+                                  >
+                                    <Check className="h-4 w-4" />
+                                  </Button>
+                                  <Button 
+                                    size="icon" 
+                                    variant="ghost" 
+                                    className="h-6 w-6" 
+                                    onClick={handleCancelEdit}
+                                  >
+                                    <X className="h-4 w-4" />
+                                  </Button>
+                                </div>
+                              </div>
+                            ) : (
+                              <div className="flex items-center">
+                                <p className="text-sm text-left" style={{ fontSize: '12px', color: '#878484' }}>
+                                  {lead.phone || "Não informado"}
+                                </p>
+                                <button 
+                                  className="ml-2 invisible group-hover:visible"
+                                  onClick={() => handleStartEditing(lead.id, 'phone', lead.phone)}
+                                >
+                                  <Pencil className="h-3 w-3 text-gray-400 hover:text-gray-600" />
+                                </button>
+                              </div>
+                            )}
+                          </div>
                         </div>
                         
                         <div>
                           <h4 className="text-xs font-semibold mb-1" style={{ fontSize: '14px' }}>WhatsApp:</h4>
-                          <p className="text-sm text-left" style={{ fontSize: '12px', color: '#878484' }}>{(lead as any).whatsapp || "Não informado"}</p>
+                          <div className="group relative">
+                            {editingField && editingField.leadId === lead.id && editingField.field === 'whatsapp' ? (
+                              <div className="flex items-center">
+                                <Input 
+                                  value={editingValue}
+                                  onChange={(e) => setEditingValue(e.target.value)}
+                                  className="h-8 text-sm"
+                                  style={{ fontSize: '12px' }}
+                                  autoFocus
+                                />
+                                <div className="flex ml-2">
+                                  <Button 
+                                    size="icon" 
+                                    variant="ghost" 
+                                    className="h-6 w-6" 
+                                    onClick={handleSaveEdit}
+                                    disabled={updateLeadFieldMutation.isPending}
+                                  >
+                                    <Check className="h-4 w-4" />
+                                  </Button>
+                                  <Button 
+                                    size="icon" 
+                                    variant="ghost" 
+                                    className="h-6 w-6" 
+                                    onClick={handleCancelEdit}
+                                  >
+                                    <X className="h-4 w-4" />
+                                  </Button>
+                                </div>
+                              </div>
+                            ) : (
+                              <div className="flex items-center">
+                                <p className="text-sm text-left" style={{ fontSize: '12px', color: '#878484' }}>
+                                  {(lead as any).whatsapp || "Não informado"}
+                                </p>
+                                <button 
+                                  className="ml-2 invisible group-hover:visible"
+                                  onClick={() => handleStartEditing(lead.id, 'whatsapp', (lead as any).whatsapp)}
+                                >
+                                  <Pencil className="h-3 w-3 text-gray-400 hover:text-gray-600" />
+                                </button>
+                              </div>
+                            )}
+                          </div>
                         </div>
                       </div>
                     </div>
