@@ -1048,7 +1048,7 @@ export default function CRM() {
                 {/* Coluna de Notas */}
                 <div className="md:col-span-9 px-8">                  
                   <div>
-                    <div className="bg-white p-5 border border-black">
+                    <div className="bg-white p-5 border border-[#f5f5f5] rounded-[5px]">
                       <h3 className="text-base font-bold mb-4 border-b pb-2">Nota Rápida</h3>
                       <Textarea 
                         placeholder="Digite uma anotação rápida sobre este lead..." 
