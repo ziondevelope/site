@@ -960,9 +960,9 @@ export default function CRM() {
                 )}
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-12 gap-6 pb-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-6">
                 {/* Coluna 1 - Dividida em 2 grids */}
-                <div className="md:col-span-3">
+                <div className="md:col-span-1">
                   <div className="grid gap-6">
                     {/* Grid 1: Informações de Contato */}
                     <div className="bg-[#F1F3F5] p-4 rounded-md border border-gray-100">
@@ -1044,8 +1044,8 @@ export default function CRM() {
                   </div>
                 </div>
                 
-                {/* Funil de Vendas */}
-                <div className="md:col-span-6 px-8">                  
+                {/* Coluna de Notas */}
+                <div className="md:col-span-1 px-4">                  
                   <div>
                     <h3 className="text-sm font-medium text-gray-500 mb-3">Nota Rápida</h3>
                     <div className="bg-gray-50 p-4 rounded-md border border-gray-200">
@@ -1061,90 +1061,6 @@ export default function CRM() {
                         Salvar Nota
                       </Button>
                     </div>
-                  </div>
-                </div>
-                
-                {/* Ações e Atividades */}
-                <div className="md:col-span-3">
-                  {/* Funil de Vendas */}
-                  <h3 className="text-base font-semibold mb-4">Funil de Vendas</h3>                  
-                  <div className="bg-[#F1F3F5] p-4 rounded-md border border-gray-100 mb-8">
-                    <div className="grid grid-cols-1 gap-4">
-                      {/* Seletor de Funil */}
-                      <div>
-                        <label className="text-sm font-bold text-gray-700 mb-2 block">
-                          Selecionar Funil
-                        </label>
-                        <Select
-                          value={String(lead.funnelId || (funnels?.find(f => f.isDefault)?.id || funnels?.[0]?.id || ""))}
-                          onValueChange={(value) => {
-                            // Armazenar o ID do funil selecionado temporariamente
-                            const funnelId = Number(value);
-                            
-                            // Atualizar o lead na API com o novo funnelId
-                            apiRequest(`/api/leads/${lead.id}/funnel`, {
-                              method: "PATCH",
-                              body: JSON.stringify({ funnelId }),
-                            })
-                              .then(() => {
-                                // Definir o funil atual para o lead
-                                setCurrentLeadFunnelId(funnelId);
-                                // Atualizar a lista de leads
-                                queryClient.invalidateQueries({ queryKey: ['/api/leads'] });
-                                // Recarregar a lista de estágios para o novo funil
-                                queryClient.invalidateQueries({ queryKey: ['/api/funnel-stages', funnelId] });
-                                
-                                toast({
-                                  title: "Funil atualizado",
-                                  description: "O funil de vendas foi atualizado com sucesso.",
-                                });
-                              })
-                              .catch((error) => {
-                                console.error("Erro ao atualizar funil:", error);
-                                toast({
-                                  title: "Erro ao atualizar funil",
-                                  description: "Não foi possível atualizar o funil. Tente novamente.",
-                                  variant: "destructive",
-                                });
-                              });
-                          }}
-                        >
-                          <SelectTrigger className="w-full">
-                            <SelectValue placeholder="Selecione um funil" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {funnels?.map((funnel) => (
-                              <SelectItem key={funnel.id} value={String(funnel.id)}>
-                                {funnel.name}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      
-
-
-                    </div>
-                  </div>
-                  
-                  <h3 className="text-base font-semibold mb-4">Ações</h3>
-                  <div className="space-y-2 mb-8">
-                    <Button variant="outline" className="w-full justify-start text-gray-700 border-gray-300 h-10">
-                      <i className="fas fa-pen mr-2 text-gray-500"></i> Editar Lead
-                    </Button>
-                    <Button variant="outline" className="w-full justify-start text-gray-700 border-gray-300 h-10">
-                      <i className="far fa-calendar-alt mr-2 text-gray-500"></i> Agendar Atividade
-                    </Button>
-                    <Button 
-                      variant="outline" 
-                      className="w-full justify-start text-red-600 hover:text-red-700 border-gray-300 h-10"
-                      onClick={() => {
-                        setLeadToDelete(lead);
-                        setIsDeleteConfirmOpen(true);
-                      }}
-                    >
-                      <i className="fas fa-trash-alt mr-2"></i> Excluir Lead
-                    </Button>
                   </div>
                 </div>
               </div>
