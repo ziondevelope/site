@@ -960,7 +960,9 @@ export default function CRM() {
                 )}
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-12 gap-6 pb-6">
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-6 pb-6" style={{
+                padding: '40px 40px 40px 40px'
+              }}>
                 {/* Coluna 1 - Dividida em 2 grids */}
                 <div className="md:col-span-3">
                   <div className="grid gap-6">
