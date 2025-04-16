@@ -50,9 +50,12 @@ export default function CRM() {
   // Mutation para atualizar dados do lead
   const updateLeadFieldMutation = useMutation({
     mutationFn: ({ id, field, value }: { id: number; field: string; value: string }) => {
+      console.log("Enviando dados:", { id, field, value });
+      // Para campos que podem ser null, precisamos manter como string vazia se vazio
+      const updateData = { [field]: value || "" };
       return apiRequest(`/api/leads/${id}`, {
         method: 'PATCH',
-        body: JSON.stringify({ [field]: value })
+        body: JSON.stringify(updateData)
       });
     },
     onSuccess: () => {
