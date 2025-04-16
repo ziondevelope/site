@@ -864,7 +864,7 @@ export default function CRM() {
                             return (
                               <div
                                 key={stage.id}
-                                className={`relative flex-1 h-16 cursor-pointer transition-all duration-200 hover:shadow-lg mx-0.5 
+                                className={`relative flex-1 h-10 cursor-pointer transition-all duration-200 hover:shadow-lg mx-0.5 
                                   ${bgColor} ${textColor} border-t-2 ${borderColor} `}
                                 style={{
                                   clipPath: clipPath,
@@ -893,13 +893,13 @@ export default function CRM() {
                                     });
                                 }}
                               >
-                                <div className="flex flex-col items-center justify-center h-full px-2">
+                                <div className="flex items-center justify-center h-full px-2">
                                   {/* Ícone ou número */}
-                                  <div className="flex items-center mb-1">
+                                  <div className="flex items-center mr-1">
                                     {isCompleted ? (
-                                      <i className="fas fa-check text-sm"></i>
+                                      <i className="fas fa-check text-xs"></i>
                                     ) : (
-                                      <span className="font-semibold">{index + 1}</span>
+                                      <span className="text-xs font-semibold">{index + 1}</span>
                                     )}
                                   </div>
                                   
