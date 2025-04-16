@@ -442,20 +442,27 @@ export class FirebaseStorage implements IStorage {
 
   async updateLead(id: number, leadData: Partial<InsertLead>): Promise<Lead | undefined> {
     try {
-      const leadRef = db.collection('leads').doc(id.toString());
-      const leadDoc = await leadRef.get();
+      // Usar a sintaxe correta do Firebase v9+
+      const leadDocRef = doc(db, 'leads', id.toString());
+      const leadDoc = await getDoc(leadDocRef);
       
-      if (!leadDoc.exists) {
+      if (!leadDoc.exists()) {
+        console.log(`Lead com ID ${id} não encontrado para atualização`);
         return undefined;
       }
       
+      console.log(`Lead encontrado para atualizar:`, leadDoc.data());
+      
+      const existingData = leadDoc.data() as Lead;
       const updatedLead = {
-        ...leadDoc.data(),
+        ...existingData,
         ...leadData,
         updatedAt: new Date().toISOString(),
       };
       
-      await leadRef.update(updatedLead);
+      console.log(`Dados atualizados do lead:`, updatedLead);
+      
+      await updateDoc(leadDocRef, updatedLead);
       return updatedLead as Lead;
     } catch (error) {
       console.error('Error updating lead:', error);
@@ -490,7 +497,9 @@ export class FirebaseStorage implements IStorage {
   // Tasks collection
   async getTask(id: number): Promise<Task | undefined> {
     try {
-      const taskSnapshot = await db.collection('tasks').where('id', '==', id).limit(1).get();
+      const tasksRef = collection(db, 'tasks');
+      const q = query(tasksRef, where('id', '==', id), limit(1));
+      const taskSnapshot = await getDocs(q);
       
       if (taskSnapshot.empty) {
         return undefined;
@@ -505,7 +514,9 @@ export class FirebaseStorage implements IStorage {
 
   async getAllTasks(): Promise<Task[]> {
     try {
-      const tasksSnapshot = await db.collection('tasks').orderBy('date', 'asc').get();
+      const tasksRef = collection(db, 'tasks');
+      const q = query(tasksRef, orderBy('date', 'asc'));
+      const tasksSnapshot = await getDocs(q);
       return tasksSnapshot.docs.map(doc => doc.data() as Task);
     } catch (error) {
       console.error('Error fetching all tasks:', error);
@@ -519,11 +530,14 @@ export class FirebaseStorage implements IStorage {
       const today = new Date();
       today.setHours(0, 0, 0, 0);
       
-      const tasksSnapshot = await db.collection('tasks')
-        .where('date', '>=', today.toISOString())
-        .orderBy('date', 'asc')
-        .limit(10)
-        .get();
+      const tasksRef = collection(db, 'tasks');
+      const q = query(
+        tasksRef,
+        where('date', '>=', today.toISOString()),
+        orderBy('date', 'asc'),
+        limit(10)
+      );
+      const tasksSnapshot = await getDocs(q);
         
       return tasksSnapshot.docs.map(doc => doc.data() as Task);
     } catch (error) {
@@ -535,7 +549,10 @@ export class FirebaseStorage implements IStorage {
   async createTask(task: InsertTask): Promise<Task> {
     try {
       // Find the highest ID to increment
-      const tasksSnapshot = await db.collection('tasks').orderBy('id', 'desc').limit(1).get();
+      const tasksRef = collection(db, 'tasks');
+      const q = query(tasksRef, orderBy('id', 'desc'), limit(1));
+      const tasksSnapshot = await getDocs(q);
+      
       const highestId = tasksSnapshot.empty ? 0 : tasksSnapshot.docs[0].data().id;
       
       const now = new Date().toISOString();
@@ -546,7 +563,7 @@ export class FirebaseStorage implements IStorage {
         updatedAt: now,
       };
       
-      await db.collection('tasks').doc(newTask.id.toString()).set(newTask);
+      await setDoc(doc(db, 'tasks', newTask.id.toString()), newTask);
       return newTask;
     } catch (error) {
       console.error('Error creating task:', error);
@@ -556,10 +573,10 @@ export class FirebaseStorage implements IStorage {
 
   async updateTask(id: number, taskData: Partial<InsertTask>): Promise<Task | undefined> {
     try {
-      const taskRef = db.collection('tasks').doc(id.toString());
-      const taskDoc = await taskRef.get();
+      const taskRef = doc(db, 'tasks', id.toString());
+      const taskDoc = await getDoc(taskRef);
       
-      if (!taskDoc.exists) {
+      if (!taskDoc.exists()) {
         return undefined;
       }
       
@@ -569,7 +586,7 @@ export class FirebaseStorage implements IStorage {
         updatedAt: new Date().toISOString(),
       };
       
-      await taskRef.update(updatedTask);
+      await updateDoc(taskRef, updatedTask);
       return updatedTask as Task;
     } catch (error) {
       console.error('Error updating task:', error);
@@ -579,14 +596,14 @@ export class FirebaseStorage implements IStorage {
 
   async deleteTask(id: number): Promise<boolean> {
     try {
-      const taskRef = db.collection('tasks').doc(id.toString());
-      const taskDoc = await taskRef.get();
+      const taskRef = doc(db, 'tasks', id.toString());
+      const taskDoc = await getDoc(taskRef);
       
-      if (!taskDoc.exists) {
+      if (!taskDoc.exists()) {
         return false;
       }
       
-      await taskRef.delete();
+      await deleteDoc(taskRef);
       return true;
     } catch (error) {
       console.error('Error deleting task:', error);
@@ -667,10 +684,15 @@ export class FirebaseStorage implements IStorage {
   async getDashboardStats(): Promise<any> {
     try {
       // Get counts of total properties
-      const propertiesCount = (await db.collection('properties').get()).size;
+      const propertiesRef = collection(db, 'properties');
+      const propertiesSnapshot = await getDocs(propertiesRef);
+      const propertiesCount = propertiesSnapshot.size;
       
       // Get counts of active leads
-      const activeLeadsCount = (await db.collection('leads').where('status', 'in', ['new', 'contacted', 'visit']).get()).size;
+      const leadsRef = collection(db, 'leads');
+      const activeLeadsQuery = query(leadsRef, where('status', 'in', ['new', 'contacted', 'visit']));
+      const activeLeadsSnapshot = await getDocs(activeLeadsQuery);
+      const activeLeadsCount = activeLeadsSnapshot.size;
       
       // Get counts of monthly sales (properties with status sold in the current month)
       const currentMonth = new Date().getMonth();
@@ -678,14 +700,21 @@ export class FirebaseStorage implements IStorage {
       const firstDayOfMonth = new Date(currentYear, currentMonth, 1).toISOString();
       const lastDayOfMonth = new Date(currentYear, currentMonth + 1, 0).toISOString();
       
-      const monthlySalesCount = (await db.collection('properties')
-        .where('status', '==', 'sold')
-        .where('updatedAt', '>=', firstDayOfMonth)
-        .where('updatedAt', '<=', lastDayOfMonth)
-        .get()).size;
+      const salesRef = collection(db, 'properties');
+      const monthlySalesQuery = query(
+        salesRef,
+        where('status', '==', 'sold'),
+        where('updatedAt', '>=', firstDayOfMonth),
+        where('updatedAt', '<=', lastDayOfMonth)
+      );
+      const monthlySalesSnapshot = await getDocs(monthlySalesQuery);
+      const monthlySalesCount = monthlySalesSnapshot.size;
       
       // Get counts of active agents
-      const activeAgentsCount = (await db.collection('users').where('role', '==', 'agent').get()).size;
+      const agentsRef = collection(db, 'users');
+      const activeAgentsQuery = query(agentsRef, where('role', '==', 'agent'));
+      const activeAgentsSnapshot = await getDocs(activeAgentsQuery);
+      const activeAgentsCount = activeAgentsSnapshot.size;
       
       // Generate random trends for now (in a real app we would calculate these)
       const propertyTrend = Math.floor(Math.random() * 20) - 5; // Between -5 and 15
