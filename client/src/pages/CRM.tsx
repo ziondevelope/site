@@ -837,21 +837,21 @@ export default function CRM() {
                             const isCompleted = sortedStages.findIndex(s => s.id === lead.stageId) > index;
                             const isLastStage = index === sortedStages.length - 1;
                             
-                            // Degradê azul baseado na cor do botão (bg-blue-600)
+                            // Cores dos estágios conforme solicitação
                             let bgColor;
                             let textColor;
                             
-                            if (isCompleted) {
-                              // Estágio completado
-                              bgColor = '#3565E7'; // Cor específica solicitada
+                            if (isActive) {
+                              // Estágio ativo e selecionado (atual) - Verde
+                              bgColor = '#34C38F';
                               textColor = 'text-white';
-                            } else if (isActive) {
-                              // Estágio atual - degradê azul
-                              bgColor = 'linear-gradient(135deg, #3565E7, #2955CC)'; // Degradê baseado na cor #3565E7
+                            } else if (isCompleted) {
+                              // Estágio ativo mas não selecionado - Azul
+                              bgColor = '#3565E7';
                               textColor = 'text-white';
                             } else {
-                              // Estágio futuro
-                              bgColor = '#f1f5f9'; // slate-100
+                              // Estágio não ativo e não selecionado - Cinza
+                              bgColor = '#E5E7EB'; 
                               textColor = 'text-gray-700';
                             }
                             
