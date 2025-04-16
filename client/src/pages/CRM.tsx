@@ -20,16 +20,16 @@ import { apiRequest } from "@/lib/queryClient";
 // Estilos personalizados para campos de edição com bordas mais sutis
 const subtleEditingStyles = {
   input: {
-    boxShadow: 'none',
+    boxShadow: "none",
     border: '1px solid #e5e7eb',
-    outline: 'none',
+    outline: "none",
     ringColor: 'transparent',
     ringOffset: '0'
   },
   select: {
-    boxShadow: 'none',
+    boxShadow: "none",
     border: '1px solid #e5e7eb',
-    outline: 'none',
+    outline: "none",
     ringColor: 'transparent',
     ringOffset: '0'
   }
@@ -1118,11 +1118,12 @@ export default function CRM() {
                                 <Input 
                                   value={editingValue}
                                   onChange={(e) => setEditingValue(e.target.value)}
-                                  className="h-8 text-sm focus-visible:ring-0 focus-visible:ring-offset-0"
+                                  className="h-8 text-sm focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none"
                                   style={{ 
                                     fontSize: '12px',
                                     border: '1px solid #d0d0d0',
-                                    boxShadow: 'none'
+                                    boxShadow: "none",
+                                    outline: "none"
                                   }}
                                   autoFocus
                                 />
@@ -1170,11 +1171,12 @@ export default function CRM() {
                                 <Input 
                                   value={editingValue}
                                   onChange={(e) => setEditingValue(e.target.value)}
-                                  className="h-8 text-sm focus-visible:ring-0 focus-visible:ring-offset-0"
+                                  className="h-8 text-sm focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none"
                                   style={{ 
                                     fontSize: '12px',
                                     border: '1px solid #d0d0d0',
-                                    boxShadow: 'none'
+                                    boxShadow: "none",
+                                    outline: "none"
                                   }}
                                   autoFocus
                                 />
@@ -1222,11 +1224,12 @@ export default function CRM() {
                                 <Input 
                                   value={editingValue}
                                   onChange={(e) => setEditingValue(e.target.value)}
-                                  className="h-8 text-sm focus-visible:ring-0 focus-visible:ring-offset-0"
+                                  className="h-8 text-sm focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none"
                                   style={{ 
                                     fontSize: '12px',
                                     border: '1px solid #d0d0d0',
-                                    boxShadow: 'none'
+                                    boxShadow: "none",
+                                    outline: "none"
                                   }}
                                   autoFocus
                                 />
@@ -1274,11 +1277,12 @@ export default function CRM() {
                                 <Input 
                                   value={editingValue}
                                   onChange={(e) => setEditingValue(e.target.value)}
-                                  className="h-8 text-sm focus-visible:ring-0 focus-visible:ring-offset-0"
+                                  className="h-8 text-sm focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none"
                                   style={{ 
                                     fontSize: '12px',
                                     border: '1px solid #d0d0d0',
-                                    boxShadow: 'none'
+                                    boxShadow: "none",
+                                    outline: "none"
                                   }}
                                   autoFocus
                                 />
@@ -1334,11 +1338,12 @@ export default function CRM() {
                                   value={editingValue}
                                   onValueChange={(value) => setEditingValue(value)}
                                 >
-                                  <SelectTrigger className="h-8 text-sm focus-visible:ring-0 focus-visible:ring-offset-0" 
+                                  <SelectTrigger className="h-8 text-sm focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none" 
                                   style={{ 
                                     fontSize: '12px',
                                     border: '1px solid #d0d0d0',
-                                    boxShadow: 'none'
+                                    boxShadow: "none",
+                                    outline: "none"
                                   }}>
                                     <SelectValue placeholder="Selecione o tipo de negócio" />
                                   </SelectTrigger>
@@ -1394,11 +1399,12 @@ export default function CRM() {
                                   value={editingValue}
                                   onValueChange={(value) => setEditingValue(value)}
                                 >
-                                  <SelectTrigger className="h-8 text-sm focus-visible:ring-0 focus-visible:ring-offset-0" 
+                                  <SelectTrigger className="h-8 text-sm focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none" 
                                   style={{ 
                                     fontSize: '12px',
                                     border: '1px solid #d0d0d0',
-                                    boxShadow: 'none'
+                                    boxShadow: "none",
+                                    outline: "none"
                                   }}>
                                     <SelectValue placeholder="Selecione o tipo de imóvel" />
                                   </SelectTrigger>
@@ -1455,11 +1461,12 @@ export default function CRM() {
                                 <Input 
                                   value={editingValue}
                                   onChange={(e) => setEditingValue(e.target.value)}
-                                  className="h-8 text-sm focus-visible:ring-0 focus-visible:ring-offset-0"
+                                  className="h-8 text-sm focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none"
                                   style={{ 
                                     fontSize: '12px',
                                     border: '1px solid #d0d0d0',
-                                    boxShadow: 'none'
+                                    boxShadow: "none",
+                                    outline: "none"
                                   }}
                                   autoFocus
                                 />
@@ -1506,11 +1513,12 @@ export default function CRM() {
                                   type="number"
                                   value={editingValue}
                                   onChange={(e) => setEditingValue(e.target.value)}
-                                  className="h-8 text-sm focus-visible:ring-0 focus-visible:ring-offset-0"
+                                  className="h-8 text-sm focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none"
                                   style={{ 
                                     fontSize: '12px',
                                     border: '1px solid #d0d0d0',
-                                    boxShadow: 'none'
+                                    boxShadow: "none",
+                                    outline: "none"
                                   }}
                                   autoFocus
                                   placeholder="Valor do orçamento"
@@ -1562,11 +1570,12 @@ export default function CRM() {
                                   value={editingValue}
                                   onValueChange={(value) => setEditingValue(value)}
                                 >
-                                  <SelectTrigger className="h-8 text-sm focus-visible:ring-0 focus-visible:ring-offset-0" 
+                                  <SelectTrigger className="h-8 text-sm focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none" 
                                   style={{ 
                                     fontSize: '12px',
                                     border: '1px solid #d0d0d0',
-                                    boxShadow: 'none'
+                                    boxShadow: "none",
+                                    outline: "none"
                                   }}>
                                     <SelectValue placeholder="Selecione a origem" />
                                   </SelectTrigger>
