@@ -820,8 +820,8 @@ export default function CRM() {
                     
                     return (
                       <div className="w-full mb-4">
-                        {/* Estágios do funil - Design de chevrons */}
-                        <div className="flex w-full">
+                        {/* Barra preta simples horizontal */}
+                        <div className="w-full bg-black h-9 flex mb-2">
                           {sortedStages.map((stage, index) => {
                             const isActive = lead.stageId === stage.id || (!lead.stageId && index === 0);
                             const isCompleted = sortedStages.findIndex(s => s.id === lead.stageId) > index;
@@ -852,42 +852,29 @@ export default function CRM() {
                                     });
                                 }}
                               >
-                                {/* Chevron design - Uma barra com triângulo branco na direita */}
-                                <div className="flex items-center h-9">
-                                  {/* Barra principal */}
-                                  <div 
-                                    className="h-full flex-1 flex items-center justify-center"
-                                    style={{
-                                      backgroundColor: isActive ? '#00bcd4' : 
-                                                       isCompleted ? '#00838f' : 
-                                                       '#e0f7fa',
-                                      color: isActive || isCompleted ? 'white' : '#37474f',
-                                      position: 'relative',
-                                    }}
-                                  >
-                                    {/* Nome do estágio */}
-                                    <span 
-                                      className="text-xs font-medium text-center mx-2"
-                                      style={{
-                                        maxWidth: '100%',
-                                        whiteSpace: 'nowrap',
-                                        overflow: 'hidden',
-                                        textOverflow: 'ellipsis'
-                                      }}
-                                    >
-                                      {stage.name}
-                                    </span>
-                                  </div>
-                                  
-                                  {/* Triângulo branco à direita */}
-                                  <div
-                                    className="h-full w-7 relative z-10"
-                                    style={{
-                                      backgroundColor: 'black',
-                                      clipPath: 'polygon(0 0, 0% 100%, 100% 50%)',
-                                    }}
-                                  />
+                                {/* Divisão do estágio com linha branca visível */}
+                                <div className="h-full border-r border-white flex items-center justify-center">
+                                  <span className="text-xs font-medium text-white px-2 text-center">
+                                    {stage.name}
+                                  </span>
                                 </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                        
+                        {/* Indicador de estágio atual */}
+                        <div className="flex w-full">
+                          {sortedStages.map((stage, index) => {
+                            const isActive = lead.stageId === stage.id || (!lead.stageId && index === 0);
+                            return (
+                              <div 
+                                key={`indicator-${stage.id}`} 
+                                className="flex-1 flex justify-center"
+                              >
+                                {isActive && (
+                                  <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+                                )}
                               </div>
                             );
                           })}
