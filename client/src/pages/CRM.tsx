@@ -843,11 +843,11 @@ export default function CRM() {
                             
                             if (isCompleted) {
                               // Estágio completado
-                              bgColor = '#3b82f6'; // blue-500
+                              bgColor = '#3565E7'; // Cor específica solicitada
                               textColor = 'text-white';
                             } else if (isActive) {
                               // Estágio atual - degradê azul
-                              bgColor = 'linear-gradient(135deg, #2563eb, #1d4ed8)'; // blue-600 para blue-700
+                              bgColor = 'linear-gradient(135deg, #3565E7, #2955CC)'; // Degradê baseado na cor #3565E7
                               textColor = 'text-white';
                             } else {
                               // Estágio futuro
