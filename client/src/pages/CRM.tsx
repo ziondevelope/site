@@ -820,61 +820,81 @@ export default function CRM() {
                     
                     return (
                       <div className="w-full mb-4">
-                        {/* Barra preta simples horizontal */}
-                        <div className="w-full bg-black h-9 flex mb-2">
+                        {/* Estágios do funil - Design simples com setas */}
+                        <div className="flex w-full">
                           {sortedStages.map((stage, index) => {
                             const isActive = lead.stageId === stage.id || (!lead.stageId && index === 0);
                             const isCompleted = sortedStages.findIndex(s => s.id === lead.stageId) > index;
+                            const isLastStage = index === sortedStages.length - 1;
+                            
+                            // Definir cores para cada etapa baseado no status
+                            let bgColor;
+                            let textColor;
+                            
+                            if (isCompleted) {
+                              // Estágio completado - azul mais escuro
+                              bgColor = '#00bcd4';
+                              textColor = 'text-white';
+                            } else if (isActive) {
+                              // Estágio atual - azul mais claro
+                              bgColor = '#80deea';
+                              textColor = 'text-gray-800';
+                            } else {
+                              // Estágio futuro - azul bem claro
+                              bgColor = '#e0f7fa';
+                              textColor = 'text-gray-800';
+                            }
                             
                             return (
                               <div
                                 key={stage.id}
-                                className="relative flex-1 cursor-pointer"
-                                onClick={() => {
-                                  apiRequest(`/api/leads/${lead.id}/stage`, {
-                                    method: "PATCH",
-                                    body: JSON.stringify({ stageId: stage.id }),
-                                  })
-                                    .then(() => {
-                                      queryClient.invalidateQueries({ queryKey: ['/api/leads'] });
-                                      toast({
-                                        title: "Estágio atualizado",
-                                        description: "O estágio do lead foi atualizado com sucesso.",
-                                      });
-                                    })
-                                    .catch((error) => {
-                                      console.error("Erro ao atualizar estágio:", error);
-                                      toast({
-                                        title: "Erro ao atualizar estágio",
-                                        description: "Não foi possível atualizar o estágio.",
-                                        variant: "destructive",
-                                      });
-                                    });
+                                className="relative flex-grow flex h-10 items-center cursor-pointer"
+                                style={{
+                                  zIndex: sortedStages.length - index,
                                 }}
                               >
-                                {/* Divisão do estágio com linha branca visível */}
-                                <div className="h-full border-r border-white flex items-center justify-center">
-                                  <span className="text-xs font-medium text-white px-2 text-center">
+                                {/* Container principal */}
+                                <div 
+                                  className={`h-full w-full flex items-center justify-center ${textColor} px-2`}
+                                  style={{
+                                    backgroundColor: bgColor,
+                                    clipPath: !isLastStage ? 'polygon(0 0, 85% 0, 100% 50%, 85% 100%, 0 100%, 15% 50%)' : 'polygon(0 0, 85% 0, 100% 50%, 85% 100%, 0 100%)',
+                                  }}
+                                  onClick={() => {
+                                    apiRequest(`/api/leads/${lead.id}/stage`, {
+                                      method: "PATCH",
+                                      body: JSON.stringify({ stageId: stage.id }),
+                                    })
+                                      .then(() => {
+                                        queryClient.invalidateQueries({ queryKey: ['/api/leads'] });
+                                        toast({
+                                          title: "Estágio atualizado",
+                                          description: "O estágio do lead foi atualizado com sucesso.",
+                                        });
+                                      })
+                                      .catch((error) => {
+                                        console.error("Erro ao atualizar estágio:", error);
+                                        toast({
+                                          title: "Erro ao atualizar estágio",
+                                          description: "Não foi possível atualizar o estágio.",
+                                          variant: "destructive",
+                                        });
+                                      });
+                                  }}
+                                >
+                                  {/* Nome do estágio */}
+                                  <span 
+                                    className="text-xs font-medium text-center"
+                                    style={{
+                                      maxWidth: '100%',
+                                      whiteSpace: 'nowrap',
+                                      overflow: 'hidden',
+                                      textOverflow: 'ellipsis'
+                                    }}
+                                  >
                                     {stage.name}
                                   </span>
                                 </div>
-                              </div>
-                            );
-                          })}
-                        </div>
-                        
-                        {/* Indicador de estágio atual */}
-                        <div className="flex w-full">
-                          {sortedStages.map((stage, index) => {
-                            const isActive = lead.stageId === stage.id || (!lead.stageId && index === 0);
-                            return (
-                              <div 
-                                key={`indicator-${stage.id}`} 
-                                className="flex-1 flex justify-center"
-                              >
-                                {isActive && (
-                                  <div className="w-2 h-2 rounded-full bg-blue-500"></div>
-                                )}
                               </div>
                             );
                           })}
