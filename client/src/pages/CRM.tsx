@@ -821,46 +821,53 @@ export default function CRM() {
                     return (
                       <div className="w-full mb-4">
                         {/* Estágios do funil - Design simples com setas */}
-                        <div className="flex w-full items-center">
+                        <div className="flex w-full items-center mt-3 px-2">
                           {sortedStages.map((stage, index) => {
                             const isActive = lead.stageId === stage.id || (!lead.stageId && index === 0);
                             const isCompleted = sortedStages.findIndex(s => s.id === lead.stageId) > index;
                             const isLastStage = index === sortedStages.length - 1;
                             
-                            // Definir cores para cada etapa baseado no status
+                            // Cores mais profissionais
                             let bgColor;
                             let textColor;
+                            let borderColor;
                             
                             if (isCompleted) {
-                              // Estágio completado - azul mais escuro
-                              bgColor = '#00bcd4';
+                              // Estágio completado - azul escuro
+                              bgColor = '#1976d2';
                               textColor = 'text-white';
+                              borderColor = '#1565c0';
                             } else if (isActive) {
-                              // Estágio atual - azul mais claro
-                              bgColor = '#80deea';
-                              textColor = 'text-gray-800';
+                              // Estágio atual - azul médio
+                              bgColor = '#2196f3';
+                              textColor = 'text-white';
+                              borderColor = '#1976d2';
                             } else {
-                              // Estágio futuro - azul bem claro
-                              bgColor = '#e0f7fa';
-                              textColor = 'text-gray-800';
+                              // Estágio futuro - cinza claro
+                              bgColor = '#f5f5f5';
+                              textColor = 'text-gray-700';
+                              borderColor = '#e0e0e0';
                             }
                             
                             return (
                               <div
                                 key={stage.id}
-                                className="relative flex h-10 items-center justify-center cursor-pointer"
+                                className="relative flex h-12 items-center justify-center cursor-pointer"
                                 style={{
                                   zIndex: sortedStages.length - index,
-                                  marginRight: '-20px',
+                                  marginRight: '-15px',
                                   width: `${100 / sortedStages.length}%`,
                                 }}
                               >
                                 {/* Container principal */}
                                 <div 
-                                  className={`h-full w-full flex items-center justify-center ${textColor} px-2`}
+                                  className={`h-full w-full flex items-center justify-center ${textColor} px-3 shadow-sm transition-all duration-200`}
                                   style={{
                                     backgroundColor: bgColor,
-                                    marginRight: isLastStage ? '20px' : '0',
+                                    borderLeft: index === 0 ? `1px solid ${borderColor}` : 'none',
+                                    borderTop: `1px solid ${borderColor}`,
+                                    borderBottom: `1px solid ${borderColor}`,
+                                    borderRight: `1px solid ${borderColor}`,
                                     clipPath: index === 0 ? 'polygon(0px 0px, 85% 0px, 93% 50%, 85% 100%, 0px 100%)' : 
                                               !isLastStage ? 'polygon(0px 0px, 85% 0px, 91% 50%, 85% 100%, 0px 100%, 6% 50%)' : 
                                               'polygon(0px 0px, 85% 0px, 93% 50%, 85% 100%, 0px 100%)',
@@ -889,7 +896,7 @@ export default function CRM() {
                                 >
                                   {/* Nome do estágio */}
                                   <span 
-                                    className="text-xs font-medium text-center"
+                                    className="text-xs font-medium text-center flex items-center"
                                     style={{
                                       maxWidth: '100%',
                                       whiteSpace: 'nowrap',
@@ -897,6 +904,8 @@ export default function CRM() {
                                       textOverflow: 'ellipsis'
                                     }}
                                   >
+                                    {isCompleted && <i className="fas fa-check-circle mr-1.5" />}
+                                    {isActive && !isCompleted && <i className="fas fa-circle text-[8px] mr-1.5" />}
                                     {stage.name}
                                   </span>
                                 </div>
