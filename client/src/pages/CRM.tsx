@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { Pencil, Check, X } from "lucide-react";
+import { Pencil, Check, X, User, Mail, Phone, MessageSquare } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from "@/components/ui/dialog";
@@ -1092,7 +1092,7 @@ export default function CRM() {
                       <div className="w-full h-px mb-4 -mx-5" style={{ marginLeft: '-20px', marginRight: '-20px', width: 'calc(100% + 40px)', backgroundColor: 'rgb(245, 245, 245)' }}></div>
                       <div className="space-y-5">
                         <div>
-                          <h4 className="text-xs font-semibold mb-1" style={{ fontSize: '14px' }}>Nome:</h4>
+                          <h4 className="text-xs font-semibold mb-1 flex items-center" style={{ fontSize: '14px' }}><User className="h-4 w-4 mr-1 text-gray-500" /> Nome:</h4>
                           <div className="group relative">
                             {editingField && editingField.leadId === lead.id && editingField.field === 'name' ? (
                               <div className="flex items-center">
@@ -1140,7 +1140,7 @@ export default function CRM() {
                         </div>
                         
                         <div>
-                          <h4 className="text-xs font-semibold mb-1" style={{ fontSize: '14px' }}>Email:</h4>
+                          <h4 className="text-xs font-semibold mb-1 flex items-center" style={{ fontSize: '14px' }}><Mail className="h-4 w-4 mr-1 text-gray-500" /> Email:</h4>
                           <div className="group relative">
                             {editingField && editingField.leadId === lead.id && editingField.field === 'email' ? (
                               <div className="flex items-center">
@@ -1188,7 +1188,7 @@ export default function CRM() {
                         </div>
                         
                         <div>
-                          <h4 className="text-xs font-semibold mb-1" style={{ fontSize: '14px' }}>Telefone:</h4>
+                          <h4 className="text-xs font-semibold mb-1 flex items-center" style={{ fontSize: '14px' }}><Phone className="h-4 w-4 mr-1 text-gray-500" /> Telefone:</h4>
                           <div className="group relative">
                             {editingField && editingField.leadId === lead.id && editingField.field === 'phone' ? (
                               <div className="flex items-center">
@@ -1236,7 +1236,7 @@ export default function CRM() {
                         </div>
                         
                         <div>
-                          <h4 className="text-xs font-semibold mb-1" style={{ fontSize: '14px' }}>WhatsApp:</h4>
+                          <h4 className="text-xs font-semibold mb-1 flex items-center" style={{ fontSize: '14px' }}><MessageSquare className="h-4 w-4 mr-1 text-gray-500" /> WhatsApp:</h4>
                           <div className="group relative">
                             {editingField && editingField.leadId === lead.id && editingField.field === 'whatsapp' ? (
                               <div className="flex items-center">
