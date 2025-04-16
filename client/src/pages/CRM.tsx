@@ -1059,8 +1059,8 @@ export default function CRM() {
                       <h3 className="text-base font-bold mb-4">Detalhes do Interesse</h3>
                       <div className="w-full h-px mb-4 -mx-5" style={{ marginLeft: '-20px', marginRight: '-20px', width: 'calc(100% + 40px)', backgroundColor: 'rgb(245, 245, 245)' }}></div>
                       <div className="space-y-5">
-                        <div className="flex items-center">
-                          <h4 className="text-xs font-semibold mr-2" style={{ fontSize: '14px', minWidth: "120px" }}>Tipo de Negócio:</h4>
+                        <div>
+                          <h4 className="text-xs font-semibold mb-1" style={{ fontSize: '14px' }}>Tipo de Negócio:</h4>
                           <p className="text-sm text-left" style={{ fontSize: "12px", color: "#878484" }}>
                             {lead.interestType === 'purchase' ? 'Compra' :
                             lead.interestType === 'rent' ? 'Aluguel' :
@@ -1068,8 +1068,8 @@ export default function CRM() {
                           </p>
                         </div>
                         
-                        <div className="flex items-center">
-                          <h4 className="text-xs font-semibold mr-2" style={{ fontSize: '14px', minWidth: "120px" }}>Tipo de Imóvel:</h4>
+                        <div>
+                          <h4 className="text-xs font-semibold mb-1" style={{ fontSize: '14px' }}>Tipo de Imóvel:</h4>
                           <p className="text-sm text-left" style={{ fontSize: "12px", color: "#878484" }}>
                             {(lead as any).propertyType === 'apartment' ? 'Apartamento' : 
                             (lead as any).propertyType === 'house' ? 'Casa' : 
@@ -1078,13 +1078,13 @@ export default function CRM() {
                           </p>
                         </div>
                         
-                        <div className="flex items-center">
-                          <h4 className="text-xs font-semibold mr-2" style={{ fontSize: '14px', minWidth: "120px" }}>Região:</h4>
+                        <div>
+                          <h4 className="text-xs font-semibold mb-1" style={{ fontSize: '14px' }}>Região:</h4>
                           <p className="text-sm text-left" style={{ fontSize: "12px", color: "#878484" }}>{(lead as any).region || "Não informado"}</p>
                         </div>
                         
-                        <div className="flex items-center">
-                          <h4 className="text-xs font-semibold mr-2" style={{ fontSize: '14px', minWidth: "120px" }}>Faixa de Preço:</h4>
+                        <div>
+                          <h4 className="text-xs font-semibold mb-1" style={{ fontSize: '14px' }}>Faixa de Preço:</h4>
                           <p className="text-sm text-left" style={{ fontSize: "12px", color: "#878484" }}>
                             {(lead as any).priceRangeMin && (lead as any).priceRangeMax ? 
                               `R$ ${(lead as any).priceRangeMin.toLocaleString('pt-BR')} - R$ ${(lead as any).priceRangeMax.toLocaleString('pt-BR')}` : 
@@ -1092,8 +1092,8 @@ export default function CRM() {
                           </p>
                         </div>
                         
-                        <div className="flex items-center">
-                          <h4 className="text-xs font-semibold mr-2" style={{ fontSize: '14px', minWidth: "120px" }}>Origem:</h4>
+                        <div>
+                          <h4 className="text-xs font-semibold mb-1" style={{ fontSize: '14px' }}>Origem:</h4>
                           <p className="text-sm text-left" style={{ fontSize: "12px", color: "#878484" }}>
                             {lead.source === 'manual' ? 'Manual' :
                             lead.source === 'website' ? 'Website' :
