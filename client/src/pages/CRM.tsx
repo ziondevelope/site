@@ -1034,22 +1034,22 @@ export default function CRM() {
                       <div className="space-y-5">
                         <div className="flex items-center">
                           <h4 className="text-xs font-semibold mr-2" style={{ fontSize: '14px', minWidth: "80px" }}>Nome:</h4>
-                          <p className="text-gray-900 text-sm text-left">{lead.name}</p>
+                          <p className="text-sm text-left" style={{ fontSize: '12px', color: '#878484' }}>{lead.name}</p>
                         </div>
                         
                         <div className="flex items-center">
                           <h4 className="text-xs font-semibold mr-2" style={{ fontSize: '14px', minWidth: "80px" }}>Email:</h4>
-                          <p className="text-gray-900 text-sm text-left">{lead.email || "Não informado"}</p>
+                          <p className="text-sm text-left" style={{ fontSize: '12px', color: '#878484' }}>{lead.email || "Não informado"}</p>
                         </div>
                         
                         <div className="flex items-center">
                           <h4 className="text-xs font-semibold mr-2" style={{ fontSize: '14px', minWidth: "80px" }}>Telefone:</h4>
-                          <p className="text-gray-900 text-sm text-left">{lead.phone || "Não informado"}</p>
+                          <p className="text-sm text-left" style={{ fontSize: "12px", color: "#878484" }}>{lead.phone || "Não informado"}</p>
                         </div>
                         
                         <div className="flex items-center">
                           <h4 className="text-xs font-semibold mr-2" style={{ fontSize: '14px', minWidth: "80px" }}>WhatsApp:</h4>
-                          <p className="text-gray-900 text-sm text-left">{(lead as any).whatsapp || "Não informado"}</p>
+                          <p className="text-sm text-left" style={{ fontSize: "12px", color: "#878484" }}>{(lead as any).whatsapp || "Não informado"}</p>
                         </div>
                       </div>
                     </div>
@@ -1061,16 +1061,16 @@ export default function CRM() {
                       <div className="space-y-5">
                         <div className="flex items-center">
                           <h4 className="text-xs font-semibold mr-2" style={{ fontSize: '14px', minWidth: "120px" }}>Tipo de Negócio:</h4>
-                          <p className="text-gray-900 text-sm text-left">
+                          <p className="text-sm text-left" style={{ fontSize: "12px", color: "#878484" }}>
                             {lead.interestType === 'purchase' ? 'Compra' :
                             lead.interestType === 'rent' ? 'Aluguel' :
                             lead.interestType || 'Não informado'}
                           </p>
                         </div>
                         
-                        <div>
-                          <h4 className="text-xs font-semibold mb-0.5" style={{ fontSize: '14px' }}>Tipo de Imóvel</h4>
-                          <p className="text-gray-900 text-sm text-left">
+                        <div className="flex items-center">
+                          <h4 className="text-xs font-semibold mr-2" style={{ fontSize: '14px', minWidth: "120px" }}>Tipo de Imóvel:</h4>
+                          <p className="text-sm text-left" style={{ fontSize: "12px", color: "#878484" }}>
                             {(lead as any).propertyType === 'apartment' ? 'Apartamento' : 
                             (lead as any).propertyType === 'house' ? 'Casa' : 
                             (lead as any).propertyType === 'commercial' ? 'Comercial' : 
@@ -1078,23 +1078,23 @@ export default function CRM() {
                           </p>
                         </div>
                         
-                        <div>
-                          <h4 className="text-xs font-semibold mb-0.5" style={{ fontSize: '14px' }}>Região</h4>
-                          <p className="text-gray-900 text-sm text-left">{(lead as any).region || "Não informado"}</p>
+                        <div className="flex items-center">
+                          <h4 className="text-xs font-semibold mr-2" style={{ fontSize: '14px', minWidth: "120px" }}>Região:</h4>
+                          <p className="text-sm text-left" style={{ fontSize: "12px", color: "#878484" }}>{(lead as any).region || "Não informado"}</p>
                         </div>
                         
-                        <div>
-                          <h4 className="text-xs font-semibold mb-0.5" style={{ fontSize: '14px' }}>Faixa de Preço</h4>
-                          <p className="text-gray-900 text-sm text-left">
+                        <div className="flex items-center">
+                          <h4 className="text-xs font-semibold mr-2" style={{ fontSize: '14px', minWidth: "120px" }}>Faixa de Preço:</h4>
+                          <p className="text-sm text-left" style={{ fontSize: "12px", color: "#878484" }}>
                             {(lead as any).priceRangeMin && (lead as any).priceRangeMax ? 
                               `R$ ${(lead as any).priceRangeMin.toLocaleString('pt-BR')} - R$ ${(lead as any).priceRangeMax.toLocaleString('pt-BR')}` : 
                               lead.budget ? 'R$ ' + lead.budget.toLocaleString('pt-BR') : 'Não informado'}
                           </p>
                         </div>
                         
-                        <div>
-                          <h4 className="text-xs font-semibold mb-0.5" style={{ fontSize: '14px' }}>Origem</h4>
-                          <p className="text-gray-900 text-sm text-left">
+                        <div className="flex items-center">
+                          <h4 className="text-xs font-semibold mr-2" style={{ fontSize: '14px', minWidth: "120px" }}>Origem:</h4>
+                          <p className="text-sm text-left" style={{ fontSize: "12px", color: "#878484" }}>
                             {lead.source === 'manual' ? 'Manual' :
                             lead.source === 'website' ? 'Website' :
                             lead.source === 'whatsapp' ? 'WhatsApp' :
