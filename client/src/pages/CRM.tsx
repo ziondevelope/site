@@ -819,96 +819,74 @@ export default function CRM() {
                     };
                     
                     return (
-                      <div className="w-full py-6">
-                        {/* Estágios do funil - Design de trapézio moderno */}
+                      <div className="w-full mb-4">
+                        {/* Estágios do funil - Design simples com setas */}
                         <div className="flex w-full">
                           {sortedStages.map((stage, index) => {
                             const isActive = lead.stageId === stage.id || (!lead.stageId && index === 0);
                             const isCompleted = sortedStages.findIndex(s => s.id === lead.stageId) > index;
-                            
-                            // Definir gradientes específicos para cada etapa baseado na posição
-                            let bgColor;
-                            let borderColor;
-                            let textColor = 'text-white';
-                            
-                            if (isCompleted) {
-                              // Estágio completado - verde
-                              bgColor = 'bg-gradient-to-br from-green-500 to-green-600';
-                              borderColor = 'border-green-400';
-                            } else if (isActive) {
-                              // Estágio atual - azul
-                              bgColor = 'bg-gradient-to-br from-blue-500 to-blue-600';
-                              borderColor = 'border-blue-400';
-                            } else {
-                              // Estágio futuro - cinza
-                              bgColor = 'bg-gradient-to-br from-gray-200 to-gray-300';
-                              borderColor = 'border-gray-200';
-                              textColor = 'text-gray-600';
-                            }
-                            
-                            // Último item tem formato diferente (mais estreito na direita)
                             const isLastStage = index === sortedStages.length - 1;
                             
-                            // Determinar o formato do trapézio com clip-path
-                            let clipPath;
-                            if (sortedStages.length === 1) {
-                              clipPath = 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)'; // Retângulo para 1 item
-                            } else if (index === 0) {
-                              clipPath = 'polygon(0% 0%, 95% 0%, 100% 100%, 0% 100%)'; // Primeiro: direita inclinada
-                            } else if (isLastStage) {
-                              clipPath = 'polygon(0% 0%, 100% 0%, 100% 100%, 5% 100%)'; // Último: esquerda inclinada
+                            // Definir cores para cada etapa baseado no status
+                            let bgColor;
+                            let textColor;
+                            
+                            if (isCompleted) {
+                              // Estágio completado - azul mais escuro
+                              bgColor = '#00bcd4';
+                              textColor = 'text-white';
+                            } else if (isActive) {
+                              // Estágio atual - azul mais claro
+                              bgColor = '#80deea';
+                              textColor = 'text-gray-800';
                             } else {
-                              clipPath = 'polygon(0% 0%, 95% 0%, 100% 100%, 5% 100%)'; // Meio: ambos lados inclinados
+                              // Estágio futuro - azul bem claro
+                              bgColor = '#e0f7fa';
+                              textColor = 'text-gray-800';
                             }
                             
                             return (
                               <div
                                 key={stage.id}
-                                className={`relative flex-1 h-10 cursor-pointer transition-all duration-200 hover:shadow-lg mx-0.5 
-                                  ${bgColor} ${textColor} border-t-2 ${borderColor} `}
+                                className="relative flex-grow flex h-10 items-center cursor-pointer"
                                 style={{
-                                  clipPath: clipPath,
-                                  zIndex: sortedStages.length - index, // Criar efeito de sobreposição
-                                  marginRight: isLastStage ? 0 : '-8px' // Sobreposição
-                                }}
-                                onClick={() => {
-                                  apiRequest(`/api/leads/${lead.id}/stage`, {
-                                    method: "PATCH",
-                                    body: JSON.stringify({ stageId: stage.id }),
-                                  })
-                                    .then(() => {
-                                      queryClient.invalidateQueries({ queryKey: ['/api/leads'] });
-                                      toast({
-                                        title: "Estágio atualizado",
-                                        description: "O estágio do lead foi atualizado com sucesso.",
-                                      });
-                                    })
-                                    .catch((error) => {
-                                      console.error("Erro ao atualizar estágio:", error);
-                                      toast({
-                                        title: "Erro ao atualizar estágio",
-                                        description: "Não foi possível atualizar o estágio.",
-                                        variant: "destructive",
-                                      });
-                                    });
+                                  zIndex: sortedStages.length - index,
                                 }}
                               >
-                                <div className="flex items-center justify-center h-full px-2">
-                                  {/* Ícone ou número */}
-                                  <div className="flex items-center mr-1">
-                                    {isCompleted ? (
-                                      <i className="fas fa-check text-xs"></i>
-                                    ) : (
-                                      <span className="text-xs font-semibold">{index + 1}</span>
-                                    )}
-                                  </div>
-                                  
+                                {/* Container principal */}
+                                <div 
+                                  className={`h-full w-full flex items-center justify-center ${textColor} px-2`}
+                                  style={{
+                                    backgroundColor: bgColor,
+                                    clipPath: !isLastStage ? 'polygon(0 0, calc(100% - 12px) 0, 100% 50%, calc(100% - 12px) 100%, 0 100%)' : 'none',
+                                  }}
+                                  onClick={() => {
+                                    apiRequest(`/api/leads/${lead.id}/stage`, {
+                                      method: "PATCH",
+                                      body: JSON.stringify({ stageId: stage.id }),
+                                    })
+                                      .then(() => {
+                                        queryClient.invalidateQueries({ queryKey: ['/api/leads'] });
+                                        toast({
+                                          title: "Estágio atualizado",
+                                          description: "O estágio do lead foi atualizado com sucesso.",
+                                        });
+                                      })
+                                      .catch((error) => {
+                                        console.error("Erro ao atualizar estágio:", error);
+                                        toast({
+                                          title: "Erro ao atualizar estágio",
+                                          description: "Não foi possível atualizar o estágio.",
+                                          variant: "destructive",
+                                        });
+                                      });
+                                  }}
+                                >
                                   {/* Nome do estágio */}
                                   <span 
-                                    className="text-xs font-medium"
+                                    className="text-xs font-medium text-center"
                                     style={{
                                       maxWidth: '100%',
-                                      textAlign: 'center',
                                       whiteSpace: 'nowrap',
                                       overflow: 'hidden',
                                       textOverflow: 'ellipsis'
@@ -917,13 +895,6 @@ export default function CRM() {
                                     {stage.name}
                                   </span>
                                 </div>
-                                
-                                {/* Seta indicativa para o próximo estágio */}
-                                {!isLastStage && (
-                                  <div className="absolute right-[-1px] top-1/2 transform -translate-y-1/2 text-white z-10">
-                                    <i className="fas fa-angle-right"></i>
-                                  </div>
-                                )}
                               </div>
                             );
                           })}
