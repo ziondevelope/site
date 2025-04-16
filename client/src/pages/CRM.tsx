@@ -966,7 +966,7 @@ export default function CRM() {
                 <div className="md:col-span-3">
                   <div className="grid gap-6">
                     {/* Grid 1: Informações de Contato */}
-                    <div className="bg-white p-5 border border-[#f5f5f5] rounded-[5px]">
+                    <div className="p-5 border border-[#f5f5f5] rounded-[5px]" style={{ background: '#F9FAFB' }}>
                       <h3 className="text-base font-bold mb-4">Dados do Cliente</h3>
                       <div className="w-full h-px mb-4 -mx-5" style={{ marginLeft: '-20px', marginRight: '-20px', width: 'calc(100% + 40px)', backgroundColor: 'rgb(245, 245, 245)' }}></div>
                       <div className="space-y-5">
@@ -993,7 +993,7 @@ export default function CRM() {
                     </div>
                     
                     {/* Grid 2: Detalhes do Interesse */}
-                    <div className="bg-white p-5 border border-[#f5f5f5] rounded-[5px]">
+                    <div className="p-5 border border-[#f5f5f5] rounded-[5px]" style={{ background: '#F9FAFB' }}>
                       <h3 className="text-base font-bold mb-4">Detalhes do Interesse</h3>
                       <div className="w-full h-px mb-4 -mx-5" style={{ marginLeft: '-20px', marginRight: '-20px', width: 'calc(100% + 40px)', backgroundColor: 'rgb(245, 245, 245)' }}></div>
                       <div className="space-y-5">
@@ -1050,7 +1050,7 @@ export default function CRM() {
                 {/* Coluna de Notas */}
                 <div className="md:col-span-9 px-8">                  
                   <div>
-                    <div className="bg-white p-5 border border-[#f5f5f5] rounded-[5px]">
+                    <div className="p-5 border border-[#f5f5f5] rounded-[5px]" style={{ background: '#F9FAFB' }}>
                       <h3 className="text-base font-bold mb-4">Nota Rápida</h3>
                       <div className="w-full h-px mb-4 -mx-5" style={{ marginLeft: '-20px', marginRight: '-20px', width: 'calc(100% + 40px)', backgroundColor: 'rgb(245, 245, 245)' }}></div>
                       <Textarea 
