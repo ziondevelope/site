@@ -966,8 +966,9 @@ export default function CRM() {
                 <div className="md:col-span-3">
                   <div className="grid gap-6">
                     {/* Grid 1: Informações de Contato */}
-                    <div className="bg-white p-5">
-                      <h3 className="text-base font-bold mb-4 border-b pb-2">Dados do Cliente</h3>
+                    <div className="bg-white p-5 border border-[#f5f5f5] rounded-[5px]">
+                      <h3 className="text-base font-bold mb-4">Dados do Cliente</h3>
+                      <div className="w-full h-px mb-4 -mx-5" style={{ marginLeft: '-20px', marginRight: '-20px', width: 'calc(100% + 40px)', backgroundColor: 'rgb(245, 245, 245)' }}></div>
                       <div className="space-y-5">
                         <div>
                           <h4 className="text-xs font-semibold mb-0.5">Nome</h4>
@@ -992,8 +993,9 @@ export default function CRM() {
                     </div>
                     
                     {/* Grid 2: Detalhes do Interesse */}
-                    <div className="bg-white p-5">
-                      <h3 className="text-base font-bold mb-4 border-b pb-2">Detalhes do Interesse</h3>
+                    <div className="bg-white p-5 border border-[#f5f5f5] rounded-[5px]">
+                      <h3 className="text-base font-bold mb-4">Detalhes do Interesse</h3>
+                      <div className="w-full h-px mb-4 -mx-5" style={{ marginLeft: '-20px', marginRight: '-20px', width: 'calc(100% + 40px)', backgroundColor: 'rgb(245, 245, 245)' }}></div>
                       <div className="space-y-5">
                         <div>
                           <h4 className="text-xs font-semibold mb-0.5">Tipo de Negócio</h4>
