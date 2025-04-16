@@ -39,6 +39,23 @@ type LeadFormValues = z.infer<typeof leadFormSchema>;
 export default function CRM() {
   // Estilo sutil para os campos editáveis
   const editableFieldStyle = "border-gray-200 bg-gray-50 focus-visible:ring-1 focus-visible:ring-gray-300";
+  
+  // Auxiliar para atualizar todos os campos de edição com o estilo
+  useEffect(() => {
+    const updateFormStyle = () => {
+      const inputs = document.querySelectorAll('input.h-8.text-sm');
+      inputs.forEach(input => {
+        if (!input.classList.contains('bg-gray-50')) {
+          input.classList.add('border-gray-200', 'bg-gray-50', 'focus-visible:ring-1', 'focus-visible:ring-gray-300');
+        }
+      });
+    };
+    
+    // Aplicar estilos quando o componente montar ou quando o estado de edição mudar
+    if (editingField) {
+      setTimeout(updateFormStyle, 50);
+    }
+  }, [editingField]);
   const [isAddLeadOpen, setIsAddLeadOpen] = useState(false);
   const [leadToDelete, setLeadToDelete] = useState<Lead | null>(null);
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
