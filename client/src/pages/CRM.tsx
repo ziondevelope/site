@@ -868,7 +868,7 @@ export default function CRM() {
                                 
                                 {/* Container principal */}
                                 <div 
-                                  className={`h-12 w-full rounded-lg flex items-center justify-center ${textColor} px-3 shadow-sm transition-all duration-200 relative`}
+                                  className={`h-12 w-full flex items-center justify-center ${textColor} px-3 shadow-sm transition-all duration-200 relative`}
                                   style={{
                                     backgroundColor: bgColor,
                                   }}
@@ -896,7 +896,7 @@ export default function CRM() {
                                 >
                                   {/* Nome do estágio */}
                                   <span 
-                                    className="text-xs font-medium text-center flex items-center"
+                                    className="text-sm font-medium text-center"
                                     style={{
                                       maxWidth: '100%',
                                       whiteSpace: 'nowrap',
@@ -904,8 +904,6 @@ export default function CRM() {
                                       textOverflow: 'ellipsis'
                                     }}
                                   >
-                                    {isCompleted && <i className="fas fa-check-circle mr-1.5" />}
-                                    {isActive && !isCompleted && <i className="fas fa-circle text-[8px] mr-1.5" />}
                                     {stage.name}
                                   </span>
                                 </div>
