@@ -252,6 +252,39 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
+  // Rota para atualizar um lead
+  apiRouter.patch("/leads/:id", async (req, res) => {
+    try {
+      console.log("Recebendo request para atualizar lead:", req.params.id, req.body);
+      const leadId = parseInt(req.params.id);
+      
+      // Validar apenas os campos principais do schema, permitindo campos extras
+      const validatedData = insertLeadSchema.partial().parse(req.body);
+      
+      // Manter quaisquer campos extras que possam existir
+      const fullLeadData = {
+        ...req.body,
+        ...validatedData
+      };
+      
+      console.log("Dados validados do lead:", fullLeadData);
+      
+      const lead = await storageInstance.updateLead(leadId, fullLeadData);
+      
+      if (!lead) {
+        return res.status(404).json({ message: "Lead not found" });
+      }
+      
+      res.json(lead);
+    } catch (error) {
+      console.error("Erro ao atualizar lead:", error);
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Invalid lead data", errors: error.errors });
+      }
+      res.status(500).json({ message: "Error updating lead" });
+    }
+  });
+
   // Rota para excluir um lead
   apiRouter.delete("/leads/:id", async (req, res) => {
     try {
