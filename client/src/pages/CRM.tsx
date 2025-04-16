@@ -1050,7 +1050,7 @@ export default function CRM() {
                   <div>
                     <div className="bg-white p-5 border border-[#f5f5f5] rounded-[5px]">
                       <h3 className="text-base font-bold mb-4">Nota Rápida</h3>
-                      <div className="w-full h-px bg-gray-200 mb-4 -mx-5" style={{ marginLeft: '-20px', marginRight: '-20px', width: 'calc(100% + 40px)' }}></div>
+                      <div className="w-full h-px mb-4 -mx-5" style={{ marginLeft: '-20px', marginRight: '-20px', width: 'calc(100% + 40px)', backgroundColor: 'rgb(245, 245, 245)' }}></div>
                       <Textarea 
                         placeholder="Digite uma anotação rápida sobre este lead..." 
                         className="resize-none border-0 bg-transparent p-0 focus-visible:ring-0 text-sm" 
