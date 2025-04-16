@@ -1119,18 +1119,21 @@ export default function CRM() {
                         placeholder="Digite uma anotação rápida sobre este lead..." 
                         className="resize-none border-0 bg-transparent p-0 focus-visible:ring-0 text-sm" 
                         rows={8}
-                        defaultValue={lead.notes || ""}
+                        value={leadNotes[lead.id] || lead.notes || ""}
                         style={{
                           background: '#fff',
                           padding: '20px 20px 0'
                         }}
-                        onChange={(e) => setCurrentNote(e.target.value)}
+                        onChange={(e) => setLeadNotes(prev => ({
+                          ...prev,
+                          [lead.id]: e.target.value
+                        }))}
                       />
                     </div>
                     <div className="flex justify-end mt-4">
                       <Button 
                         className="bg-[#3565E7] hover:bg-[#2955CC] text-sm"
-                        onClick={handleSaveNote}
+                        onClick={() => handleSaveNote(lead.id)}
                       >
                         Salvar Nota
                       </Button>
@@ -1142,9 +1145,9 @@ export default function CRM() {
                         <h3 className="text-base font-bold mb-4">Histórico de Atividades</h3>
                         <div className="w-full h-px mb-4 -mx-5" style={{ marginLeft: '-20px', marginRight: '-20px', width: 'calc(100% + 40px)', backgroundColor: 'rgb(245, 245, 245)' }}></div>
                         
-                        {savedNotes.length > 0 ? (
+                        {savedNotes[lead.id] && savedNotes[lead.id].length > 0 ? (
                           <div className="space-y-4">
-                            {savedNotes.map((note, index) => (
+                            {savedNotes[lead.id].map((note, index) => (
                               <div key={index} className="p-4 border border-[#f5f5f5] rounded-[5px] bg-white">
                                 <div className="flex justify-between items-start mb-2">
                                   <span className="text-sm font-semibold">{formatDate(note.date)}</span>
