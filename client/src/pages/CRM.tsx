@@ -960,9 +960,9 @@ export default function CRM() {
                 )}
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-6">
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-6 pb-6">
                 {/* Coluna 1 - Dividida em 2 grids */}
-                <div className="md:col-span-1">
+                <div className="md:col-span-3">
                   <div className="grid gap-6">
                     {/* Grid 1: Informações de Contato */}
                     <div className="bg-[#F1F3F5] p-4 rounded-md border border-gray-100">
@@ -1045,7 +1045,7 @@ export default function CRM() {
                 </div>
                 
                 {/* Coluna de Notas */}
-                <div className="md:col-span-1 px-4">                  
+                <div className="md:col-span-9 px-8">                  
                   <div>
                     <h3 className="text-sm font-medium text-gray-500 mb-3">Nota Rápida</h3>
                     <div className="bg-gray-50 p-4 rounded-md border border-gray-200">
