@@ -1292,48 +1292,275 @@ export default function CRM() {
                       <div className="space-y-5">
                         <div>
                           <h4 className="text-xs font-semibold mb-1" style={{ fontSize: '14px' }}>Tipo de Negócio:</h4>
-                          <p className="text-sm text-left" style={{ fontSize: "12px", color: "#878484" }}>
-                            {lead.interestType === 'purchase' ? 'Compra' :
-                            lead.interestType === 'rent' ? 'Aluguel' :
-                            lead.interestType || 'Não informado'}
-                          </p>
+                          <div className="group relative">
+                            {editingField && editingField.leadId === lead.id && editingField.field === 'interestType' ? (
+                              <div className="flex items-center">
+                                <Select
+                                  value={editingValue}
+                                  onValueChange={(value) => setEditingValue(value)}
+                                >
+                                  <SelectTrigger className="h-8 text-sm" style={{ fontSize: '12px' }}>
+                                    <SelectValue placeholder="Selecione o tipo de negócio" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectItem value="purchase">Compra</SelectItem>
+                                    <SelectItem value="rent">Aluguel</SelectItem>
+                                  </SelectContent>
+                                </Select>
+                                <div className="flex ml-2">
+                                  <Button 
+                                    size="icon" 
+                                    variant="ghost" 
+                                    className="h-6 w-6" 
+                                    onClick={handleSaveEdit}
+                                    disabled={updateLeadFieldMutation.isPending}
+                                  >
+                                    <Check className="h-4 w-4" />
+                                  </Button>
+                                  <Button 
+                                    size="icon" 
+                                    variant="ghost" 
+                                    className="h-6 w-6" 
+                                    onClick={handleCancelEdit}
+                                  >
+                                    <X className="h-4 w-4" />
+                                  </Button>
+                                </div>
+                              </div>
+                            ) : (
+                              <div className="flex items-center">
+                                <p className="text-sm text-left" style={{ fontSize: "12px", color: "#878484" }}>
+                                  {lead.interestType === 'purchase' ? 'Compra' :
+                                  lead.interestType === 'rent' ? 'Aluguel' :
+                                  lead.interestType || 'Não informado'}
+                                </p>
+                                <button 
+                                  className="ml-2 invisible group-hover:visible"
+                                  onClick={() => handleStartEditing(lead.id, 'interestType', lead.interestType)}
+                                >
+                                  <Pencil className="h-3 w-3 text-blue-500 hover:text-blue-700" />
+                                </button>
+                              </div>
+                            )}
+                          </div>
                         </div>
                         
                         <div>
                           <h4 className="text-xs font-semibold mb-1" style={{ fontSize: '14px' }}>Tipo de Imóvel:</h4>
-                          <p className="text-sm text-left" style={{ fontSize: "12px", color: "#878484" }}>
-                            {(lead as any).propertyType === 'apartment' ? 'Apartamento' : 
-                            (lead as any).propertyType === 'house' ? 'Casa' : 
-                            (lead as any).propertyType === 'commercial' ? 'Comercial' : 
-                            'Não informado'}
-                          </p>
+                          <div className="group relative">
+                            {editingField && editingField.leadId === lead.id && editingField.field === 'propertyType' ? (
+                              <div className="flex items-center">
+                                <Select
+                                  value={editingValue}
+                                  onValueChange={(value) => setEditingValue(value)}
+                                >
+                                  <SelectTrigger className="h-8 text-sm" style={{ fontSize: '12px' }}>
+                                    <SelectValue placeholder="Selecione o tipo de imóvel" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectItem value="apartment">Apartamento</SelectItem>
+                                    <SelectItem value="house">Casa</SelectItem>
+                                    <SelectItem value="commercial">Comercial</SelectItem>
+                                  </SelectContent>
+                                </Select>
+                                <div className="flex ml-2">
+                                  <Button 
+                                    size="icon" 
+                                    variant="ghost" 
+                                    className="h-6 w-6" 
+                                    onClick={handleSaveEdit}
+                                    disabled={updateLeadFieldMutation.isPending}
+                                  >
+                                    <Check className="h-4 w-4" />
+                                  </Button>
+                                  <Button 
+                                    size="icon" 
+                                    variant="ghost" 
+                                    className="h-6 w-6" 
+                                    onClick={handleCancelEdit}
+                                  >
+                                    <X className="h-4 w-4" />
+                                  </Button>
+                                </div>
+                              </div>
+                            ) : (
+                              <div className="flex items-center">
+                                <p className="text-sm text-left" style={{ fontSize: "12px", color: "#878484" }}>
+                                  {(lead as any).propertyType === 'apartment' ? 'Apartamento' : 
+                                  (lead as any).propertyType === 'house' ? 'Casa' : 
+                                  (lead as any).propertyType === 'commercial' ? 'Comercial' : 
+                                  'Não informado'}
+                                </p>
+                                <button 
+                                  className="ml-2 invisible group-hover:visible"
+                                  onClick={() => handleStartEditing(lead.id, 'propertyType', (lead as any).propertyType)}
+                                >
+                                  <Pencil className="h-3 w-3 text-blue-500 hover:text-blue-700" />
+                                </button>
+                              </div>
+                            )}
+                          </div>
                         </div>
                         
                         <div>
                           <h4 className="text-xs font-semibold mb-1" style={{ fontSize: '14px' }}>Região:</h4>
-                          <p className="text-sm text-left" style={{ fontSize: "12px", color: "#878484" }}>{(lead as any).region || "Não informado"}</p>
+                          <div className="group relative">
+                            {editingField && editingField.leadId === lead.id && editingField.field === 'region' ? (
+                              <div className="flex items-center">
+                                <Input 
+                                  value={editingValue}
+                                  onChange={(e) => setEditingValue(e.target.value)}
+                                  className="h-8 text-sm"
+                                  style={{ fontSize: '12px' }}
+                                  autoFocus
+                                />
+                                <div className="flex ml-2">
+                                  <Button 
+                                    size="icon" 
+                                    variant="ghost" 
+                                    className="h-6 w-6" 
+                                    onClick={handleSaveEdit}
+                                    disabled={updateLeadFieldMutation.isPending}
+                                  >
+                                    <Check className="h-4 w-4" />
+                                  </Button>
+                                  <Button 
+                                    size="icon" 
+                                    variant="ghost" 
+                                    className="h-6 w-6" 
+                                    onClick={handleCancelEdit}
+                                  >
+                                    <X className="h-4 w-4" />
+                                  </Button>
+                                </div>
+                              </div>
+                            ) : (
+                              <div className="flex items-center">
+                                <p className="text-sm text-left" style={{ fontSize: "12px", color: "#878484" }}>{(lead as any).region || "Não informado"}</p>
+                                <button 
+                                  className="ml-2 invisible group-hover:visible"
+                                  onClick={() => handleStartEditing(lead.id, 'region', (lead as any).region)}
+                                >
+                                  <Pencil className="h-3 w-3 text-blue-500 hover:text-blue-700" />
+                                </button>
+                              </div>
+                            )}
+                          </div>
                         </div>
                         
                         <div>
                           <h4 className="text-xs font-semibold mb-1" style={{ fontSize: '14px' }}>Faixa de Preço:</h4>
-                          <p className="text-sm text-left" style={{ fontSize: "12px", color: "#878484" }}>
-                            {(lead as any).priceRangeMin && (lead as any).priceRangeMax ? 
-                              `R$ ${(lead as any).priceRangeMin.toLocaleString('pt-BR')} - R$ ${(lead as any).priceRangeMax.toLocaleString('pt-BR')}` : 
-                              lead.budget ? 'R$ ' + lead.budget.toLocaleString('pt-BR') : 'Não informado'}
-                          </p>
+                          <div className="group relative">
+                            {editingField && editingField.leadId === lead.id && editingField.field === 'budget' ? (
+                              <div className="flex items-center">
+                                <Input 
+                                  type="number"
+                                  value={editingValue}
+                                  onChange={(e) => setEditingValue(e.target.value)}
+                                  className="h-8 text-sm"
+                                  style={{ fontSize: '12px' }}
+                                  autoFocus
+                                  placeholder="Valor do orçamento"
+                                />
+                                <div className="flex ml-2">
+                                  <Button 
+                                    size="icon" 
+                                    variant="ghost" 
+                                    className="h-6 w-6" 
+                                    onClick={handleSaveEdit}
+                                    disabled={updateLeadFieldMutation.isPending}
+                                  >
+                                    <Check className="h-4 w-4" />
+                                  </Button>
+                                  <Button 
+                                    size="icon" 
+                                    variant="ghost" 
+                                    className="h-6 w-6" 
+                                    onClick={handleCancelEdit}
+                                  >
+                                    <X className="h-4 w-4" />
+                                  </Button>
+                                </div>
+                              </div>
+                            ) : (
+                              <div className="flex items-center">
+                                <p className="text-sm text-left" style={{ fontSize: "12px", color: "#878484" }}>
+                                  {(lead as any).priceRangeMin && (lead as any).priceRangeMax ? 
+                                    `R$ ${(lead as any).priceRangeMin.toLocaleString('pt-BR')} - R$ ${(lead as any).priceRangeMax.toLocaleString('pt-BR')}` : 
+                                    lead.budget ? 'R$ ' + lead.budget.toLocaleString('pt-BR') : 'Não informado'}
+                                </p>
+                                <button 
+                                  className="ml-2 invisible group-hover:visible"
+                                  onClick={() => handleStartEditing(lead.id, 'budget', lead.budget)}
+                                >
+                                  <Pencil className="h-3 w-3 text-blue-500 hover:text-blue-700" />
+                                </button>
+                              </div>
+                            )}
+                          </div>
                         </div>
                         
                         <div>
                           <h4 className="text-xs font-semibold mb-1" style={{ fontSize: '14px' }}>Origem:</h4>
-                          <p className="text-sm text-left" style={{ fontSize: "12px", color: "#878484" }}>
-                            {lead.source === 'manual' ? 'Manual' :
-                            lead.source === 'website' ? 'Website' :
-                            lead.source === 'whatsapp' ? 'WhatsApp' :
-                            lead.source === 'instagram' ? 'Instagram' :
-                            lead.source === 'facebook' ? 'Facebook' :
-                            lead.source === 'indicacao' ? 'Indicação' :
-                            lead.source || 'Não informado'}
-                          </p>
+                          <div className="group relative">
+                            {editingField && editingField.leadId === lead.id && editingField.field === 'source' ? (
+                              <div className="flex items-center">
+                                <Select
+                                  value={editingValue}
+                                  onValueChange={(value) => setEditingValue(value)}
+                                >
+                                  <SelectTrigger className="h-8 text-sm" style={{ fontSize: '12px' }}>
+                                    <SelectValue placeholder="Selecione a origem" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectItem value="manual">Manual</SelectItem>
+                                    <SelectItem value="website">Website</SelectItem>
+                                    <SelectItem value="whatsapp">WhatsApp</SelectItem>
+                                    <SelectItem value="instagram">Instagram</SelectItem>
+                                    <SelectItem value="facebook">Facebook</SelectItem>
+                                    <SelectItem value="indicacao">Indicação</SelectItem>
+                                  </SelectContent>
+                                </Select>
+                                <div className="flex ml-2">
+                                  <Button 
+                                    size="icon" 
+                                    variant="ghost" 
+                                    className="h-6 w-6" 
+                                    onClick={handleSaveEdit}
+                                    disabled={updateLeadFieldMutation.isPending}
+                                  >
+                                    <Check className="h-4 w-4" />
+                                  </Button>
+                                  <Button 
+                                    size="icon" 
+                                    variant="ghost" 
+                                    className="h-6 w-6" 
+                                    onClick={handleCancelEdit}
+                                  >
+                                    <X className="h-4 w-4" />
+                                  </Button>
+                                </div>
+                              </div>
+                            ) : (
+                              <div className="flex items-center">
+                                <p className="text-sm text-left" style={{ fontSize: "12px", color: "#878484" }}>
+                                  {lead.source === 'manual' ? 'Manual' :
+                                  lead.source === 'website' ? 'Website' :
+                                  lead.source === 'whatsapp' ? 'WhatsApp' :
+                                  lead.source === 'instagram' ? 'Instagram' :
+                                  lead.source === 'facebook' ? 'Facebook' :
+                                  lead.source === 'indicacao' ? 'Indicação' :
+                                  lead.source || 'Não informado'}
+                                </p>
+                                <button 
+                                  className="ml-2 invisible group-hover:visible"
+                                  onClick={() => handleStartEditing(lead.id, 'source', lead.source)}
+                                >
+                                  <Pencil className="h-3 w-3 text-blue-500 hover:text-blue-700" />
+                                </button>
+                              </div>
+                            )}
+                          </div>
                         </div>
                       </div>
                     </div>
