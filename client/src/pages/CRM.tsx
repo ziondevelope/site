@@ -821,7 +821,7 @@ export default function CRM() {
                     return (
                       <div className="w-full mb-4">
                         {/* Estágios do funil - Design simples com setas */}
-                        <div className="flex w-full">
+                        <div className="flex w-full items-center">
                           {sortedStages.map((stage, index) => {
                             const isActive = lead.stageId === stage.id || (!lead.stageId && index === 0);
                             const isCompleted = sortedStages.findIndex(s => s.id === lead.stageId) > index;
@@ -848,7 +848,7 @@ export default function CRM() {
                             return (
                               <div
                                 key={stage.id}
-                                className="relative flex-grow flex h-10 items-center cursor-pointer"
+                                className="relative flex-grow flex h-10 items-center justify-center cursor-pointer"
                                 style={{
                                   zIndex: sortedStages.length - index,
                                   marginRight: !isLastStage ? '-20px' : '0',
