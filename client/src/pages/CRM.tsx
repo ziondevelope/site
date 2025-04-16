@@ -750,9 +750,16 @@ export default function CRM() {
                 </div>
                 
                 <div className="flex items-center space-x-2">
-                  <Button variant="outline" className="h-9 px-3 text-sm">
-                    <i className="fas fa-user-plus mr-2 text-blue-600"></i> 
-                    Atribuir agente
+                  <Button 
+                    variant="outline" 
+                    className="h-9 px-3 text-sm text-red-600 hover:text-red-700"
+                    onClick={() => {
+                      setLeadToDelete(lead);
+                      setIsDeleteConfirmOpen(true);
+                    }}
+                  >
+                    <i className="fas fa-trash-alt mr-2"></i> 
+                    Excluir lead
                   </Button>
                   <Button className="bg-blue-600 hover:bg-blue-700 h-9 px-3 text-sm">
                     <i className="fas fa-pen mr-2"></i> 
