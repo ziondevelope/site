@@ -970,23 +970,23 @@ export default function CRM() {
                       <h3 className="text-base font-bold mb-4 border-b pb-2">Dados do Cliente</h3>
                       <div className="space-y-5">
                         <div>
-                          <h4 className="text-sm font-semibold mb-1">Nome</h4>
-                          <p className="text-gray-900">{lead.name}</p>
+                          <h4 className="text-xs font-semibold mb-0.5">Nome</h4>
+                          <p className="text-gray-900 text-sm">{lead.name}</p>
                         </div>
                         
                         <div>
-                          <h4 className="text-sm font-semibold mb-1">Email</h4>
-                          <p className="text-gray-900">{lead.email || "Não informado"}</p>
+                          <h4 className="text-xs font-semibold mb-0.5">Email</h4>
+                          <p className="text-gray-900 text-sm">{lead.email || "Não informado"}</p>
                         </div>
                         
                         <div>
-                          <h4 className="text-sm font-semibold mb-1">Telefone</h4>
-                          <p className="text-gray-900">{lead.phone || "Não informado"}</p>
+                          <h4 className="text-xs font-semibold mb-0.5">Telefone</h4>
+                          <p className="text-gray-900 text-sm">{lead.phone || "Não informado"}</p>
                         </div>
                         
                         <div>
-                          <h4 className="text-sm font-semibold mb-1">WhatsApp</h4>
-                          <p className="text-gray-900">{(lead as any).whatsapp || "Não informado"}</p>
+                          <h4 className="text-xs font-semibold mb-0.5">WhatsApp</h4>
+                          <p className="text-gray-900 text-sm">{(lead as any).whatsapp || "Não informado"}</p>
                         </div>
                       </div>
                     </div>
@@ -996,8 +996,8 @@ export default function CRM() {
                       <h3 className="text-base font-bold mb-4 border-b pb-2">Detalhes do Interesse</h3>
                       <div className="space-y-5">
                         <div>
-                          <h4 className="text-sm font-semibold mb-1">Tipo de Negócio</h4>
-                          <p className="text-gray-900">
+                          <h4 className="text-xs font-semibold mb-0.5">Tipo de Negócio</h4>
+                          <p className="text-gray-900 text-sm">
                             {lead.interestType === 'purchase' ? 'Compra' :
                             lead.interestType === 'rent' ? 'Aluguel' :
                             lead.interestType || 'Não informado'}
@@ -1005,8 +1005,8 @@ export default function CRM() {
                         </div>
                         
                         <div>
-                          <h4 className="text-sm font-semibold mb-1">Tipo de Imóvel</h4>
-                          <p className="text-gray-900">
+                          <h4 className="text-xs font-semibold mb-0.5">Tipo de Imóvel</h4>
+                          <p className="text-gray-900 text-sm">
                             {(lead as any).propertyType === 'apartment' ? 'Apartamento' : 
                             (lead as any).propertyType === 'house' ? 'Casa' : 
                             (lead as any).propertyType === 'commercial' ? 'Comercial' : 
@@ -1015,13 +1015,13 @@ export default function CRM() {
                         </div>
                         
                         <div>
-                          <h4 className="text-sm font-semibold mb-1">Região</h4>
-                          <p className="text-gray-900">{(lead as any).region || "Não informado"}</p>
+                          <h4 className="text-xs font-semibold mb-0.5">Região</h4>
+                          <p className="text-gray-900 text-sm">{(lead as any).region || "Não informado"}</p>
                         </div>
                         
                         <div>
-                          <h4 className="text-sm font-semibold mb-1">Faixa de Preço</h4>
-                          <p className="text-gray-900">
+                          <h4 className="text-xs font-semibold mb-0.5">Faixa de Preço</h4>
+                          <p className="text-gray-900 text-sm">
                             {(lead as any).priceRangeMin && (lead as any).priceRangeMax ? 
                               `R$ ${(lead as any).priceRangeMin.toLocaleString('pt-BR')} - R$ ${(lead as any).priceRangeMax.toLocaleString('pt-BR')}` : 
                               lead.budget ? 'R$ ' + lead.budget.toLocaleString('pt-BR') : 'Não informado'}
@@ -1029,8 +1029,8 @@ export default function CRM() {
                         </div>
                         
                         <div>
-                          <h4 className="text-sm font-semibold mb-1">Origem</h4>
-                          <p className="text-gray-900">
+                          <h4 className="text-xs font-semibold mb-0.5">Origem</h4>
+                          <p className="text-gray-900 text-sm">
                             {lead.source === 'manual' ? 'Manual' :
                             lead.source === 'website' ? 'Website' :
                             lead.source === 'whatsapp' ? 'WhatsApp' :
