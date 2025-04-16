@@ -157,30 +157,41 @@ export default function SalesFunnel({ isLoading: initialLoading, data }: SalesFu
 
 // Helper function to get a background color based on stage position
 function getStageBackgroundColor(index: number, totalStages: number): string {
-  // Cores baseadas na imagem de referência (Cobrefácil)
-  if (totalStages <= 3) {
-    // Se tiver 3 ou menos estágios, usar as cores exatas da imagem de referência
-    const colors = ["#0066ff", "#4d94ff", "#2ecc71"];
-    return colors[Math.min(index, colors.length - 1)];
+  // Nova paleta de cores com transição mais suave
+  // Começa com azul profundo, passa por tons de azul mais claros e termina em verde
+  if (totalStages <= 1) {
+    return "#3565E7"; // Azul principal
+  }
+  
+  // Progressão de cores do início ao fim do funil
+  if (index === totalStages - 1) {
+    // Último estágio: verde suave
+    return "#34C38F";
+  } else if (index === 0) {
+    // Primeiro estágio: azul escuro
+    return "#3565E7";
   } else {
-    // Para mais estágios, criar gradiente similar
-    if (index === totalStages - 1) {
-      // Último estágio sempre verde
-      return "#2ecc71";
-    } else if (index === 0) {
-      // Primeiro estágio sempre azul forte
-      return "#0066ff";
-    } else {
-      // Estágios do meio em degradê de azul
-      // Quanto mais próximo do final, mais claro o azul
-      const totalBlueStages = totalStages - 1; // Excluindo o último estágio (verde)
-      const blueIndex = index;
-      const blueRatio = blueIndex / (totalBlueStages - 1);
+    // Estágios intermediários com progressão de cor
+    const stageProgress = index / (totalStages - 1);
+    
+    if (stageProgress < 0.5) {
+      // Primeira metade: transição de azul escuro para azul médio
+      const ratio = stageProgress * 2; // Normalizado para 0-1 na primeira metade
       
-      // Interpolação entre azul escuro e azul mais claro
-      const r = Math.round(0 + (77 - 0) * blueRatio);
-      const g = Math.round(102 + (148 - 102) * blueRatio);
-      const b = Math.round(255 + (255 - 255) * blueRatio);
+      // Transição do azul principal (#3565E7) para azul médio (#5E87EA)
+      const r = Math.round(53 + (94 - 53) * ratio);
+      const g = Math.round(101 + (135 - 101) * ratio);
+      const b = Math.round(231 + (234 - 231) * ratio);
+      
+      return `rgb(${r}, ${g}, ${b})`;
+    } else {
+      // Segunda metade: transição de azul médio para verde claro
+      const ratio = (stageProgress - 0.5) * 2; // Normalizado para 0-1 na segunda metade
+      
+      // Transição do azul médio (#5E87EA) para verde (#34C38F)
+      const r = Math.round(94 - (94 - 52) * ratio);
+      const g = Math.round(135 + (195 - 135) * ratio);
+      const b = Math.round(234 - (234 - 143) * ratio);
       
       return `rgb(${r}, ${g}, ${b})`;
     }
