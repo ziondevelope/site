@@ -1458,7 +1458,7 @@ export default function CRM() {
                                   type="number"
                                   value={editingValue}
                                   onChange={(e) => setEditingValue(e.target.value)}
-                                  className="h-8 text-sm"
+                                  className="h-8 text-sm border-gray-200 bg-gray-50 focus-visible:ring-1 focus-visible:ring-gray-300"
                                   style={{ fontSize: '12px' }}
                                   autoFocus
                                   placeholder="Valor do orçamento"
