@@ -1003,16 +1003,22 @@ export default function CRM() {
                                 className="relative flex items-center justify-center cursor-pointer"
                                 style={{
                                   width: `${85 / sortedStages.length}%`,
-                                  padding: '0 6px',
+                                  padding: '0 0',
+                                  margin: '0 -3px',
                                 }}
                               >
 
                                 
-                                {/* Container principal */}
+                                {/* Container principal - Estilo seta */}
                                 <div 
-                                  className={`h-10 w-full flex items-center justify-center ${textColor} px-3 shadow-sm transition-all duration-200 relative rounded-md`}
+                                  className={`h-10 w-full flex items-center justify-center ${textColor} transition-all duration-200 relative`}
                                   style={{
                                     backgroundColor: bgColor,
+                                    clipPath: isLastStage 
+                                      ? 'polygon(0 0, 100% 0, 100% 100%, 0 100%)' 
+                                      : 'polygon(0 0, 85% 0, 100% 50%, 85% 100%, 0 100%, 15% 50%)',
+                                    paddingRight: isLastStage ? '0' : '10px',
+                                    paddingLeft: index === 0 ? '0' : '10px',
                                   }}
                                   onClick={() => {
                                     apiRequest(`/api/leads/${lead.id}/stage`, {
@@ -1043,7 +1049,8 @@ export default function CRM() {
                                       maxWidth: '100%',
                                       whiteSpace: 'nowrap',
                                       overflow: 'hidden',
-                                      textOverflow: 'ellipsis'
+                                      textOverflow: 'ellipsis',
+                                      padding: '0 8px'
                                     }}
                                   >
                                     {stage.name}
