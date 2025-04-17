@@ -1046,7 +1046,7 @@ export default function CRM() {
                                 
                                 {/* Container principal - Estilo seta */}
                                 <div 
-                                  className={`h-10 w-full flex items-center justify-center ${textColor} transition-all duration-200 relative`}
+                                  className={`h-11 w-full flex items-center justify-center ${textColor} transition-all duration-200 relative`}
                                   style={{
                                     backgroundColor: bgColor,
                                     clipPath: isLastStage 
@@ -1088,7 +1088,7 @@ export default function CRM() {
                                       overflow: 'hidden',
                                       textOverflow: 'ellipsis',
                                       padding: '0 8px',
-                                      fontSize: '11px'
+                                      fontSize: '12px'
                                     }}
                                   >
                                     {stage.name}
