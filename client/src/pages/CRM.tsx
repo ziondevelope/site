@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { Pencil, Check, X, User, Mail, Phone, Store, Home, MapPin, DollarSign, Tag, Filter, Trophy } from "lucide-react";
+import { Pencil, Check, X, User, Mail, Phone, Store, Home, MapPin, DollarSign, Tag, Filter, Trophy, MessageSquare, FileText } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -1651,7 +1651,10 @@ export default function CRM() {
                 <div className="md:col-span-9 px-8">                  
                   <div>
                     <div className="p-5 border border-[#f5f5f5] rounded-[5px]" style={{ background: '#F9FAFB' }}>
-                      <h3 className="text-base font-bold mb-4">Nota Rápida</h3>
+                      <h3 className="text-base font-bold mb-4 flex items-center">
+                        <FileText className="h-4 w-4 mr-2 text-gray-500" />
+                        Nota Rápida
+                      </h3>
                       <div className="w-full h-px mb-4 -mx-5" style={{ marginLeft: '-20px', marginRight: '-20px', width: 'calc(100% + 40px)', backgroundColor: 'rgb(245, 245, 245)' }}></div>
                       <Textarea 
                         placeholder="Digite uma anotação rápida sobre este lead..." 
@@ -1680,7 +1683,10 @@ export default function CRM() {
                     {/* Histórico de atividades/notas */}
                     <div className="mt-8">
                       <div className="p-5 border border-[#f5f5f5] rounded-[5px]" style={{ background: '#F9FAFB' }}>
-                        <h3 className="text-base font-bold mb-4">Histórico de Atividades</h3>
+                        <h3 className="text-base font-bold mb-4 flex items-center">
+                          <MessageSquare className="h-4 w-4 mr-2 text-gray-500" />
+                          Histórico de Atividades
+                        </h3>
                         <div className="w-full h-px mb-4 -mx-5" style={{ marginLeft: '-20px', marginRight: '-20px', width: 'calc(100% + 40px)', backgroundColor: 'rgb(245, 245, 245)' }}></div>
                         
                         {savedNotes[lead.id] && savedNotes[lead.id].length > 0 ? (
