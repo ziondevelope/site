@@ -968,47 +968,13 @@ export default function CRM() {
                     return (
                       <div className="w-full mb-4">
                         {/* Título do funil alinhado à esquerda acima */}
-                        <div className="flex justify-between items-center mb-3 px-2">
-                          <div className="flex items-center">
-                            <Filter className="h-4 w-4 mr-1 text-gray-500" />
-                            <span className="text-sm font-medium whitespace-nowrap">Funil de Vendas</span>
-                          </div>
-                          <div className="flex space-x-2">
-                            <Button 
-                              variant="outline" 
-                              size="sm"
-                              className="h-7 bg-green-50 border-green-200 hover:bg-green-100 text-green-600"
-                              onClick={() => {
-                                // Lógica para marcar como "Ganho"
-                                toast({
-                                  title: "Lead marcado como Ganho",
-                                  description: "O lead foi movido para status 'Ganho'",
-                                });
-                              }}
-                            >
-                              <Trophy className="h-3.5 w-3.5 mr-1" />
-                              Ganho
-                            </Button>
-                            <Button 
-                              variant="outline" 
-                              size="sm"
-                              className="h-7 bg-red-50 border-red-200 hover:bg-red-100 text-red-600"
-                              onClick={() => {
-                                // Lógica para marcar como "Perdido"
-                                toast({
-                                  title: "Lead marcado como Perdido",
-                                  description: "O lead foi movido para status 'Perdido'",
-                                });
-                              }}
-                            >
-                              <X className="h-3.5 w-3.5 mr-1" />
-                              Perdido
-                            </Button>
-                          </div>
+                        <div className="flex items-center mb-3 px-2">
+                          <Filter className="h-4 w-4 mr-1 text-gray-500" />
+                          <span className="text-sm font-medium whitespace-nowrap">Funil de Vendas</span>
                         </div>
                         
                         {/* Estágios do funil - Design simples com setas */}
-                        <div className="flex w-full items-center px-2">
+                        <div className="flex w-full items-center px-0">
                           {sortedStages.map((stage, index) => {
                             const isActive = lead.stageId === stage.id || (!lead.stageId && index === 0);
                             const isCompleted = sortedStages.findIndex(s => s.id === lead.stageId) > index;
@@ -1037,9 +1003,9 @@ export default function CRM() {
                                 key={stage.id}
                                 className="relative flex items-center justify-center cursor-pointer"
                                 style={{
-                                  width: `${85 / sortedStages.length}%`,
+                                  width: `${100 / sortedStages.length}%`,
                                   padding: '0 0',
-                                  margin: '0 -10px',
+                                  margin: '0 -8px',
                                 }}
                               >
 
