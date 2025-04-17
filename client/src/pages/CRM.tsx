@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { Pencil, Check, X, User, Mail, Phone, Store, Home, MapPin, DollarSign, Tag, Filter, Trophy, MessageSquare, FileText } from "lucide-react";
+import { Pencil, Check, X, User, Mail, Phone, Store, Home, MapPin, DollarSign, Tag, Filter, Trophy, MessageSquare, FileText, Bold, Italic, Underline, AlignLeft, AlignCenter, AlignRight, List } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -65,6 +65,111 @@ export default function CRM() {
   const [savedNotes, setSavedNotes] = useState<{[leadId: number]: Array<{text: string, date: Date}>}>({});
   const [editingField, setEditingField] = useState<{leadId: number, field: string} | null>(null);
   const [editingValue, setEditingValue] = useState<string>("");
+  
+  // Funções para formatação de texto nas notas
+  const applyBold = (leadId: number) => {
+    const textarea = document.getElementById(`note-textarea-${leadId}`) as HTMLTextAreaElement;
+    if (textarea) {
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+      const selectedText = textarea.value.substring(start, end);
+      
+      if (selectedText) {
+        const newText = textarea.value.substring(0, start) + 
+                        `**${selectedText}**` + 
+                        textarea.value.substring(end);
+        
+        setLeadNotes(prev => ({
+          ...prev,
+          [leadId]: newText
+        }));
+        
+        setTimeout(() => {
+          textarea.focus();
+          textarea.setSelectionRange(start + 2, end + 2);
+        }, 0);
+      }
+    }
+  };
+  
+  const applyItalic = (leadId: number) => {
+    const textarea = document.getElementById(`note-textarea-${leadId}`) as HTMLTextAreaElement;
+    if (textarea) {
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+      const selectedText = textarea.value.substring(start, end);
+      
+      if (selectedText) {
+        const newText = textarea.value.substring(0, start) + 
+                        `_${selectedText}_` + 
+                        textarea.value.substring(end);
+        
+        setLeadNotes(prev => ({
+          ...prev,
+          [leadId]: newText
+        }));
+        
+        setTimeout(() => {
+          textarea.focus();
+          textarea.setSelectionRange(start + 1, end + 1);
+        }, 0);
+      }
+    }
+  };
+  
+  const applyUnderline = (leadId: number) => {
+    const textarea = document.getElementById(`note-textarea-${leadId}`) as HTMLTextAreaElement;
+    if (textarea) {
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+      const selectedText = textarea.value.substring(start, end);
+      
+      if (selectedText) {
+        const newText = textarea.value.substring(0, start) + 
+                        `__${selectedText}__` + 
+                        textarea.value.substring(end);
+        
+        setLeadNotes(prev => ({
+          ...prev,
+          [leadId]: newText
+        }));
+        
+        setTimeout(() => {
+          textarea.focus();
+          textarea.setSelectionRange(start + 2, end + 2);
+        }, 0);
+      }
+    }
+  };
+  
+  const applyBulletList = (leadId: number) => {
+    const textarea = document.getElementById(`note-textarea-${leadId}`) as HTMLTextAreaElement;
+    if (textarea) {
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+      const selectedText = textarea.value.substring(start, end);
+      
+      if (selectedText) {
+        // Divide o texto selecionado em linhas e adiciona marcadores
+        const lines = selectedText.split('\n');
+        const bulletedList = lines.map(line => `• ${line}`).join('\n');
+        
+        const newText = textarea.value.substring(0, start) + 
+                        bulletedList + 
+                        textarea.value.substring(end);
+        
+        setLeadNotes(prev => ({
+          ...prev,
+          [leadId]: newText
+        }));
+        
+        setTimeout(() => {
+          textarea.focus();
+          textarea.setSelectionRange(start, start + bulletedList.length);
+        }, 0);
+      }
+    }
+  };
   
   // Mutation para atualizar dados do lead
   const updateLeadFieldMutation = useMutation({
@@ -1651,12 +1756,53 @@ export default function CRM() {
                 <div className="md:col-span-9 px-8">                  
                   <div>
                     <div className="p-5 border border-[#f5f5f5] rounded-[5px]" style={{ background: '#F9FAFB' }}>
-                      <h3 className="text-base font-bold mb-4 flex items-center">
-                        <FileText className="h-4 w-4 mr-2 text-gray-500" />
-                        Nota Rápida
-                      </h3>
+                      <div className="flex justify-between items-center mb-4">
+                        <h3 className="text-base font-bold flex items-center">
+                          <FileText className="h-4 w-4 mr-2 text-gray-500" />
+                          Nota Rápida
+                        </h3>
+                        <div className="flex space-x-2">
+                          <Button 
+                            variant="outline" 
+                            size="icon" 
+                            className="h-8 w-8 border-gray-200"
+                            onClick={() => applyBold(lead.id)}
+                            title="Negrito"
+                          >
+                            <Bold className="h-4 w-4 text-gray-600" />
+                          </Button>
+                          <Button 
+                            variant="outline" 
+                            size="icon" 
+                            className="h-8 w-8 border-gray-200"
+                            onClick={() => applyItalic(lead.id)}
+                            title="Itálico"
+                          >
+                            <Italic className="h-4 w-4 text-gray-600" />
+                          </Button>
+                          <Button 
+                            variant="outline" 
+                            size="icon" 
+                            className="h-8 w-8 border-gray-200"
+                            onClick={() => applyUnderline(lead.id)}
+                            title="Sublinhado"
+                          >
+                            <Underline className="h-4 w-4 text-gray-600" />
+                          </Button>
+                          <Button 
+                            variant="outline" 
+                            size="icon" 
+                            className="h-8 w-8 border-gray-200"
+                            onClick={() => applyBulletList(lead.id)}
+                            title="Lista com marcadores"
+                          >
+                            <List className="h-4 w-4 text-gray-600" />
+                          </Button>
+                        </div>
+                      </div>
                       <div className="w-full h-px mb-4 -mx-5" style={{ marginLeft: '-20px', marginRight: '-20px', width: 'calc(100% + 40px)', backgroundColor: 'rgb(245, 245, 245)' }}></div>
                       <Textarea 
+                        id={`note-textarea-${lead.id}`}
                         placeholder="Digite uma anotação rápida sobre este lead..." 
                         className="resize-none border-0 bg-transparent p-0 focus-visible:ring-0 text-sm" 
                         rows={8}
