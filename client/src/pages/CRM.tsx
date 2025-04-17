@@ -1015,7 +1015,7 @@ export default function CRM() {
                                   style={{
                                     backgroundColor: bgColor,
                                     clipPath: isLastStage 
-                                      ? 'polygon(0 0, 100% 0, 100% 100%, 0 100%)' 
+                                      ? 'polygon(0 0, 85% 0, 100% 0, 100% 100%, 0 100%, 15% 50%)' 
                                       : index === 0
                                         ? 'polygon(0 0, 85% 0, 100% 50%, 85% 100%, 0 100%, 0 50%)'
                                         : 'polygon(0 0, 85% 0, 100% 50%, 85% 100%, 0 100%, 15% 50%)',
