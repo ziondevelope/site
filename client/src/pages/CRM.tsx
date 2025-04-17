@@ -1004,7 +1004,7 @@ export default function CRM() {
                                 style={{
                                   width: `${85 / sortedStages.length}%`,
                                   padding: '0 0',
-                                  margin: '0 -3px',
+                                  margin: '0 -6px',
                                 }}
                               >
 
