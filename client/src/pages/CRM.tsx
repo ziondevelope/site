@@ -929,9 +929,6 @@ export default function CRM() {
               
               {/* Indicadores de progresso (funil) - mantemos o código já melhorado */}
               <div className="relative mb-6 bg-white px-6 py-4">
-                <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-3">
-                  Estágio atual no funil
-                </h3>
                 
                 {stages && stages.length > 0 ? (
                   (() => {
