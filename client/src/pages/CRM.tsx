@@ -1046,13 +1046,14 @@ export default function CRM() {
                                 >
                                   {/* Nome do estágio */}
                                   <span 
-                                    className="text-sm font-medium text-center"
+                                    className="text-xs font-medium text-center"
                                     style={{
                                       maxWidth: '100%',
                                       whiteSpace: 'nowrap',
                                       overflow: 'hidden',
                                       textOverflow: 'ellipsis',
-                                      padding: '0 8px'
+                                      padding: '0 8px',
+                                      fontSize: '11px'
                                     }}
                                   >
                                     {stage.name}
