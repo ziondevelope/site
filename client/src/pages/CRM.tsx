@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { Pencil, Check, X, User, Mail, Phone, Store, Home, MapPin, DollarSign, Tag, Filter, Trophy } from "lucide-react";
+import { Pencil, Check, X, User, Mail, Phone, Store, Home, MapPin, DollarSign, Tag, Filter, Trophy, Activity } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -969,7 +969,7 @@ export default function CRM() {
                       <div className="w-full mb-4">
                         {/* Título do funil alinhado à esquerda acima */}
                         <div className="flex items-center mb-3 px-2">
-                          <Filter className="h-4 w-4 mr-1 text-gray-500" />
+                          <Activity className="h-4 w-4 mr-1 text-gray-500" />
                           <span className="text-sm font-medium whitespace-nowrap">Funil de Vendas</span>
                         </div>
                         
