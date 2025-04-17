@@ -69,8 +69,7 @@ export default function CRM() {
   // Módulos para o editor React Quill
   const quillModules = {
     toolbar: [
-      ['bold', 'italic', 'underline'],
-      [{ 'list': 'bullet' }]
+      ['bold', 'italic', 'underline']
     ]
   };
   const [editingField, setEditingField] = useState<{leadId: number, field: string} | null>(null);
