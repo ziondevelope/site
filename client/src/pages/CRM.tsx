@@ -967,8 +967,8 @@ export default function CRM() {
                     
                     return (
                       <div className="w-full mb-4">
-                        {/* Título do funil centralizado acima */}
-                        <div className="flex justify-center items-center mb-3">
+                        {/* Título do funil alinhado à esquerda acima */}
+                        <div className="flex justify-start items-center mb-3 px-2">
                           <Filter className="h-4 w-4 mr-1 text-gray-500" />
                           <span className="text-sm font-medium whitespace-nowrap">Funil de Vendas</span>
                         </div>
