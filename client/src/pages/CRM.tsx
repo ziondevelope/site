@@ -967,13 +967,14 @@ export default function CRM() {
                     
                     return (
                       <div className="w-full mb-4">
+                        {/* Título do funil centralizado acima */}
+                        <div className="flex justify-center items-center mb-3">
+                          <Filter className="h-4 w-4 mr-1 text-gray-500" />
+                          <span className="text-sm font-medium whitespace-nowrap">Funil de Vendas</span>
+                        </div>
+                        
                         {/* Estágios do funil - Design simples com setas */}
                         <div className="flex w-full items-center px-2">
-                          {/* Título do funil com ícone ao lado esquerdo */}
-                          <div className="flex items-center mr-4 shrink-0">
-                            <Filter className="h-4 w-4 mr-1 text-gray-500" />
-                            <span className="text-sm font-medium whitespace-nowrap">Funil de Vendas:</span>
-                          </div>
                           {sortedStages.map((stage, index) => {
                             const isActive = lead.stageId === stage.id || (!lead.stageId && index === 0);
                             const isCompleted = sortedStages.findIndex(s => s.id === lead.stageId) > index;
