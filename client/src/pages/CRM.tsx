@@ -1766,50 +1766,10 @@ export default function CRM() {
                 <div className="md:col-span-9 px-8">                  
                   <div>
                     <div className="p-5 border border-[#f5f5f5] rounded-[5px]" style={{ background: '#F9FAFB' }}>
-                      <div className="flex justify-between items-center mb-4">
-                        <h3 className="text-base font-bold flex items-center">
-                          <FileText className="h-4 w-4 mr-2 text-gray-500" />
-                          Nota Rápida
-                        </h3>
-                        <div className="flex space-x-2">
-                          <Button 
-                            variant="outline" 
-                            size="icon" 
-                            className="h-8 w-8 border-gray-200"
-                            onClick={() => applyBold(lead.id)}
-                            title="Negrito"
-                          >
-                            <Bold className="h-4 w-4 text-gray-600" />
-                          </Button>
-                          <Button 
-                            variant="outline" 
-                            size="icon" 
-                            className="h-8 w-8 border-gray-200"
-                            onClick={() => applyItalic(lead.id)}
-                            title="Itálico"
-                          >
-                            <Italic className="h-4 w-4 text-gray-600" />
-                          </Button>
-                          <Button 
-                            variant="outline" 
-                            size="icon" 
-                            className="h-8 w-8 border-gray-200"
-                            onClick={() => applyUnderline(lead.id)}
-                            title="Sublinhado"
-                          >
-                            <Underline className="h-4 w-4 text-gray-600" />
-                          </Button>
-                          <Button 
-                            variant="outline" 
-                            size="icon" 
-                            className="h-8 w-8 border-gray-200"
-                            onClick={() => applyBulletList(lead.id)}
-                            title="Lista com marcadores"
-                          >
-                            <List className="h-4 w-4 text-gray-600" />
-                          </Button>
-                        </div>
-                      </div>
+                      <h3 className="text-base font-bold mb-4 flex items-center">
+                        <FileText className="h-4 w-4 mr-2 text-gray-500" />
+                        Nota Rápida
+                      </h3>
                       <div className="w-full h-px mb-4 -mx-5" style={{ marginLeft: '-20px', marginRight: '-20px', width: 'calc(100% + 40px)', backgroundColor: 'rgb(245, 245, 245)' }}></div>
                       <div className="bg-white p-5 rounded-sm" style={{ minHeight: '200px' }}>
                         <ReactQuill
@@ -1852,7 +1812,7 @@ export default function CRM() {
                                   <span className="text-sm font-semibold">{formatDate(note.date)}</span>
                                   <span className="text-xs text-gray-500">{formatTime(note.date)}</span>
                                 </div>
-                                <p className="text-sm text-left">{note.text}</p>
+                                <div className="text-sm text-left" dangerouslySetInnerHTML={{ __html: note.text }}></div>
                               </div>
                             ))}
                           </div>
