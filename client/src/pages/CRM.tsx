@@ -967,13 +967,13 @@ export default function CRM() {
                     
                     return (
                       <div className="w-full mb-4">
-                        {/* Título do funil com ícone */}
-                        <div className="flex items-center mb-2">
-                          <Filter className="h-4 w-4 mr-1 text-gray-500" />
-                          <span className="text-sm font-medium">Funil de Vendas</span>
-                        </div>
                         {/* Estágios do funil - Design simples com setas */}
-                        <div className="flex w-full items-center mt-3 px-2">
+                        <div className="flex w-full items-center px-2">
+                          {/* Título do funil com ícone ao lado esquerdo */}
+                          <div className="flex items-center mr-4 shrink-0">
+                            <Filter className="h-4 w-4 mr-1 text-gray-500" />
+                            <span className="text-sm font-medium whitespace-nowrap">Funil de Vendas:</span>
+                          </div>
                           {sortedStages.map((stage, index) => {
                             const isActive = lead.stageId === stage.id || (!lead.stageId && index === 0);
                             const isCompleted = sortedStages.findIndex(s => s.id === lead.stageId) > index;
@@ -1002,7 +1002,7 @@ export default function CRM() {
                                 key={stage.id}
                                 className="relative flex items-center justify-center cursor-pointer"
                                 style={{
-                                  width: `${100 / sortedStages.length}%`,
+                                  width: `${85 / sortedStages.length}%`,
                                   padding: '0 6px',
                                 }}
                               >
