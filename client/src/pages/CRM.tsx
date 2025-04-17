@@ -916,9 +916,6 @@ export default function CRM() {
                     <i className="fas fa-pen mr-2"></i> 
                     Editar lead
                   </Button>
-                  <DialogClose className="rounded-full w-9 h-9 p-0 border border-gray-200 inline-flex items-center justify-center text-gray-500 hover:bg-gray-100">
-                    <i className="fas fa-times"></i>
-                  </DialogClose>
                 </div>
               </div>
               
