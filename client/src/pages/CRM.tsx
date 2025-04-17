@@ -1,5 +1,7 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import { Pencil, Check, X, User, Mail, Phone, Store, Home, MapPin, DollarSign, Tag, Filter, Trophy, MessageSquare, FileText, Bold, Italic, Underline, AlignLeft, AlignCenter, AlignRight, List } from "lucide-react";
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 import { FaWhatsapp } from "react-icons/fa";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -63,6 +65,14 @@ export default function CRM() {
   const [openLeadId, setOpenLeadId] = useState<number | null>(null);
   const [leadNotes, setLeadNotes] = useState<{[leadId: number]: string}>({});
   const [savedNotes, setSavedNotes] = useState<{[leadId: number]: Array<{text: string, date: Date}>}>({});
+  
+  // Módulos para o editor React Quill
+  const quillModules = {
+    toolbar: [
+      ['bold', 'italic', 'underline'],
+      [{ 'list': 'bullet' }]
+    ]
+  };
   const [editingField, setEditingField] = useState<{leadId: number, field: string} | null>(null);
   const [editingValue, setEditingValue] = useState<string>("");
   
@@ -1801,21 +1811,20 @@ export default function CRM() {
                         </div>
                       </div>
                       <div className="w-full h-px mb-4 -mx-5" style={{ marginLeft: '-20px', marginRight: '-20px', width: 'calc(100% + 40px)', backgroundColor: 'rgb(245, 245, 245)' }}></div>
-                      <Textarea 
-                        id={`note-textarea-${lead.id}`}
-                        placeholder="Digite uma anotação rápida sobre este lead..." 
-                        className="resize-none border-0 bg-transparent p-0 focus-visible:ring-0 text-sm" 
-                        rows={8}
-                        value={leadNotes[lead.id] || lead.notes || ""}
-                        style={{
-                          background: '#fff',
-                          padding: '20px 20px 0'
-                        }}
-                        onChange={(e) => setLeadNotes(prev => ({
-                          ...prev,
-                          [lead.id]: e.target.value
-                        }))}
-                      />
+                      <div className="bg-white p-5 rounded-sm" style={{ minHeight: '200px' }}>
+                        <ReactQuill
+                          id={`note-textarea-${lead.id}`}
+                          theme="snow"
+                          placeholder="Digite uma anotação rápida sobre este lead..."
+                          value={leadNotes[lead.id] || lead.notes || ""}
+                          onChange={(content) => setLeadNotes(prev => ({
+                            ...prev,
+                            [lead.id]: content
+                          }))}
+                          modules={quillModules}
+                          className="h-32 focus:outline-none"
+                        />
+                      </div>
                       <div className="flex justify-end mt-4 pr-5 pb-2">
                         <Button 
                           className="bg-[#3565E7] hover:bg-[#2955CC] text-sm"
