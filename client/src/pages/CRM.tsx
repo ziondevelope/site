@@ -76,110 +76,7 @@ export default function CRM() {
   const [editingField, setEditingField] = useState<{leadId: number, field: string} | null>(null);
   const [editingValue, setEditingValue] = useState<string>("");
   
-  // Funções para formatação de texto nas notas
-  const applyBold = (leadId: number) => {
-    const textarea = document.getElementById(`note-textarea-${leadId}`) as HTMLTextAreaElement;
-    if (textarea) {
-      const start = textarea.selectionStart;
-      const end = textarea.selectionEnd;
-      const selectedText = textarea.value.substring(start, end);
-      
-      if (selectedText) {
-        const newText = textarea.value.substring(0, start) + 
-                        `**${selectedText}**` + 
-                        textarea.value.substring(end);
-        
-        setLeadNotes(prev => ({
-          ...prev,
-          [leadId]: newText
-        }));
-        
-        setTimeout(() => {
-          textarea.focus();
-          textarea.setSelectionRange(start + 2, end + 2);
-        }, 0);
-      }
-    }
-  };
-  
-  const applyItalic = (leadId: number) => {
-    const textarea = document.getElementById(`note-textarea-${leadId}`) as HTMLTextAreaElement;
-    if (textarea) {
-      const start = textarea.selectionStart;
-      const end = textarea.selectionEnd;
-      const selectedText = textarea.value.substring(start, end);
-      
-      if (selectedText) {
-        const newText = textarea.value.substring(0, start) + 
-                        `_${selectedText}_` + 
-                        textarea.value.substring(end);
-        
-        setLeadNotes(prev => ({
-          ...prev,
-          [leadId]: newText
-        }));
-        
-        setTimeout(() => {
-          textarea.focus();
-          textarea.setSelectionRange(start + 1, end + 1);
-        }, 0);
-      }
-    }
-  };
-  
-  const applyUnderline = (leadId: number) => {
-    const textarea = document.getElementById(`note-textarea-${leadId}`) as HTMLTextAreaElement;
-    if (textarea) {
-      const start = textarea.selectionStart;
-      const end = textarea.selectionEnd;
-      const selectedText = textarea.value.substring(start, end);
-      
-      if (selectedText) {
-        const newText = textarea.value.substring(0, start) + 
-                        `__${selectedText}__` + 
-                        textarea.value.substring(end);
-        
-        setLeadNotes(prev => ({
-          ...prev,
-          [leadId]: newText
-        }));
-        
-        setTimeout(() => {
-          textarea.focus();
-          textarea.setSelectionRange(start + 2, end + 2);
-        }, 0);
-      }
-    }
-  };
-  
-  const applyBulletList = (leadId: number) => {
-    const textarea = document.getElementById(`note-textarea-${leadId}`) as HTMLTextAreaElement;
-    if (textarea) {
-      const start = textarea.selectionStart;
-      const end = textarea.selectionEnd;
-      const selectedText = textarea.value.substring(start, end);
-      
-      if (selectedText) {
-        // Divide o texto selecionado em linhas e adiciona marcadores
-        const lines = selectedText.split('\n');
-        const bulletedList = lines.map(line => `• ${line}`).join('\n');
-        
-        const newText = textarea.value.substring(0, start) + 
-                        bulletedList + 
-                        textarea.value.substring(end);
-        
-        setLeadNotes(prev => ({
-          ...prev,
-          [leadId]: newText
-        }));
-        
-        setTimeout(() => {
-          textarea.focus();
-          textarea.setSelectionRange(start, start + bulletedList.length);
-        }, 0);
-      }
-    }
-  };
+  // As funções de formatação não são mais necessárias, o ReactQuill já implementa formatação direta
   
   // Mutation para atualizar dados do lead
   const updateLeadFieldMutation = useMutation({
@@ -1771,7 +1668,7 @@ export default function CRM() {
                         Nota Rápida
                       </h3>
                       <div className="w-full h-px mb-4 -mx-5" style={{ marginLeft: '-20px', marginRight: '-20px', width: 'calc(100% + 40px)', backgroundColor: 'rgb(245, 245, 245)' }}></div>
-                      <div className="bg-white p-5 rounded-sm" style={{ minHeight: '200px' }}>
+                      <div className="bg-white" style={{ minHeight: '200px' }}>
                         <ReactQuill
                           id={`note-textarea-${lead.id}`}
                           theme="snow"
@@ -1782,7 +1679,7 @@ export default function CRM() {
                             [lead.id]: content
                           }))}
                           modules={quillModules}
-                          className="h-32 focus:outline-none"
+                          className="h-32 focus:outline-none quill-no-border"
                         />
                       </div>
                       <div className="flex justify-end mt-4 pr-5 pb-2">

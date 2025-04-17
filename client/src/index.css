@@ -4,6 +4,18 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Classe para remover bordas do React Quill */
+.quill-no-border .ql-container,
+.quill-no-border .ql-editor {
+  border: none !important;
+}
+
+.quill-no-border .ql-toolbar {
+  border: none !important;
+  border-bottom: 1px solid rgb(245, 245, 245) !important;
+  padding: 8px 0 !important;
+}
+
 /* Estilos personalizados */
 .scrollbar-hide {
   -ms-overflow-style: none;  /* IE e Edge */
