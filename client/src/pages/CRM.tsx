@@ -68,6 +68,27 @@ export default function CRM() {
   const [savedNotes, setSavedNotes] = useState<{[leadId: number]: Array<{text: string, date: Date}>}>({});
   const [activeTab, setActiveTab] = useState<{[leadId: number]: string}>({});
   
+  // Estados para gerenciamento de tarefas
+  const [taskForm, setTaskForm] = useState<{
+    [leadId: number]: {
+      type: string;
+      description: string;
+      date: Date | null;
+      time: string;
+    }
+  }>({});
+  const [taskList, setTaskList] = useState<{
+    [leadId: number]: Array<{
+      id: number;
+      type: string;
+      description: string;
+      date: Date;
+      time: string;
+      completed: boolean;
+    }>
+  }>({});
+  const [taskIdCounter, setTaskIdCounter] = useState(1);
+  
   // Módulos para o editor React Quill
   const quillModules = {
     toolbar: [
@@ -203,6 +224,171 @@ export default function CRM() {
     //   method: 'POST',
     //   data: { note: noteText }
     // });
+  };
+  
+  // Inicializar o formulário de tarefa para um lead
+  const initializeTaskForm = (leadId: number) => {
+    if (!taskForm[leadId]) {
+      setTaskForm(prev => ({
+        ...prev,
+        [leadId]: {
+          type: "ligacao",
+          description: "",
+          date: null,
+          time: ""
+        }
+      }));
+    }
+  };
+  
+  // Manipular a alteração nos campos do formulário de tarefa
+  const handleTaskFormChange = (leadId: number, field: string, value: any) => {
+    setTaskForm(prev => ({
+      ...prev,
+      [leadId]: {
+        ...prev[leadId],
+        [field]: value
+      }
+    }));
+  };
+  
+  // Criar nova tarefa
+  const handleCreateTask = (leadId: number) => {
+    const form = taskForm[leadId];
+    
+    if (!form) {
+      toast({
+        title: "Erro",
+        description: "Formulário de tarefa não inicializado",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    if (!form.description) {
+      toast({
+        title: "Descrição necessária",
+        description: "Por favor, adicione uma descrição para a tarefa",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    if (!form.date) {
+      toast({
+        title: "Data necessária",
+        description: "Por favor, selecione uma data para a tarefa",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    if (!form.time) {
+      toast({
+        title: "Horário necessário",
+        description: "Por favor, selecione um horário para a tarefa",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    // Cria a nova tarefa
+    const newTask = {
+      id: taskIdCounter,
+      type: form.type,
+      description: form.description,
+      date: form.date as Date,
+      time: form.time,
+      completed: false
+    };
+    
+    // Atualiza a lista de tarefas
+    setTaskList(prev => {
+      const leadTasks = prev[leadId] || [];
+      return {
+        ...prev,
+        [leadId]: [...leadTasks, newTask]
+      };
+    });
+    
+    // Adiciona a tarefa como atividade no histórico
+    const taskTypeText = 
+      form.type === "ligacao" ? "Ligação" :
+      form.type === "email" ? "E-mail" : 
+      form.type === "whatsapp" ? "WhatsApp" : "Tarefa";
+    
+    const formattedDate = form.date ? formatDate(form.date as Date) : "";
+    
+    setSavedNotes(prev => {
+      const leadNotes = prev[leadId] || [];
+      return {
+        ...prev,
+        [leadId]: [...leadNotes, {
+          text: `<strong>${taskTypeText}</strong> agendada: ${form.description} - Data: ${formattedDate} às ${form.time}`,
+          date: new Date()
+        }]
+      };
+    });
+    
+    // Incrementa o contador de IDs
+    setTaskIdCounter(prev => prev + 1);
+    
+    // Limpa o formulário
+    setTaskForm(prev => ({
+      ...prev,
+      [leadId]: {
+        type: "ligacao",
+        description: "",
+        date: null,
+        time: ""
+      }
+    }));
+    
+    toast({
+      title: "Tarefa criada",
+      description: `${taskTypeText} agendada com sucesso!`,
+    });
+  };
+  
+  // Marcar tarefa como concluída
+  const handleCompleteTask = (leadId: number, taskId: number) => {
+    setTaskList(prev => {
+      const leadTasks = prev[leadId] || [];
+      const updatedTasks = leadTasks.map(task => 
+        task.id === taskId ? { ...task, completed: true } : task
+      );
+      
+      return {
+        ...prev,
+        [leadId]: updatedTasks
+      };
+    });
+    
+    // Adiciona a conclusão da tarefa ao histórico
+    const task = taskList[leadId]?.find(t => t.id === taskId);
+    
+    if (task) {
+      const taskTypeText = 
+        task.type === "ligacao" ? "Ligação" :
+        task.type === "email" ? "E-mail" : 
+        task.type === "whatsapp" ? "WhatsApp" : "Tarefa";
+      
+      setSavedNotes(prev => {
+        const leadNotes = prev[leadId] || [];
+        return {
+          ...prev,
+          [leadId]: [...leadNotes, {
+            text: `<strong>${taskTypeText}</strong> concluída: ${task.description}`,
+            date: new Date()
+          }]
+        };
+      });
+      
+      toast({
+        title: "Tarefa concluída",
+        description: `${taskTypeText} marcada como concluída!`,
+      });
+    }
   };
   
   // Função para abrir o modal de adicionar novo lead
