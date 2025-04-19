@@ -396,6 +396,7 @@ export default function SalesFunnelSettings({}: SalesFunnelSettingsProps) {
                   <Button 
                     size="sm"
                     onClick={() => setIsNewStageDialogOpen(true)}
+                    className="bg-[#15616D] hover:bg-[#15616D]/90 rounded-full px-5 text-white"
                   >
                     <Plus className="h-4 w-4 mr-1" /> Adicionar Estágio
                   </Button>
@@ -464,9 +465,8 @@ export default function SalesFunnelSettings({}: SalesFunnelSettingsProps) {
                     <div className="p-6 text-center">
                       <p className="text-sm text-gray-500">Nenhum estágio foi configurado neste funil.</p>
                       <Button 
-                        variant="outline" 
                         size="sm" 
-                        className="mt-2"
+                        className="mt-2 bg-[#15616D] hover:bg-[#15616D]/90 rounded-full px-5 text-white"
                         onClick={() => setIsNewStageDialogOpen(true)}
                       >
                         <Plus className="h-4 w-4 mr-1" /> Adicionar Estágio
@@ -479,7 +479,10 @@ export default function SalesFunnelSettings({}: SalesFunnelSettingsProps) {
           ) : (
             <div className="flex flex-col items-center justify-center p-8 border rounded-md">
               <p className="text-gray-500 mb-4">Selecione um funil para ver seus detalhes ou crie um novo.</p>
-              <Button onClick={() => setIsNewFunnelDialogOpen(true)}>
+              <Button 
+                onClick={() => setIsNewFunnelDialogOpen(true)}
+                className="bg-[#15616D] hover:bg-[#15616D]/90 rounded-full px-5 text-white"
+              >
                 <Plus className="h-4 w-4 mr-1" /> Criar Novo Funil
               </Button>
             </div>
@@ -526,6 +529,7 @@ export default function SalesFunnelSettings({}: SalesFunnelSettingsProps) {
             <Button 
               variant="outline" 
               onClick={() => setIsNewFunnelDialogOpen(false)}
+              className="rounded-full px-5"
             >
               Cancelar
             </Button>
@@ -542,6 +546,7 @@ export default function SalesFunnelSettings({}: SalesFunnelSettingsProps) {
                 createFunnelMutation.mutate(newFunnelData);
               }}
               disabled={createFunnelMutation.isPending}
+              className="bg-[#15616D] hover:bg-[#15616D]/90 rounded-full px-5"
             >
               {createFunnelMutation.isPending ? "Criando..." : "Criar Funil"}
             </Button>
@@ -595,6 +600,7 @@ export default function SalesFunnelSettings({}: SalesFunnelSettingsProps) {
             <Button 
               variant="outline" 
               onClick={() => setIsNewStageDialogOpen(false)}
+              className="rounded-full px-5"
             >
               Cancelar
             </Button>
@@ -629,6 +635,7 @@ export default function SalesFunnelSettings({}: SalesFunnelSettingsProps) {
                 });
               }}
               disabled={createStageMutation.isPending}
+              className="bg-[#15616D] hover:bg-[#15616D]/90 rounded-full px-5"
             >
               {createStageMutation.isPending ? "Adicionando..." : "Adicionar Estágio"}
             </Button>
@@ -682,6 +689,7 @@ export default function SalesFunnelSettings({}: SalesFunnelSettingsProps) {
             <Button 
               variant="outline" 
               onClick={() => setIsEditStageDialogOpen(false)}
+              className="rounded-full px-5"
             >
               Cancelar
             </Button>
@@ -709,6 +717,7 @@ export default function SalesFunnelSettings({}: SalesFunnelSettingsProps) {
                 });
               }}
               disabled={updateStageMutation.isPending}
+              className="bg-[#15616D] hover:bg-[#15616D]/90 rounded-full px-5"
             >
               {updateStageMutation.isPending ? "Salvando..." : "Salvar Alterações"}
             </Button>
