@@ -37,15 +37,15 @@ export default function Dashboard() {
   const { data: funnelData, isLoading: funnelLoading } = useQuery({
     queryKey: ['/api/dashboard/funnel'],
   });
+  
+  // Fetch scheduled tasks
+  const { data: tasks, isLoading: tasksLoading } = useQuery({
+    queryKey: ['/api/tasks/scheduled'],
+  });
 
   // Fetch recent contacts
   const { data: recentContacts, isLoading: contactsLoading } = useQuery({
     queryKey: ['/api/contacts/recent'],
-  });
-
-  // Fetch scheduled tasks
-  const { data: tasks, isLoading: tasksLoading } = useQuery({
-    queryKey: ['/api/tasks/scheduled'],
   });
   
   // Fetch all leads para o funil
@@ -85,90 +85,82 @@ export default function Dashboard() {
       
       {/* Grid principal de painéis */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Painel de Imóveis com gráfico de pizza */}
+        {/* Painel de Tarefas Agendadas */}
         <div className="bg-white p-6 rounded-lg shadow-sm">
-          <h3 className="text-lg font-semibold text-gray-800 mb-2">Imóveis</h3>
-          <div className="flex items-center mb-4">
-            <div className="text-4xl font-bold text-gray-800">350</div>
-            <div className="ml-2 text-sm text-gray-600">Disponível</div>
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-lg font-semibold text-gray-800">Tarefas Agendadas</h3>
+            <button className="text-blue-600 hover:text-blue-800 text-sm font-medium">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="inline-block mr-1"><path d="M12 5v14M5 12h14"/></svg>
+              Nova Tarefa
+            </button>
           </div>
           
-          {/* Gráfico de pizza */}
-          <div className="h-[200px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={pieData}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={60}
-                  outerRadius={80}
-                  paddingAngle={0}
-                  dataKey="value"
-                  label={false}
-                >
-                  {pieData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-          
-          {/* Legendas */}
-          <div className="mt-2 space-y-2">
-            <div className="flex items-center">
-              <div className="w-full bg-[#FF5C75] rounded-sm px-2 py-1 text-white flex justify-between">
-                <span>Venda</span>
-                <span>30% (412)</span>
-              </div>
+          {tasksLoading ? (
+            <div className="py-6 text-center">
+              <p className="text-gray-500">Carregando tarefas...</p>
             </div>
-            <div className="flex items-center">
-              <div className="w-full bg-[#FFA757] rounded-sm px-2 py-1 text-white flex justify-between">
-                <span>Locação</span>
-                <span>30% (412)</span>
-              </div>
+          ) : !Array.isArray(tasks) || tasks.length === 0 ? (
+            <div className="py-6 text-center">
+              <p className="text-gray-500">Nenhuma tarefa agendada.</p>
             </div>
-            <div className="flex items-center">
-              <div className="w-full bg-[#18D0C6] rounded-sm px-2 py-1 text-white flex justify-between">
-                <span>Temporada</span>
-                <span>13% (98)</span>
-              </div>
+          ) : (
+            <div className="space-y-3 overflow-y-auto max-h-[350px] pr-1">
+              {tasks.map((task) => (
+                <div key={task.id} className="p-3 border border-gray-100 rounded-lg hover:bg-gray-50 cursor-pointer">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <div className="font-medium text-gray-800">{task.title}</div>
+                      <div className="text-sm text-gray-500 mt-1">{task.description}</div>
+                    </div>
+                    <div className={`text-xs font-medium rounded-full px-2.5 py-1 inline-flex items-center justify-center
+                      ${task.status === 'pending' ? 'bg-yellow-50 text-yellow-700' : 
+                        task.status === 'completed' ? 'bg-green-50 text-green-700' : 
+                        task.status === 'cancelled' ? 'bg-red-50 text-red-700' : 
+                        task.status === 'confirmed' ? 'bg-blue-50 text-blue-700' :
+                        'bg-gray-50 text-gray-700'}`}
+                    >
+                      {task.status === 'pending' ? 'Pendente' : 
+                       task.status === 'completed' ? 'Concluída' :
+                       task.status === 'cancelled' ? 'Cancelada' :
+                       task.status === 'confirmed' ? 'Confirmada' :
+                       task.status}
+                    </div>
+                  </div>
+                  <div className="mt-2 flex items-center justify-between">
+                    <div className="flex items-center text-xs text-gray-500">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                      {new Date(task.date).toLocaleString('pt-BR', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                      })}
+                    </div>
+                    <div className="flex space-x-2">
+                      <span className="text-xs px-2 py-1 rounded bg-blue-50 text-blue-700 capitalize">
+                        {task.type === 'call' ? 'Ligação' :
+                         task.type === 'visit' ? 'Visita' :
+                         task.type === 'whatsapp' ? 'WhatsApp' :
+                         task.type === 'meeting' ? 'Reunião' :
+                         task.type}
+                      </span>
+                      {task.leadId && (
+                        <span className="text-xs px-2 py-1 rounded bg-purple-50 text-purple-700">
+                          Lead
+                        </span>
+                      )}
+                      {task.propertyId && (
+                        <span className="text-xs px-2 py-1 rounded bg-green-50 text-green-700">
+                          Imóvel
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
-          </div>
-          
-          {/* Lista de status */}
-          <div className="mt-4 space-y-2">
-            <div className="flex justify-between items-center p-2 border-b border-gray-100">
-              <span className="text-sm">11</span>
-              <span className="text-sm text-gray-700">Aguardando aprovação</span>
-              <span className="text-gray-400">
-                <i className="fas fa-chevron-right"></i>
-              </span>
-            </div>
-            <div className="flex justify-between items-center p-2 border-b border-gray-100">
-              <span className="text-sm">290</span>
-              <span className="text-sm text-gray-700">Atualizados</span>
-              <span className="text-gray-400">
-                <i className="fas fa-chevron-right"></i>
-              </span>
-            </div>
-            <div className="flex justify-between items-center p-2 border-b border-gray-100">
-              <span className="text-sm">123</span>
-              <span className="text-sm text-gray-700">Vencendo</span>
-              <span className="text-gray-400">
-                <i className="fas fa-chevron-right"></i>
-              </span>
-            </div>
-            <div className="flex justify-between items-center p-2 border-b border-gray-100">
-              <span className="text-sm">8</span>
-              <span className="text-sm text-gray-700">Desatualizados</span>
-              <span className="text-gray-400">
-                <i className="fas fa-chevron-right"></i>
-              </span>
-            </div>
-          </div>
+          )}
         </div>
         
         {/* Painel de Funil de Vendas */}
