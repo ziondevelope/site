@@ -2016,19 +2016,25 @@ export default function CRM() {
                         <TabsContent value="nota" className="space-y-4">
                           <div className="bg-white" style={{ minHeight: '200px' }}>
                             <div className="relative">
-                              <div style={{ position: 'absolute', right: '10px', top: '40px', zIndex: 5, color: '#888' }} className="pointer-events-none">
-                                <FileEdit size={16} />
-                              </div>
+                              {/* Ícone removido conforme solicitado */}
                               <ReactQuill
                                 id={`note-textarea-${lead.id}`}
                                 theme="snow"
-                                placeholder="Faça uma anotação..."
+                                placeholder="Faça uma anotação"
                                 value={leadNotes[lead.id] || lead.notes || ""}
                                 onChange={(content) => setLeadNotes(prev => ({
                                   ...prev,
                                   [lead.id]: content
                                 }))}
-                                modules={quillModules}
+                                modules={{
+                                  ...quillModules,
+                                  // Desativando itálico no editor
+                                  toolbar: [
+                                    ['bold'], // apenas negrito, sem itálico
+                                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                                    ['clean']
+                                  ]
+                                }}
                                 className="h-32 focus:outline-none quill-no-border"
                               />
                             </div>
