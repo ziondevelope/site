@@ -895,9 +895,9 @@ export default function CRM() {
             <VisuallyHidden>
               <DialogTitle>Detalhes do Lead</DialogTitle>
             </VisuallyHidden>
-            <div className="bg-[#E8E8E8]">
+            <div className="bg-[#E8E8E8] border-b border-gray-200">
               {/* Barra superior com nome do lead e detalhes */}
-              <div className="flex justify-between items-center bg-[#E8E8E8] p-6 rounded-t-lg">
+              <div className="flex justify-between items-center bg-[#E8E8E8] p-6 rounded-t-lg border-b border-gray-100">
                 <div className="flex items-center space-x-4">
                   <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600">
                     <i className="fas fa-user text-xl"></i>
@@ -977,9 +977,9 @@ export default function CRM() {
                       <div className="w-full mb-4">
                         {/* Novo design de funil com círculos e linhas horizontais */}
                         <div className="flex flex-col w-full px-4">
-                          <div className="w-full pb-5" style={{ position: 'relative', height: '50px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                            {/* Linha horizontal de conexão */}
-                            <div className="absolute h-[2px] bg-gray-300 w-full z-0"></div>
+                          <div className="relative flex items-center justify-between w-full">
+                            {/* Linha horizontal de conexão - ajustada para ficar centralizada nas bolas */}
+                            <div className="absolute h-[2px] bg-gray-300 left-[25px] right-[25px] top-[20px] z-0"></div>
                             
                             {sortedStages.map((stage, index) => {
                               const isActive = lead.stageId === stage.id || (!lead.stageId && index === 0);
@@ -998,16 +998,15 @@ export default function CRM() {
                                 bgColor = '#3565E7';
                                 textColor = 'text-white';
                               } else {
-                                // Estágio não ativo e não selecionado - Mantendo texto azul
+                                // Estágio não ativo e não selecionado - Cinza claro
                                 bgColor = '#D3D3D3';
-                                textColor = 'text-[#3465E7]';
+                                textColor = 'text-gray-700';
                               }
                               
                               return (
                                 <div 
                                   key={stage.id}
-                                  className="z-10 cursor-pointer"
-                                  style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+                                  className="flex flex-col items-center z-10 cursor-pointer"
                                   onClick={() => {
                                     apiRequest(`/api/leads/${lead.id}/stage`, {
                                       method: "PATCH",
