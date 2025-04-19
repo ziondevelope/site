@@ -224,6 +224,19 @@ export default function Dashboard() {
               <div className="flex-1 text-center py-1 text-gray-500">ANO</div>
               <div className="flex-1 text-center py-1 text-gray-500">GERAL</div>
             </div>
+            
+            {/* Informações do sistema */}
+            <div className="mt-4 flex items-center">
+              <div className="flex-1">
+                <div className="text-5xl font-bold text-purple-600">23</div>
+                <div className="flex items-center mt-2">
+                  <div className="bg-green-500 text-white text-xs px-1 rounded flex items-center mr-2">
+                    <i className="fas fa-arrow-up mr-1"></i>3
+                  </div>
+                  <div className="text-gray-500 text-xs">10 esperados</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         
