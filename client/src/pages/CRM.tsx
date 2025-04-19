@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
-import { Pencil, Check, X, User, Mail, Phone, Store, Home, MapPin, DollarSign, Tag, Filter, Trophy, MessageSquare, FileText, Bold, Italic, Underline, AlignLeft, AlignCenter, AlignRight, List, CalendarPlus, CheckCircle, FileEdit } from "lucide-react";
+import { Pencil, Check, X, User, Mail, Phone, Store, Home, MapPin, DollarSign, Tag, Filter, Trophy, MessageSquare, FileText, Bold, Italic, Underline, AlignLeft, AlignCenter, AlignRight, List, CalendarPlus, CheckCircle, FileEdit, ArrowDown, ArrowUp } from "lucide-react";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { FaWhatsapp } from "react-icons/fa";
@@ -103,10 +103,20 @@ export default function CRM() {
   
   // Mutation para atualizar dados do lead
   const updateLeadFieldMutation = useMutation({
-    mutationFn: ({ id, field, value }: { id: number; field: string; value: string }) => {
+    mutationFn: ({ id, field, value }: { id: number; field: string; value: string | number }) => {
       console.log("Enviando dados:", { id, field, value });
-      // Para campos que podem ser null, precisamos manter como string vazia se vazio
-      const updateData = { [field]: value || "" };
+      
+      // Converter para o tipo correto baseado no campo
+      let processedValue = value;
+      if (field === 'budget' || field === 'priceRangeMin' || field === 'priceRangeMax') {
+        // Converte para número se for um campo de preço/orçamento
+        processedValue = value === "" ? null : Number(value);
+      } else {
+        // Para outros campos que podem ser null, manter como string vazia se vazio
+        processedValue = value || "";
+      }
+      
+      const updateData = { [field]: processedValue };
       return apiRequest(`/api/leads/${id}`, {
         method: 'PATCH',
         body: JSON.stringify(updateData)
@@ -784,6 +794,28 @@ export default function CRM() {
         }
       }
       
+      // Extrair valores da faixa de preço para serem gravados como campos separados
+      const priceRangeMin = data.priceRange?.min;
+      const priceRangeMax = data.priceRange?.max;
+      
+      // Registrar no console os dados formatados antes de enviar
+      console.log("Dados formatados para envio:", {
+        name: data.name,
+        email: data.email,
+        phone: data.phone,
+        message: data.message || data.quickNote,
+        status: data.stage || 'new',
+        source: data.source || 'manual',
+        interestType: data.interestType,
+        propertyType: data.propertyType,
+        region: data.region,
+        funnelId: defaultFunnel?.id,
+        stageId: firstStageId,
+        whatsapp: data.whatsapp,
+        priceRangeMin,
+        priceRangeMax
+      });
+      
       const leadData = {
         name: data.name,
         email: data.email,
@@ -792,12 +824,14 @@ export default function CRM() {
         status: data.stage || 'new',
         source: data.source || 'manual',
         interestType: data.interestType, // Usar interestType do formulário
-        budget: data.priceRange?.max, // Usar o valor máximo da faixa de preço como orçamento
         notes: data.quickNote, // Salvar a nota rápida
         propertyType: data.propertyType, // Adicionar tipo de propriedade
         region: data.region, // Adicionar região
         // Incluir automaticamente um funil padrão para novos leads
         funnelId: defaultFunnel?.id,
+        // Adicionar valores da faixa de preço como campos separados
+        priceRangeMin,
+        priceRangeMax,
         // Definir o primeiro estágio do funil como o estágio atual do lead
         stageId: firstStageId,
         // Outros campos específicos que não estão no schema padrão
@@ -1866,22 +1900,62 @@ export default function CRM() {
                         <div>
                           <h4 className="text-xs font-semibold mb-1 flex items-center" style={{ fontSize: '14px' }}><DollarSign className="h-4 w-4 mr-1 text-gray-500" /> Faixa de Preço:</h4>
                           <div className="group relative">
-                            {editingField && editingField.leadId === lead.id && editingField.field === 'budget' ? (
+                            {editingField && editingField.leadId === lead.id && editingField.field === 'priceRangeMin' ? (
                               <div className="flex items-center">
-                                <Input 
-                                  type="number"
-                                  value={editingValue}
-                                  onChange={(e) => setEditingValue(e.target.value)}
-                                  className="h-8 text-sm focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none"
-                                  style={{ 
-                                    fontSize: '12px',
-                                    border: '1px solid #d0d0d0',
-                                    boxShadow: "none",
-                                    outline: "none"
-                                  }}
-                                  autoFocus
-                                  placeholder="Valor do orçamento"
-                                />
+                                <div className="grid grid-cols-2 gap-2 w-full">
+                                  <Input 
+                                    type="number"
+                                    value={editingValue}
+                                    onChange={(e) => setEditingValue(e.target.value)}
+                                    className="h-8 text-sm focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none"
+                                    style={{ 
+                                      fontSize: '12px',
+                                      border: '1px solid #d0d0d0',
+                                      boxShadow: "none",
+                                      outline: "none"
+                                    }}
+                                    autoFocus
+                                    placeholder="Valor mínimo (R$)"
+                                  />
+                                </div>
+                                <div className="flex ml-2">
+                                  <Button 
+                                    size="icon" 
+                                    variant="ghost" 
+                                    className="h-6 w-6" 
+                                    onClick={handleSaveEdit}
+                                    disabled={updateLeadFieldMutation.isPending}
+                                  >
+                                    <Check className="h-4 w-4" />
+                                  </Button>
+                                  <Button 
+                                    size="icon" 
+                                    variant="ghost" 
+                                    className="h-6 w-6" 
+                                    onClick={handleCancelEdit}
+                                  >
+                                    <X className="h-4 w-4" />
+                                  </Button>
+                                </div>
+                              </div>
+                            ) : editingField && editingField.leadId === lead.id && editingField.field === 'priceRangeMax' ? (
+                              <div className="flex items-center">
+                                <div className="grid grid-cols-2 gap-2 w-full">
+                                  <Input 
+                                    type="number"
+                                    value={editingValue}
+                                    onChange={(e) => setEditingValue(e.target.value)}
+                                    className="h-8 text-sm focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none"
+                                    style={{ 
+                                      fontSize: '12px',
+                                      border: '1px solid #d0d0d0',
+                                      boxShadow: "none",
+                                      outline: "none"
+                                    }}
+                                    autoFocus
+                                    placeholder="Valor máximo (R$)"
+                                  />
+                                </div>
                                 <div className="flex ml-2">
                                   <Button 
                                     size="icon" 
@@ -1907,14 +1981,26 @@ export default function CRM() {
                                 <p className="text-sm text-left" style={{ fontSize: "13px", color: "#878484" }}>
                                   {(lead as any).priceRangeMin && (lead as any).priceRangeMax ? 
                                     `R$ ${(lead as any).priceRangeMin.toLocaleString('pt-BR')} - R$ ${(lead as any).priceRangeMax.toLocaleString('pt-BR')}` : 
+                                    (lead as any).priceRangeMin ? `A partir de R$ ${(lead as any).priceRangeMin.toLocaleString('pt-BR')}` :
+                                    (lead as any).priceRangeMax ? `Até R$ ${(lead as any).priceRangeMax.toLocaleString('pt-BR')}` :
                                     lead.budget ? 'R$ ' + lead.budget.toLocaleString('pt-BR') : 'Não informado'}
                                 </p>
-                                <button 
-                                  className="ml-2 invisible group-hover:visible"
-                                  onClick={() => handleStartEditing(lead.id, 'budget', lead.budget)}
-                                >
-                                  <Pencil className="h-3 w-3 text-gray-500 hover:text-gray-700" />
-                                </button>
+                                <div className="flex ml-2">
+                                  <button 
+                                    className="mr-1 invisible group-hover:visible"
+                                    onClick={() => handleStartEditing(lead.id, 'priceRangeMin', (lead as any).priceRangeMin?.toString())}
+                                    title="Editar valor mínimo"
+                                  >
+                                    <ArrowDown className="h-3 w-3 text-gray-500 hover:text-gray-700" />
+                                  </button>
+                                  <button 
+                                    className="invisible group-hover:visible"
+                                    onClick={() => handleStartEditing(lead.id, 'priceRangeMax', (lead as any).priceRangeMax?.toString())}
+                                    title="Editar valor máximo"
+                                  >
+                                    <ArrowUp className="h-3 w-3 text-gray-500 hover:text-gray-700" />
+                                  </button>
+                                </div>
                               </div>
                             )}
                           </div>
