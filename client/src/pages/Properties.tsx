@@ -759,14 +759,14 @@ export default function Properties() {
                     type="button" 
                     variant="outline" 
                     onClick={() => setIsAddDialogOpen(false)}
-                    className="mr-2"
+                    className="mr-2 rounded-full px-5"
                   >
                     Cancelar
                   </Button>
                   <Button 
                     type="submit"
                     disabled={addPropertyMutation.isPending}
-                    className="bg-[#15616D] hover:bg-[#15616D]/90"
+                    className="bg-[#15616D] hover:bg-[#15616D]/90 rounded-full px-5"
                   >
                     {addPropertyMutation.isPending ? "Salvando..." : "Salvar Imóvel"}
                   </Button>
@@ -1161,14 +1161,14 @@ export default function Properties() {
                     type="button" 
                     variant="outline" 
                     onClick={() => setIsEditDialogOpen(false)}
-                    className="mr-2"
+                    className="mr-2 rounded-full px-5"
                   >
                     Cancelar
                   </Button>
                   <Button 
                     type="submit"
                     disabled={updatePropertyMutation.isPending}
-                    className="bg-[#15616D] hover:bg-[#15616D]/90"
+                    className="bg-[#15616D] hover:bg-[#15616D]/90 rounded-full px-5"
                   >
                     {updatePropertyMutation.isPending ? "Salvando..." : "Salvar Alterações"}
                   </Button>
@@ -1189,12 +1189,15 @@ export default function Properties() {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => setIsDeleteAlertOpen(false)}>
+            <AlertDialogCancel 
+              onClick={() => setIsDeleteAlertOpen(false)}
+              className="rounded-full px-5"
+            >
               Cancelar
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDeleteConfirm}
-              className="bg-red-500 hover:bg-red-600"
+              className="bg-red-500 hover:bg-red-600 rounded-full px-5"
               disabled={deletePropertyMutation.isPending}
             >
               {deletePropertyMutation.isPending ? "Excluindo..." : "Excluir Imóvel"}
@@ -1261,7 +1264,7 @@ export default function Properties() {
           <Button
             onClick={handleAddClick}
             size="sm"
-            className="rounded-full bg-[#15616D] hover:bg-[#15616D]/90"
+            className="rounded-full px-5 bg-[#15616D] hover:bg-[#15616D]/90"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
             Adicionar Imóvel
@@ -1280,7 +1283,7 @@ export default function Properties() {
             }}
             size="sm"
             variant="outline"
-            className="rounded-full"
+            className="rounded-full px-5"
           >
             Limpar filtros
           </Button>
