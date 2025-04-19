@@ -33,14 +33,17 @@ const DialogContent = React.forwardRef<
 >(({ className, children, ...props }, ref) => (
   <DialogPortal>
     <DialogOverlay />
-    <div className="fixed left-[50%] top-[50%] z-50 flex flex-col items-end max-w-lg translate-x-[-50%] translate-y-[-50%]">
-      {/* Botão de fechar separado, acima do modal */}
-      <DialogPrimitive.Close className="mb-2 rounded-full bg-blue-600 text-white p-1.5 opacity-90 shadow-md hover:opacity-100 transition-all hover:bg-blue-700 focus:outline-none disabled:pointer-events-none z-[100]">
-        <X className="h-4 w-4" />
-        <span className="sr-only">Close</span>
-      </DialogPrimitive.Close>
+    {/* Container para centralizar tudo */}
+    <div className="fixed left-[50%] top-[50%] z-50 translate-x-[-50%] translate-y-[-50%] w-full max-w-lg">
+      {/* Container para o botão no canto direito */}
+      <div className="flex justify-end w-full">
+        <DialogPrimitive.Close className="mb-2 rounded-full bg-blue-600 text-white p-1.5 opacity-90 shadow-md hover:opacity-100 transition-all hover:bg-blue-700 focus:outline-none disabled:pointer-events-none z-[100]">
+          <X className="h-4 w-4" />
+          <span className="sr-only">Close</span>
+        </DialogPrimitive.Close>
+      </div>
       
-      {/* Conteúdo do modal */}
+      {/* Conteúdo do modal centralizado */}
       <DialogPrimitive.Content
         ref={ref}
         className={cn(
