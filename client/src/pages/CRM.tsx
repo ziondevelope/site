@@ -6,6 +6,7 @@ import { FaWhatsapp } from "react-icons/fa";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from "@/components/ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { InsertLead, Lead, FunnelStage, SalesFunnel, insertLeadSchema } from "@shared/schema";
@@ -65,6 +66,7 @@ export default function CRM() {
   const [openLeadId, setOpenLeadId] = useState<number | null>(null);
   const [leadNotes, setLeadNotes] = useState<{[leadId: number]: string}>({});
   const [savedNotes, setSavedNotes] = useState<{[leadId: number]: Array<{text: string, date: Date}>}>({});
+  const [activeTab, setActiveTab] = useState<{[leadId: number]: string}>({});
   
   // Módulos para o editor React Quill
   const quillModules = {
@@ -151,6 +153,14 @@ export default function CRM() {
     }).format(date);
   };
   
+  // Função para definir a aba ativa
+  const handleTabChange = (leadId: number, tabValue: string) => {
+    setActiveTab(prev => ({
+      ...prev,
+      [leadId]: tabValue
+    }));
+  };
+
   // Função para salvar a nota
   const handleSaveNote = (leadId: number) => {
     const noteText = leadNotes[leadId] || "";
@@ -296,10 +306,16 @@ export default function CRM() {
     return allLeads;
   }, [allLeads, selectedFunnelId, selectedStageId]);
   
-  // Quando um lead é aberto, carregar seus dados de funil
+  // Quando um lead é aberto, carregar seus dados de funil e definir a aba ativa padrão
   useEffect(() => {
     if (openLeadId !== null && allLeads) {
       const openLead = allLeads.find(lead => lead.id === openLeadId);
+      
+      // Definir a aba padrão como "nota" quando abrir o modal
+      setActiveTab(prev => ({
+        ...prev,
+        [openLeadId]: "nota"
+      }));
       
       if (openLead && openLead.funnelId) {
         // Se o lead já tem um funil associado, usar esse funil
@@ -1621,66 +1637,108 @@ export default function CRM() {
                   </div>
                 </div>
                 
-                {/* Coluna de Notas */}
+                {/* Coluna de Notas e Tarefas com Sistema de Abas */}
                 <div className="md:col-span-8 px-4">                  
                   <div>
                     <div className="p-5 border border-[#f5f5f5] rounded-[10px]" style={{ background: '#F9FAFB' }}>
-                      <h3 className="text-sm font-bold mb-4 uppercase flex items-center" style={{ color: '#444444' }}>
-                        <FileText className="h-4 w-4 mr-2 text-gray-500" />
-                        NOTA RÁPIDA
-                      </h3>
-                      <div className="w-full h-px mb-4 -mx-5" style={{ marginLeft: '-20px', marginRight: '-20px', width: 'calc(100% + 40px)', backgroundColor: 'rgb(245, 245, 245)' }}></div>
-                      <div className="bg-white" style={{ minHeight: '200px' }}>
-                        <ReactQuill
-                          id={`note-textarea-${lead.id}`}
-                          theme="snow"
-                          placeholder="Digite uma anotação rápida sobre este lead..."
-                          value={leadNotes[lead.id] || lead.notes || ""}
-                          onChange={(content) => setLeadNotes(prev => ({
-                            ...prev,
-                            [lead.id]: content
-                          }))}
-                          modules={quillModules}
-                          className="h-32 focus:outline-none quill-no-border"
-                        />
-                      </div>
-                      <div className="flex justify-end mt-4 pr-5 pb-2">
-                        <Button 
-                          className="bg-[#3565E7] hover:bg-[#2955CC] text-sm"
-                          onClick={() => handleSaveNote(lead.id)}
-                        >
-                          Salvar Nota
-                        </Button>
-                      </div>
-                    </div>
-                    
-                    {/* Histórico de atividades/notas */}
-                    <div className="mt-8">
-                      <div className="p-5 border border-[#f5f5f5] rounded-[10px]" style={{ background: '#F9FAFB' }}>
-                        <h3 className="text-sm font-bold mb-4 uppercase flex items-center" style={{ color: '#444444' }}>
-                          <MessageSquare className="h-4 w-4 mr-2 text-gray-500" />
-                          HISTÓRICO DE ATIVIDADES
-                        </h3>
+                      
+                      <Tabs 
+                        defaultValue="nota" 
+                        value={activeTab[lead.id] || "nota"}
+                        onValueChange={(value) => handleTabChange(lead.id, value)}
+                        className="w-full"
+                      >
+                        <TabsList className="grid w-full grid-cols-2 mb-4">
+                          <TabsTrigger 
+                            value="nota" 
+                            style={{ 
+                              fontFamily: 'Montserrat, sans-serif',
+                              fontWeight: 600,
+                              textTransform: 'capitalize'
+                            }}
+                          >
+                            <FileText className="h-4 w-4 mr-2 text-gray-500" />
+                            Nota
+                          </TabsTrigger>
+                          <TabsTrigger 
+                            value="tarefas"
+                            style={{ 
+                              fontFamily: 'Montserrat, sans-serif',
+                              fontWeight: 600,
+                              textTransform: 'capitalize'
+                            }}
+                          >
+                            <MessageSquare className="h-4 w-4 mr-2 text-gray-500" />
+                            Criar tarefas
+                          </TabsTrigger>
+                        </TabsList>
+                        
                         <div className="w-full h-px mb-4 -mx-5" style={{ marginLeft: '-20px', marginRight: '-20px', width: 'calc(100% + 40px)', backgroundColor: 'rgb(245, 245, 245)' }}></div>
                         
-                        {savedNotes[lead.id] && savedNotes[lead.id].length > 0 ? (
-                          <div className="space-y-4">
-                            {savedNotes[lead.id].map((note, index) => (
-                              <div key={index} className="p-4 border border-[#f5f5f5] rounded-[10px] bg-white">
-                                <div className="flex justify-between items-start mb-2">
-                                  <span className="text-sm font-semibold">{formatDate(note.date)}</span>
-                                  <span className="text-xs text-gray-500">{formatTime(note.date)}</span>
+                        <TabsContent value="nota" className="space-y-4">
+                          <div className="bg-white" style={{ minHeight: '200px' }}>
+                            <ReactQuill
+                              id={`note-textarea-${lead.id}`}
+                              theme="snow"
+                              placeholder="Digite uma anotação rápida sobre este lead..."
+                              value={leadNotes[lead.id] || lead.notes || ""}
+                              onChange={(content) => setLeadNotes(prev => ({
+                                ...prev,
+                                [lead.id]: content
+                              }))}
+                              modules={quillModules}
+                              className="h-32 focus:outline-none quill-no-border"
+                            />
+                          </div>
+                          <div className="flex justify-end mt-4 pr-5 pb-2">
+                            <Button 
+                              className="bg-[#3565E7] hover:bg-[#2955CC] text-sm"
+                              onClick={() => handleSaveNote(lead.id)}
+                            >
+                              Salvar Nota
+                            </Button>
+                          </div>
+                          
+                          {/* Histórico de atividades/notas */}
+                          <div className="mt-8">
+                            <div className="p-5 border border-[#f5f5f5] rounded-[10px]" style={{ background: '#F9FAFB' }}>
+                              <h3 className="text-sm font-bold mb-4 uppercase flex items-center" style={{ color: '#444444' }}>
+                                <MessageSquare className="h-4 w-4 mr-2 text-gray-500" />
+                                HISTÓRICO DE ATIVIDADES
+                              </h3>
+                              <div className="w-full h-px mb-4 -mx-5" style={{ marginLeft: '-20px', marginRight: '-20px', width: 'calc(100% + 40px)', backgroundColor: 'rgb(245, 245, 245)' }}></div>
+                              
+                              {savedNotes[lead.id] && savedNotes[lead.id].length > 0 ? (
+                                <div className="space-y-4">
+                                  {savedNotes[lead.id].map((note, index) => (
+                                    <div key={index} className="p-4 border border-[#f5f5f5] rounded-[10px] bg-white">
+                                      <div className="flex justify-between items-start mb-2">
+                                        <span className="text-sm font-semibold">{formatDate(note.date)}</span>
+                                        <span className="text-xs text-gray-500">{formatTime(note.date)}</span>
+                                      </div>
+                                      <div className="text-sm text-left" dangerouslySetInnerHTML={{ __html: note.text }}></div>
+                                    </div>
+                                  ))}
                                 </div>
-                                <div className="text-sm text-left" dangerouslySetInnerHTML={{ __html: note.text }}></div>
-                              </div>
-                            ))}
+                              ) : (
+                                <div className="text-center py-6 text-gray-500 text-sm">
+                                  Nenhuma nota foi adicionada ainda.
+                                </div>
+                              )}
+                            </div>
                           </div>
-                        ) : (
-                          <div className="text-center py-6 text-gray-500 text-sm">
-                            Nenhuma nota foi adicionada ainda.
+                        </TabsContent>
+                        
+                        <TabsContent value="tarefas" className="space-y-4">
+                          <div className="p-4 bg-white rounded-md" style={{ minHeight: '250px' }}>
+                            <div className="text-center py-6">
+                              <p className="text-sm text-gray-500">
+                                Funcionalidade de criação de tarefas em desenvolvimento.
+                              </p>
+                            </div>
                           </div>
-                        )}
-                      </div>
+                        </TabsContent>
+                      </Tabs>
                     </div>
                   </div>
                 </div>
