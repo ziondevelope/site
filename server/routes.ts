@@ -389,12 +389,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   apiRouter.post("/tasks", async (req, res) => {
     try {
-      const validatedData = insertTaskSchema.parse(req.body);
+      console.log("Dados recebidos na API:", req.body);
+      
+      // Converter manualmente a data de string para Date
+      const taskData = {
+        ...req.body,
+        date: new Date(req.body.date)
+      };
+      
+      console.log("Dados processados:", taskData);
+      
+      // Validar dados
+      const validatedData = insertTaskSchema.parse(taskData);
+      console.log("Dados validados:", validatedData);
+      
+      // Criar tarefa
       const task = await storageInstance.createTask(validatedData);
+      console.log("Tarefa criada:", task);
+      
       res.status(201).json(task);
     } catch (error) {
+      console.error("Erro detalhado na criação da tarefa:", error);
       if (error instanceof z.ZodError) {
-        return res.status(400).json({ message: "Invalid task data", errors: error.errors });
+        return res.status(400).json({ 
+          message: "Invalid task data", 
+          errors: error.errors,
+          receivedData: req.body
+        });
       }
       res.status(500).json({ message: "Error creating task" });
     }
@@ -456,7 +477,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const note = await storageInstance.createLeadNote({
         leadId,
         text,
-        date: new Date().toISOString()
+        date: new Date()
       });
       
       res.status(201).json(note);
