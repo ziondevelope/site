@@ -391,33 +391,42 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       console.log("Dados recebidos na API:", req.body);
       
-      // Converter manualmente a data de string para Date
+      // Validação manual dos campos obrigatórios
+      const { title, description, date, type, status, leadId, agentId } = req.body;
+      
+      if (!title || !description || !date || !type || !status) {
+        return res.status(400).json({ 
+          message: "Missing required fields", 
+          requiredFields: ["title", "description", "date", "type", "status"]
+        });
+      }
+      
+      // Criar objeto da tarefa com conversão manual da data
       const taskData = {
-        ...req.body,
-        date: new Date(req.body.date)
+        title,
+        description,
+        date: new Date(date),
+        type,
+        status,
+        leadId: leadId ? parseInt(leadId) : null,
+        propertyId: req.body.propertyId ? parseInt(req.body.propertyId) : null,
+        agentId: agentId ? parseInt(agentId) : null
       };
       
-      console.log("Dados processados:", taskData);
+      console.log("Dados processados e validados manualmente:", taskData);
       
-      // Validar dados
-      const validatedData = insertTaskSchema.parse(taskData);
-      console.log("Dados validados:", validatedData);
-      
-      // Criar tarefa
-      const task = await storageInstance.createTask(validatedData);
+      // Criar tarefa diretamente sem usar o Zod
+      const task = await storageInstance.createTask(taskData);
       console.log("Tarefa criada:", task);
       
       res.status(201).json(task);
     } catch (error) {
       console.error("Erro detalhado na criação da tarefa:", error);
-      if (error instanceof z.ZodError) {
-        return res.status(400).json({ 
-          message: "Invalid task data", 
-          errors: error.errors,
-          receivedData: req.body
-        });
-      }
-      res.status(500).json({ message: "Error creating task" });
+      const errorMessage = error instanceof Error ? error.message : "Unknown error";
+      res.status(500).json({ 
+        message: "Error creating task",
+        error: errorMessage
+      });
     }
   });
   

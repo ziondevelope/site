@@ -552,8 +552,10 @@ export class FirebaseStorage implements IStorage {
     }
   }
 
-  async createTask(task: InsertTask): Promise<Task> {
+  async createTask(task: any): Promise<Task> {
     try {
+      console.log("Storage: recebido task:", task);
+      
       // Find the highest ID to increment
       const tasksRef = collection(db, 'tasks');
       const q = query(tasksRef, orderBy('id', 'desc'), limit(1));
@@ -562,18 +564,34 @@ export class FirebaseStorage implements IStorage {
       const highestId = tasksSnapshot.empty ? 0 : tasksSnapshot.docs[0].data().id;
       
       const now = new Date().toISOString();
+      
+      // Garantir que a data seja convertida para string ISO
+      let taskDate = task.date;
+      if (taskDate instanceof Date) {
+        taskDate = taskDate.toISOString();
+      }
+      
       const newTask: Task = {
-        ...task,
         id: highestId + 1,
+        title: task.title,
+        description: task.description,
+        date: taskDate,
+        type: task.type,
+        status: task.status || "pending",
+        leadId: task.leadId,
+        propertyId: task.propertyId,
+        agentId: task.agentId,
         createdAt: now,
         updatedAt: now,
       };
+      
+      console.log("Storage: criando task:", newTask);
       
       await setDoc(doc(db, 'tasks', newTask.id.toString()), newTask);
       return newTask;
     } catch (error) {
       console.error('Error creating task:', error);
-      throw new Error('Failed to create task');
+      throw new Error('Failed to create task: ' + error.message);
     }
   }
 
