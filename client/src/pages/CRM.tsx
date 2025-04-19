@@ -160,19 +160,31 @@ export default function CRM() {
   const queryClient = useQueryClient();
   
   // Funções auxiliares para formatação de data
-  const formatDate = (date: Date) => {
-    return new Intl.DateTimeFormat('pt-BR', { 
-      day: '2-digit', 
-      month: '2-digit', 
-      year: 'numeric' 
-    }).format(date);
+  const formatDate = (date: Date | string) => {
+    try {
+      const dateObj = typeof date === 'string' ? new Date(date) : date;
+      return new Intl.DateTimeFormat('pt-BR', { 
+        day: '2-digit', 
+        month: '2-digit', 
+        year: 'numeric' 
+      }).format(dateObj);
+    } catch (error) {
+      console.error("Erro ao formatar data:", error, date);
+      return "Data inválida";
+    }
   };
   
-  const formatTime = (date: Date) => {
-    return new Intl.DateTimeFormat('pt-BR', { 
-      hour: '2-digit', 
-      minute: '2-digit' 
-    }).format(date);
+  const formatTime = (date: Date | string) => {
+    try {
+      const dateObj = typeof date === 'string' ? new Date(date) : date;
+      return new Intl.DateTimeFormat('pt-BR', { 
+        hour: '2-digit', 
+        minute: '2-digit' 
+      }).format(dateObj);
+    } catch (error) {
+      console.error("Erro ao formatar hora:", error, date);
+      return "Hora inválida";
+    }
   };
   
   // Função para definir a aba ativa
