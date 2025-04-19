@@ -2153,7 +2153,7 @@ export default function CRM() {
                           </div>
                           <div className="flex justify-end mt-4 pr-5 pb-2">
                             <Button 
-                              className="bg-[#3565E7] hover:bg-[#2955CC] text-sm"
+                              className="bg-[#12636C] hover:bg-[#12636C]/90 text-sm rounded-full px-5"
                               onClick={() => handleSaveNote(lead.id)}
                             >
                               Salvar Nota
@@ -2252,7 +2252,7 @@ export default function CRM() {
                               <div className="flex justify-end mt-4">
                                 <Button 
                                   onClick={() => handleCreateTask(lead.id)}
-                                  className="bg-[#3565E7] hover:bg-[#2955CC] text-sm"
+                                  className="bg-[#12636C] hover:bg-[#12636C]/90 text-sm rounded-full px-5"
                                 >
                                   <CalendarPlus className="h-4 w-4 mr-2" />
                                   Agendar Tarefa
