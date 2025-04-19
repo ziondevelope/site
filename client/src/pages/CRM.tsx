@@ -874,7 +874,7 @@ export default function CRM() {
             if (!open) setOpenLeadId(null);
           }}
         >
-          <DialogContent className="max-w-6xl w-[90vw] max-h-[90vh] overflow-y-auto p-0">
+          <DialogContent className="max-w-6xl w-[90vw] max-h-[90vh] overflow-y-auto p-0" style={{ fontFamily: 'Montserrat, sans-serif' }}>
             {/* Cabeçalho no estilo RD Station - INVISIBLE TITLE para acessibilidade */}
             <VisuallyHidden>
               <DialogTitle>Detalhes do Lead</DialogTitle>
