@@ -904,7 +904,7 @@ export default function CRM() {
                   </div>
                   <div>
                     <h2 className="text-xl font-bold text-gray-800">{lead.name}</h2>
-                    <p className="text-sm text-white">
+                    <p className="text-sm text-[#111111]">
                       {lead.source === 'manual' ? 'Lead manual' :
                       lead.source === 'website' ? 'Lead do website' :
                       lead.source === 'whatsapp' ? 'Lead do WhatsApp' :
