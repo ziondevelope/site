@@ -94,12 +94,18 @@
     @apply antialiased;
     background-color: var(--color-beige);
     color: var(--color-dark-blue);
-    font-family: var(--body-font, 'Montserrat'), sans-serif;
+    font-family: 'Montserrat', sans-serif;
   }
   
   h1, h2, h3, h4, h5, h6 {
-    font-family: var(--heading-font, 'Montserrat'), sans-serif;
+    font-family: 'Montserrat', sans-serif;
     color: var(--color-dark-blue);
+  }
+  
+  /* Variáveis globais de fonte */
+  :root {
+    --body-font: 'Montserrat', sans-serif;
+    --heading-font: 'Montserrat', sans-serif;
   }
 
   select:focus, input:focus {

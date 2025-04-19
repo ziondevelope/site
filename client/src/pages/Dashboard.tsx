@@ -78,7 +78,7 @@ export default function Dashboard() {
       {/* Barra do topo com nome e data */}
       <div className="flex justify-between items-center bg-white p-5 rounded-lg shadow-sm">
         <div>
-          <h2 className="text-xl font-semibold text-[#357deb]">Bom dia, Walter!</h2>
+          <h2 className="text-xl font-semibold" style={{ color: '#15616D' }}>Bom dia, Walter!</h2>
           <p className="text-sm text-gray-600">{formattedDate}</p>
         </div>
       </div>
@@ -88,8 +88,8 @@ export default function Dashboard() {
         {/* Painel de Tarefas Agendadas */}
         <div className="bg-white p-6 rounded-lg shadow-sm">
           <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-semibold text-gray-800">Tarefas Agendadas</h3>
-            <button className="text-blue-600 hover:text-blue-800 text-sm font-medium">
+            <h3 className="text-lg font-semibold" style={{ color: '#001524' }}>Tarefas Agendadas</h3>
+            <button className="text-sm font-medium" style={{ color: '#15616D' }}>
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="inline-block mr-1"><path d="M12 5v14M5 12h14"/></svg>
               Nova Tarefa
             </button>
@@ -165,7 +165,7 @@ export default function Dashboard() {
         
         {/* Painel de Funil de Vendas */}
         <div className="bg-white p-6 rounded-lg shadow-sm">
-          <h3 className="text-lg font-semibold text-gray-800 mb-2">Funil de Vendas</h3>
+          <h3 className="text-lg font-semibold mb-2" style={{ color: '#001524' }}>Funil de Vendas</h3>
           
           <div className="mt-2 mb-4">
             <div className="flex justify-between">
@@ -243,7 +243,7 @@ export default function Dashboard() {
           
           {/* Raio-X */}
           <div className="mt-8">
-            <h4 className="text-lg font-semibold text-gray-800 mb-3">Raio-X</h4>
+            <h4 className="text-lg font-semibold mb-3" style={{ color: '#001524' }}>Raio-X</h4>
             <div className="flex text-sm mb-4">
               <div className="flex-1 text-center py-1 border-b-2 font-medium" style={{ borderColor: '#15616D', color: '#15616D' }}>MÊS</div>
               <div className="flex-1 text-center py-1 text-gray-500">ANO</div>
@@ -267,7 +267,7 @@ export default function Dashboard() {
         
         {/* Painel de Faturamento */}
         <div className="bg-white p-6 rounded-lg shadow-sm">
-          <h3 className="text-lg font-semibold text-gray-800 mb-4">Faturamento</h3>
+          <h3 className="text-lg font-semibold mb-4" style={{ color: '#001524' }}>Faturamento</h3>
           
           {/* Gráfico de linhas */}
           <div className="h-[240px]">
