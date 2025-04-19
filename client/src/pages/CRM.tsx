@@ -1984,32 +1984,32 @@ export default function CRM() {
                         onValueChange={(value) => handleTabChange(lead.id, value)}
                         className="w-full"
                       >
-                        <TabsList className="grid w-full grid-cols-2 mb-4">
+                        <TabsList className="w-full mb-4 bg-transparent border-b border-[#f0f0f0] flex">
                           <TabsTrigger 
                             value="nota" 
+                            className="px-6 py-2 rounded-none border-b-2 border-transparent data-[state=active]:border-[#3565E7] data-[state=active]:bg-transparent text-sm"
                             style={{ 
                               fontFamily: 'Montserrat, sans-serif',
-                              fontWeight: 600,
-                              textTransform: 'capitalize'
+                              fontWeight: 500,
+                              textTransform: 'capitalize',
                             }}
                           >
-                            <FileText className="h-4 w-4 mr-2 text-gray-500" />
                             Nota
                           </TabsTrigger>
                           <TabsTrigger 
                             value="tarefas"
+                            className="px-6 py-2 rounded-none border-b-2 border-transparent data-[state=active]:border-[#3565E7] data-[state=active]:bg-transparent text-sm"
                             style={{ 
                               fontFamily: 'Montserrat, sans-serif',
-                              fontWeight: 600,
-                              textTransform: 'capitalize'
+                              fontWeight: 500,
+                              textTransform: 'capitalize',
                             }}
                           >
-                            <MessageSquare className="h-4 w-4 mr-2 text-gray-500" />
-                            Criar tarefas
+                            Criar tarefa
                           </TabsTrigger>
                         </TabsList>
                         
-                        <div className="w-full h-px mb-4 -mx-5" style={{ marginLeft: '-20px', marginRight: '-20px', width: 'calc(100% + 40px)', backgroundColor: 'rgb(245, 245, 245)' }}></div>
+                        {/* Linha de divisão removida já que a Tab List tem uma borda inferior */}
                         
                         <TabsContent value="nota" className="space-y-4">
                           <div className="bg-white" style={{ minHeight: '200px' }}>
