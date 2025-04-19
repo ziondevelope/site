@@ -1,6 +1,7 @@
 import express, { type Express, type Request, type Response, type NextFunction } from "express";
 import { createServer, type Server } from "http";
 import { storageInstance } from "./storage";
+import { getFirestore, doc, setDoc } from "firebase/firestore";
 import { z } from "zod";
 import {
   insertUserSchema,
@@ -389,7 +390,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   apiRouter.post("/tasks", async (req, res) => {
     try {
-      console.log("Dados recebidos na API:", req.body);
+      // Ainda usando o schema Zod para validação
+      const validatedData = insertTaskSchema.parse(req.body);
+      const task = await storageInstance.createTask(validatedData);
+      res.status(201).json(task);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Invalid task data", errors: error.errors });
+      }
+      res.status(500).json({ message: "Error creating task" });
+    }
+  });
+  
+  // Novo endpoint que não usa Zod (contorno temporário)
+  apiRouter.post("/tasks-direct", async (req, res) => {
+    try {
+      console.log("Dados recebidos na API (direct):", req.body);
       
       // Validação manual dos campos obrigatórios
       const { title, description, date, type, status, leadId, agentId } = req.body;
@@ -401,30 +417,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
       
-      // Criar objeto da tarefa com conversão manual da data
-      const taskData = {
+      // Criamos um ID temporário para a tarefa
+      const highestId = Date.now() % 10000;
+      const now = new Date().toISOString();
+      
+      // Criar objeto da tarefa explicitamente com todos os campos
+      const newTask = {
+        id: highestId,
         title,
         description,
-        date: new Date(date),
-        type,
+        date: date, // Mantemos como string
+        type, 
         status,
         leadId: leadId ? parseInt(leadId) : null,
         propertyId: req.body.propertyId ? parseInt(req.body.propertyId) : null,
-        agentId: agentId ? parseInt(agentId) : null
+        agentId: agentId ? parseInt(agentId) : null,
+        createdAt: now,
+        updatedAt: now
       };
       
-      console.log("Dados processados e validados manualmente:", taskData);
+      // Salvar diretamente no Firebase
+      const db = getFirestore();
+      await setDoc(doc(db, 'tasks', newTask.id.toString()), newTask);
+      console.log("Tarefa salva diretamente:", newTask);
       
-      // Criar tarefa diretamente sem usar o Zod
-      const task = await storageInstance.createTask(taskData);
-      console.log("Tarefa criada:", task);
-      
-      res.status(201).json(task);
+      res.status(201).json(newTask);
     } catch (error) {
       console.error("Erro detalhado na criação da tarefa:", error);
       const errorMessage = error instanceof Error ? error.message : "Unknown error";
       res.status(500).json({ 
-        message: "Error creating task",
+        message: "Error creating task direct",
         error: errorMessage
       });
     }
