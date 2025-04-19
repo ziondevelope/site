@@ -988,19 +988,23 @@ export default function CRM() {
                               // Cores dos estágios conforme solicitação
                               let bgColor;
                               let textColor;
+                              let numberColor;
                               
                               if (isActive) {
                                 // Estágio ativo e selecionado (atual) - Verde
                                 bgColor = '#34C38F';
                                 textColor = 'text-white';
+                                numberColor = 'white';
                               } else if (isCompleted) {
                                 // Estágio já completado - Azul
                                 bgColor = '#3565E7';
                                 textColor = 'text-white';
+                                numberColor = 'white';
                               } else {
                                 // Estágio não ativo e não selecionado - Cinza claro
                                 bgColor = '#D3D3D3';
                                 textColor = 'text-gray-700';
+                                numberColor = '#3465E7'; // Cor específica para o número quando inativo
                               }
                               
                               return (
@@ -1031,10 +1035,10 @@ export default function CRM() {
                                 >
                                   {/* Círculo com número */}
                                   <div 
-                                    className={`w-10 h-10 rounded-full flex items-center justify-center mb-2 ${textColor} transition-all duration-200`}
+                                    className={`w-10 h-10 rounded-full flex items-center justify-center mb-2 transition-all duration-200`}
                                     style={{ backgroundColor: bgColor }}
                                   >
-                                    <span className="font-bold">{index + 1}</span>
+                                    <span className="font-bold" style={{ color: numberColor }}>{index + 1}</span>
                                   </div>
                                   
                                   {/* Nome do estágio */}
