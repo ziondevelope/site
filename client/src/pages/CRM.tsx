@@ -160,29 +160,51 @@ export default function CRM() {
   const queryClient = useQueryClient();
   
   // Funções auxiliares para formatação de data
-  const formatDate = (date: Date | string) => {
+  const formatDate = (date: Date | string | null) => {
     try {
+      if (date === null || date === undefined) {
+        return "Data não definida";
+      }
+      
+      // Se for string, tenta converter para Date
       const dateObj = typeof date === 'string' ? new Date(date) : date;
+      
+      // Verifica se a data é válida
+      if (isNaN(dateObj.getTime())) {
+        return "Data inválida";
+      }
+      
       return new Intl.DateTimeFormat('pt-BR', { 
         day: '2-digit', 
         month: '2-digit', 
         year: 'numeric' 
       }).format(dateObj);
     } catch (error) {
-      console.error("Erro ao formatar data:", error, date);
+      console.error("Erro ao formatar data:", error);
       return "Data inválida";
     }
   };
   
-  const formatTime = (date: Date | string) => {
+  const formatTime = (date: Date | string | null) => {
     try {
+      if (date === null || date === undefined) {
+        return "Hora não definida";
+      }
+      
+      // Se for string, tenta converter para Date
       const dateObj = typeof date === 'string' ? new Date(date) : date;
+      
+      // Verifica se a data é válida
+      if (isNaN(dateObj.getTime())) {
+        return "Hora inválida";
+      }
+      
       return new Intl.DateTimeFormat('pt-BR', { 
         hour: '2-digit', 
         minute: '2-digit' 
       }).format(dateObj);
     } catch (error) {
-      console.error("Erro ao formatar hora:", error, date);
+      console.error("Erro ao formatar hora:", error);
       return "Hora inválida";
     }
   };
