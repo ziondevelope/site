@@ -63,7 +63,13 @@ export default function Dashboard() {
   
   // Buscar os estágios do funil
   const { data: funnelStages, isLoading: stagesLoading } = useQuery({
-    queryKey: ['/api/funnel-stages', defaultFunnel?.id],
+    queryKey: ['/api/funnel-stages'],
+    queryFn: async () => {
+      if (!defaultFunnel?.id) return [];
+      const response = await fetch(`/api/funnel-stages?funnelId=${defaultFunnel.id}`);
+      if (!response.ok) throw new Error('Failed to fetch funnel stages');
+      return response.json();
+    },
     enabled: !!defaultFunnel?.id,
   });
 
@@ -188,52 +194,57 @@ export default function Dashboard() {
               </div>
             ) : (
               <>
-                {funnelStages
-                  ?.filter(stage => stage.funnelId === defaultFunnel?.id)
-                  ?.sort((a, b) => a.position - b.position)
-                  ?.map((stage, index, allStages) => {
-                    // Determine a largura do elemento baseado na posição
-                    const maxWidth = 100;
-                    const minWidth = 55;
-                    const width = maxWidth - (index * ((maxWidth - minWidth) / (allStages.length - 1 || 1)));
-                    
-                    // Calcula a porcentagem de leads neste estágio
-                    const stageLeads = leads?.filter(lead => lead.stageId === stage.id)?.length || 0;
-                    const totalLeads = leads?.length || 1;
-                    const percentage = Math.round((stageLeads / totalLeads) * 100);
-                    
-                    // Define cores para os diferentes estágios
-                    const stageColors = [
-                      '#FED659', // Amarelo
-                      '#FEE659', // Amarelo claro
-                      '#39ADDC', // Azul
-                      '#FF3A7C'  // Rosa
-                    ];
-                    
-                    const color = stageColors[index % stageColors.length];
-                    
-                    return (
-                      <div
-                        key={stage.id}
-                        className="relative cursor-pointer mb-3"
-                        style={{ width: `${width}%` }}
-                        onClick={() => window.location.href = '/crm'}
-                      >
+                {Array.isArray(funnelStages) && funnelStages.length > 0 ? (
+                  funnelStages
+                    .sort((a, b) => a.position - b.position)
+                    .map((stage, index, allStages) => {
+                      // Determine a largura do elemento baseado na posição
+                      const maxWidth = 100;
+                      const minWidth = 55;
+                      const width = maxWidth - (index * ((maxWidth - minWidth) / (allStages.length - 1 || 1)));
+                      
+                      // Calcula a porcentagem de leads neste estágio
+                      const stageLeads = Array.isArray(leads) ? leads.filter(lead => lead.stageId === stage.id).length : 0;
+                      const totalLeads = Array.isArray(leads) ? leads.length : 1;
+                      const percentage = Math.round((stageLeads / totalLeads) * 100);
+                      
+                      // Define cores para os diferentes estágios
+                      const stageColors = [
+                        '#FED659', // Amarelo
+                        '#FEE659', // Amarelo claro
+                        '#39ADDC', // Azul
+                        '#FF3A7C'  // Rosa
+                      ];
+                      
+                      const color = stageColors[index % stageColors.length];
+                      
+                      return (
                         <div
-                          className="h-14 w-full rounded-sm flex items-center pl-4 pr-16"
-                          style={{ backgroundColor: color }}
+                          key={stage.id}
+                          className="relative cursor-pointer mb-3"
+                          style={{ width: `${width}%` }}
+                          onClick={() => window.location.href = '/crm'}
                         >
-                          <div className="flex flex-col text-white">
-                            <div className="text-xs uppercase">{stage.name}</div>
-                            <div className="font-bold">{percentage}%</div>
+                          <div
+                            className="h-14 w-full rounded-sm flex items-center pl-4 pr-16"
+                            style={{ backgroundColor: color }}
+                          >
+                            <div className="flex flex-col text-white">
+                              <div className="text-xs uppercase">{stage.name}</div>
+                              <div className="font-bold">{percentage}%</div>
+                            </div>
+                          </div>
+                          <div className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white font-bold">
+                            {stageLeads}
                           </div>
                         </div>
-                        <div className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white font-bold">
-                          {stageLeads}
-                        </div>
-                      </div>
-                    );
-                  })}
+                      );
+                    })
+                ) : (
+                  <div className="py-6 text-center">
+                    <p className="text-gray-500">Nenhum estágio do funil encontrado.</p>
+                  </div>
+                )}
               </>
             )}
           </div>
