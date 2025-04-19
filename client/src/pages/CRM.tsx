@@ -915,7 +915,7 @@ export default function CRM() {
           </div>
         </DialogContent>
       </Dialog>
-      <div className="bg-white p-6 rounded-lg shadow-sm">
+      <div className="bg-white p-6 rounded-lg shadow-sm" style={{ fontFamily: 'Montserrat, sans-serif' }}>
         <div className="flex justify-between items-center mb-6">
           <div>
             <h2 className="text-lg font-semibold text-gray-800 mb-1">Gerenciamento de Leads</h2>
@@ -932,7 +932,11 @@ export default function CRM() {
                   <i className="fas fa-plus mr-2"></i> Novo Lead
                 </Button>
               </DialogTrigger>
-              <DialogContent className="sm:max-w-[850px] max-h-[90vh] overflow-y-auto">
+              <DialogContent className="sm:max-w-[850px] max-h-[90vh] overflow-y-auto" style={{ 
+                fontFamily: 'Montserrat, sans-serif',
+                scrollbarWidth: 'thin',
+                scrollbarColor: 'rgba(155, 155, 155, 0.5) transparent'
+              }}>
                 <DialogHeader>
                   <DialogTitle>Adicionar Novo Lead</DialogTitle>
                   <DialogDescription>
