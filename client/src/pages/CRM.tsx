@@ -1094,7 +1094,7 @@ export default function CRM() {
                   <div className="grid gap-6">
                     {/* Grid 1: Informações de Contato */}
                     <div className="p-5 border border-[#f5f5f5] rounded-[10px]" style={{ background: '#F9FAFB' }}>
-                      <h3 className="text-sm font-bold mb-4 uppercase">INFORMAÇÕES DO LEAD</h3>
+                      <h3 className="text-sm font-bold mb-4 uppercase" style={{ color: '#444444' }}>INFORMAÇÕES DO LEAD</h3>
                       <div className="w-full h-px mb-4 -mx-5" style={{ marginLeft: '-20px', marginRight: '-20px', width: 'calc(100% + 40px)', backgroundColor: 'rgb(245, 245, 245)' }}></div>
                       <div className="space-y-5">
                         <div>
@@ -1313,7 +1313,7 @@ export default function CRM() {
                     
                     {/* Grid 2: Detalhes do Interesse */}
                     <div className="p-5 border border-[#f5f5f5] rounded-[10px]" style={{ background: '#F9FAFB' }}>
-                      <h3 className="text-sm font-bold mb-4 uppercase">DETALHES DO INTERESSE</h3>
+                      <h3 className="text-sm font-bold mb-4 uppercase" style={{ color: '#444444' }}>DETALHES DO INTERESSE</h3>
                       <div className="w-full h-px mb-4 -mx-5" style={{ marginLeft: '-20px', marginRight: '-20px', width: 'calc(100% + 40px)', backgroundColor: 'rgb(245, 245, 245)' }}></div>
                       <div className="space-y-5">
                         <div>
@@ -1625,7 +1625,7 @@ export default function CRM() {
                 <div className="md:col-span-8 px-4">                  
                   <div>
                     <div className="p-5 border border-[#f5f5f5] rounded-[10px]" style={{ background: '#F9FAFB' }}>
-                      <h3 className="text-sm font-bold mb-4 uppercase flex items-center">
+                      <h3 className="text-sm font-bold mb-4 uppercase flex items-center" style={{ color: '#444444' }}>
                         <FileText className="h-4 w-4 mr-2 text-gray-500" />
                         NOTA RÁPIDA
                       </h3>
@@ -1657,7 +1657,7 @@ export default function CRM() {
                     {/* Histórico de atividades/notas */}
                     <div className="mt-8">
                       <div className="p-5 border border-[#f5f5f5] rounded-[10px]" style={{ background: '#F9FAFB' }}>
-                        <h3 className="text-sm font-bold mb-4 uppercase flex items-center">
+                        <h3 className="text-sm font-bold mb-4 uppercase flex items-center" style={{ color: '#444444' }}>
                           <MessageSquare className="h-4 w-4 mr-2 text-gray-500" />
                           HISTÓRICO DE ATIVIDADES
                         </h3>
