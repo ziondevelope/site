@@ -1960,13 +1960,13 @@ export default function CRM() {
                         <TabsContent value="nota" className="space-y-4">
                           <div className="bg-white" style={{ minHeight: '200px' }}>
                             <div className="relative">
-                              <div className="absolute left-3 top-3 text-gray-400 pointer-events-none">
+                              <div style={{ position: 'absolute', right: '10px', top: '40px', zIndex: 5, color: '#888' }} className="pointer-events-none">
                                 <FileEdit size={16} />
                               </div>
                               <ReactQuill
                                 id={`note-textarea-${lead.id}`}
                                 theme="snow"
-                                placeholder="  Faça uma anotação..."
+                                placeholder="Faça uma anotação..."
                                 value={leadNotes[lead.id] || lead.notes || ""}
                                 onChange={(content) => setLeadNotes(prev => ({
                                   ...prev,
