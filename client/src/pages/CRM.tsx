@@ -977,9 +977,9 @@ export default function CRM() {
                       <div className="w-full mb-4">
                         {/* Novo design de funil com círculos e linhas horizontais */}
                         <div className="flex flex-col w-full px-4">
-                          <div className="relative flex items-center justify-between w-full">
+                          <div className="relative flex items-center justify-between w-full" style={{ paddingTop: '15px', paddingBottom: '15px' }}>
                             {/* Linha horizontal de conexão - ajustada para ficar exatamente no meio dos círculos */}
-                            <div className="absolute h-[2px] bg-gray-300 left-[25px] right-[25px] top-[15px] z-0"></div>
+                            <div className="absolute h-[2px] bg-gray-300 left-[25px] right-[25px] top-[20px] z-0"></div>
                             
                             {sortedStages.map((stage, index) => {
                               const isActive = lead.stageId === stage.id || (!lead.stageId && index === 0);
@@ -1032,7 +1032,7 @@ export default function CRM() {
                                   {/* Círculo com número */}
                                   <div 
                                     className={`w-10 h-10 rounded-full flex items-center justify-center mb-2 ${textColor} transition-all duration-200`}
-                                    style={{ backgroundColor: bgColor }}
+                                    style={{ backgroundColor: bgColor, position: 'relative', top: '0' }}
                                   >
                                     <span className="font-bold">{index + 1}</span>
                                   </div>
