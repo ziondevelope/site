@@ -197,10 +197,9 @@ export default function CRM() {
     }
     
     // Chama a API para salvar a nota no banco de dados
-    apiRequest({
-      url: `/api/leads/${leadId}/notes`,
+    apiRequest(`/api/leads/${leadId}/notes`, {
       method: 'POST',
-      data: { text: noteText }
+      body: JSON.stringify({ text: noteText })
     })
     .then((savedNote) => {
       // Adiciona a nova nota ao array de notas salvas para o lead específico
@@ -318,10 +317,9 @@ export default function CRM() {
     };
     
     // Salvar a tarefa no banco de dados
-    apiRequest({
-      url: '/api/tasks',
+    apiRequest('/api/tasks', {
       method: 'POST',
-      data: taskData
+      body: JSON.stringify(taskData)
     })
     .then((savedTask) => {
       // Cria a nova tarefa local
@@ -354,10 +352,9 @@ export default function CRM() {
       // Criar e salvar uma nota para registrar a atividade
       const noteText = `<strong>${taskTypeText}</strong> agendada: ${form.description} - Data: ${formattedDate} às ${form.time}`;
       
-      apiRequest({
-        url: `/api/leads/${leadId}/notes`,
+      apiRequest(`/api/leads/${leadId}/notes`, {
         method: 'POST',
-        data: { text: noteText }
+        body: JSON.stringify({ text: noteText })
       })
       .then(() => {
         // Adicionar a nota localmente
@@ -413,10 +410,9 @@ export default function CRM() {
   // Marcar tarefa como concluída
   const handleCompleteTask = (leadId: number, taskId: number) => {
     // Atualizar a tarefa no banco de dados
-    apiRequest({
-      url: `/api/tasks/${taskId}/complete`,
+    apiRequest(`/api/tasks/${taskId}/complete`, {
       method: 'PATCH',
-      data: { status: 'completed' }
+      body: JSON.stringify({ status: 'completed' })
     })
     .then((updatedTask) => {
       // Atualizar a lista de tarefas na interface
@@ -444,10 +440,9 @@ export default function CRM() {
         // Criar e salvar nota de conclusão da tarefa
         const noteText = `<strong>${taskTypeText}</strong> concluída: ${task.description}`;
         
-        apiRequest({
-          url: `/api/leads/${leadId}/notes`,
+        apiRequest(`/api/leads/${leadId}/notes`, {
           method: 'POST',
-          data: { text: noteText }
+          body: JSON.stringify({ text: noteText })
         })
         .then(() => {
           // Adicionar a nota localmente
