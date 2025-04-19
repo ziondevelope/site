@@ -996,8 +996,8 @@ export default function CRM() {
                               let textColor;
                               
                               if (isActive) {
-                                // Estágio ativo e selecionado (atual) - Azul
-                                bgColor = '#3565E7';
+                                // Estágio ativo e selecionado (atual) - Verde
+                                bgColor = '#34C38F';
                                 textColor = 'text-white';
                               } else if (isCompleted) {
                                 // Estágio já completado - Azul
@@ -1045,7 +1045,7 @@ export default function CRM() {
                                   
                                   {/* Nome do estágio */}
                                   <span 
-                                    className={`text-xs font-medium text-center ${isActive || isCompleted ? 'text-blue-600' : 'text-gray-500'}`}
+                                    className={`text-xs font-medium text-center ${isActive ? 'text-green-600' : isCompleted ? 'text-blue-600' : 'text-gray-500'}`}
                                     style={{
                                       maxWidth: '80px',
                                       textAlign: 'center',
