@@ -1322,7 +1322,7 @@ export default function CRM() {
                 <div className="flex items-center space-x-2">
                   <Button 
                     variant="outline" 
-                    className="h-9 px-3 text-sm text-red-600 hover:text-red-700"
+                    className="h-9 px-3 text-sm text-red-600 hover:text-red-700 rounded-full"
                     onClick={() => {
                       setLeadToDelete(lead);
                       setIsDeleteConfirmOpen(true);
@@ -1331,7 +1331,7 @@ export default function CRM() {
                     <i className="fas fa-trash-alt mr-2"></i> 
                     Excluir lead
                   </Button>
-                  <Button className="bg-blue-600 hover:bg-blue-700 h-9 px-3 text-sm">
+                  <Button className="bg-[#12636C] hover:bg-[#12636C]/90 h-9 px-3 text-sm rounded-full">
                     <i className="fas fa-pen mr-2"></i> 
                     Editar lead
                   </Button>
@@ -1395,19 +1395,19 @@ export default function CRM() {
                               
                               if (isActive) {
                                 // Estágio ativo e selecionado (atual) - Verde
-                                bgColor = '#34C38F';
+                                bgColor = '#12636C';
                                 textColor = 'text-white';
                                 numberColor = 'white';
                               } else if (isCompleted) {
                                 // Estágio já completado - Azul
-                                bgColor = '#3565E7';
+                                bgColor = '#12636C';
                                 textColor = 'text-white';
                                 numberColor = 'white';
                               } else {
                                 // Estágio não ativo e não selecionado - Cinza claro
                                 bgColor = '#D3D3D3';
                                 textColor = 'text-gray-700';
-                                numberColor = '#3465E7'; // Cor específica para o número quando inativo
+                                numberColor = '#12636C'; // Cor específica para o número quando inativo
                               }
                               
                               return (
