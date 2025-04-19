@@ -895,9 +895,9 @@ export default function CRM() {
             <VisuallyHidden>
               <DialogTitle>Detalhes do Lead</DialogTitle>
             </VisuallyHidden>
-            <div className="bg-[#E8E8E8] border-b border-gray-200">
+            <div className="bg-[#E8E8E8]">
               {/* Barra superior com nome do lead e detalhes */}
-              <div className="flex justify-between items-center bg-[#E8E8E8] p-6 rounded-t-lg border-b border-gray-100">
+              <div className="flex justify-between items-center bg-[#E8E8E8] p-6 rounded-t-lg">
                 <div className="flex items-center space-x-4">
                   <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600">
                     <i className="fas fa-user text-xl"></i>
