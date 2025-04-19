@@ -1266,9 +1266,20 @@ export class FirebaseStorage implements IStorage {
   async getLeadNotes(leadId: number): Promise<LeadNote[]> {
     try {
       const notesRef = collection(db, 'lead_notes');
-      const q = query(notesRef, where('leadId', '==', leadId), orderBy('date', 'desc'));
+      // Simplificamos a consulta para evitar o erro de índice
+      // Apenas filtramos por leadId sem ordenação
+      const q = query(notesRef, where('leadId', '==', leadId));
       const notesSnapshot = await getDocs(q);
-      return notesSnapshot.docs.map(doc => doc.data() as LeadNote);
+      
+      // Ordenamos manualmente depois de obter os dados
+      const notes = notesSnapshot.docs.map(doc => doc.data() as LeadNote);
+      
+      // Ordenar por data decrescente (mais recente primeiro)
+      return notes.sort((a, b) => {
+        const dateA = a.date ? new Date(a.date).getTime() : 0;
+        const dateB = b.date ? new Date(b.date).getTime() : 0;
+        return dateB - dateA; // Ordem decrescente
+      });
     } catch (error) {
       console.error(`Erro ao buscar notas para o lead ${leadId}:`, error);
       return [];
