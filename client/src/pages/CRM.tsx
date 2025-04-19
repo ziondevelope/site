@@ -93,7 +93,7 @@ export default function CRM() {
   // Módulos para o editor React Quill
   const quillModules = {
     toolbar: [
-      ['bold', 'underline'] // removido o itálico
+      ['bold', 'italic'] // apenas negrito e itálico
     ]
   };
   const [editingField, setEditingField] = useState<{leadId: number, field: string} | null>(null);
@@ -2028,11 +2028,8 @@ export default function CRM() {
                                 }))}
                                 modules={{
                                   ...quillModules,
-                                  // Desativando itálico no editor
                                   toolbar: [
-                                    ['bold'], // apenas negrito, sem itálico
-                                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                                    ['clean']
+                                    ['bold', 'italic'], // apenas negrito e itálico
                                   ]
                                 }}
                                 className="h-32 focus:outline-none quill-no-border"
