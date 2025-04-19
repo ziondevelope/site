@@ -1045,11 +1045,12 @@ export default function CRM() {
                                   
                                   {/* Nome do estágio */}
                                   <span 
-                                    className={`text-xs font-medium text-center ${isActive ? 'text-green-600' : isCompleted ? 'text-blue-600' : 'text-gray-500'}`}
+                                    className="text-xs font-medium text-center"
                                     style={{
                                       maxWidth: '80px',
                                       textAlign: 'center',
-                                      fontSize: '12px'
+                                      fontSize: '12px',
+                                      color: '#111111'
                                     }}
                                   >
                                     {stage.name}
