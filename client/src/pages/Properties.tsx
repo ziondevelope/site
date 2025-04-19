@@ -766,6 +766,7 @@ export default function Properties() {
                   <Button 
                     type="submit"
                     disabled={addPropertyMutation.isPending}
+                    className="bg-[#15616D] hover:bg-[#15616D]/90"
                   >
                     {addPropertyMutation.isPending ? "Salvando..." : "Salvar Imóvel"}
                   </Button>
@@ -1167,6 +1168,7 @@ export default function Properties() {
                   <Button 
                     type="submit"
                     disabled={updatePropertyMutation.isPending}
+                    className="bg-[#15616D] hover:bg-[#15616D]/90"
                   >
                     {updatePropertyMutation.isPending ? "Salvando..." : "Salvar Alterações"}
                   </Button>
