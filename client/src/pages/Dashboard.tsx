@@ -8,14 +8,14 @@ import { ptBR } from "date-fns/locale";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
 import { PieChart, Pie, Cell, Legend } from 'recharts';
 
-// Dados de exemplo para o gráfico de torta usando a paleta de cores
+// Dados de exemplo para o gráfico de torta
 const pieData = [
-  { name: 'Venda', value: 412, color: '#15616D' }, // Ciano
-  { name: 'Locação', value: 412, color: '#FF7D00' }, // Laranja
-  { name: 'Temporada', value: 98, color: '#78290F' }, // Marrom avermelhado
+  { name: 'Venda', value: 412, color: '#FF5C75' },
+  { name: 'Locação', value: 412, color: '#FFA757' },
+  { name: 'Temporada', value: 98, color: '#18D0C6' },
 ];
 
-// Dados de exemplo para o gráfico de linha usando a paleta de cores
+// Dados de exemplo para o gráfico de linha
 const lineData = [
   { month: 'DEZ', valor1: 500, valor2: 700 },
   { month: 'JAN', valor1: 800, valor2: 900 },
@@ -78,7 +78,7 @@ export default function Dashboard() {
       {/* Barra do topo com nome e data */}
       <div className="flex justify-between items-center bg-white p-5 rounded-lg shadow-sm">
         <div>
-          <h2 className="text-xl font-semibold" style={{ color: '#15616D' }}>Bom dia, Walter!</h2>
+          <h2 className="text-xl font-semibold text-[#357deb]">Bom dia, Walter!</h2>
           <p className="text-sm text-gray-600">{formattedDate}</p>
         </div>
       </div>
@@ -88,8 +88,8 @@ export default function Dashboard() {
         {/* Painel de Tarefas Agendadas */}
         <div className="bg-white p-6 rounded-lg shadow-sm">
           <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-semibold" style={{ color: '#001524' }}>Tarefas Agendadas</h3>
-            <button className="text-sm font-medium" style={{ color: '#15616D' }}>
+            <h3 className="text-lg font-semibold text-gray-800">Tarefas Agendadas</h3>
+            <button className="text-blue-600 hover:text-blue-800 text-sm font-medium">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="inline-block mr-1"><path d="M12 5v14M5 12h14"/></svg>
               Nova Tarefa
             </button>
@@ -165,7 +165,7 @@ export default function Dashboard() {
         
         {/* Painel de Funil de Vendas */}
         <div className="bg-white p-6 rounded-lg shadow-sm">
-          <h3 className="text-lg font-semibold mb-2" style={{ color: '#001524' }}>Funil de Vendas</h3>
+          <h3 className="text-lg font-semibold text-gray-800 mb-2">Funil de Vendas</h3>
           
           <div className="mt-2 mb-4">
             <div className="flex justify-between">
@@ -200,12 +200,12 @@ export default function Dashboard() {
                       const totalLeads = Array.isArray(leads) ? leads.length : 1;
                       const percentage = Math.round((stageLeads / totalLeads) * 100);
                       
-                      // Define cores para os diferentes estágios usando a nova paleta
+                      // Define cores para os diferentes estágios
                       const stageColors = [
-                        '#15616D', // Ciano
-                        '#001524', // Azul escuro
-                        '#FF7D00', // Laranja
-                        '#78290F'  // Marrom avermelhado
+                        '#FED659', // Amarelo
+                        '#FEE659', // Amarelo claro
+                        '#39ADDC', // Azul
+                        '#FF3A7C'  // Rosa
                       ];
                       
                       const color = stageColors[index % stageColors.length];
@@ -243,9 +243,9 @@ export default function Dashboard() {
           
           {/* Raio-X */}
           <div className="mt-8">
-            <h4 className="text-lg font-semibold mb-3" style={{ color: '#001524' }}>Raio-X</h4>
+            <h4 className="text-lg font-semibold text-gray-800 mb-3">Raio-X</h4>
             <div className="flex text-sm mb-4">
-              <div className="flex-1 text-center py-1 border-b-2 font-medium" style={{ borderColor: '#15616D', color: '#15616D' }}>MÊS</div>
+              <div className="flex-1 text-center py-1 border-b-2 border-blue-500 font-medium text-blue-500">MÊS</div>
               <div className="flex-1 text-center py-1 text-gray-500">ANO</div>
               <div className="flex-1 text-center py-1 text-gray-500">GERAL</div>
             </div>
@@ -253,9 +253,9 @@ export default function Dashboard() {
             {/* Informações do sistema */}
             <div className="mt-4 flex items-center">
               <div className="flex-1">
-                <div className="text-5xl font-bold" style={{ color: '#15616D' }}>23</div>
+                <div className="text-5xl font-bold text-purple-600">23</div>
                 <div className="flex items-center mt-2">
-                  <div className="text-white text-xs px-1 rounded flex items-center mr-2" style={{ backgroundColor: '#FF7D00' }}>
+                  <div className="bg-green-500 text-white text-xs px-1 rounded flex items-center mr-2">
                     <i className="fas fa-arrow-up mr-1"></i>3
                   </div>
                   <div className="text-gray-500 text-xs">10 esperados</div>
@@ -267,7 +267,7 @@ export default function Dashboard() {
         
         {/* Painel de Faturamento */}
         <div className="bg-white p-6 rounded-lg shadow-sm">
-          <h3 className="text-lg font-semibold mb-4" style={{ color: '#001524' }}>Faturamento</h3>
+          <h3 className="text-lg font-semibold text-gray-800 mb-4">Faturamento</h3>
           
           {/* Gráfico de linhas */}
           <div className="h-[240px]">
@@ -280,7 +280,7 @@ export default function Dashboard() {
                 <Line 
                   type="monotone" 
                   dataKey="valor1" 
-                  stroke="#15616D" 
+                  stroke="#357DEB" 
                   strokeWidth={2}
                   dot={{ r: 4 }}
                   activeDot={{ r: 6 }}
@@ -288,7 +288,7 @@ export default function Dashboard() {
                 <Line 
                   type="monotone" 
                   dataKey="valor2" 
-                  stroke="#FF7D00" 
+                  stroke="#FF3A7C" 
                   strokeWidth={2}
                   dot={{ r: 4 }}
                   activeDot={{ r: 6 }}
@@ -300,13 +300,13 @@ export default function Dashboard() {
           {/* Valores */}
           <div className="grid grid-cols-2 gap-4 mt-8">
             <div>
-              <h4 className="text-sm" style={{ color: '#15616D' }}>Venda</h4>
+              <h4 className="text-sm text-teal-500">Venda</h4>
               <div className="font-bold text-xl text-gray-800">R$ 1.763.900,00</div>
               <div className="text-xs text-gray-600 mt-1">Total faturado</div>
               <div className="font-medium text-sm mt-1">R$ 1.792.800,00</div>
             </div>
             <div>
-              <h4 className="text-sm" style={{ color: '#FF7D00' }}>Locação</h4>
+              <h4 className="text-sm text-pink-500">Locação</h4>
               <div className="font-bold text-xl text-gray-800">R$ 28.900,00</div>
               <div className="text-xs text-gray-600 mt-1">Previsão</div>
               <div className="font-medium text-sm mt-1">R$ 2.100.000,00</div>

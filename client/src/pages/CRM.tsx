@@ -1459,48 +1459,36 @@ export default function CRM() {
                   <div className="flex justify-between items-center bg-gray-50 p-3 rounded-lg">
                     <div className="flex space-x-8">
                       <div 
-                        className={`flex flex-col items-center cursor-pointer ${lead.status === 'new' ? 'font-medium' : 'text-gray-500'}`}
-                        style={{ color: lead.status === 'new' ? '#15616D' : undefined }}
+                        className={`flex flex-col items-center cursor-pointer ${lead.status === 'new' ? 'text-blue-600 font-medium' : 'text-gray-500'}`}
                       >
-                        <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-1 ${lead.status === 'new' ? 'text-white' : 'bg-gray-200'}`}
-                          style={{ backgroundColor: lead.status === 'new' ? '#15616D' : undefined }}
-                        >
+                        <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-1 ${lead.status === 'new' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}>
                           <i className="fas fa-user-plus text-sm"></i>
                         </div>
                         <span className="text-xs">Contato</span>
                       </div>
                       
                       <div 
-                        className={`flex flex-col items-center cursor-pointer ${lead.status === 'contacted' ? 'font-medium' : 'text-gray-500'}`}
-                        style={{ color: lead.status === 'contacted' ? '#15616D' : undefined }}
+                        className={`flex flex-col items-center cursor-pointer ${lead.status === 'contacted' ? 'text-blue-600 font-medium' : 'text-gray-500'}`}
                       >
-                        <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-1 ${lead.status === 'contacted' ? 'text-white' : 'bg-gray-200'}`}
-                          style={{ backgroundColor: lead.status === 'contacted' ? '#15616D' : undefined }}
-                        >
+                        <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-1 ${lead.status === 'contacted' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}>
                           <i className="fas fa-phone-alt text-sm"></i>
                         </div>
                         <span className="text-xs">Follow up</span>
                       </div>
                       
                       <div 
-                        className={`flex flex-col items-center cursor-pointer ${lead.status === 'visit' ? 'font-medium' : 'text-gray-500'}`}
-                        style={{ color: lead.status === 'visit' ? '#FF7D00' : undefined }}
+                        className={`flex flex-col items-center cursor-pointer ${lead.status === 'visit' ? 'text-blue-600 font-medium' : 'text-gray-500'}`}
                       >
-                        <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-1 ${lead.status === 'visit' ? 'text-white' : 'bg-gray-200'}`}
-                          style={{ backgroundColor: lead.status === 'visit' ? '#FF7D00' : undefined }}
-                        >
+                        <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-1 ${lead.status === 'visit' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}>
                           <i className="fas fa-calendar-check text-sm"></i>
                         </div>
                         <span className="text-xs">Agendamento</span>
                       </div>
                       
                       <div 
-                        className={`flex flex-col items-center cursor-pointer ${lead.status === 'proposal' ? 'font-medium' : 'text-gray-500'}`}
-                        style={{ color: lead.status === 'proposal' ? '#78290F' : undefined }}
+                        className={`flex flex-col items-center cursor-pointer ${lead.status === 'proposal' ? 'text-green-600 font-medium' : 'text-gray-500'}`}
                       >
-                        <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-1 ${lead.status === 'proposal' ? 'text-white' : 'bg-gray-200'}`}
-                          style={{ backgroundColor: lead.status === 'proposal' ? '#78290F' : undefined }}
-                        >
+                        <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-1 ${lead.status === 'proposal' ? 'bg-green-600 text-white' : 'bg-gray-200'}`}>
                           <i className="fas fa-check-circle text-sm"></i>
                         </div>
                         <span className="text-xs">Fechado</span>
@@ -2165,12 +2153,7 @@ export default function CRM() {
                           </div>
                           <div className="flex justify-end mt-4 pr-5 pb-2">
                             <Button 
-                              className="text-sm text-white"
-                              style={{ 
-                                backgroundColor: '#15616D', 
-                                borderRadius: '0.625rem', 
-                                fontFamily: 'Montserrat, sans-serif' 
-                              }}
+                              className="bg-[#3565E7] hover:bg-[#2955CC] text-sm"
                               onClick={() => handleSaveNote(lead.id)}
                             >
                               Salvar Nota
@@ -2269,12 +2252,7 @@ export default function CRM() {
                               <div className="flex justify-end mt-4">
                                 <Button 
                                   onClick={() => handleCreateTask(lead.id)}
-                                  className="text-sm text-white"
-                                  style={{ 
-                                    backgroundColor: '#15616D', 
-                                    borderRadius: '0.625rem', 
-                                    fontFamily: 'Montserrat, sans-serif'
-                                  }}
+                                  className="bg-[#3565E7] hover:bg-[#2955CC] text-sm"
                                 >
                                   <CalendarPlus className="h-4 w-4 mr-2" />
                                   Agendar Tarefa
@@ -2290,9 +2268,9 @@ export default function CRM() {
                                       .filter(task => !task.completed)
                                       .map((task) => {
                                         const taskIcon = 
-                                          task.type === "ligacao" ? <Phone className="h-3.5 w-3.5" style={{ color: '#15616D' }} /> :
-                                          task.type === "email" ? <Mail className="h-3.5 w-3.5" style={{ color: '#FF7D00' }} /> :
-                                          <MessageSquare className="h-3.5 w-3.5" style={{ color: '#78290F' }} />;
+                                          task.type === "ligacao" ? <Phone className="h-3.5 w-3.5 text-blue-500" /> :
+                                          task.type === "email" ? <Mail className="h-3.5 w-3.5 text-green-500" /> :
+                                          <MessageSquare className="h-3.5 w-3.5 text-purple-500" />;
                                           
                                         const taskTitle = 
                                           task.type === "ligacao" ? "Ligação" :
