@@ -96,11 +96,16 @@ export const tasks = pgTable("tasks", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
-export const insertTaskSchema = createInsertSchema(tasks).omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true
-});
+export const insertTaskSchema = createInsertSchema(tasks)
+  .extend({
+    // Permitir que o campo date seja uma string ISO e convertê-la para Date
+    date: z.string().transform((str) => new Date(str)),
+  })
+  .omit({
+    id: true,
+    createdAt: true,
+    updatedAt: true
+  });
 
 // Website configuration schema
 export const websiteConfig = pgTable("website_config", {
