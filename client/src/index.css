@@ -4,6 +4,14 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --color-dark-blue: #001524;
+  --color-cyan: #15616D;
+  --color-beige: #FFECD1;
+  --color-orange: #FF7D00;
+  --color-brown: #78290F;
+}
+
 /* Estilos para rolagem suave */
 * {
   scroll-behavior: smooth;
@@ -20,17 +28,19 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(155, 155, 155, 0.5);
+  background: var(--color-cyan);
+  opacity: 0.5;
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(155, 155, 155, 0.7);
+  background: var(--color-cyan);
+  opacity: 0.7;
 }
 
 /* Remove a borda preta que aparece em alguns elementos quando focados */
 * {
-  outline-color: rgba(59, 130, 246, 0.5);
+  outline-color: var(--color-cyan);
 }
 
 /* Classe para remover bordas do React Quill */
@@ -81,32 +91,81 @@
   }
 
   body {
-    @apply antialiased bg-background text-foreground;
-    font-family: var(--body-font, 'Inter'), sans-serif;
+    @apply antialiased;
+    background-color: var(--color-beige);
+    color: var(--color-dark-blue);
+    font-family: var(--body-font, 'Montserrat'), sans-serif;
   }
   
   h1, h2, h3, h4, h5, h6 {
-    font-family: var(--heading-font, 'Inter'), serif;
+    font-family: var(--heading-font, 'Montserrat'), sans-serif;
+    color: var(--color-dark-blue);
   }
 
   select:focus, input:focus {
-    border-color: transparent !important;
+    border-color: var(--color-cyan) !important;
     outline: none !important;
-    box-shadow: none !important;
+    box-shadow: 0 0 0 2px rgba(21, 97, 109, 0.2) !important;
   }
   
   .property-characteristics-icons_icon__q1Mde {
-    color: currentColor;
+    color: var(--color-cyan);
     font-size: 1rem;
+  }
+
+  /* Cards e painéis */
+  .bg-white {
+    background-color: #fff;
+  }
+
+  /* Botões e elementos interativos */
+  .btn-primary, 
+  .bg-primary,
+  .text-primary,
+  .hover\:text-primary,
+  .hover\:bg-primary {
+    background-color: var(--color-cyan) !important;
+    color: white !important;
+  }
+
+  .hover\:bg-primary:hover {
+    background-color: var(--color-dark-blue) !important;
+  }
+
+  /* Elementos de destaque */
+  .bg-orange, 
+  .text-orange,
+  .hover\:text-orange,
+  .hover\:bg-orange {
+    background-color: var(--color-orange) !important;
+    color: white !important;
+  }
+
+  /* Elementos de alerta */
+  .bg-brown, 
+  .text-brown,
+  .hover\:text-brown,
+  .hover\:bg-brown {
+    background-color: var(--color-brown) !important;
+    color: white !important;
   }
 
   /* Estilos para a barra de filtro no estilo moderno */
   .filter-select {
-    @apply text-base w-full appearance-none rounded-md px-4 py-3 transition-all text-black font-medium;
+    @apply text-base w-full appearance-none rounded-md px-4 py-3 transition-all font-medium;
+    background-color: white;
+    color: var(--color-dark-blue);
+    border: 1px solid var(--color-cyan);
   }
 
   .filter-button {
-    @apply rounded-md h-full px-4 py-3 text-white font-medium transition-all shadow-sm hover:shadow-md flex items-center justify-center;
+    @apply rounded-md h-full px-4 py-3 font-medium transition-all shadow-sm hover:shadow-md flex items-center justify-center;
+    background-color: var(--color-cyan);
+    color: white;
+  }
+  
+  .filter-button:hover {
+    background-color: var(--color-dark-blue);
   }
 
   .search-filters {
@@ -114,7 +173,22 @@
   }
 
   .tag-filter {
-    @apply bg-white/90 backdrop-blur-sm text-gray-800 px-3 py-1.5 rounded-full text-sm font-medium flex items-center gap-1;
-    border: 1px solid rgba(0,0,0,0.1);
+    @apply backdrop-blur-sm px-3 py-1.5 rounded-full text-sm font-medium flex items-center gap-1;
+    background-color: white;
+    color: var(--color-dark-blue);
+    border: 1px solid var(--color-cyan);
   }
+  
+  /* Status e badges */
+  .bg-green-50 { background-color: rgba(21, 97, 109, 0.1) !important; }
+  .text-green-700, .text-green-800 { color: var(--color-cyan) !important; }
+  
+  .bg-yellow-50 { background-color: rgba(255, 125, 0, 0.1) !important; }
+  .text-yellow-700, .text-yellow-800 { color: var(--color-orange) !important; }
+  
+  .bg-red-50 { background-color: rgba(120, 41, 15, 0.1) !important; }
+  .text-red-700, .text-red-800 { color: var(--color-brown) !important; }
+  
+  .bg-blue-50 { background-color: rgba(0, 21, 36, 0.1) !important; }
+  .text-blue-700, .text-blue-800 { color: var(--color-dark-blue) !important; }
 }

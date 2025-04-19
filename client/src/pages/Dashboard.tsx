@@ -8,14 +8,14 @@ import { ptBR } from "date-fns/locale";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
 import { PieChart, Pie, Cell, Legend } from 'recharts';
 
-// Dados de exemplo para o gráfico de torta
+// Dados de exemplo para o gráfico de torta usando a paleta de cores
 const pieData = [
-  { name: 'Venda', value: 412, color: '#FF5C75' },
-  { name: 'Locação', value: 412, color: '#FFA757' },
-  { name: 'Temporada', value: 98, color: '#18D0C6' },
+  { name: 'Venda', value: 412, color: '#15616D' }, // Ciano
+  { name: 'Locação', value: 412, color: '#FF7D00' }, // Laranja
+  { name: 'Temporada', value: 98, color: '#78290F' }, // Marrom avermelhado
 ];
 
-// Dados de exemplo para o gráfico de linha
+// Dados de exemplo para o gráfico de linha usando a paleta de cores
 const lineData = [
   { month: 'DEZ', valor1: 500, valor2: 700 },
   { month: 'JAN', valor1: 800, valor2: 900 },
@@ -200,12 +200,12 @@ export default function Dashboard() {
                       const totalLeads = Array.isArray(leads) ? leads.length : 1;
                       const percentage = Math.round((stageLeads / totalLeads) * 100);
                       
-                      // Define cores para os diferentes estágios
+                      // Define cores para os diferentes estágios usando a nova paleta
                       const stageColors = [
-                        '#FED659', // Amarelo
-                        '#FEE659', // Amarelo claro
-                        '#39ADDC', // Azul
-                        '#FF3A7C'  // Rosa
+                        '#15616D', // Ciano
+                        '#001524', // Azul escuro
+                        '#FF7D00', // Laranja
+                        '#78290F'  // Marrom avermelhado
                       ];
                       
                       const color = stageColors[index % stageColors.length];
@@ -245,7 +245,7 @@ export default function Dashboard() {
           <div className="mt-8">
             <h4 className="text-lg font-semibold text-gray-800 mb-3">Raio-X</h4>
             <div className="flex text-sm mb-4">
-              <div className="flex-1 text-center py-1 border-b-2 border-blue-500 font-medium text-blue-500">MÊS</div>
+              <div className="flex-1 text-center py-1 border-b-2 font-medium" style={{ borderColor: '#15616D', color: '#15616D' }}>MÊS</div>
               <div className="flex-1 text-center py-1 text-gray-500">ANO</div>
               <div className="flex-1 text-center py-1 text-gray-500">GERAL</div>
             </div>
@@ -253,9 +253,9 @@ export default function Dashboard() {
             {/* Informações do sistema */}
             <div className="mt-4 flex items-center">
               <div className="flex-1">
-                <div className="text-5xl font-bold text-purple-600">23</div>
+                <div className="text-5xl font-bold" style={{ color: '#15616D' }}>23</div>
                 <div className="flex items-center mt-2">
-                  <div className="bg-green-500 text-white text-xs px-1 rounded flex items-center mr-2">
+                  <div className="text-white text-xs px-1 rounded flex items-center mr-2" style={{ backgroundColor: '#FF7D00' }}>
                     <i className="fas fa-arrow-up mr-1"></i>3
                   </div>
                   <div className="text-gray-500 text-xs">10 esperados</div>
@@ -280,7 +280,7 @@ export default function Dashboard() {
                 <Line 
                   type="monotone" 
                   dataKey="valor1" 
-                  stroke="#357DEB" 
+                  stroke="#15616D" 
                   strokeWidth={2}
                   dot={{ r: 4 }}
                   activeDot={{ r: 6 }}
@@ -288,7 +288,7 @@ export default function Dashboard() {
                 <Line 
                   type="monotone" 
                   dataKey="valor2" 
-                  stroke="#FF3A7C" 
+                  stroke="#FF7D00" 
                   strokeWidth={2}
                   dot={{ r: 4 }}
                   activeDot={{ r: 6 }}
@@ -300,13 +300,13 @@ export default function Dashboard() {
           {/* Valores */}
           <div className="grid grid-cols-2 gap-4 mt-8">
             <div>
-              <h4 className="text-sm text-teal-500">Venda</h4>
+              <h4 className="text-sm" style={{ color: '#15616D' }}>Venda</h4>
               <div className="font-bold text-xl text-gray-800">R$ 1.763.900,00</div>
               <div className="text-xs text-gray-600 mt-1">Total faturado</div>
               <div className="font-medium text-sm mt-1">R$ 1.792.800,00</div>
             </div>
             <div>
-              <h4 className="text-sm text-pink-500">Locação</h4>
+              <h4 className="text-sm" style={{ color: '#FF7D00' }}>Locação</h4>
               <div className="font-bold text-xl text-gray-800">R$ 28.900,00</div>
               <div className="text-xs text-gray-600 mt-1">Previsão</div>
               <div className="font-medium text-sm mt-1">R$ 2.100.000,00</div>
