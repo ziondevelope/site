@@ -998,9 +998,9 @@ export default function CRM() {
                                 bgColor = '#3565E7';
                                 textColor = 'text-white';
                               } else {
-                                // Estágio não ativo e não selecionado - Cinza claro
+                                // Estágio não ativo e não selecionado - Mantendo texto azul
                                 bgColor = '#D3D3D3';
-                                textColor = 'text-gray-700';
+                                textColor = 'text-[#3465E7]';
                               }
                               
                               return (
