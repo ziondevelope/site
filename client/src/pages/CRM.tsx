@@ -1,8 +1,13 @@
-import React, { useState, useEffect, useMemo } from "react";
-import { User, Filter } from "lucide-react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
+import { Pencil, Check, X, User, Mail, Phone, Store, Home, MapPin, DollarSign, Tag, Filter, Trophy, MessageSquare, FileText, Bold, Italic, Underline, AlignLeft, AlignCenter, AlignRight, List } from "lucide-react";
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+import { FaWhatsapp } from "react-icons/fa";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from "@/components/ui/dialog";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { InsertLead, Lead, FunnelStage, SalesFunnel, insertLeadSchema } from "@shared/schema";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,7 +18,24 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import LeadDetailsDialog from "@/components/crm/LeadDetailsDialog";
+
+// Estilos personalizados para campos de edição com bordas mais sutis
+const subtleEditingStyles = {
+  input: {
+    boxShadow: "none",
+    border: '1px solid #e5e7eb',
+    outline: "none",
+    ringColor: 'transparent',
+    ringOffset: '0'
+  },
+  select: {
+    boxShadow: "none",
+    border: '1px solid #e5e7eb',
+    outline: "none",
+    ringColor: 'transparent',
+    ringOffset: '0'
+  }
+};
 
 const leadFormSchema = insertLeadSchema.extend({
   name: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
@@ -23,9 +45,13 @@ const leadFormSchema = insertLeadSchema.extend({
   interestType: z.enum(["purchase", "rent", "sale"]).optional().nullable(),
   propertyType: z.enum(["apartment", "house", "commercial"]).optional().nullable(),
   region: z.string().optional().nullable(),
-  budget: z.number().optional().nullable(),
+  priceRange: z.object({
+    min: z.number().optional().nullable(),
+    max: z.number().optional().nullable(),
+  }).optional().nullable(),
   stage: z.enum(["new", "contacted", "visit", "proposal"]).default("new"),
   quickNote: z.string().optional().nullable(),
+  notes: z.string().optional().nullable(),
 });
 
 type LeadFormValues = z.infer<typeof leadFormSchema>;
@@ -37,11 +63,138 @@ export default function CRM() {
   const [selectedFunnelId, setSelectedFunnelId] = useState<number | null>(null);
   const [selectedStageId, setSelectedStageId] = useState<number | null>(null);
   const [openLeadId, setOpenLeadId] = useState<number | null>(null);
+  const [leadNotes, setLeadNotes] = useState<{[leadId: number]: string}>({});
   const [savedNotes, setSavedNotes] = useState<{[leadId: number]: Array<{text: string, date: Date}>}>({});
   
+  // Módulos para o editor React Quill
+  const quillModules = {
+    toolbar: [
+      ['bold', 'italic', 'underline']
+    ]
+  };
+  const [editingField, setEditingField] = useState<{leadId: number, field: string} | null>(null);
+  const [editingValue, setEditingValue] = useState<string>("");
+  
+  // As funções de formatação não são mais necessárias, o ReactQuill já implementa formatação direta
+  
+  // Mutation para atualizar dados do lead
+  const updateLeadFieldMutation = useMutation({
+    mutationFn: ({ id, field, value }: { id: number; field: string; value: string }) => {
+      console.log("Enviando dados:", { id, field, value });
+      // Para campos que podem ser null, precisamos manter como string vazia se vazio
+      const updateData = { [field]: value || "" };
+      return apiRequest(`/api/leads/${id}`, {
+        method: 'PATCH',
+        body: JSON.stringify(updateData)
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/leads'] });
+      
+      toast({
+        title: "Campo atualizado",
+        description: "As informações do lead foram atualizadas com sucesso.",
+      });
+      
+      // Limpar estado de edição
+      setEditingField(null);
+      setEditingValue("");
+    },
+    onError: (error) => {
+      console.error("Erro ao atualizar campo:", error);
+      toast({
+        title: "Erro ao atualizar",
+        description: "Não foi possível atualizar as informações do lead. Tente novamente.",
+        variant: "destructive",
+      });
+    },
+  });
+  
+  // Função para iniciar edição de um campo
+  const handleStartEditing = (leadId: number, field: string, currentValue: string | null | undefined) => {
+    setEditingField({ leadId, field });
+    setEditingValue(currentValue || "");
+  };
+  
+  // Função para salvar o valor editado
+  const handleSaveEdit = () => {
+    if (editingField) {
+      updateLeadFieldMutation.mutate({
+        id: editingField.leadId,
+        field: editingField.field,
+        value: editingValue
+      });
+    }
+  };
+  
+  // Função para cancelar a edição
+  const handleCancelEdit = () => {
+    setEditingField(null);
+    setEditingValue("");
+  };
   const { toast } = useToast();
   const queryClient = useQueryClient();
-
+  
+  // Funções auxiliares para formatação de data
+  const formatDate = (date: Date) => {
+    return new Intl.DateTimeFormat('pt-BR', { 
+      day: '2-digit', 
+      month: '2-digit', 
+      year: 'numeric' 
+    }).format(date);
+  };
+  
+  const formatTime = (date: Date) => {
+    return new Intl.DateTimeFormat('pt-BR', { 
+      hour: '2-digit', 
+      minute: '2-digit' 
+    }).format(date);
+  };
+  
+  // Função para salvar a nota
+  const handleSaveNote = (leadId: number) => {
+    const noteText = leadNotes[leadId] || "";
+    
+    if (noteText.trim() === "") {
+      toast({
+        title: "Nota vazia",
+        description: "Por favor, digite algum texto para salvar uma nota.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    // Adiciona a nova nota ao array de notas salvas para o lead específico
+    setSavedNotes(prev => {
+      const leadNotes = prev[leadId] || [];
+      return {
+        ...prev,
+        [leadId]: [...leadNotes, {
+          text: noteText,
+          date: new Date()
+        }]
+      };
+    });
+    
+    // Limpa o campo de texto
+    setLeadNotes(prev => ({
+      ...prev,
+      [leadId]: ""
+    }));
+    
+    toast({
+      title: "Nota salva",
+      description: "Sua nota foi salva com sucesso!",
+    });
+    
+    // Aqui você também poderia fazer uma chamada para a API para salvar a nota no servidor
+    // apiRequest({
+    //   url: `/api/leads/${leadId}/notes`,
+    //   method: 'POST',
+    //   data: { note: noteText }
+    // });
+  };
+  
   // Função para abrir o modal de adicionar novo lead
   const handleAddClick = () => {
     form.reset();
@@ -117,7 +270,7 @@ export default function CRM() {
         });
       }
     }
-  }, [allLeads, funnels, queryClient]);
+  }, [allLeads, funnels]);
   
   // Filter leads by status on the client side (for backward compatibility)
   const newLeads = allLeads?.filter(lead => lead.status === 'new') || [];
@@ -172,7 +325,7 @@ export default function CRM() {
           });
       }
     }
-  }, [openLeadId, allLeads, funnels, queryClient]);
+  }, [openLeadId, allLeads, funnels]);
   
   const isLoading = leadsLoading || funnelsLoading || (selectedFunnelId !== null && stagesLoading);
 
@@ -188,58 +341,65 @@ export default function CRM() {
       interestType: undefined,
       budget: undefined,
       notes: "",
+      status: "new",
+      businessType: undefined,
+      propertyType: undefined,
+      region: "",
+      priceRange: {
+        min: undefined,
+        max: undefined,
+      },
+      stage: "new",
       quickNote: "",
     },
   });
   
-  // Mutation para adicionar novo lead
-  const addLeadMutation = useMutation({
-    mutationFn: (data: LeadFormValues) => {
-      return apiRequest('/api/leads', {
-        method: 'POST',
-        body: JSON.stringify(data)
+  // Mutation para atualizar o status do lead
+  const updateLeadStatusMutation = useMutation({
+    mutationFn: ({ id, status }: { id: number; status: string }) => {
+      return apiRequest(`/api/leads/${id}/status`, {
+        method: 'PATCH',
+        body: JSON.stringify({ status })
       });
     },
     onSuccess: () => {
+      // Invalidar a consulta principal que busca todos os leads
       queryClient.invalidateQueries({ queryKey: ['/api/leads'] });
-      setIsAddLeadOpen(false);
-      form.reset();
       
       toast({
-        title: "Lead adicionado",
-        description: "O lead foi adicionado com sucesso!",
+        title: "Status atualizado",
+        description: "O status do lead foi atualizado com sucesso.",
       });
     },
     onError: (error) => {
-      console.error("Erro ao adicionar lead:", error);
+      console.error("Erro ao atualizar status:", error);
       toast({
-        title: "Erro ao adicionar lead",
-        description: "Não foi possível adicionar o lead. Verifique os dados e tente novamente.",
+        title: "Erro ao atualizar status",
+        description: "Não foi possível atualizar o status do lead. Tente novamente.",
         variant: "destructive",
       });
     },
   });
   
-  function onSubmit(data: LeadFormValues) {
-    addLeadMutation.mutate(data);
-  }
-
-  // Mutation para deletar lead
+  // Mutação para excluir um lead
   const deleteLeadMutation = useMutation({
-    mutationFn: (leadId: number) => {
-      return apiRequest(`/api/leads/${leadId}`, {
-        method: 'DELETE'
+    mutationFn: (id: number) => {
+      return apiRequest(`/api/leads/${id}`, {
+        method: 'DELETE',
       });
     },
     onSuccess: () => {
+      // Invalidar a consulta principal que busca todos os leads
       queryClient.invalidateQueries({ queryKey: ['/api/leads'] });
-      setIsDeleteConfirmOpen(false);
-      setLeadToDelete(null);
       
       toast({
         title: "Lead excluído",
-        description: "O lead foi excluído com sucesso!",
+        description: "O lead foi excluído com sucesso.",
       });
+      
+      // Fechar o diálogo e limpar o estado
+      setIsDeleteConfirmOpen(false);
+      setLeadToDelete(null);
     },
     onError: (error) => {
       console.error("Erro ao excluir lead:", error);
@@ -250,368 +410,1319 @@ export default function CRM() {
       });
     },
   });
+
+  const createLeadMutation = useMutation({
+    mutationFn: (data: LeadFormValues) => {
+      // Transformar os dados do formulário no formato esperado pelo schema do lead
+      // Encontrar o funil padrão ou usar o primeiro da lista
+      const defaultFunnel = funnels?.find(f => f.isDefault) || funnels?.[0];
+      
+      // Encontrar o primeiro estágio do funil padrão
+      let firstStageId = null;
+      if (defaultFunnel && stages) {
+        const filteredStages = stages.filter(stage => stage.funnelId === defaultFunnel.id);
+        const sortedStages = [...filteredStages].sort((a, b) => a.position - b.position);
+        if (sortedStages.length > 0) {
+          firstStageId = sortedStages[0].id;
+        }
+      }
+      
+      const leadData = {
+        name: data.name,
+        email: data.email,
+        phone: data.phone,
+        message: data.message || data.quickNote, // Use a mensagem ou nota rápida
+        status: data.stage || 'new',
+        source: data.source || 'manual',
+        interestType: data.interestType, // Usar interestType do formulário
+        budget: data.priceRange?.max, // Usar o valor máximo da faixa de preço como orçamento
+        notes: data.quickNote, // Salvar a nota rápida
+        propertyType: data.propertyType, // Adicionar tipo de propriedade
+        region: data.region, // Adicionar região
+        // Incluir automaticamente um funil padrão para novos leads
+        funnelId: defaultFunnel?.id,
+        // Definir o primeiro estágio do funil como o estágio atual do lead
+        stageId: firstStageId,
+        // Outros campos específicos que não estão no schema padrão
+        whatsapp: data.whatsapp,
+        priceRangeMin: data.priceRange?.min,
+        priceRangeMax: data.priceRange?.max,
+      };
+      
+      console.log("Dados formatados para envio:", leadData);
+      
+      return apiRequest('/api/leads', {
+        method: 'POST',
+        body: JSON.stringify(leadData)
+      });
+    },
+    onSuccess: (data) => {
+      // Invalidar a consulta principal que busca todos os leads
+      queryClient.invalidateQueries({ queryKey: ['/api/leads'] });
+      
+      console.log("Lead criado com sucesso:", data);
+      
+      toast({
+        title: "Lead criado com sucesso",
+        description: "O lead foi adicionado ao CRM.",
+      });
+      setIsAddLeadOpen(false);
+      form.reset();
+    },
+    onError: (error) => {
+      console.error("Erro ao criar lead:", error);
+      toast({
+        title: "Erro ao criar lead",
+        description: "Não foi possível adicionar o lead. Tente novamente.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  function onSubmit(data: LeadFormValues) {
+    console.log("Submetendo dados do lead:", data);
+    createLeadMutation.mutate(data);
+  }
   
+  // Diálogo de confirmação de exclusão
+  const handleConfirmDelete = () => {
+    if (leadToDelete) {
+      deleteLeadMutation.mutate(leadToDelete.id);
+    }
+  };
+
   return (
-    <div className="container mx-auto p-4">
-      {/* Header */}
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-2xl font-bold">Gestão de Leads - CRM</h1>
-        <Button onClick={handleAddClick} className="bg-blue-600 hover:bg-blue-700">
-          Adicionar Lead
-        </Button>
-      </div>
-      
-      {/* Filter options */}
-      <div className="bg-white p-4 mb-6 rounded-lg shadow">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-          <div className="flex items-center gap-2 text-gray-600">
-            <Filter className="h-4 w-4" />
-            <span className="font-medium">Filtrar leads por:</span>
-          </div>
-          
-          <div className="flex flex-col md:flex-row gap-4">
-            <Select
-              value={selectedFunnelId?.toString() || ""}
-              onValueChange={(value) => {
-                setSelectedFunnelId(Number(value));
-                setSelectedStageId(null);
-              }}
+    <div className="space-y-2">
+      {/* Diálogo de confirmação de exclusão */}
+      <Dialog open={isDeleteConfirmOpen} onOpenChange={setIsDeleteConfirmOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Excluir Lead</DialogTitle>
+            <DialogDescription>
+              Você tem certeza que deseja excluir este lead? Esta ação não pode ser desfeita.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex justify-end space-x-2 pt-4">
+            <Button
+              variant="outline"
+              onClick={() => setIsDeleteConfirmOpen(false)}
             >
-              <SelectTrigger className="w-[200px]">
-                <SelectValue placeholder="Selecionar funil" />
-              </SelectTrigger>
-              <SelectContent>
-                {funnels?.map((funnel) => (
-                  <SelectItem key={funnel.id} value={funnel.id.toString()}>
-                    {funnel.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            
-            <Select
-              value={selectedStageId?.toString() || ""}
-              onValueChange={(value) => setSelectedStageId(Number(value))}
-              disabled={!selectedFunnelId || !stages || stages.length === 0}
+              Cancelar
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={handleConfirmDelete}
+              disabled={deleteLeadMutation.isPending}
             >
-              <SelectTrigger className="w-[200px]">
-                <SelectValue placeholder="Selecionar estágio" />
-              </SelectTrigger>
-              <SelectContent>
-                {stages?.filter(stage => stage.funnelId === selectedFunnelId)
-                  .sort((a, b) => a.position - b.position)
-                  .map((stage) => (
-                    <SelectItem key={stage.id} value={stage.id.toString()}>
-                      {stage.name}
-                    </SelectItem>
-                  ))}
-              </SelectContent>
-            </Select>
-            
-            {selectedFunnelId && (
-              <Button
-                variant="outline"
-                onClick={() => {
-                  setSelectedFunnelId(null);
-                  setSelectedStageId(null);
-                }}
-              >
-                Limpar filtros
-              </Button>
-            )}
+              {deleteLeadMutation.isPending ? (
+                <>
+                  <div className="animate-spin mr-2 h-4 w-4 border-2 border-b-transparent border-white rounded-full"></div>
+                  Excluindo...
+                </>
+              ) : (
+                'Excluir Lead'
+              )}
+            </Button>
           </div>
-        </div>
-      </div>
-      
-      {/* Tabela de leads com guias */}
-      <div className="bg-white rounded-lg shadow overflow-hidden min-h-[600px]">
-        {/* Contagem de resultados */}
-        <div className="flex justify-between items-center p-4 border-b">
-          <h2 className="text-lg font-semibold">
-            Leads{' '}
-            {selectedFunnelId && (
-              <span className="text-sm font-normal text-gray-500">
-                ({filteredLeads.length} resultados)
-              </span>
-            )}
-          </h2>
-        </div>
-        
-        {/* Exibir leads filtrados em formato de cards/lista */}
-        <div className="p-4">
-          {isLoading ? (
-            <div className="flex justify-center items-center h-40">
-              <p className="text-gray-500">Carregando leads...</p>
-            </div>
-          ) : filteredLeads.length === 0 ? (
-            <div className="flex justify-center items-center h-40">
-              <p className="text-gray-500">Nenhum lead encontrado para os filtros selecionados.</p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {filteredLeads.map(lead => (
-                <div 
-                  key={lead.id} 
-                  className="border rounded-lg p-4 hover:shadow-md cursor-pointer transition-shadow"
-                  onClick={() => setOpenLeadId(lead.id)}
+        </DialogContent>
+      </Dialog>
+      <div className="bg-white p-6 rounded-lg shadow-sm">
+        <div className="flex justify-between items-center mb-6">
+          <div>
+            <h2 className="text-lg font-semibold text-gray-800 mb-1">Gerenciamento de Leads</h2>
+            <p className="text-sm text-gray-500">Cadastre aqui leads, clientes potenciais, ou pessoas interessadas no seu produto/serviço.</p>
+          </div>
+          <div className="flex space-x-2">
+            <Dialog open={isAddLeadOpen} onOpenChange={setIsAddLeadOpen}>
+              <DialogTrigger asChild>
+                <Button
+                  variant="default"
+                  className="bg-blue-600 hover:bg-blue-700"
+                  onClick={handleAddClick}
                 >
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600">
-                        <User className="h-5 w-5" />
-                      </div>
-                      <div>
-                        <h3 className="font-semibold">{lead.name}</h3>
-                        <p className="text-sm text-gray-500">{lead.email || 'Email não informado'}</p>
-                      </div>
+                  <i className="fas fa-plus mr-2"></i> Novo Lead
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[850px] max-h-[90vh] overflow-y-auto">
+                <DialogHeader>
+                  <DialogTitle>Adicionar Novo Lead</DialogTitle>
+                  <DialogDescription>
+                    Preencha as informações do novo lead para cadastrá-lo no sistema.
+                  </DialogDescription>
+                </DialogHeader>
+                <Form {...form}>
+                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                    {/* Informações básicas */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="name"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Nome*</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Digite o nome" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="email"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Email</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Digite o email" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="phone"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Telefone</FormLabel>
+                            <FormControl>
+                              <Input placeholder="(00) 0000-0000" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="whatsapp"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>WhatsApp</FormLabel>
+                            <FormControl>
+                              <Input placeholder="(00) 00000-0000" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
                     </div>
-                    <div className="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-800">
-                      {lead.status === 'new' ? 'Novo' : 
-                       lead.status === 'contacted' ? 'Contatado' : 
-                       lead.status === 'visit' ? 'Visita' : 
-                       lead.status === 'proposal' ? 'Proposta' : lead.status}
+                    
+                    {/* Informações de interesse */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="interestType"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Tipo de Negócio</FormLabel>
+                            <Select 
+                              onValueChange={field.onChange} 
+                              defaultValue={field.value || ""}
+                            >
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Selecione..." />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectItem value="purchase">Compra</SelectItem>
+                                <SelectItem value="rent">Aluguel</SelectItem>
+                                <SelectItem value="sale">Venda</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="propertyType"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Tipo de Imóvel</FormLabel>
+                            <Select 
+                              onValueChange={field.onChange} 
+                              defaultValue={field.value || ""}
+                            >
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Selecione..." />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectItem value="apartment">Apartamento</SelectItem>
+                                <SelectItem value="house">Casa</SelectItem>
+                                <SelectItem value="commercial">Comercial</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="region"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Região</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Ex: Centro, Zona Sul..." {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
                     </div>
-                  </div>
-                  
-                  <div className="mt-3 pt-3 border-t text-sm">
-                    <div className="flex justify-between text-gray-500">
-                      <span>Origem: {lead.source === 'manual' ? 'Manual' : 
-                               lead.source === 'website' ? 'Website' : 
-                               lead.source === 'facebook' ? 'Facebook' : lead.source}</span>
-                      <span>{lead.createdAt ? new Date(lead.createdAt).toLocaleDateString('pt-BR') : ''}</span>
+                    
+                    {/* Informações adicionais */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="source"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Origem</FormLabel>
+                            <Select 
+                              onValueChange={field.onChange} 
+                              defaultValue={field.value || "manual"}
+                            >
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Selecione..." />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectItem value="manual">Manual</SelectItem>
+                                <SelectItem value="website">Website</SelectItem>
+                                <SelectItem value="whatsapp">WhatsApp</SelectItem>
+                                <SelectItem value="instagram">Instagram</SelectItem>
+                                <SelectItem value="facebook">Facebook</SelectItem>
+                                <SelectItem value="indicacao">Indicação</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="budget"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Orçamento</FormLabel>
+                            <FormControl>
+                              <Input 
+                                type="number" 
+                                placeholder="Valor em R$" 
+                                {...field}
+                                onChange={(e) => field.onChange(e.target.value === "" ? null : Number(e.target.value))}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
                     </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
+                    
+                    <FormField
+                      control={form.control}
+                      name="quickNote"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Nota Rápida</FormLabel>
+                          <FormControl>
+                            <Textarea 
+                              placeholder="Observações sobre o lead..." 
+                              className="resize-none" 
+                              {...field} 
+                              rows={5}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <div className="flex justify-end space-x-2">
+                      <Button type="button" variant="outline" onClick={() => setIsAddLeadOpen(false)}>
+                        Cancelar
+                      </Button>
+                      <Button type="submit" disabled={createLeadMutation.isPending} className="bg-blue-600 hover:bg-blue-700">
+                        {createLeadMutation.isPending ? (
+                          <>
+                            <div className="animate-spin mr-2 h-4 w-4 border-2 border-b-transparent border-white rounded-full"></div>
+                            Salvando...
+                          </>
+                        ) : (
+                          'Salvar Lead'
+                        )}
+                      </Button>
+                    </div>
+                  </form>
+                </Form>
+              </DialogContent>
+            </Dialog>
+          </div>
         </div>
+
+        {isLoading ? (
+          <div className="flex justify-center py-8">
+            <div className="animate-spin h-8 w-8 border-2 border-blue-600 border-t-transparent rounded-full"></div>
+          </div>
+        ) : (
+          <div className="bg-white rounded-md">
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="w-[300px]">Nome / Contato</TableHead>
+                    <TableHead>Interesse</TableHead>
+                    <TableHead>WhatsApp</TableHead>
+                    <TableHead>Estágio</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {[...newLeads, ...contactedLeads, ...visitLeads, ...proposalLeads]
+                    .sort((a, b) => {
+                      // Ordenar por data (mais recente primeiro)
+                      const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+                      const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+                      return dateB - dateA;
+                    })
+                    .map((lead) => (
+                      <TableRow 
+                        key={lead.id} 
+                        className="cursor-pointer hover:bg-gray-50" 
+                        onClick={() => setOpenLeadId(lead.id)}
+                      >
+                        <TableCell>
+                          <div className="flex items-center gap-3">
+                            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 text-gray-600">
+                              <i className="fas fa-user-alt"></i>
+                            </div>
+                            <div>
+                              <div className="font-medium">{lead.name}</div>
+                              <div className="text-xs text-gray-500 mt-0.5">
+                                {lead.email || lead.phone || 'Sem contato'}
+                              </div>
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <span className="capitalize">
+                            {lead.interestType === 'purchase' ? 'Compra' :
+                            lead.interestType === 'rent' ? 'Aluguel' :
+                            lead.interestType || 'Não informado'}
+                          </span>
+                        </TableCell>
+                        <TableCell>
+                          {(lead as any).whatsapp ? (
+                            <div className="flex items-center">
+                              <span className="mr-2">{(lead as any).whatsapp}</span>
+                              <a 
+                                href={`https://wa.me/${(lead as any).whatsapp.replace(/\D/g, '')}`} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                onClick={(e) => e.stopPropagation()}
+                                className="text-green-600 hover:text-green-700"
+                              >
+                                <i className="fab fa-whatsapp"></i>
+                              </a>
+                            </div>
+                          ) : 'Não informado'}
+                        </TableCell>
+                        <TableCell>
+                          {(() => {
+                            // Verificar se o lead tem um estágio no funil
+                            if (lead.stageId && stages) {
+                              const currentStage = stages.find(s => s.id === lead.stageId);
+                              if (currentStage) {
+                                return currentStage.name;
+                              }
+                            }
+                            
+                            // Fallback para o status legado se não tiver estágio
+                            return lead.status === 'new' ? 'Novo' :
+                                   lead.status === 'contacted' ? 'Contatado' :
+                                   lead.status === 'visit' ? 'Agendado' :
+                                   lead.status === 'proposal' ? 'Proposta' :
+                                   'Não definido';
+                          })()}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                </TableBody>
+              </Table>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Lead Details Dialog */}
-      <LeadDetailsDialog 
-        open={openLeadId !== null}
-        onOpenChange={(open) => {
-          if (!open) setOpenLeadId(null);
-        }}
-        lead={allLeads?.find(l => l.id === openLeadId) || null}
-        stages={stages}
-        funnels={funnels}
-        onDelete={(lead) => {
-          setLeadToDelete(lead);
-          setIsDeleteConfirmOpen(true);
-        }}
-      />
-
-      {/* Add Lead Dialog */}
-      <Dialog open={isAddLeadOpen} onOpenChange={setIsAddLeadOpen}>
-        <DialogContent className="sm:max-w-[500px]">
-          <DialogTitle>Adicionar Novo Lead</DialogTitle>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Nome</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Nome do Lead" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input type="email" placeholder="Email" {...field} value={field.value || ""} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <FormField
-                control={form.control}
-                name="phone"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Telefone</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Telefone" {...field} value={field.value || ""} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <FormField
-                control={form.control}
-                name="whatsapp"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>WhatsApp</FormLabel>
-                    <FormControl>
-                      <Input placeholder="WhatsApp" {...field} value={field.value || ""} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <FormField
-                  control={form.control}
-                  name="interestType"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Tipo de Interesse</FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value as string || undefined}
-                      >
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Selecione..." />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="purchase">Compra</SelectItem>
-                          <SelectItem value="rent">Aluguel</SelectItem>
-                          <SelectItem value="sale">Venda</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+      {allLeads?.map(lead => (
+        <Dialog 
+          key={`lead-dialog-${lead.id}`}
+          open={openLeadId === lead.id} 
+          onOpenChange={(open) => {
+            if (!open) setOpenLeadId(null);
+          }}
+        >
+          <DialogContent className="max-w-6xl w-[90vw] max-h-[90vh] overflow-y-auto p-0">
+            {/* Cabeçalho no estilo RD Station - INVISIBLE TITLE para acessibilidade */}
+            <VisuallyHidden>
+              <DialogTitle>Detalhes do Lead</DialogTitle>
+            </VisuallyHidden>
+            <div className="bg-white border-b border-gray-200">
+              {/* Barra superior com nome do lead e detalhes */}
+              <div className="flex justify-between items-center bg-white p-6 rounded-t-lg border-b border-gray-100">
+                <div className="flex items-center space-x-4">
+                  <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600">
+                    <i className="fas fa-user text-xl"></i>
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-bold text-gray-800">{lead.name}</h2>
+                    <p className="text-sm text-gray-500">
+                      {lead.source === 'manual' ? 'Lead manual' :
+                      lead.source === 'website' ? 'Lead do website' :
+                      lead.source === 'whatsapp' ? 'Lead do WhatsApp' :
+                      lead.source === 'instagram' ? 'Lead do Instagram' :
+                      lead.source === 'facebook' ? 'Lead do Facebook' :
+                      lead.source === 'indicacao' ? 'Lead por indicação' :
+                      'Lead'} · Criado em {lead.createdAt ? new Date(lead.createdAt).toLocaleDateString('pt-BR') : "Data não disponível"}
+                    </p>
+                  </div>
+                </div>
                 
-                <FormField
-                  control={form.control}
-                  name="propertyType"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Tipo de Imóvel</FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value as string || undefined}
+                <div className="flex items-center space-x-2">
+                  <Button 
+                    variant="outline" 
+                    className="h-9 px-3 text-sm text-red-600 hover:text-red-700"
+                    onClick={() => {
+                      setLeadToDelete(lead);
+                      setIsDeleteConfirmOpen(true);
+                    }}
+                  >
+                    <i className="fas fa-trash-alt mr-2"></i> 
+                    Excluir lead
+                  </Button>
+                  <Button className="bg-blue-600 hover:bg-blue-700 h-9 px-3 text-sm">
+                    <i className="fas fa-pen mr-2"></i> 
+                    Editar lead
+                  </Button>
+                </div>
+              </div>
+              
+              {/* Abas de ação */}
+              <div className="flex bg-gray-50 border-b border-gray-100 px-6 py-3 space-x-6">
+                <div className="flex items-center space-x-2 text-blue-600 border-b-2 border-blue-600 pb-1 cursor-pointer">
+                  <i className="fas fa-clipboard-list"></i>
+                  <span className="text-sm font-medium">Detalhes</span>
+                </div>
+                <div className="flex items-center space-x-2 text-gray-500 hover:text-gray-700 pb-1 cursor-pointer">
+                  <i className="fas fa-history"></i>
+                  <span className="text-sm font-medium">Histórico</span>
+                </div>
+                <div className="flex items-center space-x-2 text-gray-500 hover:text-gray-700 pb-1 cursor-pointer">
+                  <i className="fas fa-tasks"></i>
+                  <span className="text-sm font-medium">Tarefas</span>
+                </div>
+              </div>
+              
+              {/* Indicadores de progresso (funil) - mantemos o código já melhorado */}
+              <div className="relative mb-6 bg-white px-6 py-4">
+                
+                {stages && stages.length > 0 ? (
+                  (() => {
+                    // Determinamos o funil atual
+                    const currentFunnelId = lead.funnelId || (funnels?.find(f => f.isDefault)?.id || funnels?.[0]?.id);
+                    
+                    // Filtramos e ordenamos os estágios deste funil
+                    const filteredStages = stages.filter(stage => stage.funnelId === currentFunnelId) || [];
+                    const sortedStages = [...filteredStages].sort((a, b) => a.position - b.position);
+                    
+                    // Função para obter cor de estágio similar ao dashboard do funil
+                    const getStageColor = (index: number, isActive: boolean, isCompleted: boolean) => {
+                      const totalStages = sortedStages.length;
+                      
+                      // Se for o último estágio
+                      if (index === totalStages - 1) {
+                        return isActive ? "#2ecc71" : isCompleted ? "#2ecc71" : "#e2f8ed";
+                      }
+                      
+                      // Primeiro estágio (azul)
+                      if (index === 0) {
+                        return isActive ? "#0066ff" : isCompleted ? "#0066ff" : "#e6f0ff";
+                      }
+                      
+                      // Estágios do meio
+                      const ratio = index / (totalStages - 2);
+                      if (isActive) {
+                        return `rgb(${Math.round(0 + (77 - 0) * ratio)}, ${Math.round(102 + (148 - 102) * ratio)}, 255)`;
+                      } else if (isCompleted) {
+                        return `rgb(${Math.round(0 + (77 - 0) * ratio)}, ${Math.round(102 + (148 - 102) * ratio)}, 255)`;
+                      }
+                      
+                      // Cor de fundo para estágios inativos
+                      return `rgba(${Math.round(0 + (77 - 0) * ratio)}, ${Math.round(102 + (148 - 102) * ratio)}, 255, 0.15)`;
+                    };
+                    
+                    return (
+                      <div className="w-full mb-4">
+                        {/* Título do funil alinhado à esquerda acima */}
+                        <div className="flex items-center mb-3 px-2">
+                          <Filter className="h-4 w-4 mr-1 text-gray-500" />
+                          <span className="text-sm font-medium whitespace-nowrap">Funil de Vendas</span>
+                        </div>
+                        
+                        {/* Estágios do funil - Design simples com setas */}
+                        <div className="flex w-full items-center px-0">
+                          {sortedStages.map((stage, index) => {
+                            const isActive = lead.stageId === stage.id || (!lead.stageId && index === 0);
+                            const isCompleted = sortedStages.findIndex(s => s.id === lead.stageId) > index;
+                            const isLastStage = index === sortedStages.length - 1;
+                            
+                            // Cores dos estágios conforme solicitação
+                            let bgColor;
+                            let textColor;
+                            
+                            if (isActive) {
+                              // Estágio ativo e selecionado (atual) - Verde
+                              bgColor = '#34C38F';
+                              textColor = 'text-white';
+                            } else if (isCompleted) {
+                              // Estágio ativo mas não selecionado - Azul
+                              bgColor = '#3565E7';
+                              textColor = 'text-white';
+                            } else {
+                              // Estágio não ativo e não selecionado - Cinza
+                              bgColor = '#E5E7EB'; 
+                              textColor = 'text-gray-700';
+                            }
+                            
+                            return (
+                              <div
+                                key={stage.id}
+                                className="relative flex items-center justify-center cursor-pointer"
+                                style={{
+                                  width: `${100 / sortedStages.length}%`,
+                                  padding: '0 0',
+                                  margin: '0 -8px',
+                                }}
+                              >
+
+                                
+                                {/* Container principal - Estilo seta */}
+                                <div 
+                                  className={`h-11 w-full flex items-center justify-center ${textColor} transition-all duration-200 relative`}
+                                  style={{
+                                    backgroundColor: bgColor,
+                                    clipPath: isLastStage 
+                                      ? 'polygon(0 0, 85% 0, 100% 0, 100% 100%, 0 100%, 15% 50%)' 
+                                      : index === 0
+                                        ? 'polygon(0 0, 85% 0, 100% 50%, 85% 100%, 0 100%, 0 50%)'
+                                        : 'polygon(0 0, 85% 0, 100% 50%, 85% 100%, 0 100%, 15% 50%)',
+                                    paddingRight: isLastStage ? '0' : '10px',
+                                    paddingLeft: index === 0 ? '0' : '10px',
+                                  }}
+                                  onClick={() => {
+                                    apiRequest(`/api/leads/${lead.id}/stage`, {
+                                      method: "PATCH",
+                                      body: JSON.stringify({ stageId: stage.id }),
+                                    })
+                                      .then(() => {
+                                        queryClient.invalidateQueries({ queryKey: ['/api/leads'] });
+                                        toast({
+                                          title: "Estágio atualizado",
+                                          description: "O estágio do lead foi atualizado com sucesso.",
+                                        });
+                                      })
+                                      .catch((error) => {
+                                        console.error("Erro ao atualizar estágio:", error);
+                                        toast({
+                                          title: "Erro ao atualizar estágio",
+                                          description: "Não foi possível atualizar o estágio.",
+                                          variant: "destructive",
+                                        });
+                                      });
+                                  }}
+                                >
+                                  {/* Nome do estágio */}
+                                  <span 
+                                    className="text-xs font-medium text-center"
+                                    style={{
+                                      maxWidth: '100%',
+                                      whiteSpace: 'nowrap',
+                                      overflow: 'hidden',
+                                      textOverflow: 'ellipsis',
+                                      padding: '0 8px',
+                                      fontSize: '12px'
+                                    }}
+                                  >
+                                    {stage.name}
+                                  </span>
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    );
+                  })()
+                ) : (
+                  // Fallback para o sistema anterior se não houver estágios definidos
+                  <div className="flex justify-between items-center bg-gray-50 p-3 rounded-lg">
+                    <div className="flex space-x-8">
+                      <div 
+                        className={`flex flex-col items-center cursor-pointer ${lead.status === 'new' ? 'text-blue-600 font-medium' : 'text-gray-500'}`}
                       >
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Selecione..." />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="apartment">Apartamento</SelectItem>
-                          <SelectItem value="house">Casa</SelectItem>
-                          <SelectItem value="commercial">Comercial</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                        <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-1 ${lead.status === 'new' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}>
+                          <i className="fas fa-user-plus text-sm"></i>
+                        </div>
+                        <span className="text-xs">Contato</span>
+                      </div>
+                      
+                      <div 
+                        className={`flex flex-col items-center cursor-pointer ${lead.status === 'contacted' ? 'text-blue-600 font-medium' : 'text-gray-500'}`}
+                      >
+                        <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-1 ${lead.status === 'contacted' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}>
+                          <i className="fas fa-phone-alt text-sm"></i>
+                        </div>
+                        <span className="text-xs">Follow up</span>
+                      </div>
+                      
+                      <div 
+                        className={`flex flex-col items-center cursor-pointer ${lead.status === 'visit' ? 'text-blue-600 font-medium' : 'text-gray-500'}`}
+                      >
+                        <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-1 ${lead.status === 'visit' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}>
+                          <i className="fas fa-calendar-check text-sm"></i>
+                        </div>
+                        <span className="text-xs">Agendamento</span>
+                      </div>
+                      
+                      <div 
+                        className={`flex flex-col items-center cursor-pointer ${lead.status === 'proposal' ? 'text-green-600 font-medium' : 'text-gray-500'}`}
+                      >
+                        <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-1 ${lead.status === 'proposal' ? 'bg-green-600 text-white' : 'bg-gray-200'}`}>
+                          <i className="fas fa-check-circle text-sm"></i>
+                        </div>
+                        <span className="text-xs">Fechado</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
               
-              <FormField
-                control={form.control}
-                name="region"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Região</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Região de interesse" {...field} value={field.value || ""} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <FormField
-                control={form.control}
-                name="budget"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Orçamento</FormLabel>
-                    <FormControl>
-                      <Input 
-                        type="number" 
-                        placeholder="Orçamento disponível" 
-                        {...field}
-                        value={field.value === null || field.value === undefined ? '' : field.value}
-                        onChange={(e) => field.onChange(e.target.value === '' ? null : Number(e.target.value))}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <FormField
-                control={form.control}
-                name="quickNote"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Anotação Rápida</FormLabel>
-                    <FormControl>
-                      <Textarea 
-                        rows={3}
-                        placeholder="Adicione uma anotação sobre este lead" 
-                        className="resize-none"
-                        {...field}
-                        value={field.value || ""}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <div className="flex justify-end space-x-2 pt-2">
-                <Button type="button" variant="outline" onClick={() => setIsAddLeadOpen(false)}>
-                  Cancelar
-                </Button>
-                <Button 
-                  type="submit" 
-                  disabled={addLeadMutation.isPending}
-                  className="bg-blue-600 hover:bg-blue-700"
-                >
-                  {addLeadMutation.isPending ? "Adicionando..." : "Adicionar Lead"}
-                </Button>
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-6 pb-6" style={{
+                padding: '0px 40px',
+                background: 'white'
+              }}>
+                {/* Coluna 1 - Dividida em 2 grids */}
+                <div className="md:col-span-3">
+                  <div className="grid gap-6">
+                    {/* Grid 1: Informações de Contato */}
+                    <div className="p-5 border border-[#f5f5f5] rounded-[5px]" style={{ background: '#F9FAFB' }}>
+                      <h3 className="text-base font-bold mb-4">Dados do Cliente</h3>
+                      <div className="w-full h-px mb-4 -mx-5" style={{ marginLeft: '-20px', marginRight: '-20px', width: 'calc(100% + 40px)', backgroundColor: 'rgb(245, 245, 245)' }}></div>
+                      <div className="space-y-5">
+                        <div>
+                          <h4 className="text-xs font-semibold mb-1 flex items-center" style={{ fontSize: '14px' }}><User className="h-4 w-4 mr-1 text-gray-500" /> Nome:</h4>
+                          <div className="group relative">
+                            {editingField && editingField.leadId === lead.id && editingField.field === 'name' ? (
+                              <div className="flex items-center">
+                                <Input 
+                                  value={editingValue}
+                                  onChange={(e) => setEditingValue(e.target.value)}
+                                  className="h-8 text-sm focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none"
+                                  style={{ 
+                                    fontSize: '12px',
+                                    border: '1px solid #d0d0d0',
+                                    boxShadow: "none",
+                                    outline: "none"
+                                  }}
+                                  autoFocus
+                                />
+                                <div className="flex ml-2">
+                                  <Button 
+                                    size="icon" 
+                                    variant="ghost" 
+                                    className="h-6 w-6" 
+                                    onClick={handleSaveEdit}
+                                    disabled={updateLeadFieldMutation.isPending}
+                                  >
+                                    <Check className="h-4 w-4" />
+                                  </Button>
+                                  <Button 
+                                    size="icon" 
+                                    variant="ghost" 
+                                    className="h-6 w-6" 
+                                    onClick={handleCancelEdit}
+                                  >
+                                    <X className="h-4 w-4" />
+                                  </Button>
+                                </div>
+                              </div>
+                            ) : (
+                              <div className="flex items-center">
+                                <p className="text-sm text-left" style={{ fontSize: '12px', color: '#878484' }}>
+                                  {lead.name}
+                                </p>
+                                <button 
+                                  className="ml-2 invisible group-hover:visible"
+                                  onClick={() => handleStartEditing(lead.id, 'name', lead.name)}
+                                >
+                                  <Pencil className="h-3 w-3 text-gray-500 hover:text-gray-700" />
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                        
+                        <div>
+                          <h4 className="text-xs font-semibold mb-1 flex items-center" style={{ fontSize: '14px' }}><Mail className="h-4 w-4 mr-1 text-gray-500" /> Email:</h4>
+                          <div className="group relative">
+                            {editingField && editingField.leadId === lead.id && editingField.field === 'email' ? (
+                              <div className="flex items-center">
+                                <Input 
+                                  value={editingValue}
+                                  onChange={(e) => setEditingValue(e.target.value)}
+                                  className="h-8 text-sm focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none"
+                                  style={{ 
+                                    fontSize: '12px',
+                                    border: '1px solid #d0d0d0',
+                                    boxShadow: "none",
+                                    outline: "none"
+                                  }}
+                                  autoFocus
+                                />
+                                <div className="flex ml-2">
+                                  <Button 
+                                    size="icon" 
+                                    variant="ghost" 
+                                    className="h-6 w-6" 
+                                    onClick={handleSaveEdit}
+                                    disabled={updateLeadFieldMutation.isPending}
+                                  >
+                                    <Check className="h-4 w-4" />
+                                  </Button>
+                                  <Button 
+                                    size="icon" 
+                                    variant="ghost" 
+                                    className="h-6 w-6" 
+                                    onClick={handleCancelEdit}
+                                  >
+                                    <X className="h-4 w-4" />
+                                  </Button>
+                                </div>
+                              </div>
+                            ) : (
+                              <div className="flex items-center">
+                                <p className="text-sm text-left" style={{ fontSize: '12px', color: '#878484' }}>
+                                  {lead.email || "Não informado"}
+                                </p>
+                                <button 
+                                  className="ml-2 invisible group-hover:visible"
+                                  onClick={() => handleStartEditing(lead.id, 'email', lead.email)}
+                                >
+                                  <Pencil className="h-3 w-3 text-gray-500 hover:text-gray-700" />
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                        
+                        <div>
+                          <h4 className="text-xs font-semibold mb-1 flex items-center" style={{ fontSize: '14px' }}><Phone className="h-4 w-4 mr-1 text-gray-500" /> Telefone:</h4>
+                          <div className="group relative">
+                            {editingField && editingField.leadId === lead.id && editingField.field === 'phone' ? (
+                              <div className="flex items-center">
+                                <Input 
+                                  value={editingValue}
+                                  onChange={(e) => setEditingValue(e.target.value)}
+                                  className="h-8 text-sm focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none"
+                                  style={{ 
+                                    fontSize: '12px',
+                                    border: '1px solid #d0d0d0',
+                                    boxShadow: "none",
+                                    outline: "none"
+                                  }}
+                                  autoFocus
+                                />
+                                <div className="flex ml-2">
+                                  <Button 
+                                    size="icon" 
+                                    variant="ghost" 
+                                    className="h-6 w-6" 
+                                    onClick={handleSaveEdit}
+                                    disabled={updateLeadFieldMutation.isPending}
+                                  >
+                                    <Check className="h-4 w-4" />
+                                  </Button>
+                                  <Button 
+                                    size="icon" 
+                                    variant="ghost" 
+                                    className="h-6 w-6" 
+                                    onClick={handleCancelEdit}
+                                  >
+                                    <X className="h-4 w-4" />
+                                  </Button>
+                                </div>
+                              </div>
+                            ) : (
+                              <div className="flex items-center">
+                                <p className="text-sm text-left" style={{ fontSize: '12px', color: '#878484' }}>
+                                  {lead.phone || "Não informado"}
+                                </p>
+                                <button 
+                                  className="ml-2 invisible group-hover:visible"
+                                  onClick={() => handleStartEditing(lead.id, 'phone', lead.phone)}
+                                >
+                                  <Pencil className="h-3 w-3 text-gray-500 hover:text-gray-700" />
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                        
+                        <div>
+                          <h4 className="text-xs font-semibold mb-1 flex items-center" style={{ fontSize: '14px' }}><FaWhatsapp className="h-4 w-4 mr-1 text-gray-500" /> WhatsApp:</h4>
+                          <div className="group relative">
+                            {editingField && editingField.leadId === lead.id && editingField.field === 'whatsapp' ? (
+                              <div className="flex items-center">
+                                <Input 
+                                  value={editingValue}
+                                  onChange={(e) => setEditingValue(e.target.value)}
+                                  className="h-8 text-sm focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none"
+                                  style={{ 
+                                    fontSize: '12px',
+                                    border: '1px solid #d0d0d0',
+                                    boxShadow: "none",
+                                    outline: "none"
+                                  }}
+                                  autoFocus
+                                />
+                                <div className="flex ml-2">
+                                  <Button 
+                                    size="icon" 
+                                    variant="ghost" 
+                                    className="h-6 w-6" 
+                                    onClick={handleSaveEdit}
+                                    disabled={updateLeadFieldMutation.isPending}
+                                  >
+                                    <Check className="h-4 w-4" />
+                                  </Button>
+                                  <Button 
+                                    size="icon" 
+                                    variant="ghost" 
+                                    className="h-6 w-6" 
+                                    onClick={handleCancelEdit}
+                                  >
+                                    <X className="h-4 w-4" />
+                                  </Button>
+                                </div>
+                              </div>
+                            ) : (
+                              <div className="flex items-center">
+                                <p className="text-sm text-left" style={{ fontSize: '12px', color: '#878484' }}>
+                                  {(lead as any).whatsapp || "Não informado"}
+                                </p>
+                                <button 
+                                  className="ml-2 invisible group-hover:visible"
+                                  onClick={() => handleStartEditing(lead.id, 'whatsapp', (lead as any).whatsapp)}
+                                >
+                                  <Pencil className="h-3 w-3 text-gray-500 hover:text-gray-700" />
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Grid 2: Detalhes do Interesse */}
+                    <div className="p-5 border border-[#f5f5f5] rounded-[5px]" style={{ background: '#F9FAFB' }}>
+                      <h3 className="text-base font-bold mb-4">Detalhes do Interesse</h3>
+                      <div className="w-full h-px mb-4 -mx-5" style={{ marginLeft: '-20px', marginRight: '-20px', width: 'calc(100% + 40px)', backgroundColor: 'rgb(245, 245, 245)' }}></div>
+                      <div className="space-y-5">
+                        <div>
+                          <h4 className="text-xs font-semibold mb-1 flex items-center" style={{ fontSize: '14px' }}><Store className="h-4 w-4 mr-1 text-gray-500" /> Tipo de Negócio:</h4>
+                          <div className="group relative">
+                            {editingField && editingField.leadId === lead.id && editingField.field === 'interestType' ? (
+                              <div className="flex items-center">
+                                <Select
+                                  value={editingValue}
+                                  onValueChange={(value) => setEditingValue(value)}
+                                >
+                                  <SelectTrigger className="h-8 text-sm focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none" 
+                                  style={{ 
+                                    fontSize: '12px',
+                                    border: '1px solid #d0d0d0',
+                                    boxShadow: "none",
+                                    outline: "none"
+                                  }}>
+                                    <SelectValue placeholder="Selecione o tipo de negócio" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectItem value="purchase">Compra</SelectItem>
+                                    <SelectItem value="rent">Aluguel</SelectItem>
+                                  </SelectContent>
+                                </Select>
+                                <div className="flex ml-2">
+                                  <Button 
+                                    size="icon" 
+                                    variant="ghost" 
+                                    className="h-6 w-6" 
+                                    onClick={handleSaveEdit}
+                                    disabled={updateLeadFieldMutation.isPending}
+                                  >
+                                    <Check className="h-4 w-4" />
+                                  </Button>
+                                  <Button 
+                                    size="icon" 
+                                    variant="ghost" 
+                                    className="h-6 w-6" 
+                                    onClick={handleCancelEdit}
+                                  >
+                                    <X className="h-4 w-4" />
+                                  </Button>
+                                </div>
+                              </div>
+                            ) : (
+                              <div className="flex items-center">
+                                <p className="text-sm text-left" style={{ fontSize: "12px", color: "#878484" }}>
+                                  {lead.interestType === 'purchase' ? 'Compra' :
+                                  lead.interestType === 'rent' ? 'Aluguel' :
+                                  lead.interestType || 'Não informado'}
+                                </p>
+                                <button 
+                                  className="ml-2 invisible group-hover:visible"
+                                  onClick={() => handleStartEditing(lead.id, 'interestType', lead.interestType)}
+                                >
+                                  <Pencil className="h-3 w-3 text-gray-500 hover:text-gray-700" />
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                        
+                        <div>
+                          <h4 className="text-xs font-semibold mb-1 flex items-center" style={{ fontSize: '14px' }}><Home className="h-4 w-4 mr-1 text-gray-500" /> Tipo de Imóvel:</h4>
+                          <div className="group relative">
+                            {editingField && editingField.leadId === lead.id && editingField.field === 'propertyType' ? (
+                              <div className="flex items-center">
+                                <Select
+                                  value={editingValue}
+                                  onValueChange={(value) => setEditingValue(value)}
+                                >
+                                  <SelectTrigger className="h-8 text-sm focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none" 
+                                  style={{ 
+                                    fontSize: '12px',
+                                    border: '1px solid #d0d0d0',
+                                    boxShadow: "none",
+                                    outline: "none"
+                                  }}>
+                                    <SelectValue placeholder="Selecione o tipo de imóvel" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectItem value="apartment">Apartamento</SelectItem>
+                                    <SelectItem value="house">Casa</SelectItem>
+                                    <SelectItem value="commercial">Comercial</SelectItem>
+                                  </SelectContent>
+                                </Select>
+                                <div className="flex ml-2">
+                                  <Button 
+                                    size="icon" 
+                                    variant="ghost" 
+                                    className="h-6 w-6" 
+                                    onClick={handleSaveEdit}
+                                    disabled={updateLeadFieldMutation.isPending}
+                                  >
+                                    <Check className="h-4 w-4" />
+                                  </Button>
+                                  <Button 
+                                    size="icon" 
+                                    variant="ghost" 
+                                    className="h-6 w-6" 
+                                    onClick={handleCancelEdit}
+                                  >
+                                    <X className="h-4 w-4" />
+                                  </Button>
+                                </div>
+                              </div>
+                            ) : (
+                              <div className="flex items-center">
+                                <p className="text-sm text-left" style={{ fontSize: "12px", color: "#878484" }}>
+                                  {(lead as any).propertyType === 'apartment' ? 'Apartamento' : 
+                                  (lead as any).propertyType === 'house' ? 'Casa' : 
+                                  (lead as any).propertyType === 'commercial' ? 'Comercial' : 
+                                  'Não informado'}
+                                </p>
+                                <button 
+                                  className="ml-2 invisible group-hover:visible"
+                                  onClick={() => handleStartEditing(lead.id, 'propertyType', (lead as any).propertyType)}
+                                >
+                                  <Pencil className="h-3 w-3 text-gray-500 hover:text-gray-700" />
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                        
+                        <div>
+                          <h4 className="text-xs font-semibold mb-1 flex items-center" style={{ fontSize: '14px' }}><MapPin className="h-4 w-4 mr-1 text-gray-500" /> Região:</h4>
+                          <div className="group relative">
+                            {editingField && editingField.leadId === lead.id && editingField.field === 'region' ? (
+                              <div className="flex items-center">
+                                <Input 
+                                  value={editingValue}
+                                  onChange={(e) => setEditingValue(e.target.value)}
+                                  className="h-8 text-sm focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none"
+                                  style={{ 
+                                    fontSize: '12px',
+                                    border: '1px solid #d0d0d0',
+                                    boxShadow: "none",
+                                    outline: "none"
+                                  }}
+                                  autoFocus
+                                />
+                                <div className="flex ml-2">
+                                  <Button 
+                                    size="icon" 
+                                    variant="ghost" 
+                                    className="h-6 w-6" 
+                                    onClick={handleSaveEdit}
+                                    disabled={updateLeadFieldMutation.isPending}
+                                  >
+                                    <Check className="h-4 w-4" />
+                                  </Button>
+                                  <Button 
+                                    size="icon" 
+                                    variant="ghost" 
+                                    className="h-6 w-6" 
+                                    onClick={handleCancelEdit}
+                                  >
+                                    <X className="h-4 w-4" />
+                                  </Button>
+                                </div>
+                              </div>
+                            ) : (
+                              <div className="flex items-center">
+                                <p className="text-sm text-left" style={{ fontSize: "12px", color: "#878484" }}>{(lead as any).region || "Não informado"}</p>
+                                <button 
+                                  className="ml-2 invisible group-hover:visible"
+                                  onClick={() => handleStartEditing(lead.id, 'region', (lead as any).region)}
+                                >
+                                  <Pencil className="h-3 w-3 text-gray-500 hover:text-gray-700" />
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                        
+                        <div>
+                          <h4 className="text-xs font-semibold mb-1 flex items-center" style={{ fontSize: '14px' }}><DollarSign className="h-4 w-4 mr-1 text-gray-500" /> Faixa de Preço:</h4>
+                          <div className="group relative">
+                            {editingField && editingField.leadId === lead.id && editingField.field === 'budget' ? (
+                              <div className="flex items-center">
+                                <Input 
+                                  type="number"
+                                  value={editingValue}
+                                  onChange={(e) => setEditingValue(e.target.value)}
+                                  className="h-8 text-sm focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none"
+                                  style={{ 
+                                    fontSize: '12px',
+                                    border: '1px solid #d0d0d0',
+                                    boxShadow: "none",
+                                    outline: "none"
+                                  }}
+                                  autoFocus
+                                  placeholder="Valor do orçamento"
+                                />
+                                <div className="flex ml-2">
+                                  <Button 
+                                    size="icon" 
+                                    variant="ghost" 
+                                    className="h-6 w-6" 
+                                    onClick={handleSaveEdit}
+                                    disabled={updateLeadFieldMutation.isPending}
+                                  >
+                                    <Check className="h-4 w-4" />
+                                  </Button>
+                                  <Button 
+                                    size="icon" 
+                                    variant="ghost" 
+                                    className="h-6 w-6" 
+                                    onClick={handleCancelEdit}
+                                  >
+                                    <X className="h-4 w-4" />
+                                  </Button>
+                                </div>
+                              </div>
+                            ) : (
+                              <div className="flex items-center">
+                                <p className="text-sm text-left" style={{ fontSize: "12px", color: "#878484" }}>
+                                  {(lead as any).priceRangeMin && (lead as any).priceRangeMax ? 
+                                    `R$ ${(lead as any).priceRangeMin.toLocaleString('pt-BR')} - R$ ${(lead as any).priceRangeMax.toLocaleString('pt-BR')}` : 
+                                    lead.budget ? 'R$ ' + lead.budget.toLocaleString('pt-BR') : 'Não informado'}
+                                </p>
+                                <button 
+                                  className="ml-2 invisible group-hover:visible"
+                                  onClick={() => handleStartEditing(lead.id, 'budget', lead.budget)}
+                                >
+                                  <Pencil className="h-3 w-3 text-gray-500 hover:text-gray-700" />
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                        
+                        <div>
+                          <h4 className="text-xs font-semibold mb-1 flex items-center" style={{ fontSize: '14px' }}><Tag className="h-4 w-4 mr-1 text-gray-500" /> Origem:</h4>
+                          <div className="group relative">
+                            {editingField && editingField.leadId === lead.id && editingField.field === 'source' ? (
+                              <div className="flex items-center">
+                                <Select
+                                  value={editingValue}
+                                  onValueChange={(value) => setEditingValue(value)}
+                                >
+                                  <SelectTrigger className="h-8 text-sm focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none" 
+                                  style={{ 
+                                    fontSize: '12px',
+                                    border: '1px solid #d0d0d0',
+                                    boxShadow: "none",
+                                    outline: "none"
+                                  }}>
+                                    <SelectValue placeholder="Selecione a origem" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectItem value="manual">Manual</SelectItem>
+                                    <SelectItem value="website">Website</SelectItem>
+                                    <SelectItem value="whatsapp">WhatsApp</SelectItem>
+                                    <SelectItem value="instagram">Instagram</SelectItem>
+                                    <SelectItem value="facebook">Facebook</SelectItem>
+                                    <SelectItem value="indicacao">Indicação</SelectItem>
+                                  </SelectContent>
+                                </Select>
+                                <div className="flex ml-2">
+                                  <Button 
+                                    size="icon" 
+                                    variant="ghost" 
+                                    className="h-6 w-6" 
+                                    onClick={handleSaveEdit}
+                                    disabled={updateLeadFieldMutation.isPending}
+                                  >
+                                    <Check className="h-4 w-4" />
+                                  </Button>
+                                  <Button 
+                                    size="icon" 
+                                    variant="ghost" 
+                                    className="h-6 w-6" 
+                                    onClick={handleCancelEdit}
+                                  >
+                                    <X className="h-4 w-4" />
+                                  </Button>
+                                </div>
+                              </div>
+                            ) : (
+                              <div className="flex items-center">
+                                <p className="text-sm text-left" style={{ fontSize: "12px", color: "#878484" }}>
+                                  {lead.source === 'manual' ? 'Manual' :
+                                  lead.source === 'website' ? 'Website' :
+                                  lead.source === 'whatsapp' ? 'WhatsApp' :
+                                  lead.source === 'instagram' ? 'Instagram' :
+                                  lead.source === 'facebook' ? 'Facebook' :
+                                  lead.source === 'indicacao' ? 'Indicação' :
+                                  lead.source || 'Não informado'}
+                                </p>
+                                <button 
+                                  className="ml-2 invisible group-hover:visible"
+                                  onClick={() => handleStartEditing(lead.id, 'source', lead.source)}
+                                >
+                                  <Pencil className="h-3 w-3 text-gray-500 hover:text-gray-700" />
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Coluna de Notas */}
+                <div className="md:col-span-9 px-8">                  
+                  <div>
+                    <div className="p-5 border border-[#f5f5f5] rounded-[5px]" style={{ background: '#F9FAFB' }}>
+                      <h3 className="text-base font-bold mb-4 flex items-center">
+                        <FileText className="h-4 w-4 mr-2 text-gray-500" />
+                        Nota Rápida
+                      </h3>
+                      <div className="w-full h-px mb-4 -mx-5" style={{ marginLeft: '-20px', marginRight: '-20px', width: 'calc(100% + 40px)', backgroundColor: 'rgb(245, 245, 245)' }}></div>
+                      <div className="bg-white" style={{ minHeight: '200px' }}>
+                        <ReactQuill
+                          id={`note-textarea-${lead.id}`}
+                          theme="snow"
+                          placeholder="Digite uma anotação rápida sobre este lead..."
+                          value={leadNotes[lead.id] || lead.notes || ""}
+                          onChange={(content) => setLeadNotes(prev => ({
+                            ...prev,
+                            [lead.id]: content
+                          }))}
+                          modules={quillModules}
+                          className="h-32 focus:outline-none quill-no-border"
+                        />
+                      </div>
+                      <div className="flex justify-end mt-4 pr-5 pb-2">
+                        <Button 
+                          className="bg-[#3565E7] hover:bg-[#2955CC] text-sm"
+                          onClick={() => handleSaveNote(lead.id)}
+                        >
+                          Salvar Nota
+                        </Button>
+                      </div>
+                    </div>
+                    
+                    {/* Histórico de atividades/notas */}
+                    <div className="mt-8">
+                      <div className="p-5 border border-[#f5f5f5] rounded-[5px]" style={{ background: '#F9FAFB' }}>
+                        <h3 className="text-base font-bold mb-4 flex items-center">
+                          <MessageSquare className="h-4 w-4 mr-2 text-gray-500" />
+                          Histórico de Atividades
+                        </h3>
+                        <div className="w-full h-px mb-4 -mx-5" style={{ marginLeft: '-20px', marginRight: '-20px', width: 'calc(100% + 40px)', backgroundColor: 'rgb(245, 245, 245)' }}></div>
+                        
+                        {savedNotes[lead.id] && savedNotes[lead.id].length > 0 ? (
+                          <div className="space-y-4">
+                            {savedNotes[lead.id].map((note, index) => (
+                              <div key={index} className="p-4 border border-[#f5f5f5] rounded-[5px] bg-white">
+                                <div className="flex justify-between items-start mb-2">
+                                  <span className="text-sm font-semibold">{formatDate(note.date)}</span>
+                                  <span className="text-xs text-gray-500">{formatTime(note.date)}</span>
+                                </div>
+                                <div className="text-sm text-left" dangerouslySetInnerHTML={{ __html: note.text }}></div>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <div className="text-center py-6 text-gray-500 text-sm">
+                            Nenhuma nota foi adicionada ainda.
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </form>
-          </Form>
-        </DialogContent>
-      </Dialog>
-      
-      {/* Delete Confirmation Dialog */}
-      <Dialog open={isDeleteConfirmOpen} onOpenChange={setIsDeleteConfirmOpen}>
-        <DialogContent className="sm:max-w-[400px]">
-          <DialogTitle>Confirmar Exclusão</DialogTitle>
-          <div className="py-4">
-            <p>Tem certeza que deseja excluir o lead <strong>{leadToDelete?.name}</strong>?</p>
-            <p className="text-sm text-gray-500 mt-2">Esta ação não pode ser desfeita.</p>
-          </div>
-          <div className="flex justify-end space-x-2">
-            <Button variant="outline" onClick={() => setIsDeleteConfirmOpen(false)}>
-              Cancelar
-            </Button>
-            <Button 
-              variant="destructive" 
-              onClick={() => leadToDelete && deleteLeadMutation.mutate(leadToDelete.id)}
-              disabled={deleteLeadMutation.isPending}
-            >
-              {deleteLeadMutation.isPending ? "Excluindo..." : "Excluir Lead"}
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
+            </div>
+          </DialogContent>
+        </Dialog>
+      ))}
     </div>
   );
 }
