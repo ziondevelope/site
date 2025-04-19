@@ -80,77 +80,97 @@ export default function SalesFunnel({ isLoading: initialLoading, data }: SalesFu
   const stageCounts = stagesToCounts(sortedStages, funnel);
   
   return (
-    <div className="h-auto w-full relative">
-      <div className="absolute top-0 right-0">
-        <span className="text-sm font-medium text-gray-600">
-          Funil: {defaultFunnel.name}
-        </span>
+    <div className="h-auto w-full relative" style={{ fontFamily: 'Montserrat, sans-serif' }}>
+      <div className="text-center mb-2">
+        <h3 className="text-xl font-semibold mb-2">Seu funil</h3>
       </div>
-      <div className="mt-10 flex items-center justify-center">
-        <div className="w-full max-w-2xl px-4 lg:px-0 relative">
-          {/* Total leads no topo do funil */}
-          <div className="text-center mb-4">
-            <span className="text-sm font-medium bg-blue-50 px-4 py-1.5 rounded-full shadow-sm">
-              Total de Leads: {funnel.leads}
-            </span>
-          </div>
-          
+      
+      <div className="flex items-center justify-center">
+        <div className="w-full max-w-2xl relative">
           {/* Desenho visual do funil */}
-          <div className="relative flex flex-col items-center space-y-6">
+          <div className="relative flex flex-col items-center space-y-3">
             {sortedStages.map((stage, index) => {
               const count = stageCounts[stage.id] || 0;
               const percentage = getPercentage(count);
-              const isLastStage = index === sortedStages.length - 1;
               
               // Calcular a largura do funil - diminui gradualmente
               // Primeira etapa mais larga, última mais estreita
-              const maxWidth = 85;
-              const minWidth = 40;
+              const maxWidth = 95;
+              const minWidth = 60;
               const width = maxWidth - (index * ((maxWidth - minWidth) / (sortedStages.length - 1 || 1)));
               
               // Altura fixa para cada estágio
-              const height = 65;
+              const height = 68;
               
               const color = getStageBackgroundColor(index, sortedStages.length);
+              
+              // Determine se deve mostrar a porcentagem na lateral direita
+              const showSidePercentage = index < sortedStages.length - 1;
               
               return (
                 <div 
                   key={stage.id}
-                  className="relative flex flex-col items-center justify-center text-center"
+                  className="relative w-full"
                   style={{ 
-                    width: `${width}%`,
                     height: `${height}px`,
-                    marginBottom: '5px',
+                    marginBottom: '2px',
                   }}
                 >
                   {/* Forma do trapézio */}
                   <div 
-                    className="absolute inset-0 shadow-md transition-all duration-300"
+                    className="absolute left-1/2 transform -translate-x-1/2 shadow-md transition-all duration-300"
                     style={{
+                      width: `${width}%`,
+                      height: '100%',
                       backgroundColor: color,
-                      clipPath: 'polygon(0% 0%, 100% 0%, 85% 100%, 15% 100%)',
-                      borderRadius: '3px',
+                      clipPath: 'polygon(0% 0%, 100% 0%, 95% 100%, 5% 100%)',
+                      borderRadius: '2px',
                     }}
                   />
                   
                   {/* Conteúdo do estágio */}
-                  <div className="z-10 flex flex-col items-center">
-                    <div className="text-white font-medium text-base">
+                  <div 
+                    className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 flex flex-col items-center text-center" 
+                    style={{ width: '100%' }}
+                  >
+                    <div className="text-white text-sm font-medium">
                       {stage.name}
                     </div>
-                    <div className="text-white text-sm mt-1 flex items-center">
-                      <span className="mr-2 font-bold">{count}</span>
-                      <span className="opacity-80">({percentage}%)</span>
+                    <div className="text-white text-2xl font-bold mt-1">
+                      {count}
                     </div>
                   </div>
+                  
+                  {/* Indicador de porcentagem na lateral */}
+                  {showSidePercentage && (
+                    <div 
+                      className="absolute right-0 top-1/2 transform translate-x-[110%] -translate-y-1/2 z-20"
+                      style={{ 
+                        backgroundColor: index === 0 ? '#FCD34D' : index === 1 ? '#34D399' : '#F87171',
+                        width: '48px',
+                        height: '48px',
+                        borderRadius: '100%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        color: 'white',
+                        fontWeight: 'bold',
+                        fontSize: '16px',
+                        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
+                      }}
+                    >
+                      {percentage}%
+                    </div>
+                  )}
                 </div>
               );
             })}
           </div>
           
-          {/* Legenda abaixo do funil */}
-          <div className="mt-8 text-center text-xs text-gray-500">
-            As porcentagens mostram a taxa de conversão em cada estágio do funil
+          {/* Ticket médio abaixo do funil */}
+          <div className="mt-6 text-center">
+            <div className="text-sm text-gray-500 mb-1">Ticket médio</div>
+            <div className="text-2xl font-bold">250.000,00</div>
           </div>
         </div>
       </div>
@@ -160,33 +180,16 @@ export default function SalesFunnel({ isLoading: initialLoading, data }: SalesFu
 
 // Helper function to get a background color based on stage position
 function getStageBackgroundColor(index: number, totalStages: number): string {
-  // Usar cores fixas e mais simples para garantir contraste adequado
-  if (totalStages <= 1) {
-    return "#3565E7"; // Azul principal para único estágio
-  }
+  // Cores baseadas na imagem de referência
+  const colors = [
+    "#9ADE4D",  // Verde claro (Visitantes)
+    "#36C3B0",  // Verde-água (Leads) 
+    "#40A1D3",  // Azul claro (Oportunidades)
+    "#A37CCB",  // Roxo (Vendas)
+  ];
   
-  // Se for o primeiro estágio
-  if (index === 0) {
-    return "#3565E7"; // Azul escuro
-  }
-  
-  // Se for o último estágio
-  if (index === totalStages - 1) {
-    return "#34C38F"; // Verde
-  }
-  
-  // Para estágios intermediários, usar tons de azul progressivamente mais claros
-  // Calcular o quão longe estamos no progresso (de 0 a 1)
-  const progress = index / (totalStages - 1);
-  
-  // Cores para interpolar entre azul escuro e azul claro
-  if (progress < 0.33) {
-    return "#4B74E8"; // Azul ligeiramente mais claro
-  } else if (progress < 0.66) {
-    return "#6183EA"; // Azul médio
-  } else {
-    return "#7692EC"; // Azul claro
-  }
+  // Se tivermos mais estágios que cores, repetir as cores
+  return colors[index % colors.length];
 }
 
 // Helper function to estimate stage counts based on existing data

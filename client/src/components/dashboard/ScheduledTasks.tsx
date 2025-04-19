@@ -76,10 +76,9 @@ export default function ScheduledTasks({ isLoading, tasks }: ScheduledTasksProps
   };
 
   return (
-    <Card>
-      <CardContent className="p-6">
+    <div style={{ fontFamily: 'Montserrat, sans-serif' }}>
+      <div className="overflow-x-auto">
         <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-semibold">Tarefas Agendadas</h3>
           <Button variant="ghost" className="text-primary hover:text-blue-700">
             <i className="ri-add-line mr-1"></i> Nova Tarefa
           </Button>
@@ -167,7 +166,7 @@ export default function ScheduledTasks({ isLoading, tasks }: ScheduledTasksProps
             </div>
           )}
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }

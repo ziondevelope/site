@@ -43,19 +43,30 @@ export default function Dashboard() {
       <StatsRow isLoading={statsLoading} stats={stats} />
       
       {/* Charts and Recent Activity */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6" style={{ fontFamily: 'Montserrat, sans-serif' }}>
         {/* Sales Funnel Chart */}
-        <div className="bg-white p-6 rounded-xl shadow-sm lg:col-span-2">
+        <div className="bg-white p-6 rounded-xl shadow-sm">
           <h3 className="text-lg font-semibold mb-4">Funil de Vendas</h3>
           <SalesFunnel data={funnelData} isLoading={funnelLoading} />
         </div>
         
+        {/* Scheduled Tasks */}
+        <div className="bg-white p-6 rounded-xl shadow-sm">
+          <h3 className="text-lg font-semibold mb-4">Tarefas Agendadas</h3>
+          <div className="h-[400px] overflow-y-auto" style={{ 
+            scrollbarWidth: 'thin',
+            scrollbarColor: 'rgba(155, 155, 155, 0.5) transparent'
+          }}>
+            <ScheduledTasks tasks={tasks} isLoading={tasksLoading} />
+          </div>
+        </div>
+        
         {/* Recent Contacts */}
-        <RecentContacts contacts={recentContacts} isLoading={contactsLoading} />
+        <div className="bg-white p-6 rounded-xl shadow-sm">
+          <h3 className="text-lg font-semibold mb-4">Contatos Recentes</h3>
+          <RecentContacts contacts={recentContacts} isLoading={contactsLoading} />
+        </div>
       </div>
-      
-      {/* Scheduled Tasks */}
-      <ScheduledTasks tasks={tasks} isLoading={tasksLoading} />
     </div>
   );
 }
