@@ -52,6 +52,20 @@ export default function Dashboard() {
   const { data: leads } = useQuery({
     queryKey: ['/api/leads'],
   });
+  
+  // Buscar todos os funis
+  const { data: salesFunnels } = useQuery({
+    queryKey: ['/api/sales-funnels'],
+  });
+  
+  // Encontrar o funil padrão
+  const defaultFunnel = salesFunnels?.find(f => f.isDefault) || salesFunnels?.[0];
+  
+  // Buscar os estágios do funil
+  const { data: funnelStages, isLoading: stagesLoading } = useQuery({
+    queryKey: ['/api/funnel-stages', defaultFunnel?.id],
+    enabled: !!defaultFunnel?.id,
+  });
 
   return (
     <div className="space-y-6" style={{ fontFamily: 'Montserrat, sans-serif' }}>
@@ -166,60 +180,62 @@ export default function Dashboard() {
             </div>
           </div>
           
-          {/* Funil de Leads */}
+          {/* Funil de Leads - Usando os estágios configurados */}
           <div className="mt-6 mb-8">
-            {/* Componente de Funil Customizado para o Dashboard */}
-            {/* Estágio 1 */}
-            <div className="relative w-full mb-3 cursor-pointer" onClick={() => window.location.href = '/crm'}>
-              <div className="bg-[#FED659] h-14 w-full rounded-sm flex items-center pl-4 pr-16">
-                <div className="flex flex-col text-white">
-                  <div className="text-xs uppercase">INTERESSADOS</div>
-                  <div className="font-bold">43%</div>
-                </div>
+            {stagesLoading ? (
+              <div className="py-6 text-center">
+                <p className="text-gray-500">Carregando estágios do funil...</p>
               </div>
-              <div className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white font-bold">
-                {leads?.filter(lead => lead.stageId === 1)?.length || 0}
-              </div>
-            </div>
-            
-            {/* Estágio 2 */}
-            <div className="relative w-[85%] mb-3 cursor-pointer" onClick={() => window.location.href = '/crm'}>
-              <div className="bg-[#FEE659] h-14 w-full rounded-sm flex items-center pl-4 pr-16">
-                <div className="flex flex-col text-white">
-                  <div className="text-xs uppercase">VISITAS</div>
-                  <div className="font-bold">29%</div>
-                </div>
-              </div>
-              <div className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white font-bold">
-                {leads?.filter(lead => lead.stageId === 2)?.length || 0}
-              </div>
-            </div>
-            
-            {/* Estágio 3 */}
-            <div className="relative w-[70%] mb-3 cursor-pointer" onClick={() => window.location.href = '/crm'}>
-              <div className="bg-[#39ADDC] h-14 w-full rounded-sm flex items-center pl-4 pr-16">
-                <div className="flex flex-col text-white">
-                  <div className="text-xs uppercase">PROPOSTAS</div>
-                  <div className="font-bold">17%</div>
-                </div>
-              </div>
-              <div className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white font-bold">
-                {leads?.filter(lead => lead.stageId === 3)?.length || 0}
-              </div>
-            </div>
-            
-            {/* Estágio 4 */}
-            <div className="relative w-[55%] mb-3 cursor-pointer" onClick={() => window.location.href = '/crm'}>
-              <div className="bg-[#FF3A7C] h-14 w-full rounded-sm flex items-center pl-4 pr-16">
-                <div className="flex flex-col text-white">
-                  <div className="text-xs uppercase">CONTRATO ASSINADO</div>
-                  <div className="font-bold">8%</div>
-                </div>
-              </div>
-              <div className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white font-bold">
-                {leads?.filter(lead => lead.stageId === 4)?.length || 0}
-              </div>
-            </div>
+            ) : (
+              <>
+                {funnelStages
+                  ?.filter(stage => stage.funnelId === defaultFunnel?.id)
+                  ?.sort((a, b) => a.position - b.position)
+                  ?.map((stage, index, allStages) => {
+                    // Determine a largura do elemento baseado na posição
+                    const maxWidth = 100;
+                    const minWidth = 55;
+                    const width = maxWidth - (index * ((maxWidth - minWidth) / (allStages.length - 1 || 1)));
+                    
+                    // Calcula a porcentagem de leads neste estágio
+                    const stageLeads = leads?.filter(lead => lead.stageId === stage.id)?.length || 0;
+                    const totalLeads = leads?.length || 1;
+                    const percentage = Math.round((stageLeads / totalLeads) * 100);
+                    
+                    // Define cores para os diferentes estágios
+                    const stageColors = [
+                      '#FED659', // Amarelo
+                      '#FEE659', // Amarelo claro
+                      '#39ADDC', // Azul
+                      '#FF3A7C'  // Rosa
+                    ];
+                    
+                    const color = stageColors[index % stageColors.length];
+                    
+                    return (
+                      <div
+                        key={stage.id}
+                        className="relative cursor-pointer mb-3"
+                        style={{ width: `${width}%` }}
+                        onClick={() => window.location.href = '/crm'}
+                      >
+                        <div
+                          className="h-14 w-full rounded-sm flex items-center pl-4 pr-16"
+                          style={{ backgroundColor: color }}
+                        >
+                          <div className="flex flex-col text-white">
+                            <div className="text-xs uppercase">{stage.name}</div>
+                            <div className="font-bold">{percentage}%</div>
+                          </div>
+                        </div>
+                        <div className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white font-bold">
+                          {stageLeads}
+                        </div>
+                      </div>
+                    );
+                  })}
+              </>
+            )}
           </div>
           
           {/* Raio-X */}
