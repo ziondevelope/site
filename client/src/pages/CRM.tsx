@@ -1984,25 +1984,27 @@ export default function CRM() {
                         onValueChange={(value) => handleTabChange(lead.id, value)}
                         className="w-full"
                       >
-                        <TabsList className="w-full mb-4 bg-transparent border-b border-[#f0f0f0] flex">
+                        <TabsList className="w-full mb-4 bg-transparent border-b border-[#f0f0f0] flex justify-start">
                           <TabsTrigger 
                             value="nota" 
-                            className="px-6 py-2 rounded-none border-b-2 border-transparent data-[state=active]:border-[#3565E7] data-[state=active]:bg-transparent text-sm"
+                            className="px-6 py-2 rounded-none border-b-2 border-transparent data-[state=active]:border-[#3565E7] data-[state=active]:bg-transparent text-sm text-left"
                             style={{ 
                               fontFamily: 'Montserrat, sans-serif',
                               fontWeight: 500,
                               textTransform: 'capitalize',
+                              justifyContent: 'flex-start'
                             }}
                           >
                             Nota
                           </TabsTrigger>
                           <TabsTrigger 
                             value="tarefas"
-                            className="px-6 py-2 rounded-none border-b-2 border-transparent data-[state=active]:border-[#3565E7] data-[state=active]:bg-transparent text-sm"
+                            className="px-6 py-2 rounded-none border-b-2 border-transparent data-[state=active]:border-[#3565E7] data-[state=active]:bg-transparent text-sm text-left"
                             style={{ 
                               fontFamily: 'Montserrat, sans-serif',
                               fontWeight: 500,
                               textTransform: 'capitalize',
+                              justifyContent: 'flex-start'
                             }}
                           >
                             Criar tarefa
