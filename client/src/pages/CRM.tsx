@@ -1068,24 +1068,45 @@ export default function CRM() {
                         )}
                       />
                       
-                      <FormField
-                        control={form.control}
-                        name="budget"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Orçamento</FormLabel>
-                            <FormControl>
-                              <Input 
-                                type="number" 
-                                placeholder="Valor em R$" 
-                                {...field}
-                                onChange={(e) => field.onChange(e.target.value === "" ? null : Number(e.target.value))}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
+                      <div>
+                        <FormLabel className="block mb-2">Faixa de Preço</FormLabel>
+                        <div className="grid grid-cols-2 gap-2">
+                          <FormField
+                            control={form.control}
+                            name="priceRange.min"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormControl>
+                                  <Input 
+                                    type="number" 
+                                    placeholder="Mínimo (R$)" 
+                                    {...field}
+                                    onChange={(e) => field.onChange(e.target.value === "" ? null : Number(e.target.value))}
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={form.control}
+                            name="priceRange.max"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormControl>
+                                  <Input 
+                                    type="number" 
+                                    placeholder="Máximo (R$)" 
+                                    {...field}
+                                    onChange={(e) => field.onChange(e.target.value === "" ? null : Number(e.target.value))}
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+                      </div>
                     </div>
                     
                     <FormField
