@@ -399,6 +399,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Error creating task" });
     }
   });
+  
+  apiRouter.patch("/tasks/:id/complete", async (req, res) => {
+    try {
+      const taskId = parseInt(req.params.id);
+      const { status } = req.body;
+      
+      if (status !== "completed") {
+        return res.status(400).json({ message: "Status deve ser 'completed'" });
+      }
+      
+      const updatedTask = await storageInstance.updateTask(taskId, { status });
+      
+      if (!updatedTask) {
+        return res.status(404).json({ message: "Tarefa não encontrada" });
+      }
+      
+      res.json(updatedTask);
+    } catch (error) {
+      console.error("Erro ao marcar tarefa como concluída:", error);
+      res.status(500).json({ message: "Erro ao atualizar tarefa" });
+    }
+  });
 
   // Recent contacts endpoint
   apiRouter.get("/contacts/recent", async (req, res) => {
