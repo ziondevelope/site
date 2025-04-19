@@ -829,15 +829,13 @@ export default function CRM() {
         region: data.region, // Adicionar região
         // Incluir automaticamente um funil padrão para novos leads
         funnelId: defaultFunnel?.id,
-        // Adicionar valores da faixa de preço como campos separados
-        priceRangeMin,
-        priceRangeMax,
         // Definir o primeiro estágio do funil como o estágio atual do lead
         stageId: firstStageId,
         // Outros campos específicos que não estão no schema padrão
         whatsapp: data.whatsapp,
-        priceRangeMin: data.priceRange?.min,
-        priceRangeMax: data.priceRange?.max,
+        // Adicionar valores da faixa de preço como campos separados
+        priceRangeMin,
+        priceRangeMax
       };
       
       console.log("Dados formatados para envio:", leadData);
