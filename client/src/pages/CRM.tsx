@@ -1085,12 +1085,12 @@ export default function CRM() {
                 )}
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-12 gap-6 pb-6" style={{
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-3 pb-6" style={{
                 padding: '0px 40px',
                 background: '#E8E8E8'
               }}>
                 {/* Coluna 1 - Dividida em 2 grids */}
-                <div className="md:col-span-3">
+                <div className="md:col-span-4">
                   <div className="grid gap-6">
                     {/* Grid 1: Informações de Contato */}
                     <div className="p-5 border border-[#f5f5f5] rounded-[10px]" style={{ background: '#F9FAFB' }}>
@@ -1622,7 +1622,7 @@ export default function CRM() {
                 </div>
                 
                 {/* Coluna de Notas */}
-                <div className="md:col-span-9 px-8">                  
+                <div className="md:col-span-8 px-4">                  
                   <div>
                     <div className="p-5 border border-[#f5f5f5] rounded-[10px]" style={{ background: '#F9FAFB' }}>
                       <h3 className="text-base font-bold mb-4 flex items-center">
