@@ -93,7 +93,7 @@ export default function CRM() {
   // Módulos para o editor React Quill
   const quillModules = {
     toolbar: [
-      ['bold', 'italic', 'underline']
+      ['bold', 'underline'] // removido o itálico
     ]
   };
   const [editingField, setEditingField] = useState<{leadId: number, field: string} | null>(null);
@@ -2036,6 +2036,7 @@ export default function CRM() {
                                   ]
                                 }}
                                 className="h-32 focus:outline-none quill-no-border"
+                                style={{ fontFamily: 'Montserrat, sans-serif' }}
                               />
                             </div>
                           </div>
