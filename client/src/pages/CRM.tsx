@@ -979,7 +979,7 @@ export default function CRM() {
                         <div className="flex flex-col w-full px-4">
                           <div className="relative flex items-center justify-between w-full">
                             {/* Linha horizontal de conexão - ajustada para ficar centralizada nas bolas */}
-                            <div className="absolute h-[2px] bg-gray-300 left-[25px] right-[25px] top-[20px] z-0"></div>
+                            <div className="absolute bg-gray-300 left-[25px] right-[25px] top-[20px] z-0" style={{ height: '1px' }}></div>
                             
                             {sortedStages.map((stage, index) => {
                               const isActive = lead.stageId === stage.id || (!lead.stageId && index === 0);
