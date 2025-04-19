@@ -1404,10 +1404,10 @@ export default function CRM() {
                                 textColor = 'text-white';
                                 numberColor = 'white';
                               } else {
-                                // Estágio não ativo e não selecionado - Cinza claro
-                                bgColor = '#D3D3D3';
-                                textColor = 'text-gray-700';
-                                numberColor = '#3465E7'; // Cor específica para o número quando inativo
+                                // Estágio não ativo e não selecionado - Nova cor #12636C
+                                bgColor = '#12636C';
+                                textColor = 'text-white';
+                                numberColor = 'white'; // Número em branco para melhor contraste
                               }
                               
                               return (
