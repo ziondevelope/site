@@ -988,6 +988,7 @@ export default function CRM() {
                               // Cores dos estágios conforme solicitação
                               let bgColor;
                               let textColor;
+                              let stageNameColor = '#111111'; // Cor padrão para o nome do estágio
                               
                               if (isActive) {
                                 // Estágio ativo e selecionado (atual) - Verde
@@ -1001,6 +1002,7 @@ export default function CRM() {
                                 // Estágio não ativo e não selecionado - Cinza claro
                                 bgColor = '#D3D3D3';
                                 textColor = 'text-gray-700';
+                                stageNameColor = '#3465E7'; // Azul para estágios não ativos
                               }
                               
                               return (
@@ -1038,7 +1040,7 @@ export default function CRM() {
                                   </div>
                                   
                                   {/* Nome do estágio */}
-                                  <span className="text-xs font-medium text-center truncate" style={{ maxWidth: '80px', textAlign: 'center', fontSize: '12px', color: '#111111', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', display: 'inline-block' }}>{stage.name}</span>
+                                  <span className="text-xs font-medium text-center truncate" style={{ maxWidth: '80px', textAlign: 'center', fontSize: '12px', color: stageNameColor, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', display: 'inline-block' }}>{stage.name}</span>
                                 </div>
                               );
                             })}
