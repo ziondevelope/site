@@ -202,23 +202,14 @@ export default function CRM() {
       body: JSON.stringify({ text: noteText })
     })
     .then((savedNote) => {
-      // Adiciona a nova nota ao array de notas salvas para o lead específico
-      setSavedNotes(prev => {
-        const existingNotes = prev[leadId] || [];
-        return {
-          ...prev,
-          [leadId]: [...existingNotes, {
-            text: noteText,
-            date: new Date()
-          }]
-        };
-      });
-      
       // Limpa o campo de texto
       setLeadNotes(prev => ({
         ...prev,
         [leadId]: ""
       }));
+      
+      // Recarregar as notas do banco de dados para garantir que elas apareçam atualizadas
+      fetchLeadNotes(leadId);
       
       toast({
         title: "Nota salva no banco",
@@ -357,17 +348,8 @@ export default function CRM() {
         body: JSON.stringify({ text: noteText })
       })
       .then(() => {
-        // Adicionar a nota localmente
-        setSavedNotes(prev => {
-          const leadNotes = prev[leadId] || [];
-          return {
-            ...prev,
-            [leadId]: [...leadNotes, {
-              text: noteText,
-              date: new Date()
-            }]
-          };
-        });
+        // Recarregar as notas do lead após registrar uma atividade
+        fetchLeadNotes(leadId);
       })
       .catch(error => {
         console.error("Erro ao salvar nota de tarefa:", error);
@@ -445,17 +427,8 @@ export default function CRM() {
           body: JSON.stringify({ text: noteText })
         })
         .then(() => {
-          // Adicionar a nota localmente
-          setSavedNotes(prev => {
-            const leadNotes = prev[leadId] || [];
-            return {
-              ...prev,
-              [leadId]: [...leadNotes, {
-                text: noteText,
-                date: new Date()
-              }]
-            };
-          });
+          // Recarregar as notas após salvar a conclusão da tarefa
+          fetchLeadNotes(leadId);
         })
         .catch(error => {
           console.error("Erro ao salvar nota de conclusão de tarefa:", error);
@@ -581,6 +554,28 @@ export default function CRM() {
     return allLeads;
   }, [allLeads, selectedFunnelId, selectedStageId]);
   
+  // Função para carregar notas de um lead específico
+  const fetchLeadNotes = async (leadId: number) => {
+    try {
+      const notes = await apiRequest(`/api/leads/${leadId}/notes`);
+      // Atualizar o estado com as notas do banco de dados
+      setSavedNotes(prev => ({
+        ...prev,
+        [leadId]: notes.map((note: any) => ({
+          text: note.text,
+          date: new Date(note.date)
+        }))
+      }));
+    } catch (error) {
+      console.error("Erro ao carregar notas do lead:", error);
+      toast({
+        title: "Erro ao carregar notas",
+        description: "Não foi possível recuperar as notas deste lead.",
+        variant: "destructive"
+      });
+    }
+  };
+
   // Quando um lead é aberto, carregar seus dados de funil e definir a aba ativa padrão
   useEffect(() => {
     if (openLeadId !== null && allLeads) {
@@ -594,6 +589,9 @@ export default function CRM() {
       
       // Inicializar o formulário de tarefa para o lead
       initializeTaskForm(openLeadId);
+      
+      // Carregar as notas do lead
+      fetchLeadNotes(openLeadId);
       
       if (openLead && openLead.funnelId) {
         // Se o lead já tem um funil associado, usar esse funil
