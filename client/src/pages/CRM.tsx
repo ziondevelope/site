@@ -1298,9 +1298,9 @@ export default function CRM() {
             <VisuallyHidden>
               <DialogTitle>Detalhes do Lead</DialogTitle>
             </VisuallyHidden>
-            <div className="bg-[#E8E8E8]">
+            <div className="bg-[#F9FAFB]">
               {/* Barra superior com nome do lead e detalhes */}
-              <div className="flex justify-between items-center bg-[#E8E8E8] p-6 rounded-t-lg">
+              <div className="flex justify-between items-center bg-[#F9FAFB] p-6 rounded-t-lg">
                 <div className="flex items-center space-x-4">
                   <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600">
                     <i className="fas fa-user text-xl"></i>
@@ -1339,7 +1339,7 @@ export default function CRM() {
               </div>
               
               {/* Indicadores de progresso (funil) - mantemos o código já melhorado */}
-              <div className="relative mb-6 bg-[#E8E8E8] px-6 py-4">
+              <div className="relative mb-6 bg-[#F9FAFB] px-6 py-4">
                 
                 {stages && stages.length > 0 ? (
                   (() => {
@@ -1500,7 +1500,7 @@ export default function CRM() {
               
               <div className="grid grid-cols-1 md:grid-cols-12 gap-3 pb-6" style={{
                 padding: '0px 40px 40px 40px',
-                background: '#E8E8E8'
+                background: '#F9FAFB'
               }}>
                 {/* Coluna 1 - Dividida em 2 grids */}
                 <div className="md:col-span-4">
