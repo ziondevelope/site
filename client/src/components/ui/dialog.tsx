@@ -33,22 +33,25 @@ const DialogContent = React.forwardRef<
 >(({ className, children, ...props }, ref) => (
   <DialogPortal>
     <DialogOverlay />
-    <DialogPrimitive.Content
-      ref={ref}
-      className={cn(
-        "fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg",
-        className
-      )}
-      {...props}
-    >
-      {children}
-      <div className="absolute w-full flex justify-end top-[-25px] right-0">
-        <DialogPrimitive.Close className="rounded-full bg-blue-600 text-white p-1.5 opacity-90 shadow-md hover:opacity-100 transition-all hover:bg-blue-700 focus:outline-none disabled:pointer-events-none z-[100]">
-          <X className="h-4 w-4" />
-          <span className="sr-only">Close</span>
-        </DialogPrimitive.Close>
-      </div>
-    </DialogPrimitive.Content>
+    <div className="fixed left-[50%] top-[50%] z-50 flex flex-col items-end max-w-lg translate-x-[-50%] translate-y-[-50%]">
+      {/* Botão de fechar separado, acima do modal */}
+      <DialogPrimitive.Close className="mb-2 rounded-full bg-blue-600 text-white p-1.5 opacity-90 shadow-md hover:opacity-100 transition-all hover:bg-blue-700 focus:outline-none disabled:pointer-events-none z-[100]">
+        <X className="h-4 w-4" />
+        <span className="sr-only">Close</span>
+      </DialogPrimitive.Close>
+      
+      {/* Conteúdo do modal */}
+      <DialogPrimitive.Content
+        ref={ref}
+        className={cn(
+          "grid w-full gap-4 border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg",
+          className
+        )}
+        {...props}
+      >
+        {children}
+      </DialogPrimitive.Content>
+    </div>
   </DialogPortal>
 ))
 DialogContent.displayName = DialogPrimitive.Content.displayName
