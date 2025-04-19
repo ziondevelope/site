@@ -36,8 +36,8 @@ export default function Sidebar() {
                 <div className={cn(
                   "flex items-center space-x-3 px-4 py-2 text-sm rounded transition cursor-pointer",
                   location === item.href
-                    ? "bg-indigo-800 text-white"
-                    : "text-white text-opacity-80 hover:bg-indigo-800 hover:text-white"
+                    ? "bg-[#114c55] text-white"
+                    : "text-white text-opacity-80 hover:bg-[#114c55] hover:text-white"
                 )}>
                   <i className={cn(item.icon, "text-lg")}></i>
                   <span>{item.label}</span>
@@ -55,8 +55,8 @@ export default function Sidebar() {
                         <div className={cn(
                           "flex items-center space-x-3 px-4 py-2 text-sm rounded transition cursor-pointer",
                           location === child.href
-                            ? "bg-indigo-800 text-white"
-                            : "text-white text-opacity-70 hover:bg-indigo-800 hover:text-white"
+                            ? "bg-[#114c55] text-white"
+                            : "text-white text-opacity-70 hover:bg-[#114c55] hover:text-white"
                         )}>
                           <i className={cn(child.icon, "text-lg")}></i>
                           <span>{child.label}</span>
