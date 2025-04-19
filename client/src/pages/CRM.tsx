@@ -1004,8 +1004,8 @@ export default function CRM() {
                                 bgColor = '#3565E7';
                                 textColor = 'text-white';
                               } else {
-                                // Estágio não ativo e não selecionado - Cinza
-                                bgColor = '#E5E7EB';
+                                // Estágio não ativo e não selecionado - Cinza claro
+                                bgColor = '#D3D3D3';
                                 textColor = 'text-gray-700';
                               }
                               
