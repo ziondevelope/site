@@ -304,8 +304,11 @@ export default function CRM() {
       date: taskDate.toISOString(),
       type: form.type,
       status: "pending",
-      leadId: leadId
+      leadId: leadId,
+      agentId: 1  // Valor padrão para agentId para não quebrar a validação
     };
+    
+    console.log("Dados da tarefa a serem enviados:", taskData);
     
     // Salvar a tarefa no banco de dados
     apiRequest('/api/tasks', {
