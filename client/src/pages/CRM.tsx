@@ -1640,7 +1640,8 @@ export default function CRM() {
                 {/* Coluna de Notas e Tarefas com Sistema de Abas */}
                 <div className="md:col-span-8 px-4">                  
                   <div>
-                    <div className="p-5 border border-[#f5f5f5] rounded-[10px]" style={{ background: '#F9FAFB' }}>
+                    {/* Seção de abas para Nota/Tarefas */}
+                    <div className="p-5 border border-[#f5f5f5] rounded-[10px] mb-8" style={{ background: '#F9FAFB' }}>
                       
                       <Tabs 
                         defaultValue="nota" 
@@ -1698,35 +1699,6 @@ export default function CRM() {
                               Salvar Nota
                             </Button>
                           </div>
-                          
-                          {/* Histórico de atividades/notas */}
-                          <div className="mt-8">
-                            <div className="p-5 border border-[#f5f5f5] rounded-[10px]" style={{ background: '#F9FAFB' }}>
-                              <h3 className="text-sm font-bold mb-4 uppercase flex items-center" style={{ color: '#444444' }}>
-                                <MessageSquare className="h-4 w-4 mr-2 text-gray-500" />
-                                HISTÓRICO DE ATIVIDADES
-                              </h3>
-                              <div className="w-full h-px mb-4 -mx-5" style={{ marginLeft: '-20px', marginRight: '-20px', width: 'calc(100% + 40px)', backgroundColor: 'rgb(245, 245, 245)' }}></div>
-                              
-                              {savedNotes[lead.id] && savedNotes[lead.id].length > 0 ? (
-                                <div className="space-y-4">
-                                  {savedNotes[lead.id].map((note, index) => (
-                                    <div key={index} className="p-4 border border-[#f5f5f5] rounded-[10px] bg-white">
-                                      <div className="flex justify-between items-start mb-2">
-                                        <span className="text-sm font-semibold">{formatDate(note.date)}</span>
-                                        <span className="text-xs text-gray-500">{formatTime(note.date)}</span>
-                                      </div>
-                                      <div className="text-sm text-left" dangerouslySetInnerHTML={{ __html: note.text }}></div>
-                                    </div>
-                                  ))}
-                                </div>
-                              ) : (
-                                <div className="text-center py-6 text-gray-500 text-sm">
-                                  Nenhuma nota foi adicionada ainda.
-                                </div>
-                              )}
-                            </div>
-                          </div>
                         </TabsContent>
                         
                         <TabsContent value="tarefas" className="space-y-4">
@@ -1739,6 +1711,33 @@ export default function CRM() {
                           </div>
                         </TabsContent>
                       </Tabs>
+                    </div>
+                    
+                    {/* Histórico de atividades/notas - Seção separada, sempre visível */}
+                    <div className="p-5 border border-[#f5f5f5] rounded-[10px]" style={{ background: '#F9FAFB' }}>
+                      <h3 className="text-sm font-bold mb-4 uppercase flex items-center" style={{ color: '#444444' }}>
+                        <MessageSquare className="h-4 w-4 mr-2 text-gray-500" />
+                        HISTÓRICO DE ATIVIDADES
+                      </h3>
+                      <div className="w-full h-px mb-4 -mx-5" style={{ marginLeft: '-20px', marginRight: '-20px', width: 'calc(100% + 40px)', backgroundColor: 'rgb(245, 245, 245)' }}></div>
+                      
+                      {savedNotes[lead.id] && savedNotes[lead.id].length > 0 ? (
+                        <div className="space-y-4">
+                          {savedNotes[lead.id].map((note, index) => (
+                            <div key={index} className="p-4 border border-[#f5f5f5] rounded-[10px] bg-white">
+                              <div className="flex justify-between items-start mb-2">
+                                <span className="text-sm font-semibold">{formatDate(note.date)}</span>
+                                <span className="text-xs text-gray-500">{formatTime(note.date)}</span>
+                              </div>
+                              <div className="text-sm text-left" dangerouslySetInnerHTML={{ __html: note.text }}></div>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="text-center py-6 text-gray-500 text-sm">
+                          Nenhuma nota foi adicionada ainda.
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
