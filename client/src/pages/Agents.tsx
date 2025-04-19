@@ -522,7 +522,7 @@ export default function Agents() {
               type="button" 
               onClick={form.handleSubmit(onSubmit)}
               disabled={updateAgentMutation.isPending}
-              className="bg-indigo-600 hover:bg-indigo-700 rounded-full px-5"
+              className="bg-[#15616D] hover:bg-[#15616D]/90 rounded-full px-5"
             >
               {updateAgentMutation.isPending ? (
                 <>
