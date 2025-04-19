@@ -919,22 +919,6 @@ export default function CRM() {
                 </div>
               </div>
               
-              {/* Abas de ação */}
-              <div className="flex bg-[#E8E8E8] border-b border-gray-100 px-6 py-3 space-x-6">
-                <div className="flex items-center space-x-2 text-blue-600 border-b-2 border-blue-600 pb-1 cursor-pointer">
-                  <i className="fas fa-clipboard-list"></i>
-                  <span className="text-sm font-medium">Detalhes</span>
-                </div>
-                <div className="flex items-center space-x-2 text-gray-500 hover:text-gray-700 pb-1 cursor-pointer">
-                  <i className="fas fa-history"></i>
-                  <span className="text-sm font-medium">Histórico</span>
-                </div>
-                <div className="flex items-center space-x-2 text-gray-500 hover:text-gray-700 pb-1 cursor-pointer">
-                  <i className="fas fa-tasks"></i>
-                  <span className="text-sm font-medium">Tarefas</span>
-                </div>
-              </div>
-              
               {/* Indicadores de progresso (funil) - mantemos o código já melhorado */}
               <div className="relative mb-6 bg-[#E8E8E8] px-6 py-4">
                 
