@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
-import { Pencil, Check, X, User, Mail, Phone, Store, Home, MapPin, DollarSign, Tag, Filter, Trophy, MessageSquare, FileText, Bold, Italic, Underline, AlignLeft, AlignCenter, AlignRight, List, CalendarPlus, CheckCircle } from "lucide-react";
+import { Pencil, Check, X, User, Mail, Phone, Store, Home, MapPin, DollarSign, Tag, Filter, Trophy, MessageSquare, FileText, Bold, Italic, Underline, AlignLeft, AlignCenter, AlignRight, List, CalendarPlus, CheckCircle, FileEdit } from "lucide-react";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { FaWhatsapp } from "react-icons/fa";
@@ -1959,18 +1959,23 @@ export default function CRM() {
                         
                         <TabsContent value="nota" className="space-y-4">
                           <div className="bg-white" style={{ minHeight: '200px' }}>
-                            <ReactQuill
-                              id={`note-textarea-${lead.id}`}
-                              theme="snow"
-                              placeholder="✏️ Faça uma anotação..."
-                              value={leadNotes[lead.id] || lead.notes || ""}
-                              onChange={(content) => setLeadNotes(prev => ({
-                                ...prev,
-                                [lead.id]: content
-                              }))}
-                              modules={quillModules}
-                              className="h-32 focus:outline-none quill-no-border"
-                            />
+                            <div className="relative">
+                              <div className="absolute left-3 top-3 text-gray-400 pointer-events-none">
+                                <FileEdit size={16} />
+                              </div>
+                              <ReactQuill
+                                id={`note-textarea-${lead.id}`}
+                                theme="snow"
+                                placeholder="  Faça uma anotação..."
+                                value={leadNotes[lead.id] || lead.notes || ""}
+                                onChange={(content) => setLeadNotes(prev => ({
+                                  ...prev,
+                                  [lead.id]: content
+                                }))}
+                                modules={quillModules}
+                                className="h-32 focus:outline-none quill-no-border"
+                              />
+                            </div>
                           </div>
                           <div className="flex justify-end mt-4 pr-5 pb-2">
                             <Button 
