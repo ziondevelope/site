@@ -2315,7 +2315,7 @@ export default function CRM() {
                     </div>
                     
                     {/* Histórico de atividades/notas - Seção separada, sempre visível */}
-                    <div className="p-5 border border-[#f5f5f5] rounded-[10px]" style={{ background: '#F9FAFB' }}>
+                    <div className="p-5 border border-[#f5f5f5] rounded-[10px]" style={{ background: '#FFFFFF' }}>
                       <h3 className="text-sm font-bold mb-4 uppercase flex items-center" style={{ color: '#444444' }}>
                         <MessageSquare className="h-4 w-4 mr-2 text-gray-500" />
                         HISTÓRICO DE ATIVIDADES
