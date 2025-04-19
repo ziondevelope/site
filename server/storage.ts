@@ -1261,6 +1261,65 @@ export class FirebaseStorage implements IStorage {
       return undefined;
     }
   }
+  
+  // Implementação dos métodos de notas para leads
+  async getLeadNotes(leadId: number): Promise<LeadNote[]> {
+    try {
+      const notesRef = collection(db, 'lead_notes');
+      const q = query(notesRef, where('leadId', '==', leadId), orderBy('date', 'desc'));
+      const notesSnapshot = await getDocs(q);
+      return notesSnapshot.docs.map(doc => doc.data() as LeadNote);
+    } catch (error) {
+      console.error(`Erro ao buscar notas para o lead ${leadId}:`, error);
+      return [];
+    }
+  }
+
+  async createLeadNote(note: InsertLeadNote): Promise<LeadNote> {
+    try {
+      // Encontrar o ID mais alto para incrementar
+      const notesRef = collection(db, 'lead_notes');
+      const q = query(notesRef, orderBy('id', 'desc'), limit(1));
+      const notesSnapshot = await getDocs(q);
+      
+      let highestId = 0;
+      if (!notesSnapshot.empty) {
+        const data = notesSnapshot.docs[0].data();
+        highestId = data.id || 0;
+      }
+      
+      const now = new Date().toISOString();
+      const newNote: LeadNote = {
+        ...note,
+        id: highestId + 1,
+        date: note.date || now,
+        createdAt: now
+      };
+      
+      await setDoc(doc(db, 'lead_notes', newNote.id.toString()), newNote);
+      return newNote;
+    } catch (error) {
+      console.error('Erro ao criar nota:', error);
+      throw new Error('Falha ao criar nota para o lead');
+    }
+  }
+
+  async deleteLeadNote(id: number): Promise<boolean> {
+    try {
+      const noteRef = doc(db, 'lead_notes', id.toString());
+      const noteDoc = await getDoc(noteRef);
+      
+      if (!noteDoc.exists()) {
+        return false;
+      }
+      
+      await deleteDoc(noteRef);
+      return true;
+    } catch (error) {
+      console.error('Erro ao excluir nota:', error);
+      return false;
+    }
+  }
 
   async getLeadsByFunnelStage(funnelId: number, stageId: number): Promise<Lead[]> {
     try {

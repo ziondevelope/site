@@ -409,6 +409,56 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Error fetching recent contacts" });
     }
   });
+  
+  // Lead Notes endpoints
+  apiRouter.get("/leads/:id/notes", async (req, res) => {
+    try {
+      const leadId = parseInt(req.params.id);
+      const notes = await storageInstance.getLeadNotes(leadId);
+      res.json(notes);
+    } catch (error) {
+      console.error("Error fetching lead notes:", error);
+      res.status(500).json({ message: "Erro ao buscar notas do lead" });
+    }
+  });
+  
+  apiRouter.post("/leads/:id/notes", async (req, res) => {
+    try {
+      const leadId = parseInt(req.params.id);
+      const { text } = req.body;
+      
+      if (!text || text.trim() === "") {
+        return res.status(400).json({ message: "O texto da nota não pode estar vazio" });
+      }
+      
+      const note = await storageInstance.createLeadNote({
+        leadId,
+        text,
+        date: new Date().toISOString()
+      });
+      
+      res.status(201).json(note);
+    } catch (error) {
+      console.error("Error creating lead note:", error);
+      res.status(500).json({ message: "Erro ao criar nota para o lead" });
+    }
+  });
+  
+  apiRouter.delete("/lead-notes/:id", async (req, res) => {
+    try {
+      const noteId = parseInt(req.params.id);
+      const success = await storageInstance.deleteLeadNote(noteId);
+      
+      if (!success) {
+        return res.status(404).json({ message: "Nota não encontrada" });
+      }
+      
+      res.status(200).json({ success: true });
+    } catch (error) {
+      console.error("Error deleting lead note:", error);
+      res.status(500).json({ message: "Erro ao excluir nota" });
+    }
+  });
 
   // Website config endpoints
   apiRouter.get("/website/config", async (req, res) => {

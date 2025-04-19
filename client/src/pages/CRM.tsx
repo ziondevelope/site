@@ -196,35 +196,44 @@ export default function CRM() {
       return;
     }
     
-    // Adiciona a nova nota ao array de notas salvas para o lead específico
-    setSavedNotes(prev => {
-      const leadNotes = prev[leadId] || [];
-      return {
+    // Chama a API para salvar a nota no banco de dados
+    apiRequest({
+      url: `/api/leads/${leadId}/notes`,
+      method: 'POST',
+      data: { text: noteText }
+    })
+    .then((savedNote) => {
+      // Adiciona a nova nota ao array de notas salvas para o lead específico
+      setSavedNotes(prev => {
+        const existingNotes = prev[leadId] || [];
+        return {
+          ...prev,
+          [leadId]: [...existingNotes, {
+            text: noteText,
+            date: new Date()
+          }]
+        };
+      });
+      
+      // Limpa o campo de texto
+      setLeadNotes(prev => ({
         ...prev,
-        [leadId]: [...leadNotes, {
-          text: noteText,
-          date: new Date()
-        }]
-      };
+        [leadId]: ""
+      }));
+      
+      toast({
+        title: "Nota salva no banco",
+        description: "Sua nota foi salva com sucesso!",
+      });
+    })
+    .catch(error => {
+      console.error("Erro ao salvar nota:", error);
+      toast({
+        title: "Erro ao salvar nota",
+        description: "Não foi possível salvar a nota no banco de dados.",
+        variant: "destructive"
+      });
     });
-    
-    // Limpa o campo de texto
-    setLeadNotes(prev => ({
-      ...prev,
-      [leadId]: ""
-    }));
-    
-    toast({
-      title: "Nota salva",
-      description: "Sua nota foi salva com sucesso!",
-    });
-    
-    // Aqui você também poderia fazer uma chamada para a API para salvar a nota no servidor
-    // apiRequest({
-    //   url: `/api/leads/${leadId}/notes`,
-    //   method: 'POST',
-    //   data: { note: noteText }
-    // });
   };
   
   // Inicializar o formulário de tarefa para um lead
@@ -293,103 +302,187 @@ export default function CRM() {
       return;
     }
     
-    // Cria a nova tarefa
-    const newTask = {
-      id: taskIdCounter,
-      type: form.type,
+    // Formatar a data/hora completa
+    const taskDate = new Date(form.date as Date);
+    const [hours, minutes] = form.time.split(':').map(Number);
+    taskDate.setHours(hours, minutes);
+    
+    // Criar objeto da tarefa para o backend
+    const taskData = {
+      title: form.description,
       description: form.description,
-      date: form.date as Date,
-      time: form.time,
-      completed: false
+      date: taskDate.toISOString(),
+      type: form.type,
+      status: "pending",
+      leadId: leadId
     };
     
-    // Atualiza a lista de tarefas
-    setTaskList(prev => {
-      const leadTasks = prev[leadId] || [];
-      return {
-        ...prev,
-        [leadId]: [...leadTasks, newTask]
+    // Salvar a tarefa no banco de dados
+    apiRequest({
+      url: '/api/tasks',
+      method: 'POST',
+      data: taskData
+    })
+    .then((savedTask) => {
+      // Cria a nova tarefa local
+      const newTask = {
+        id: savedTask.id || taskIdCounter,
+        type: form.type,
+        description: form.description,
+        date: form.date as Date,
+        time: form.time,
+        completed: false
       };
-    });
-    
-    // Adiciona a tarefa como atividade no histórico
-    const taskTypeText = 
-      form.type === "ligacao" ? "Ligação" :
-      form.type === "email" ? "E-mail" : 
-      form.type === "whatsapp" ? "WhatsApp" : "Tarefa";
-    
-    const formattedDate = form.date ? formatDate(form.date as Date) : "";
-    
-    setSavedNotes(prev => {
-      const leadNotes = prev[leadId] || [];
-      return {
-        ...prev,
-        [leadId]: [...leadNotes, {
-          text: `<strong>${taskTypeText}</strong> agendada: ${form.description} - Data: ${formattedDate} às ${form.time}`,
-          date: new Date()
-        }]
-      };
-    });
-    
-    // Incrementa o contador de IDs
-    setTaskIdCounter(prev => prev + 1);
-    
-    // Limpa o formulário
-    setTaskForm(prev => ({
-      ...prev,
-      [leadId]: {
-        type: "ligacao",
-        description: "",
-        date: null,
-        time: ""
+      
+      // Atualiza a lista de tarefas
+      setTaskList(prev => {
+        const leadTasks = prev[leadId] || [];
+        return {
+          ...prev,
+          [leadId]: [...leadTasks, newTask]
+        };
+      });
+      
+      // Adiciona a tarefa como atividade no histórico
+      const taskTypeText = 
+        form.type === "ligacao" ? "Ligação" :
+        form.type === "email" ? "E-mail" : 
+        form.type === "whatsapp" ? "WhatsApp" : "Tarefa";
+      
+      const formattedDate = form.date ? formatDate(form.date as Date) : "";
+      
+      // Criar e salvar uma nota para registrar a atividade
+      const noteText = `<strong>${taskTypeText}</strong> agendada: ${form.description} - Data: ${formattedDate} às ${form.time}`;
+      
+      apiRequest({
+        url: `/api/leads/${leadId}/notes`,
+        method: 'POST',
+        data: { text: noteText }
+      })
+      .then(() => {
+        // Adicionar a nota localmente
+        setSavedNotes(prev => {
+          const leadNotes = prev[leadId] || [];
+          return {
+            ...prev,
+            [leadId]: [...leadNotes, {
+              text: noteText,
+              date: new Date()
+            }]
+          };
+        });
+      })
+      .catch(error => {
+        console.error("Erro ao salvar nota de tarefa:", error);
+      });
+      
+      // Incrementa o contador de IDs (somente se necessário)
+      if (!savedTask.id) {
+        setTaskIdCounter(prev => prev + 1);
       }
-    }));
-    
-    toast({
-      title: "Tarefa criada",
-      description: `${taskTypeText} agendada com sucesso!`,
+      
+      // Limpa o formulário
+      setTaskForm(prev => ({
+        ...prev,
+        [leadId]: {
+          type: "ligacao",
+          description: "",
+          date: null,
+          time: ""
+        }
+      }));
+      
+      // Atualizar a lista de tarefas agendadas
+      queryClient.invalidateQueries({ queryKey: ['/api/tasks/scheduled'] });
+      
+      toast({
+        title: "Tarefa criada no banco",
+        description: `${taskTypeText} agendada com sucesso!`,
+      });
+    })
+    .catch(error => {
+      console.error("Erro ao criar tarefa:", error);
+      toast({
+        title: "Erro ao criar tarefa",
+        description: "Não foi possível salvar a tarefa no banco de dados.",
+        variant: "destructive"
+      });
     });
   };
   
   // Marcar tarefa como concluída
   const handleCompleteTask = (leadId: number, taskId: number) => {
-    setTaskList(prev => {
-      const leadTasks = prev[leadId] || [];
-      const updatedTasks = leadTasks.map(task => 
-        task.id === taskId ? { ...task, completed: true } : task
-      );
-      
-      return {
-        ...prev,
-        [leadId]: updatedTasks
-      };
-    });
-    
-    // Adiciona a conclusão da tarefa ao histórico
-    const task = taskList[leadId]?.find(t => t.id === taskId);
-    
-    if (task) {
-      const taskTypeText = 
-        task.type === "ligacao" ? "Ligação" :
-        task.type === "email" ? "E-mail" : 
-        task.type === "whatsapp" ? "WhatsApp" : "Tarefa";
-      
-      setSavedNotes(prev => {
-        const leadNotes = prev[leadId] || [];
+    // Atualizar a tarefa no banco de dados
+    apiRequest({
+      url: `/api/tasks/${taskId}/complete`,
+      method: 'PATCH',
+      data: { status: 'completed' }
+    })
+    .then((updatedTask) => {
+      // Atualizar a lista de tarefas na interface
+      setTaskList(prev => {
+        const leadTasks = prev[leadId] || [];
+        const updatedTasks = leadTasks.map(task => 
+          task.id === taskId ? { ...task, completed: true } : task
+        );
+        
         return {
           ...prev,
-          [leadId]: [...leadNotes, {
-            text: `<strong>${taskTypeText}</strong> concluída: ${task.description}`,
-            date: new Date()
-          }]
+          [leadId]: updatedTasks
         };
       });
       
+      // Adiciona a conclusão da tarefa ao histórico
+      const task = taskList[leadId]?.find(t => t.id === taskId);
+      
+      if (task) {
+        const taskTypeText = 
+          task.type === "ligacao" ? "Ligação" :
+          task.type === "email" ? "E-mail" : 
+          task.type === "whatsapp" ? "WhatsApp" : "Tarefa";
+        
+        // Criar e salvar nota de conclusão da tarefa
+        const noteText = `<strong>${taskTypeText}</strong> concluída: ${task.description}`;
+        
+        apiRequest({
+          url: `/api/leads/${leadId}/notes`,
+          method: 'POST',
+          data: { text: noteText }
+        })
+        .then(() => {
+          // Adicionar a nota localmente
+          setSavedNotes(prev => {
+            const leadNotes = prev[leadId] || [];
+            return {
+              ...prev,
+              [leadId]: [...leadNotes, {
+                text: noteText,
+                date: new Date()
+              }]
+            };
+          });
+        })
+        .catch(error => {
+          console.error("Erro ao salvar nota de conclusão de tarefa:", error);
+        });
+        
+        // Atualizar a lista de tarefas agendadas
+        queryClient.invalidateQueries({ queryKey: ['/api/tasks/scheduled'] });
+        
+        toast({
+          title: "Tarefa concluída no banco",
+          description: `${taskTypeText} marcada como concluída!`,
+        });
+      }
+    })
+    .catch(error => {
+      console.error("Erro ao concluir tarefa:", error);
       toast({
-        title: "Tarefa concluída",
-        description: `${taskTypeText} marcada como concluída!`,
+        title: "Erro ao concluir tarefa",
+        description: "Não foi possível marcar a tarefa como concluída no banco de dados.",
+        variant: "destructive"
       });
-    }
+    });
   };
   
   // Função para abrir o modal de adicionar novo lead
