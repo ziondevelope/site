@@ -1437,7 +1437,7 @@ export default function CRM() {
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-12 gap-3 pb-6" style={{
-                padding: '0px 40px',
+                padding: '0px 40px 40px 40px',
                 background: '#E8E8E8'
               }}>
                 {/* Coluna 1 - Dividida em 2 grids */}
