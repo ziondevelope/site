@@ -23,7 +23,7 @@ export default function Sidebar() {
   const [location] = useLocation();
 
   return (
-    <aside className="w-[260px] bg-[#001E3C] text-white hidden md:block h-screen overflow-y-auto">
+    <aside className="w-[260px] bg-indigo-700 text-white hidden md:block h-screen overflow-y-auto">
       <div className="p-4 flex items-center space-x-3">
         <div className="text-2xl font-bold text-white">arbo</div>
       </div>
@@ -36,8 +36,8 @@ export default function Sidebar() {
                 <div className={cn(
                   "flex items-center space-x-3 px-4 py-2 text-sm rounded transition cursor-pointer",
                   location === item.href
-                    ? "bg-[#001524] text-white"
-                    : "text-white text-opacity-80 hover:bg-[#001524] hover:text-white"
+                    ? "bg-[#15616D] text-white"
+                    : "text-white text-opacity-80 hover:bg-[#15616D] hover:text-white"
                 )}>
                   <i className={cn(item.icon, "text-lg")}></i>
                   <span>{item.label}</span>
@@ -55,8 +55,8 @@ export default function Sidebar() {
                         <div className={cn(
                           "flex items-center space-x-3 px-4 py-2 text-sm rounded transition cursor-pointer",
                           location === child.href
-                            ? "bg-[#001524] text-white"
-                            : "text-white text-opacity-70 hover:bg-[#001524] hover:text-white"
+                            ? "bg-[#15616D] text-white"
+                            : "text-white text-opacity-70 hover:bg-[#15616D] hover:text-white"
                         )}>
                           <i className={cn(child.icon, "text-lg")}></i>
                           <span>{child.label}</span>
