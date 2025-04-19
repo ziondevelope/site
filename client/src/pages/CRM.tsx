@@ -984,8 +984,8 @@ export default function CRM() {
                         {/* Novo design de funil com círculos e linhas horizontais */}
                         <div className="flex flex-col w-full px-4">
                           <div className="relative flex items-center justify-between w-full">
-                            {/* Linha horizontal de conexão */}
-                            <div className="absolute h-[2px] bg-gray-300 left-[20px] right-[20px] top-1/2 transform -translate-y-1/2 z-0"></div>
+                            {/* Linha horizontal de conexão - ajustada para ficar centralizada nas bolas */}
+                            <div className="absolute h-[2px] bg-gray-300 left-[25px] right-[25px] top-[20px] z-0"></div>
                             
                             {sortedStages.map((stage, index) => {
                               const isActive = lead.stageId === stage.id || (!lead.stageId && index === 0);
