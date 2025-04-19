@@ -47,6 +47,11 @@ export default function Dashboard() {
   const { data: tasks, isLoading: tasksLoading } = useQuery({
     queryKey: ['/api/tasks/scheduled'],
   });
+  
+  // Fetch all leads para o funil
+  const { data: leads } = useQuery({
+    queryKey: ['/api/leads'],
+  });
 
   return (
     <div className="space-y-6" style={{ fontFamily: 'Montserrat, sans-serif' }}>
@@ -161,10 +166,11 @@ export default function Dashboard() {
             </div>
           </div>
           
-          {/* Funil visual */}
+          {/* Funil de Leads */}
           <div className="mt-6 mb-8">
+            {/* Componente de Funil Customizado para o Dashboard */}
             {/* Estágio 1 */}
-            <div className="relative w-full mb-3">
+            <div className="relative w-full mb-3 cursor-pointer" onClick={() => window.location.href = '/crm'}>
               <div className="bg-[#FED659] h-14 w-full rounded-sm flex items-center pl-4 pr-16">
                 <div className="flex flex-col text-white">
                   <div className="text-xs uppercase">INTERESSADOS</div>
@@ -172,12 +178,12 @@ export default function Dashboard() {
                 </div>
               </div>
               <div className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white font-bold">
-                (238)
+                {leads?.filter(lead => lead.stageId === 1)?.length || 0}
               </div>
             </div>
             
             {/* Estágio 2 */}
-            <div className="relative w-[85%] mb-3">
+            <div className="relative w-[85%] mb-3 cursor-pointer" onClick={() => window.location.href = '/crm'}>
               <div className="bg-[#FEE659] h-14 w-full rounded-sm flex items-center pl-4 pr-16">
                 <div className="flex flex-col text-white">
                   <div className="text-xs uppercase">VISITAS</div>
@@ -185,12 +191,12 @@ export default function Dashboard() {
                 </div>
               </div>
               <div className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white font-bold">
-                (144)
+                {leads?.filter(lead => lead.stageId === 2)?.length || 0}
               </div>
             </div>
             
             {/* Estágio 3 */}
-            <div className="relative w-[70%] mb-3">
+            <div className="relative w-[70%] mb-3 cursor-pointer" onClick={() => window.location.href = '/crm'}>
               <div className="bg-[#39ADDC] h-14 w-full rounded-sm flex items-center pl-4 pr-16">
                 <div className="flex flex-col text-white">
                   <div className="text-xs uppercase">PROPOSTAS</div>
@@ -198,12 +204,12 @@ export default function Dashboard() {
                 </div>
               </div>
               <div className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white font-bold">
-                (39)
+                {leads?.filter(lead => lead.stageId === 3)?.length || 0}
               </div>
             </div>
             
             {/* Estágio 4 */}
-            <div className="relative w-[55%] mb-3">
+            <div className="relative w-[55%] mb-3 cursor-pointer" onClick={() => window.location.href = '/crm'}>
               <div className="bg-[#FF3A7C] h-14 w-full rounded-sm flex items-center pl-4 pr-16">
                 <div className="flex flex-col text-white">
                   <div className="text-xs uppercase">CONTRATO ASSINADO</div>
@@ -211,7 +217,7 @@ export default function Dashboard() {
                 </div>
               </div>
               <div className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white font-bold">
-                (12)
+                {leads?.filter(lead => lead.stageId === 4)?.length || 0}
               </div>
             </div>
           </div>
