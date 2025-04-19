@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
-import { Pencil, Check, X, User, Mail, Phone, Store, Home, MapPin, DollarSign, Tag, Filter, Trophy, MessageSquare, FileText, Bold, Italic, Underline, AlignLeft, AlignCenter, AlignRight, List } from "lucide-react";
+import { Pencil, Check, X, User, Mail, Phone, Store, Home, MapPin, DollarSign, Tag, Filter, Trophy, MessageSquare, FileText, Bold, Italic, Underline, AlignLeft, AlignCenter, AlignRight, List, CalendarPlus, CheckCircle } from "lucide-react";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { FaWhatsapp } from "react-icons/fa";
@@ -17,6 +17,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 
@@ -503,6 +504,9 @@ export default function CRM() {
         [openLeadId]: "nota"
       }));
       
+      // Inicializar o formulário de tarefa para o lead
+      initializeTaskForm(openLeadId);
+      
       if (openLead && openLead.funnelId) {
         // Se o lead já tem um funil associado, usar esse funil
         setCurrentLeadFunnelId(openLead.funnelId);
@@ -528,6 +532,17 @@ export default function CRM() {
       }
     }
   }, [openLeadId, allLeads, funnels]);
+  
+  // Efeito adicional para inicializar formulários de tarefas quando a aba muda
+  useEffect(() => {
+    // Para cada lead que tem a aba "tarefas" ativa, garantir que o formulário esteja inicializado
+    Object.entries(activeTab).forEach(([leadIdStr, tabValue]) => {
+      const leadId = parseInt(leadIdStr, 10);
+      if (tabValue === "tarefas" && !taskForm[leadId]) {
+        initializeTaskForm(leadId);
+      }
+    });
+  }, [activeTab, taskForm]);
   
   const isLoading = leadsLoading || funnelsLoading || (selectedFunnelId !== null && stagesLoading);
 
@@ -1883,10 +1898,151 @@ export default function CRM() {
                         
                         <TabsContent value="tarefas" className="space-y-4">
                           <div className="p-4 bg-white rounded-md" style={{ minHeight: '250px' }}>
-                            <div className="text-center py-6">
-                              <p className="text-sm text-gray-500">
-                                Funcionalidade de criação de tarefas em desenvolvimento.
-                              </p>
+
+                            
+                            <div className="space-y-4">
+                              <h3 className="text-sm font-medium mb-2">Criar nova tarefa para {lead.name}</h3>
+                              
+                              <div className="grid grid-cols-1 gap-4">
+                                {/* Tipo de tarefa */}
+                                <div>
+                                  <Label htmlFor={`task-type-${lead.id}`} className="text-xs mb-1">Tipo de tarefa</Label>
+                                  <Select
+                                    value={taskForm[lead.id]?.type || "ligacao"}
+                                    onValueChange={(value) => handleTaskFormChange(lead.id, "type", value)}
+                                  >
+                                    <SelectTrigger id={`task-type-${lead.id}`} className="h-8 text-sm">
+                                      <SelectValue placeholder="Selecione o tipo" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      <SelectItem value="ligacao">
+                                        <span className="flex items-center">
+                                          <Phone className="h-3.5 w-3.5 mr-2" />
+                                          Ligação
+                                        </span>
+                                      </SelectItem>
+                                      <SelectItem value="email">
+                                        <span className="flex items-center">
+                                          <Mail className="h-3.5 w-3.5 mr-2" />
+                                          E-mail
+                                        </span>
+                                      </SelectItem>
+                                      <SelectItem value="whatsapp">
+                                        <span className="flex items-center">
+                                          <MessageSquare className="h-3.5 w-3.5 mr-2" />
+                                          WhatsApp
+                                        </span>
+                                      </SelectItem>
+                                    </SelectContent>
+                                  </Select>
+                                </div>
+                                
+                                {/* Descrição da tarefa */}
+                                <div>
+                                  <Label htmlFor={`task-description-${lead.id}`} className="text-xs mb-1">Descrição</Label>
+                                  <Input
+                                    id={`task-description-${lead.id}`}
+                                    value={taskForm[lead.id]?.description || ""}
+                                    onChange={(e) => handleTaskFormChange(lead.id, "description", e.target.value)}
+                                    placeholder="Descreva a tarefa..."
+                                    className="h-8 text-sm"
+                                  />
+                                </div>
+                                
+                                {/* Data da tarefa */}
+                                <div className="flex space-x-3">
+                                  <div className="flex-1">
+                                    <Label htmlFor={`task-date-${lead.id}`} className="text-xs mb-1">Data</Label>
+                                    <input
+                                      id={`task-date-${lead.id}`}
+                                      type="date"
+                                      value={taskForm[lead.id]?.date 
+                                        ? new Date(taskForm[lead.id].date as Date).toISOString().split('T')[0] 
+                                        : ""}
+                                      onChange={(e) => {
+                                        const dateValue = e.target.value 
+                                          ? new Date(e.target.value) 
+                                          : null;
+                                        handleTaskFormChange(lead.id, "date", dateValue);
+                                      }}
+                                      className="w-full h-8 text-sm px-3 py-1 rounded-md border border-input"
+                                    />
+                                  </div>
+                                  
+                                  {/* Horário da tarefa */}
+                                  <div className="flex-1">
+                                    <Label htmlFor={`task-time-${lead.id}`} className="text-xs mb-1">Horário</Label>
+                                    <input
+                                      id={`task-time-${lead.id}`}
+                                      type="time"
+                                      value={taskForm[lead.id]?.time || ""}
+                                      onChange={(e) => handleTaskFormChange(lead.id, "time", e.target.value)}
+                                      className="w-full h-8 text-sm px-3 py-1 rounded-md border border-input"
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+                              
+                              {/* Botão de criar tarefa */}
+                              <div className="flex justify-end mt-4">
+                                <Button 
+                                  onClick={() => handleCreateTask(lead.id)}
+                                  className="bg-[#3565E7] hover:bg-[#2955CC] text-sm"
+                                >
+                                  <CalendarPlus className="h-4 w-4 mr-2" />
+                                  Agendar Tarefa
+                                </Button>
+                              </div>
+                              
+                              {/* Lista de tarefas pendentes */}
+                              {taskList[lead.id] && taskList[lead.id].filter(task => !task.completed).length > 0 && (
+                                <div className="mt-6">
+                                  <h4 className="text-sm font-medium mb-3">Tarefas Pendentes</h4>
+                                  <div className="space-y-3">
+                                    {taskList[lead.id]
+                                      .filter(task => !task.completed)
+                                      .map((task) => {
+                                        const taskIcon = 
+                                          task.type === "ligacao" ? <Phone className="h-3.5 w-3.5 text-blue-500" /> :
+                                          task.type === "email" ? <Mail className="h-3.5 w-3.5 text-green-500" /> :
+                                          <MessageSquare className="h-3.5 w-3.5 text-purple-500" />;
+                                          
+                                        const taskTitle = 
+                                          task.type === "ligacao" ? "Ligação" :
+                                          task.type === "email" ? "E-mail" : "WhatsApp";
+                                          
+                                        return (
+                                          <div 
+                                            key={task.id} 
+                                            className="flex items-center justify-between p-3 border border-gray-100 rounded-md bg-gray-50"
+                                          >
+                                            <div className="flex items-start">
+                                              <div className="mr-3 mt-0.5">{taskIcon}</div>
+                                              <div>
+                                                <div className="flex items-center">
+                                                  <span className="text-xs font-medium">{taskTitle}:</span>
+                                                  <span className="text-xs ml-2">{task.description}</span>
+                                                </div>
+                                                <div className="text-xs text-gray-500 mt-1">
+                                                  {task.date ? formatDate(task.date) : ""} às {task.time}
+                                                </div>
+                                              </div>
+                                            </div>
+                                            <Button 
+                                              variant="outline" 
+                                              size="sm" 
+                                              className="h-7 text-xs"
+                                              onClick={() => handleCompleteTask(lead.id, task.id)}
+                                            >
+                                              <CheckCircle className="h-3.5 w-3.5 mr-1" />
+                                              Concluir
+                                            </Button>
+                                          </div>
+                                        );
+                                      })}
+                                  </div>
+                                </div>
+                              )}
                             </div>
                           </div>
                         </TabsContent>
