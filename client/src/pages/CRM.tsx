@@ -959,12 +959,6 @@ export default function CRM() {
                     
                     return (
                       <div className="w-full mb-4">
-                        {/* Título do funil alinhado à esquerda acima */}
-                        <div className="flex items-center mb-3 px-2">
-                          <Filter className="h-4 w-4 mr-1 text-gray-500" />
-                          <span className="text-sm font-medium whitespace-nowrap">Funil de Vendas</span>
-                        </div>
-                        
                         {/* Novo design de funil com círculos e linhas horizontais */}
                         <div className="flex flex-col w-full px-4">
                           <div className="relative flex items-center justify-between w-full">
