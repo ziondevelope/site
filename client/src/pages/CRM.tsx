@@ -311,7 +311,7 @@ export default function CRM() {
     console.log("Dados da tarefa a serem enviados:", taskData);
     
     // Salvar a tarefa no banco de dados
-    apiRequest('/api/tasks', {
+    apiRequest('/api/tasks-direct', {
       method: 'POST',
       body: JSON.stringify(taskData)
     })
