@@ -6,6 +6,7 @@ import { websiteConfig, type WebsiteConfig, type UpdateWebsiteConfig } from "@sh
 import { testimonials, type Testimonial, type InsertTestimonial } from "@shared/schema";
 import { salesFunnels, type SalesFunnel, type InsertSalesFunnel } from "@shared/schema";
 import { funnelStages, type FunnelStage, type InsertFunnelStage } from "@shared/schema";
+import { leadNotes, type LeadNote, type InsertLeadNote } from "@shared/schema";
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, doc, getDocs, getDoc, setDoc, updateDoc, deleteDoc, query, where, orderBy, limit, writeBatch } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
@@ -91,6 +92,11 @@ export interface IStorage {
   getLeadsByFunnelStage(funnelId: number, stageId: number): Promise<Lead[]>;
   assignLeadToFunnel(leadId: number, funnelId: number): Promise<Lead | undefined>;
 
+  // Lead Notes methods
+  getLeadNotes(leadId: number): Promise<LeadNote[]>;
+  createLeadNote(note: InsertLeadNote): Promise<LeadNote>;
+  deleteLeadNote(id: number): Promise<boolean>;
+  
   // Dashboard data
   getDashboardStats(): Promise<any>;
   getSalesFunnel(): Promise<any>;

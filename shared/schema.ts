@@ -211,3 +211,20 @@ export type SalesFunnel = typeof salesFunnels.$inferSelect;
 
 export type InsertFunnelStage = z.infer<typeof insertFunnelStageSchema>;
 export type FunnelStage = typeof funnelStages.$inferSelect;
+
+// Notas para leads
+export const leadNotes = pgTable("lead_notes", {
+  id: serial("id").primaryKey(),
+  leadId: integer("lead_id").notNull(),
+  text: text("text").notNull(),
+  date: timestamp("date").notNull().defaultNow(),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const insertLeadNoteSchema = createInsertSchema(leadNotes).omit({
+  id: true,
+  createdAt: true
+});
+
+export type InsertLeadNote = z.infer<typeof insertLeadNoteSchema>;
+export type LeadNote = typeof leadNotes.$inferSelect;
