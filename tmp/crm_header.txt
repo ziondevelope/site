@@ -1,0 +1,300 @@
+import React, { useState, useEffect, useMemo, useRef } from "react";
+import { Pencil, Check, X, User, Mail, Phone, Store, Home, MapPin, DollarSign, Tag, Filter, Trophy, MessageSquare, FileText, Bold, Italic, Underline, AlignLeft, AlignCenter, AlignRight, List } from "lucide-react";
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+import { FaWhatsapp } from "react-icons/fa";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from "@/components/ui/dialog";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { InsertLead, Lead, FunnelStage, SalesFunnel, insertLeadSchema } from "@shared/schema";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useToast } from "@/hooks/use-toast";
+import { apiRequest } from "@/lib/queryClient";
+import LeadDetailsDialog from "@/components/crm/LeadDetailsDialog";
+
+// Estilos personalizados para campos de edição com bordas mais sutis
+const subtleEditingStyles = {
+  input: {
+    boxShadow: "none",
+    border: '1px solid #e5e7eb',
+    outline: "none",
+    ringColor: 'transparent',
+    ringOffset: '0'
+  },
+  select: {
+    boxShadow: "none",
+    border: '1px solid #e5e7eb',
+    outline: "none",
+    ringColor: 'transparent',
+    ringOffset: '0'
+  }
+};
+
+const leadFormSchema = insertLeadSchema.extend({
+  name: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
+  phone: z.string().optional().nullable(),
+  whatsapp: z.string().optional().nullable(),
+  email: z.string().email("Email inválido").optional().nullable(),
+  interestType: z.enum(["purchase", "rent", "sale"]).optional().nullable(),
+  propertyType: z.enum(["apartment", "house", "commercial"]).optional().nullable(),
+  region: z.string().optional().nullable(),
+  priceRange: z.object({
+    min: z.number().optional().nullable(),
+    max: z.number().optional().nullable(),
+  }).optional().nullable(),
+  stage: z.enum(["new", "contacted", "visit", "proposal"]).default("new"),
+  quickNote: z.string().optional().nullable(),
+  notes: z.string().optional().nullable(),
+});
+
+type LeadFormValues = z.infer<typeof leadFormSchema>;
+
+export default function CRM() {
+  const [isAddLeadOpen, setIsAddLeadOpen] = useState(false);
+  const [leadToDelete, setLeadToDelete] = useState<Lead | null>(null);
+  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
+  const [selectedFunnelId, setSelectedFunnelId] = useState<number | null>(null);
+  const [selectedStageId, setSelectedStageId] = useState<number | null>(null);
+  const [openLeadId, setOpenLeadId] = useState<number | null>(null);
+  const [leadNotes, setLeadNotes] = useState<{[leadId: number]: string}>({});
+  const [savedNotes, setSavedNotes] = useState<{[leadId: number]: Array<{text: string, date: Date}>}>({});
+  
+  // Módulos para o editor React Quill
+  const quillModules = {
+    toolbar: [
+      ['bold', 'italic', 'underline']
+    ]
+  };
+  const [editingField, setEditingField] = useState<{leadId: number, field: string} | null>(null);
+  const [editingValue, setEditingValue] = useState<string>("");
+  
+  // As funções de formatação não são mais necessárias, o ReactQuill já implementa formatação direta
+  
+  // Mutation para atualizar dados do lead
+  const updateLeadFieldMutation = useMutation({
+    mutationFn: ({ id, field, value }: { id: number; field: string; value: string }) => {
+      console.log("Enviando dados:", { id, field, value });
+      // Para campos que podem ser null, precisamos manter como string vazia se vazio
+      const updateData = { [field]: value || "" };
+      return apiRequest(`/api/leads/${id}`, {
+        method: 'PATCH',
+        body: JSON.stringify(updateData)
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/leads'] });
+      
+      toast({
+        title: "Campo atualizado",
+        description: "As informações do lead foram atualizadas com sucesso.",
+      });
+      
+      // Limpar estado de edição
+      setEditingField(null);
+      setEditingValue("");
+    },
+    onError: (error) => {
+      console.error("Erro ao atualizar campo:", error);
+      toast({
+        title: "Erro ao atualizar",
+        description: "Não foi possível atualizar as informações do lead. Tente novamente.",
+        variant: "destructive",
+      });
+    },
+  });
+  
+  // Função para iniciar edição de um campo
+  const handleStartEditing = (leadId: number, field: string, currentValue: string | null | undefined) => {
+    setEditingField({ leadId, field });
+    setEditingValue(currentValue || "");
+  };
+  
+  // Função para salvar o valor editado
+  const handleSaveEdit = () => {
+    if (editingField) {
+      updateLeadFieldMutation.mutate({
+        id: editingField.leadId,
+        field: editingField.field,
+        value: editingValue
+      });
+    }
+  };
+  
+  // Função para cancelar a edição
+  const handleCancelEdit = () => {
+    setEditingField(null);
+    setEditingValue("");
+  };
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+  
+  // Funções auxiliares para formatação de data
+  const formatDate = (date: Date) => {
+    return new Intl.DateTimeFormat('pt-BR', { 
+      day: '2-digit', 
+      month: '2-digit', 
+      year: 'numeric' 
+    }).format(date);
+  };
+  
+  const formatTime = (date: Date) => {
+    return new Intl.DateTimeFormat('pt-BR', { 
+      hour: '2-digit', 
+      minute: '2-digit' 
+    }).format(date);
+  };
+  
+  // Função para salvar a nota
+  const handleSaveNote = (leadId: number) => {
+    const noteText = leadNotes[leadId] || "";
+    
+    if (noteText.trim() === "") {
+      toast({
+        title: "Nota vazia",
+        description: "Por favor, digite algum texto para salvar uma nota.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    // Adiciona a nova nota ao array de notas salvas para o lead específico
+    setSavedNotes(prev => {
+      const leadNotes = prev[leadId] || [];
+      return {
+        ...prev,
+        [leadId]: [...leadNotes, {
+          text: noteText,
+          date: new Date()
+        }]
+      };
+    });
+    
+    // Limpa o campo de texto
+    setLeadNotes(prev => ({
+      ...prev,
+      [leadId]: ""
+    }));
+    
+    toast({
+      title: "Nota salva",
+      description: "Sua nota foi salva com sucesso!",
+    });
+    
+    // Aqui você também poderia fazer uma chamada para a API para salvar a nota no servidor
+    // apiRequest({
+    //   url: `/api/leads/${leadId}/notes`,
+    //   method: 'POST',
+    //   data: { note: noteText }
+    // });
+  };
+  
+  // Função para abrir o modal de adicionar novo lead
+  const handleAddClick = () => {
+    form.reset();
+    setIsAddLeadOpen(true);
+  };
+  
+  // Fetch all leads at once to avoid Firestore index issues
+  const { data: allLeads, isLoading: leadsLoading } = useQuery<Lead[]>({
+    queryKey: ['/api/leads'],
+    queryFn: () => apiRequest(`/api/leads`),
+  });
+  
+  // Fetch all sales funnels
+  const { data: funnels, isLoading: funnelsLoading } = useQuery<SalesFunnel[]>({
+    queryKey: ['/api/sales-funnels'],
+  });
+  
+  // Estado para armazenar o ID do funil selecionado para um lead específico quando a modal abrir
+  const [currentLeadFunnelId, setCurrentLeadFunnelId] = useState<number | null>(null);
+  
+  // Fetch funnel stages when a funnel is selected
+  const { data: stages, isLoading: stagesLoading } = useQuery<FunnelStage[]>({
+    queryKey: ['/api/funnel-stages', selectedFunnelId || currentLeadFunnelId],
+    queryFn: async () => {
+      // Se não tiver funil selecionado mas tiver funis disponíveis, usar o padrão ou o primeiro
+      let funnelIdToUse = selectedFunnelId || currentLeadFunnelId;
+      
+      if (!funnelIdToUse && funnels && funnels.length > 0) {
+        const defaultFunnel = funnels.find(f => f.isDefault) || funnels[0];
+        funnelIdToUse = defaultFunnel.id;
+        
+        // Atualizar o estado para manter a consistência
+        if (selectedFunnelId === null) {
+          setSelectedFunnelId(funnelIdToUse);
+        }
+      }
+      
+      if (!funnelIdToUse) throw new Error("Nenhum funil selecionado");
+      return apiRequest(`/api/funnel-stages?funnelId=${funnelIdToUse}`);
+    },
+    enabled: (selectedFunnelId !== null || currentLeadFunnelId !== null || (funnels && funnels.length > 0)),
+  });
+  
+  // Set default funnel when data is loaded
+  useEffect(() => {
+    if (funnels && funnels.length > 0 && !selectedFunnelId) {
+      const defaultFunnel = funnels.find(f => f.isDefault) || funnels[0];
+      setSelectedFunnelId(defaultFunnel.id);
+    }
+  }, [funnels, selectedFunnelId]);
+  
+  // Garantir que todos os leads tenham um funil associado
+  useEffect(() => {
+    if (allLeads && funnels && funnels.length > 0) {
+      const leadsWithoutFunnel = allLeads.filter(lead => !lead.funnelId);
+      
+      if (leadsWithoutFunnel.length > 0) {
+        // Encontrar o funil padrão ou usar o primeiro da lista
+        const defaultFunnel = funnels.find(f => f.isDefault) || funnels[0];
+        
+        // Atualizar cada lead sem funil para usar o funil padrão
+        leadsWithoutFunnel.forEach(lead => {
+          apiRequest(`/api/leads/${lead.id}/funnel`, {
+            method: "PATCH",
+            body: JSON.stringify({ funnelId: defaultFunnel.id }),
+          })
+            .then(() => {
+              queryClient.invalidateQueries({ queryKey: ['/api/leads'] });
+            })
+            .catch(error => {
+              console.error("Erro ao atribuir funil padrão:", error);
+            });
+        });
+      }
+    }
+  }, [allLeads, funnels]);
+  
+  // Filter leads by status on the client side (for backward compatibility)
+  const newLeads = allLeads?.filter(lead => lead.status === 'new') || [];
+  const contactedLeads = allLeads?.filter(lead => lead.status === 'contacted') || [];
+  const visitLeads = allLeads?.filter(lead => lead.status === 'visit') || [];
+  const proposalLeads = allLeads?.filter(lead => lead.status === 'proposal') || [];
+  
+  // Filter leads by funnel and stage if selected
+  const filteredLeads = useMemo(() => {
+    if (!allLeads) return [];
+    
+    if (selectedFunnelId && selectedStageId) {
+      return allLeads.filter(lead => 
+        lead.funnelId === selectedFunnelId && 
+        lead.stageId === selectedStageId
+      );
+    }
+    
+    if (selectedFunnelId) {
+      return allLeads.filter(lead => lead.funnelId === selectedFunnelId);
+    }
+    
+    return allLeads;
+  }, [allLeads, selectedFunnelId, selectedStageId]);
+  
+  // Quando um lead é aberto, carregar seus dados de funil

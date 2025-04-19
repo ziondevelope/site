@@ -18,6 +18,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
+import LeadDetailsDialog from "@/components/crm/LeadDetailsDialog";
 
 // Estilos personalizados para campos de edição com bordas mais sutis
 const subtleEditingStyles = {
