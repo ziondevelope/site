@@ -33,8 +33,8 @@ const DialogContent = React.forwardRef<
 >(({ className, children, ...props }, ref) => (
   <DialogPortal>
     <DialogOverlay />
-    {/* Container para centralizar tudo, com deslocamento para a esquerda */}
-    <div className="fixed left-[45%] top-[50%] z-50 translate-x-[-50%] translate-y-[-50%] w-full max-w-lg">
+    {/* Container para centralizar tudo, com maior deslocamento para a esquerda */}
+    <div className="fixed left-[40%] top-[50%] z-50 translate-x-[-50%] translate-y-[-50%] w-full max-w-lg">
       {/* Container para o botão no canto direito */}
       <div className="flex justify-end w-full">
         <DialogPrimitive.Close className="mb-2 rounded-full bg-blue-600 text-white p-1.5 opacity-90 shadow-md hover:opacity-100 transition-all hover:bg-blue-700 focus:outline-none disabled:pointer-events-none z-[100]">
