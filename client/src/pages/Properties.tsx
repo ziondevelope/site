@@ -1205,7 +1205,7 @@ export default function Properties() {
       <div className="flex items-center justify-between mb-6">
         <Button 
           onClick={handleAddClick}
-          className="bg-indigo-600 hover:bg-indigo-700 rounded-full px-5">
+          className="bg-[#15616D] hover:bg-[#15616D]/90 rounded-full px-5">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
           Adicionar Imóvel
         </Button>
@@ -1259,7 +1259,7 @@ export default function Properties() {
           <Button
             onClick={handleAddClick}
             size="sm"
-            className="rounded-full"
+            className="rounded-full bg-[#15616D] hover:bg-[#15616D]/90"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
             Adicionar Imóvel
@@ -1396,7 +1396,7 @@ export default function Properties() {
       <div className="mt-10 bg-white rounded-lg shadow p-6">
         <div className="mb-4 flex justify-between items-center">
           <h2 className="text-xl font-semibold text-gray-800">Tarefas Agendadas</h2>
-          <Button className="bg-primary hover:bg-primary/90">
+          <Button className="bg-[#15616D] hover:bg-[#15616D]/90">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2"><path d="M12 5v14M5 12h14"/></svg>
             Nova Tarefa
           </Button>
