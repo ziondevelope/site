@@ -137,7 +137,7 @@ export default function Website() {
           
           <div className="mt-6 flex justify-end">
             <button 
-              className={`bg-indigo-600 text-white px-6 py-3 rounded-full font-medium hover:bg-indigo-700 transition flex items-center
+              className={`bg-[#15616D] text-white px-5 py-2 rounded-full font-medium hover:bg-[#15616D]/90 transition flex items-center
                 ${saveConfigMutation.isPending ? 'opacity-70 cursor-not-allowed' : ''}`}
               onClick={handleSave}
               disabled={saveConfigMutation.isPending}
