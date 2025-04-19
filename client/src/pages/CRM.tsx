@@ -598,10 +598,27 @@ export default function CRM() {
       // Atualizar o estado com as notas do banco de dados
       setSavedNotes(prev => ({
         ...prev,
-        [leadId]: notes.map((note: any) => ({
-          text: note.text,
-          date: new Date(note.date)
-        }))
+        [leadId]: notes.map((note: any) => {
+          // Garante que temos uma data válida
+          let dateObj;
+          try {
+            dateObj = note.date ? new Date(note.date) : new Date();
+            // Verifica se a data é válida
+            if (isNaN(dateObj.getTime())) {
+              console.log("Data inválida detectada, usando data atual:", note.date);
+              dateObj = new Date(); // Usa a data atual se a data for inválida
+            }
+          } catch (error) {
+            console.log("Erro ao converter data, usando data atual:", error);
+            dateObj = new Date(); // Usa a data atual em caso de erro
+          }
+          
+          return {
+            id: note.id,
+            text: note.text,
+            date: dateObj
+          };
+        })
       }));
     } catch (error) {
       console.error("Erro ao carregar notas do lead:", error);
