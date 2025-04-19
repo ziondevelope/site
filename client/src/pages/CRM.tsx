@@ -977,9 +977,9 @@ export default function CRM() {
                       <div className="w-full mb-4">
                         {/* Novo design de funil com círculos e linhas horizontais */}
                         <div className="flex flex-col w-full px-4">
-                          <div className="relative flex items-center justify-between w-full" style={{ paddingTop: '0', paddingBottom: '20px' }}>
+                          <div className="relative flex items-center justify-between w-full pb-5">
                             {/* Linha horizontal de conexão - ajustada para ficar exatamente no meio dos círculos */}
-                            <div className="absolute h-[2px] bg-gray-300 left-[25px] right-[25px] top-[19px] z-0"></div>
+                            <div className="absolute h-[2px] bg-gray-300 left-[25px] right-[25px] top-1/2 -translate-y-1/2 z-0"></div>
                             
                             {sortedStages.map((stage, index) => {
                               const isActive = lead.stageId === stage.id || (!lead.stageId && index === 0);
@@ -1007,6 +1007,7 @@ export default function CRM() {
                                 <div 
                                   key={stage.id}
                                   className="flex flex-col items-center z-10 cursor-pointer"
+                                  style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
                                   onClick={() => {
                                     apiRequest(`/api/leads/${lead.id}/stage`, {
                                       method: "PATCH",
@@ -1032,7 +1033,7 @@ export default function CRM() {
                                   {/* Círculo com número */}
                                   <div 
                                     className={`w-10 h-10 rounded-full flex items-center justify-center mb-2 ${textColor} transition-all duration-200`}
-                                    style={{ backgroundColor: bgColor, position: 'relative', top: '0' }}
+                                    style={{ backgroundColor: bgColor }}
                                   >
                                     <span className="font-bold">{index + 1}</span>
                                   </div>
