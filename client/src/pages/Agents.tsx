@@ -304,7 +304,7 @@ export default function Agents() {
               type="button" 
               onClick={form.handleSubmit(onSubmit)}
               disabled={addAgentMutation.isPending}
-              className="bg-indigo-600 hover:bg-indigo-700 rounded-full px-5"
+              className="bg-[#15616D] hover:bg-[#15616D]/90 rounded-full px-5"
             >
               {addAgentMutation.isPending ? (
                 <>
@@ -321,7 +321,7 @@ export default function Agents() {
         <div className="flex items-center justify-between mb-6">
           <Button 
             onClick={handleAddClick}
-            className="bg-indigo-600 hover:bg-indigo-700 rounded-full px-5">
+            className="bg-[#15616D] hover:bg-[#15616D]/90 rounded-full px-5">
             <i className="ri-add-line mr-1"></i> Adicionar Corretor
           </Button>
           <div className="flex space-x-4 items-center">
@@ -412,7 +412,7 @@ export default function Agents() {
               Cadastre os corretores que fazem parte da sua equipe para gerenciar suas atividades e imóveis.
             </p>
             <Button 
-              className="mt-2 bg-indigo-600 hover:bg-indigo-700 rounded-full px-6" 
+              className="mt-2 bg-[#15616D] hover:bg-[#15616D]/90 rounded-full px-6" 
               onClick={handleAddClick}
             >
               <i className="ri-add-line mr-1"></i> Adicionar Primeiro Corretor
