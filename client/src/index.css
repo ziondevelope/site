@@ -8,11 +8,18 @@
 .quill-no-border .ql-container,
 .quill-no-border .ql-editor {
   border: none !important;
+  font-family: Montserrat, sans-serif !important;
 }
 
 .quill-no-border .ql-toolbar {
   border: none !important;
   padding: 8px 0px 10px 10px !important;
+}
+
+.quill-no-border .ql-editor.ql-blank::before {
+  font-style: normal !important;
+  font-weight: 400 !important; 
+  font-family: Montserrat, sans-serif !important;
 }
 
 /* Estilos personalizados */
