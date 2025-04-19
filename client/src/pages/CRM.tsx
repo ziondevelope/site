@@ -981,56 +981,38 @@ export default function CRM() {
                           <span className="text-sm font-medium whitespace-nowrap">Funil de Vendas</span>
                         </div>
                         
-                        {/* Estágios do funil - Design simples com setas */}
-                        <div className="flex w-full items-center px-0">
-                          {sortedStages.map((stage, index) => {
-                            const isActive = lead.stageId === stage.id || (!lead.stageId && index === 0);
-                            const isCompleted = sortedStages.findIndex(s => s.id === lead.stageId) > index;
-                            const isLastStage = index === sortedStages.length - 1;
+                        {/* Novo design de funil com círculos e linhas horizontais */}
+                        <div className="flex flex-col w-full px-4">
+                          <div className="relative flex items-center justify-between w-full">
+                            {/* Linha horizontal de conexão */}
+                            <div className="absolute h-[2px] bg-gray-300 left-[20px] right-[20px] top-1/2 transform -translate-y-1/2 z-0"></div>
                             
-                            // Cores dos estágios conforme solicitação
-                            let bgColor;
-                            let textColor;
-                            
-                            if (isActive) {
-                              // Estágio ativo e selecionado (atual) - Verde
-                              bgColor = '#34C38F';
-                              textColor = 'text-white';
-                            } else if (isCompleted) {
-                              // Estágio ativo mas não selecionado - Azul
-                              bgColor = '#3565E7';
-                              textColor = 'text-white';
-                            } else {
-                              // Estágio não ativo e não selecionado - Cinza
-                              bgColor = '#E5E7EB'; 
-                              textColor = 'text-gray-700';
-                            }
-                            
-                            return (
-                              <div
-                                key={stage.id}
-                                className="relative flex items-center justify-center cursor-pointer"
-                                style={{
-                                  width: `${100 / sortedStages.length}%`,
-                                  padding: '0 0',
-                                  margin: '0 -8px',
-                                }}
-                              >
-
-                                
-                                {/* Container principal - Estilo seta */}
+                            {sortedStages.map((stage, index) => {
+                              const isActive = lead.stageId === stage.id || (!lead.stageId && index === 0);
+                              const isCompleted = sortedStages.findIndex(s => s.id === lead.stageId) > index;
+                              
+                              // Cores dos estágios conforme solicitação
+                              let bgColor;
+                              let textColor;
+                              
+                              if (isActive) {
+                                // Estágio ativo e selecionado (atual) - Azul
+                                bgColor = '#3565E7';
+                                textColor = 'text-white';
+                              } else if (isCompleted) {
+                                // Estágio já completado - Azul
+                                bgColor = '#3565E7';
+                                textColor = 'text-white';
+                              } else {
+                                // Estágio não ativo e não selecionado - Cinza
+                                bgColor = '#E5E7EB';
+                                textColor = 'text-gray-700';
+                              }
+                              
+                              return (
                                 <div 
-                                  className={`h-11 w-full flex items-center justify-center ${textColor} transition-all duration-200 relative`}
-                                  style={{
-                                    backgroundColor: bgColor,
-                                    clipPath: isLastStage 
-                                      ? 'polygon(0 0, 85% 0, 100% 0, 100% 100%, 0 100%, 15% 50%)' 
-                                      : index === 0
-                                        ? 'polygon(0 0, 85% 0, 100% 50%, 85% 100%, 0 100%, 0 50%)'
-                                        : 'polygon(0 0, 85% 0, 100% 50%, 85% 100%, 0 100%, 15% 50%)',
-                                    paddingRight: isLastStage ? '0' : '10px',
-                                    paddingLeft: index === 0 ? '0' : '10px',
-                                  }}
+                                  key={stage.id}
+                                  className="flex flex-col items-center z-10 cursor-pointer"
                                   onClick={() => {
                                     apiRequest(`/api/leads/${lead.id}/stage`, {
                                       method: "PATCH",
@@ -1053,24 +1035,29 @@ export default function CRM() {
                                       });
                                   }}
                                 >
+                                  {/* Círculo com número */}
+                                  <div 
+                                    className={`w-10 h-10 rounded-full flex items-center justify-center mb-2 ${textColor} transition-all duration-200`}
+                                    style={{ backgroundColor: bgColor }}
+                                  >
+                                    <span className="font-bold">{index + 1}</span>
+                                  </div>
+                                  
                                   {/* Nome do estágio */}
                                   <span 
-                                    className="text-xs font-medium text-center"
+                                    className={`text-xs font-medium text-center ${isActive || isCompleted ? 'text-blue-600' : 'text-gray-500'}`}
                                     style={{
-                                      maxWidth: '100%',
-                                      whiteSpace: 'nowrap',
-                                      overflow: 'hidden',
-                                      textOverflow: 'ellipsis',
-                                      padding: '0 8px',
+                                      maxWidth: '80px',
+                                      textAlign: 'center',
                                       fontSize: '12px'
                                     }}
                                   >
                                     {stage.name}
                                   </span>
                                 </div>
-                              </div>
-                            );
-                          })}
+                              );
+                            })}
+                          </div>
                         </div>
                       </div>
                     );
