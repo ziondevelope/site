@@ -1089,230 +1089,62 @@ export default function CRM() {
                 padding: '0px 40px',
                 background: '#E8E8E8'
               }}>
-                {/* Coluna 1 - Dividida em 2 grids */}
+                {/* Coluna 1 - Simplificada conforme imagem de referência */}
                 <div className="md:col-span-3">
                   <div className="grid gap-6">
-                    {/* Grid 1: Informações de Contato */}
-                    <div className="p-5 border border-[#f5f5f5] rounded-[5px]" style={{ background: '#F9FAFB' }}>
-                      <h3 className="text-base font-bold mb-4">Dados do Cliente</h3>
-                      <div className="w-full h-px mb-4 -mx-5" style={{ marginLeft: '-20px', marginRight: '-20px', width: 'calc(100% + 40px)', backgroundColor: 'rgb(245, 245, 245)' }}></div>
+                    {/* Card de Informações do Lead */}
+                    <div className="p-6 border border-[#f0f0f0] rounded-[5px]" style={{ background: 'white' }}>
+                      <div className="flex justify-between items-center mb-5">
+                        <h3 className="text-base font-bold uppercase text-gray-900">INFORMAÇÕES DO LEAD</h3>
+                        <button className="text-blue-600 font-medium">Editar</button>
+                      </div>
+                      
                       <div className="space-y-5">
                         <div>
-                          <h4 className="text-xs font-semibold mb-1 flex items-center" style={{ fontSize: '14px' }}><User className="h-4 w-4 mr-1 text-gray-500" /> Nome:</h4>
-                          <div className="group relative">
-                            {editingField && editingField.leadId === lead.id && editingField.field === 'name' ? (
-                              <div className="flex items-center">
-                                <Input 
-                                  value={editingValue}
-                                  onChange={(e) => setEditingValue(e.target.value)}
-                                  className="h-8 text-sm focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none"
-                                  style={{ 
-                                    fontSize: '12px',
-                                    border: '1px solid #d0d0d0',
-                                    boxShadow: "none",
-                                    outline: "none"
-                                  }}
-                                  autoFocus
-                                />
-                                <div className="flex ml-2">
-                                  <Button 
-                                    size="icon" 
-                                    variant="ghost" 
-                                    className="h-6 w-6" 
-                                    onClick={handleSaveEdit}
-                                    disabled={updateLeadFieldMutation.isPending}
-                                  >
-                                    <Check className="h-4 w-4" />
-                                  </Button>
-                                  <Button 
-                                    size="icon" 
-                                    variant="ghost" 
-                                    className="h-6 w-6" 
-                                    onClick={handleCancelEdit}
-                                  >
-                                    <X className="h-4 w-4" />
-                                  </Button>
-                                </div>
-                              </div>
-                            ) : (
-                              <div className="flex items-center">
-                                <p className="text-sm text-left" style={{ fontSize: '12px', color: '#878484' }}>
-                                  {lead.name}
-                                </p>
-                                <button 
-                                  className="ml-2 invisible group-hover:visible"
-                                  onClick={() => handleStartEditing(lead.id, 'name', lead.name)}
-                                >
-                                  <Pencil className="h-3 w-3 text-gray-500 hover:text-gray-700" />
-                                </button>
-                              </div>
-                            )}
-                          </div>
+                          <h4 className="text-sm font-semibold mb-1">Etapa:</h4>
+                          <p className="text-sm text-gray-800">
+                            {stages?.find(stage => stage.id === lead.stageId)?.name || 'Contato Feito'}
+                          </p>
                         </div>
                         
                         <div>
-                          <h4 className="text-xs font-semibold mb-1 flex items-center" style={{ fontSize: '14px' }}><Mail className="h-4 w-4 mr-1 text-gray-500" /> Email:</h4>
-                          <div className="group relative">
-                            {editingField && editingField.leadId === lead.id && editingField.field === 'email' ? (
-                              <div className="flex items-center">
-                                <Input 
-                                  value={editingValue}
-                                  onChange={(e) => setEditingValue(e.target.value)}
-                                  className="h-8 text-sm focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none"
-                                  style={{ 
-                                    fontSize: '12px',
-                                    border: '1px solid #d0d0d0',
-                                    boxShadow: "none",
-                                    outline: "none"
-                                  }}
-                                  autoFocus
-                                />
-                                <div className="flex ml-2">
-                                  <Button 
-                                    size="icon" 
-                                    variant="ghost" 
-                                    className="h-6 w-6" 
-                                    onClick={handleSaveEdit}
-                                    disabled={updateLeadFieldMutation.isPending}
-                                  >
-                                    <Check className="h-4 w-4" />
-                                  </Button>
-                                  <Button 
-                                    size="icon" 
-                                    variant="ghost" 
-                                    className="h-6 w-6" 
-                                    onClick={handleCancelEdit}
-                                  >
-                                    <X className="h-4 w-4" />
-                                  </Button>
-                                </div>
-                              </div>
-                            ) : (
-                              <div className="flex items-center">
-                                <p className="text-sm text-left" style={{ fontSize: '12px', color: '#878484' }}>
-                                  {lead.email || "Não informado"}
-                                </p>
-                                <button 
-                                  className="ml-2 invisible group-hover:visible"
-                                  onClick={() => handleStartEditing(lead.id, 'email', lead.email)}
-                                >
-                                  <Pencil className="h-3 w-3 text-gray-500 hover:text-gray-700" />
-                                </button>
-                              </div>
-                            )}
-                          </div>
+                          <h4 className="text-sm font-semibold mb-1">Nome</h4>
+                          <p className="text-sm text-gray-800">
+                            {lead.name}
+                          </p>
                         </div>
                         
                         <div>
-                          <h4 className="text-xs font-semibold mb-1 flex items-center" style={{ fontSize: '14px' }}><Phone className="h-4 w-4 mr-1 text-gray-500" /> Telefone:</h4>
-                          <div className="group relative">
-                            {editingField && editingField.leadId === lead.id && editingField.field === 'phone' ? (
-                              <div className="flex items-center">
-                                <Input 
-                                  value={editingValue}
-                                  onChange={(e) => setEditingValue(e.target.value)}
-                                  className="h-8 text-sm focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none"
-                                  style={{ 
-                                    fontSize: '12px',
-                                    border: '1px solid #d0d0d0',
-                                    boxShadow: "none",
-                                    outline: "none"
-                                  }}
-                                  autoFocus
-                                />
-                                <div className="flex ml-2">
-                                  <Button 
-                                    size="icon" 
-                                    variant="ghost" 
-                                    className="h-6 w-6" 
-                                    onClick={handleSaveEdit}
-                                    disabled={updateLeadFieldMutation.isPending}
-                                  >
-                                    <Check className="h-4 w-4" />
-                                  </Button>
-                                  <Button 
-                                    size="icon" 
-                                    variant="ghost" 
-                                    className="h-6 w-6" 
-                                    onClick={handleCancelEdit}
-                                  >
-                                    <X className="h-4 w-4" />
-                                  </Button>
-                                </div>
-                              </div>
-                            ) : (
-                              <div className="flex items-center">
-                                <p className="text-sm text-left" style={{ fontSize: '12px', color: '#878484' }}>
-                                  {lead.phone || "Não informado"}
-                                </p>
-                                <button 
-                                  className="ml-2 invisible group-hover:visible"
-                                  onClick={() => handleStartEditing(lead.id, 'phone', lead.phone)}
-                                >
-                                  <Pencil className="h-3 w-3 text-gray-500 hover:text-gray-700" />
-                                </button>
-                              </div>
-                            )}
-                          </div>
+                          <h4 className="text-sm font-semibold mb-1">E-mail</h4>
+                          <p className="text-sm text-gray-800">
+                            {lead.email || "Não informado"}
+                          </p>
                         </div>
                         
                         <div>
-                          <h4 className="text-xs font-semibold mb-1 flex items-center" style={{ fontSize: '14px' }}><FaWhatsapp className="h-4 w-4 mr-1 text-gray-500" /> WhatsApp:</h4>
-                          <div className="group relative">
-                            {editingField && editingField.leadId === lead.id && editingField.field === 'whatsapp' ? (
-                              <div className="flex items-center">
-                                <Input 
-                                  value={editingValue}
-                                  onChange={(e) => setEditingValue(e.target.value)}
-                                  className="h-8 text-sm focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none"
-                                  style={{ 
-                                    fontSize: '12px',
-                                    border: '1px solid #d0d0d0',
-                                    boxShadow: "none",
-                                    outline: "none"
-                                  }}
-                                  autoFocus
-                                />
-                                <div className="flex ml-2">
-                                  <Button 
-                                    size="icon" 
-                                    variant="ghost" 
-                                    className="h-6 w-6" 
-                                    onClick={handleSaveEdit}
-                                    disabled={updateLeadFieldMutation.isPending}
-                                  >
-                                    <Check className="h-4 w-4" />
-                                  </Button>
-                                  <Button 
-                                    size="icon" 
-                                    variant="ghost" 
-                                    className="h-6 w-6" 
-                                    onClick={handleCancelEdit}
-                                  >
-                                    <X className="h-4 w-4" />
-                                  </Button>
-                                </div>
-                              </div>
-                            ) : (
-                              <div className="flex items-center">
-                                <p className="text-sm text-left" style={{ fontSize: '12px', color: '#878484' }}>
-                                  {(lead as any).whatsapp || "Não informado"}
-                                </p>
-                                <button 
-                                  className="ml-2 invisible group-hover:visible"
-                                  onClick={() => handleStartEditing(lead.id, 'whatsapp', (lead as any).whatsapp)}
-                                >
-                                  <Pencil className="h-3 w-3 text-gray-500 hover:text-gray-700" />
-                                </button>
-                              </div>
-                            )}
-                          </div>
+                          <h4 className="text-sm font-semibold mb-1">Telefone</h4>
+                          <p className="text-sm text-gray-800">
+                            {lead.phone || "Não informado"}
+                          </p>
+                        </div>
+                        
+                        <div>
+                          <h4 className="text-sm font-semibold mb-1">Whatsapp</h4>
+                          <p className="text-sm text-gray-800">
+                            {(lead as any).whatsapp || lead.phone || "Não informado"}
+                          </p>
+                        </div>
+                        
+                        <div className="mt-6 text-center">
+                          <Button className="bg-blue-600 hover:bg-blue-700 px-4 py-2 text-sm rounded">
+                            Entrar em Contato
+                          </Button>
                         </div>
                       </div>
                     </div>
                     
-                    {/* Grid 2: Detalhes do Interesse */}
-                    <div className="p-5 border border-[#f5f5f5] rounded-[5px]" style={{ background: '#F9FAFB' }}>
+                    {/* As demais funcionalidades permanecem intactas, apenas ocultas */}
+                    <div className="hidden p-5 border border-[#f5f5f5] rounded-[5px]" style={{ background: '#F9FAFB' }}>
                       <h3 className="text-base font-bold mb-4">Detalhes do Interesse</h3>
                       <div className="w-full h-px mb-4 -mx-5" style={{ marginLeft: '-20px', marginRight: '-20px', width: 'calc(100% + 40px)', backgroundColor: 'rgb(245, 245, 245)' }}></div>
                       <div className="space-y-5">
