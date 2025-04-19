@@ -1136,7 +1136,7 @@ export default function CRM() {
                               </div>
                             ) : (
                               <div className="flex items-center">
-                                <p className="text-sm text-left" style={{ fontSize: '12px', color: '#878484' }}>
+                                <p className="text-sm text-left" style={{ fontSize: '13px', color: '#878484' }}>
                                   {lead.name}
                                 </p>
                                 <button 
@@ -1189,7 +1189,7 @@ export default function CRM() {
                               </div>
                             ) : (
                               <div className="flex items-center">
-                                <p className="text-sm text-left" style={{ fontSize: '12px', color: '#878484' }}>
+                                <p className="text-sm text-left" style={{ fontSize: '13px', color: '#878484' }}>
                                   {lead.email || "Não informado"}
                                 </p>
                                 <button 
@@ -1242,7 +1242,7 @@ export default function CRM() {
                               </div>
                             ) : (
                               <div className="flex items-center">
-                                <p className="text-sm text-left" style={{ fontSize: '12px', color: '#878484' }}>
+                                <p className="text-sm text-left" style={{ fontSize: '13px', color: '#878484' }}>
                                   {lead.phone || "Não informado"}
                                 </p>
                                 <button 
@@ -1295,7 +1295,7 @@ export default function CRM() {
                               </div>
                             ) : (
                               <div className="flex items-center">
-                                <p className="text-sm text-left" style={{ fontSize: '12px', color: '#878484' }}>
+                                <p className="text-sm text-left" style={{ fontSize: '13px', color: '#878484' }}>
                                   {(lead as any).whatsapp || "Não informado"}
                                 </p>
                                 <button 
@@ -1361,7 +1361,7 @@ export default function CRM() {
                               </div>
                             ) : (
                               <div className="flex items-center">
-                                <p className="text-sm text-left" style={{ fontSize: "12px", color: "#878484" }}>
+                                <p className="text-sm text-left" style={{ fontSize: "13px", color: "#878484" }}>
                                   {lead.interestType === 'purchase' ? 'Compra' :
                                   lead.interestType === 'rent' ? 'Aluguel' :
                                   lead.interestType || 'Não informado'}
@@ -1423,7 +1423,7 @@ export default function CRM() {
                               </div>
                             ) : (
                               <div className="flex items-center">
-                                <p className="text-sm text-left" style={{ fontSize: "12px", color: "#878484" }}>
+                                <p className="text-sm text-left" style={{ fontSize: "13px", color: "#878484" }}>
                                   {(lead as any).propertyType === 'apartment' ? 'Apartamento' : 
                                   (lead as any).propertyType === 'house' ? 'Casa' : 
                                   (lead as any).propertyType === 'commercial' ? 'Comercial' : 
@@ -1479,7 +1479,7 @@ export default function CRM() {
                               </div>
                             ) : (
                               <div className="flex items-center">
-                                <p className="text-sm text-left" style={{ fontSize: "12px", color: "#878484" }}>{(lead as any).region || "Não informado"}</p>
+                                <p className="text-sm text-left" style={{ fontSize: "13px", color: "#878484" }}>{(lead as any).region || "Não informado"}</p>
                                 <button 
                                   className="ml-2 invisible group-hover:visible"
                                   onClick={() => handleStartEditing(lead.id, 'region', (lead as any).region)}
@@ -1532,7 +1532,7 @@ export default function CRM() {
                               </div>
                             ) : (
                               <div className="flex items-center">
-                                <p className="text-sm text-left" style={{ fontSize: "12px", color: "#878484" }}>
+                                <p className="text-sm text-left" style={{ fontSize: "13px", color: "#878484" }}>
                                   {(lead as any).priceRangeMin && (lead as any).priceRangeMax ? 
                                     `R$ ${(lead as any).priceRangeMin.toLocaleString('pt-BR')} - R$ ${(lead as any).priceRangeMax.toLocaleString('pt-BR')}` : 
                                     lead.budget ? 'R$ ' + lead.budget.toLocaleString('pt-BR') : 'Não informado'}
@@ -1597,7 +1597,7 @@ export default function CRM() {
                               </div>
                             ) : (
                               <div className="flex items-center">
-                                <p className="text-sm text-left" style={{ fontSize: "12px", color: "#878484" }}>
+                                <p className="text-sm text-left" style={{ fontSize: "13px", color: "#878484" }}>
                                   {lead.source === 'manual' ? 'Manual' :
                                   lead.source === 'website' ? 'Website' :
                                   lead.source === 'whatsapp' ? 'WhatsApp' :
