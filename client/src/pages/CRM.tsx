@@ -1038,7 +1038,7 @@ export default function CRM() {
                                   </div>
                                   
                                   {/* Nome do estágio */}
-                                  <span className="text-xs font-medium text-center" style={{ maxWidth: '80px', textAlign: 'center', fontSize: '12px', color: '#111111' }}>{stage.name}</span>
+                                  <span className="text-xs font-medium text-center truncate" style={{ maxWidth: '80px', textAlign: 'center', fontSize: '12px', color: '#111111', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', display: 'inline-block' }}>{stage.name}</span>
                                 </div>
                               );
                             })}
