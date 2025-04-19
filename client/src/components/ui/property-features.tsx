@@ -65,6 +65,7 @@ export function PropertyFeatures({ features, onChange }: PropertyFeaturesProps) 
             type="button"
             size="sm"
             onClick={addFeature}
+            className="bg-[#15616D] hover:bg-[#15616D]/90"
           >
             Adicionar
           </Button>
