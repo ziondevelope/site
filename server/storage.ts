@@ -478,7 +478,7 @@ export class FirebaseStorage implements IStorage {
 
   async deleteLead(id: number): Promise<boolean> {
     try {
-      // Usando a nova API do Firebase
+      // Verificar se o lead existe antes de prosseguir
       const leadsRef = collection(db, 'leads');
       const q = query(leadsRef, where('id', '==', id), limit(1));
       const leadSnapshot = await getDocs(q);
@@ -488,6 +488,33 @@ export class FirebaseStorage implements IStorage {
         return false;
       }
       
+      // 1. Excluir todas as notas relacionadas ao lead
+      const notesRef = collection(db, 'lead_notes');
+      const notesQuery = query(notesRef, where('leadId', '==', id));
+      const notesSnapshot = await getDocs(notesQuery);
+      
+      const notesDeletionPromises = notesSnapshot.docs.map(noteDoc => {
+        console.log(`Excluindo nota ${noteDoc.id} do lead ${id}`);
+        return deleteDoc(doc(db, 'lead_notes', noteDoc.id));
+      });
+      
+      await Promise.all(notesDeletionPromises);
+      console.log(`Excluídas ${notesSnapshot.docs.length} notas do lead ${id}`);
+      
+      // 2. Excluir todas as tarefas relacionadas ao lead
+      const tasksRef = collection(db, 'tasks');
+      const tasksQuery = query(tasksRef, where('leadId', '==', id));
+      const tasksSnapshot = await getDocs(tasksQuery);
+      
+      const tasksDeletionPromises = tasksSnapshot.docs.map(taskDoc => {
+        console.log(`Excluindo tarefa ${taskDoc.id} do lead ${id}`);
+        return deleteDoc(doc(db, 'tasks', taskDoc.id));
+      });
+      
+      await Promise.all(tasksDeletionPromises);
+      console.log(`Excluídas ${tasksSnapshot.docs.length} tarefas do lead ${id}`);
+      
+      // 3. Finalmente, excluir o lead
       const leadDoc = leadSnapshot.docs[0];
       const leadRef = doc(db, 'leads', leadDoc.id);
       
