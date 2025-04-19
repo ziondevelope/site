@@ -1962,7 +1962,7 @@ export default function CRM() {
                             <ReactQuill
                               id={`note-textarea-${lead.id}`}
                               theme="snow"
-                              placeholder="Digite uma anotação rápida sobre este lead..."
+                              placeholder="✏️ Faça uma anotação..."
                               value={leadNotes[lead.id] || lead.notes || ""}
                               onChange={(content) => setLeadNotes(prev => ({
                                 ...prev,
