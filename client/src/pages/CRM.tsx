@@ -1506,7 +1506,7 @@ export default function CRM() {
                 <div className="md:col-span-4">
                   <div className="grid gap-6">
                     {/* Grid 1: Informações de Contato */}
-                    <div className="p-5 border border-[#f5f5f5] rounded-[10px]" style={{ background: '#F9FAFB' }}>
+                    <div className="p-5 border border-[#f5f5f5] rounded-[10px]" style={{ background: '#FFFFFF' }}>
                       <h3 className="text-sm font-bold mb-4 uppercase" style={{ color: '#444444' }}>INFORMAÇÕES DO LEAD</h3>
                       <div className="w-full h-px mb-4 -mx-5" style={{ marginLeft: '-20px', marginRight: '-20px', width: 'calc(100% + 40px)', backgroundColor: 'rgb(245, 245, 245)' }}></div>
                       <div className="space-y-5">
@@ -1725,7 +1725,7 @@ export default function CRM() {
                     </div>
                     
                     {/* Grid 2: Detalhes do Interesse */}
-                    <div className="p-5 border border-[#f5f5f5] rounded-[10px]" style={{ background: '#F9FAFB' }}>
+                    <div className="p-5 border border-[#f5f5f5] rounded-[10px]" style={{ background: '#FFFFFF' }}>
                       <h3 className="text-sm font-bold mb-4 uppercase" style={{ color: '#444444' }}>DETALHES DO INTERESSE</h3>
                       <div className="w-full h-px mb-4 -mx-5" style={{ marginLeft: '-20px', marginRight: '-20px', width: 'calc(100% + 40px)', backgroundColor: 'rgb(245, 245, 245)' }}></div>
                       <div className="space-y-5">
@@ -2090,7 +2090,7 @@ export default function CRM() {
                 <div className="md:col-span-8 px-4">                  
                   <div>
                     {/* Seção de abas para Nota/Tarefas */}
-                    <div className="p-5 border border-[#f5f5f5] rounded-[10px] mb-8" style={{ background: '#F9FAFB' }}>
+                    <div className="p-5 border border-[#f5f5f5] rounded-[10px] mb-8" style={{ background: '#FFFFFF' }}>
                       
                       <Tabs 
                         defaultValue="nota" 
