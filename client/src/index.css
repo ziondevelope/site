@@ -4,6 +4,35 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Estilos para rolagem suave */
+* {
+  scroll-behavior: smooth;
+}
+
+/* Estilo para as barras de rolagem */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(155, 155, 155, 0.5);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(155, 155, 155, 0.7);
+}
+
+/* Remove a borda preta que aparece em alguns elementos quando focados */
+* {
+  outline-color: rgba(59, 130, 246, 0.5);
+}
+
 /* Classe para remover bordas do React Quill */
 .quill-no-border .ql-container,
 .quill-no-border .ql-editor {
