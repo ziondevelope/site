@@ -583,15 +583,21 @@ export class FirebaseStorage implements IStorage {
   async getTasksByLeadId(leadId: number): Promise<Task[]> {
     try {
       // Buscar tarefas associadas a um lead específico
+      // Removemos orderBy para evitar necessidade de índice composto
       const tasksRef = collection(db, 'tasks');
       const q = query(
         tasksRef,
-        where('leadId', '==', leadId),
-        orderBy('date', 'asc')
+        where('leadId', '==', leadId)
       );
       const tasksSnapshot = await getDocs(q);
       
-      return tasksSnapshot.docs.map(doc => doc.data() as Task);
+      // Ordenar os resultados manualmente após obter os dados
+      const tasks = tasksSnapshot.docs.map(doc => doc.data() as Task);
+      return tasks.sort((a, b) => {
+        const dateA = new Date(a.date || 0).getTime();
+        const dateB = new Date(b.date || 0).getTime();
+        return dateA - dateB; // Ordem crescente por data
+      });
     } catch (error) {
       console.error(`Error fetching tasks for lead ${leadId}:`, error);
       return [];
@@ -1793,6 +1799,12 @@ export class MemStorage implements IStorage {
     const now = new Date();
     return Array.from(this.tasks.values())
       .filter(task => new Date(task.date) >= now)
+      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  }
+  
+  async getTasksByLeadId(leadId: number): Promise<Task[]> {
+    return Array.from(this.tasks.values())
+      .filter(task => task.leadId === leadId)
       .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
   }
 
