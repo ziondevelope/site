@@ -1508,7 +1508,6 @@ export default function CRM() {
                               
                               return (
                                 <div className="flex items-center">
-                                  <span className="inline-flex h-2.5 w-2.5 rounded-full bg-green-600 mr-2"></span>
                                   <span className="text-green-600 font-medium">
                                     {leadTask?.type === "ligacao" && <i className="fas fa-phone-alt text-xs mr-1"></i>}
                                     {leadTask?.type === "email" && <i className="fas fa-envelope text-xs mr-1"></i>}
@@ -1525,7 +1524,6 @@ export default function CRM() {
                             })()
                           ) : (
                             <div className="flex items-center">
-                              <span className="inline-flex h-2.5 w-2.5 rounded-full bg-gray-300 mr-2"></span>
                               <span className="text-gray-500">Nenhuma</span>
                             </div>
                           )}
