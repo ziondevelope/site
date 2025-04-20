@@ -79,14 +79,12 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Painel de Atividades */}
         <div className="bg-white p-6 rounded-lg shadow-sm">
-          <div className="group flex items-center mb-4 relative">
-            <div className="flex items-center cursor-pointer transition-all duration-300 ease-in-out">
-              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" className="transition-transform duration-300 ease-in-out group-hover:scale-110">
-                <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="rgb(21, 97, 109)" strokeWidth="1.5"/>
-                <path d="M8 12L10.5 14.5L16 9" stroke="rgb(21, 97, 109)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-              <h3 className="text-lg font-semibold text-gray-800 ml-2 max-w-0 overflow-hidden whitespace-nowrap group-hover:max-w-xs transition-all duration-300 ease-in-out">Atividades</h3>
-            </div>
+          <div className="flex items-center mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" className="mr-2">
+              <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="rgb(21, 97, 109)" strokeWidth="1.5"/>
+              <path d="M8 12L10.5 14.5L16 9" stroke="rgb(21, 97, 109)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            <h3 className="text-lg font-semibold text-gray-800">Atividades</h3>
           </div>
           
           {tasksLoading ? (
@@ -192,13 +190,11 @@ export default function Dashboard() {
         
         {/* Painel de Funil de Vendas */}
         <div className="bg-white p-6 rounded-lg shadow-sm">
-          <div className="group flex items-center mb-2 relative">
-            <div className="flex items-center cursor-pointer transition-all duration-300 ease-in-out">
-              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" className="transition-transform duration-300 ease-in-out group-hover:scale-110">
-                <path d="M3 4C3 3.44772 3.44772 3 4 3H20C20.5523 3 21 3.44772 21 4V6C21 6.26522 20.8946 6.51957 20.7071 6.70711L14 13.4142V18.5C14 18.7761 13.8881 19.0378 13.6913 19.2124L10.6913 21.5124C10.3998 21.7437 10.0088 21.8228 9.64018 21.7209C9.27157 21.619 9 21.2848 9 20.9V13.4142L2.29289 6.70711C2.10536 6.51957 2 6.26522 2 6V4C2 3.44772 2.44772 3 3 3" stroke="rgb(21, 97, 109)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-              <h3 className="text-lg font-semibold text-gray-800 ml-2 max-w-0 overflow-hidden whitespace-nowrap group-hover:max-w-xs transition-all duration-300 ease-in-out">Funil de Vendas</h3>
-            </div>
+          <div className="flex items-center mb-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" className="mr-2">
+              <path d="M3 4C3 3.44772 3.44772 3 4 3H20C20.5523 3 21 3.44772 21 4V6C21 6.26522 20.8946 6.51957 20.7071 6.70711L14 13.4142V18.5C14 18.7761 13.8881 19.0378 13.6913 19.2124L10.6913 21.5124C10.3998 21.7437 10.0088 21.8228 9.64018 21.7209C9.27157 21.619 9 21.2848 9 20.9V13.4142L2.29289 6.70711C2.10536 6.51957 2 6.26522 2 6V4C2 3.44772 2.44772 3 3 3" stroke="rgb(21, 97, 109)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            <h3 className="text-lg font-semibold text-gray-800">Funil de Vendas</h3>
           </div>
           
           <div className="mt-2 mb-4">
@@ -278,18 +274,16 @@ export default function Dashboard() {
         
         {/* Painel de Faturamento */}
         <div className="bg-white p-6 rounded-lg shadow-sm">
-          <div className="group flex items-center mb-4 relative">
-            <div className="flex items-center cursor-pointer transition-all duration-300 ease-in-out">
-              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" className="transition-transform duration-300 ease-in-out group-hover:scale-110">
-                <path d="M16 22C11.5817 22 8 18.4183 8 14C8 9.58172 11.5817 6 16 6C20.4183 6 24 9.58172 24 14C24 18.4183 20.4183 22 16 22Z" stroke="rgb(21, 97, 109)" strokeWidth="1.5"/>
-                <path d="M8 22C3.58172 22 0 18.4183 0 14C0 9.58172 3.58172 6 8 6C12.4183 6 16 9.58172 16 14C16 18.4183 12.4183 22 8 22Z" stroke="rgb(21, 97, 109)" strokeWidth="1.5"/>
-                <path d="M7 14.5V12" stroke="rgb(21, 97, 109)" strokeWidth="1.5" strokeLinecap="round"/>
-                <path d="M15 14.5V12" stroke="rgb(21, 97, 109)" strokeWidth="1.5" strokeLinecap="round"/>
-                <path d="M19 14.5V12" stroke="rgb(21, 97, 109)" strokeWidth="1.5" strokeLinecap="round"/>
-                <path d="M11 14.5V12" stroke="rgb(21, 97, 109)" strokeWidth="1.5" strokeLinecap="round"/>
-              </svg>
-              <h3 className="text-lg font-semibold text-gray-800 ml-2 max-w-0 overflow-hidden whitespace-nowrap group-hover:max-w-xs transition-all duration-300 ease-in-out">Faturamento</h3>
-            </div>
+          <div className="flex items-center mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" className="mr-2">
+              <path d="M16 22C11.5817 22 8 18.4183 8 14C8 9.58172 11.5817 6 16 6C20.4183 6 24 9.58172 24 14C24 18.4183 20.4183 22 16 22Z" stroke="rgb(21, 97, 109)" strokeWidth="1.5"/>
+              <path d="M8 22C3.58172 22 0 18.4183 0 14C0 9.58172 3.58172 6 8 6C12.4183 6 16 9.58172 16 14C16 18.4183 12.4183 22 8 22Z" stroke="rgb(21, 97, 109)" strokeWidth="1.5"/>
+              <path d="M7 14.5V12" stroke="rgb(21, 97, 109)" strokeWidth="1.5" strokeLinecap="round"/>
+              <path d="M15 14.5V12" stroke="rgb(21, 97, 109)" strokeWidth="1.5" strokeLinecap="round"/>
+              <path d="M19 14.5V12" stroke="rgb(21, 97, 109)" strokeWidth="1.5" strokeLinecap="round"/>
+              <path d="M11 14.5V12" stroke="rgb(21, 97, 109)" strokeWidth="1.5" strokeLinecap="round"/>
+            </svg>
+            <h3 className="text-lg font-semibold text-gray-800">Faturamento</h3>
           </div>
           
           {/* Gráfico de linhas */}
