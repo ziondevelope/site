@@ -1435,13 +1435,13 @@ export default function CRM() {
           <div className="bg-white rounded-md">
             <div className="overflow-x-auto">
               <Table>
-                <TableHeader className="bg-[#001623]">
-                  <TableRow>
-                    <TableHead className="w-[300px] text-white">Nome / Contato</TableHead>
-                    <TableHead className="text-white">Interesse</TableHead>
-                    <TableHead className="text-white">WhatsApp</TableHead>
-                    <TableHead className="text-white">Estágio</TableHead>
-                    <TableHead className="text-white">Tarefas</TableHead>
+                <TableHeader className="bg-[#001623] hover:bg-[#001623]">
+                  <TableRow className="hover:bg-[#001623]">
+                    <TableHead className="w-[300px] text-white hover:bg-[#001623] hover:text-white">Nome / Contato</TableHead>
+                    <TableHead className="text-white hover:bg-[#001623] hover:text-white">Interesse</TableHead>
+                    <TableHead className="text-white hover:bg-[#001623] hover:text-white">WhatsApp</TableHead>
+                    <TableHead className="text-white hover:bg-[#001623] hover:text-white">Estágio</TableHead>
+                    <TableHead className="text-white hover:bg-[#001623] hover:text-white">Tarefas</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
