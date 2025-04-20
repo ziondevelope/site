@@ -270,43 +270,6 @@ export default function Dashboard() {
               </>
             )}
           </div>
-          
-          {/* Raio-X */}
-          <div className="mt-8">
-            <div className="flex items-center mb-3">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" className="mr-2">
-                <path d="M9 12H15" stroke="rgb(21, 97, 109)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M9 16H15" stroke="rgb(21, 97, 109)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M9 8H15" stroke="rgb(21, 97, 109)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M5.5 8L4.5 8" stroke="rgb(21, 97, 109)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M5.5 12L4.5 12" stroke="rgb(21, 97, 109)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M5.5 16L4.5 16" stroke="rgb(21, 97, 109)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M19.5 8L18.5 8" stroke="rgb(21, 97, 109)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M19.5 12L18.5 12" stroke="rgb(21, 97, 109)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M19.5 16L18.5 16" stroke="rgb(21, 97, 109)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M3 20V4C3 3.44772 3.44772 3 4 3H20C20.5523 3 21 3.44772 21 4V20C21 20.5523 20.5523 21 20 21H4C3.44772 21 3 20.5523 3 20Z" stroke="rgb(21, 97, 109)" strokeWidth="1.5"/>
-              </svg>
-              <h4 className="text-lg font-semibold text-gray-800">Raio-X</h4>
-            </div>
-            <div className="flex text-sm mb-4">
-              <div className="flex-1 text-center py-1 border-b-2 border-blue-500 font-medium text-blue-500">MÊS</div>
-              <div className="flex-1 text-center py-1 text-gray-500">ANO</div>
-              <div className="flex-1 text-center py-1 text-gray-500">GERAL</div>
-            </div>
-            
-            {/* Informações do sistema */}
-            <div className="mt-4 flex items-center">
-              <div className="flex-1">
-                <div className="text-5xl font-bold text-purple-600">23</div>
-                <div className="flex items-center mt-2">
-                  <div className="bg-green-500 text-white text-xs px-1 rounded flex items-center mr-2">
-                    <i className="fas fa-arrow-up mr-1"></i>3
-                  </div>
-                  <div className="text-gray-500 text-xs">10 esperados</div>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
         
         {/* Painel de Faturamento */}
