@@ -127,11 +127,10 @@ export default function Dashboard() {
                         task.status === 'confirmed' ? 'bg-blue-50 text-blue-700' :
                         'bg-gray-50 text-gray-700'}`}
                     >
-                      {task.status === 'pending' ? 'Pendente' : 
-                       task.status === 'completed' ? 'Concluída' :
+                      {task.status === 'completed' ? 'Concluída' :
                        task.status === 'cancelled' ? 'Cancelada' :
                        task.status === 'confirmed' ? 'Confirmada' :
-                       task.status}
+                       task.status !== 'pending' ? task.status : ''}
                     </div>
                   </div>
                   <div className="mt-2 flex items-center justify-between">
@@ -171,24 +170,27 @@ export default function Dashboard() {
                     <button 
                       onClick={(e) => {
                         e.stopPropagation();
-                        fetch(`/api/tasks/${task.id}`, {
+                        fetch(`/api/tasks/${task.id}/complete`, {
                           method: 'PATCH',
                           headers: { 'Content-Type': 'application/json' },
                           body: JSON.stringify({ 
-                            status: 'completed', 
-                            completed: true 
+                            status: 'completed'
                           })
                         })
                         .then(response => response.json())
                         .then(() => {
                           // Recarregar os dados após marcar como concluído
-                          refetch();
+                          setTimeout(() => {
+                            window.location.reload();
+                          }, 300);
                         })
                         .catch(error => console.error('Erro ao atualizar tarefa:', error));
                       }}
-                      className="text-xs bg-green-50 hover:bg-green-100 text-green-700 font-medium rounded-full px-2 py-1 transition-colors"
+                      className="text-xs bg-green-50 hover:bg-green-100 text-green-700 font-medium rounded-full w-7 h-7 flex items-center justify-center transition-colors"
                     >
-                      Concluir
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
                     </button>
                   </div>
                 </div>

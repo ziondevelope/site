@@ -522,17 +522,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "Status deve ser 'completed'" });
       }
       
-      // Atualizamos tanto o status quanto o campo completed
-      const updatedTask = await storageInstance.updateTask(taskId, { 
-        status, 
-        completed: true 
-      });
+      console.log("Marcando tarefa como concluída:", taskId);
       
-      if (!updatedTask) {
+      // Atualizar diretamente no Firebase para garantir a atualização
+      const db = getFirestore();
+      const taskRef = doc(db, 'tasks', taskId.toString());
+      
+      // Verificar se a tarefa existe
+      const taskDoc = await getDoc(taskRef);
+      if (!taskDoc.exists()) {
         return res.status(404).json({ message: "Tarefa não encontrada" });
       }
       
-      res.json(updatedTask);
+      // Atualizar os campos da tarefa
+      await updateDoc(taskRef, { 
+        status: 'completed',
+        completed: true,
+        updatedAt: new Date().toISOString()
+      });
+      
+      // Buscar a tarefa atualizada para responder
+      const updatedTaskDoc = await getDoc(taskRef);
+      if (!updatedTaskDoc.exists()) {
+        return res.status(404).json({ message: "Erro ao recuperar tarefa atualizada" });
+      }
+      
+      res.json(updatedTaskDoc.data());
     } catch (error) {
       console.error("Erro ao marcar tarefa como concluída:", error);
       res.status(500).json({ message: "Erro ao atualizar tarefa" });
