@@ -1,5 +1,5 @@
-import { ReactNode, useState, useEffect } from "react";
-import Sidebar, { useSidebar } from "./Sidebar";
+import { ReactNode } from "react";
+import Sidebar from "./Sidebar";
 import MobileMenu from "./MobileMenu";
 import { Button } from "@/components/ui/button";
 import { useLocation } from "wouter";
@@ -11,7 +11,6 @@ interface AppLayoutProps {
 
 export default function AppLayout({ children }: AppLayoutProps) {
   const [location] = useLocation();
-  const [isSidebarHovered, setIsSidebarHovered] = useState(false);
   
   const getBreadcrumbs = () => {
     const path = location.split('/').filter(Boolean);
@@ -37,26 +36,6 @@ export default function AppLayout({ children }: AppLayoutProps) {
     
     return breadcrumbs;
   };
-  
-  // Detectar quando o sidebar é expandido/retraído
-  useEffect(() => {
-    const handleSidebarChange = (e: MouseEvent) => {
-      // Verificamos se o evento ocorreu dentro do sidebar
-      const target = e.target as HTMLElement;
-      const sidebar = document.querySelector('aside');
-      
-      if (sidebar && sidebar.contains(target)) {
-        setIsSidebarHovered(true);
-      } else {
-        setIsSidebarHovered(false);
-      }
-    };
-
-    window.addEventListener('mousemove', handleSidebarChange);
-    return () => {
-      window.removeEventListener('mousemove', handleSidebarChange);
-    };
-  }, []);
   
   const breadcrumbs = getBreadcrumbs();
 
