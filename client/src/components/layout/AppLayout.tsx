@@ -1,5 +1,5 @@
 import { ReactNode, useState, useEffect } from "react";
-import Sidebar from "./Sidebar";
+import Sidebar, { useSidebar } from "./Sidebar";
 import MobileMenu from "./MobileMenu";
 import { Button } from "@/components/ui/button";
 import { useLocation } from "wouter";
