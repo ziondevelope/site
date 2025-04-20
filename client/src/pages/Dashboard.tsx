@@ -159,17 +159,6 @@ export default function Dashboard() {
         <div className="bg-white p-6 rounded-lg shadow-sm">
           <h3 className="text-lg font-semibold text-gray-800 mb-2">Funil de Vendas</h3>
           
-          <div className="mt-2 mb-4">
-            <div className="flex justify-between">
-              <div className="text-sm text-gray-600">Valor total do funil</div>
-              <div className="text-sm text-teal-600">Negócios ativos</div>
-            </div>
-            <div className="flex justify-between">
-              <div className="text-xl font-bold text-gray-800">R$ 6.423.010,00</div>
-              <div className="text-xl font-bold text-gray-800">433</div>
-            </div>
-          </div>
-          
           {/* Funil de Leads - Usando os estágios configurados */}
           <div className="mt-6 mb-8">
             {stagesLoading ? (
