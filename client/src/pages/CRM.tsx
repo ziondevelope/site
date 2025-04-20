@@ -2377,8 +2377,8 @@ export default function CRM() {
                     <div className="p-5 border border-[#f5f5f5] rounded-[10px] mb-8" style={{ background: '#FFFFFF' }}>
                       
                       <Tabs 
-                        defaultValue="nota" 
-                        value={activeTab[lead.id] || "nota"}
+                        defaultValue="tarefas" 
+                        value={activeTab[lead.id] || "tarefas"}
                         onValueChange={(value) => handleTabChange(lead.id, value)}
                         className="w-full"
                       >
