@@ -77,10 +77,10 @@ export default function Dashboard() {
     <div className="space-y-6" style={{ fontFamily: 'Montserrat, sans-serif' }}>
       {/* Grid principal de painéis */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Painel de Tarefas Agendadas */}
+        {/* Painel de Tarefas Pendentes */}
         <div className="bg-white p-6 rounded-lg shadow-sm">
           <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-semibold text-gray-800">Tarefas Pendentes</h3>
+            <h3 className="text-lg font-semibold text-gray-800">Tarefas Pendentes (2 dias)</h3>
             <button className="text-blue-600 hover:text-blue-800 text-sm font-medium">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="inline-block mr-1"><path d="M12 5v14M5 12h14"/></svg>
               Nova Tarefa
@@ -97,7 +97,16 @@ export default function Dashboard() {
             </div>
           ) : (
             <div className="space-y-3 overflow-y-auto max-h-[350px] pr-1">
-              {tasks.filter(task => task.status === 'pending').map((task) => (
+              {tasks
+                .filter(task => task.status === 'pending')
+                .filter(task => {
+                  const today = new Date();
+                  const taskDate = new Date(task.date);
+                  const diffTime = taskDate.getTime() - today.getTime();
+                  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                  return diffDays <= 2 && diffDays >= -1; // Mostrar tarefas com vencimento em 2 dias ou que venceram ontem
+                })
+                .map((task) => (
                 <div key={task.id} className="p-3 border border-gray-100 rounded-lg hover:bg-gray-50 cursor-pointer">
                   <div className="flex justify-between items-start">
                     <div>
@@ -159,6 +168,28 @@ export default function Dashboard() {
                         minute: '2-digit'
                       })}
                     </div>
+                    <button 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        fetch(`/api/tasks/${task.id}`, {
+                          method: 'PATCH',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({ 
+                            status: 'completed', 
+                            completed: true 
+                          })
+                        })
+                        .then(response => response.json())
+                        .then(() => {
+                          // Recarregar os dados após marcar como concluído
+                          refetch();
+                        })
+                        .catch(error => console.error('Erro ao atualizar tarefa:', error));
+                      }}
+                      className="text-xs bg-green-50 hover:bg-green-100 text-green-700 font-medium rounded-full px-2 py-1 transition-colors"
+                    >
+                      Concluir
+                    </button>
                   </div>
                 </div>
               ))}
