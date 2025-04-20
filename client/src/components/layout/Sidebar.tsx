@@ -53,18 +53,18 @@ export default function Sidebar() {
     <SidebarContext.Provider value={{ expanded, setExpanded, toggleExpanded }}>
       <aside 
         className={cn(
-          "bg-[#001524] text-white hidden md:block h-screen overflow-y-auto transition-all duration-300 ease-in-out",
+          "bg-[#001524] text-white hidden md:block h-screen overflow-y-auto transition-all duration-500 ease-in-out",
           expanded || hovered ? "w-[260px]" : "w-[70px]"
         )}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
       >
         <div className={cn(
-          "p-4 flex items-center transition-all duration-300",
+          "p-4 flex items-center transition-all duration-500 ease-in-out",
           expanded || hovered ? "justify-between" : "justify-end"
         )}>
           <div className={cn(
-            "font-bold text-white transition-all duration-300",
+            "font-bold text-white transition-all duration-500 ease-in-out",
             expanded || hovered ? "text-2xl mr-auto" : "text-xl"
           )}>
             {expanded || hovered ? "arbo" : "a"}
@@ -73,7 +73,7 @@ export default function Sidebar() {
           {(expanded || hovered) && (
             <button 
               onClick={toggleExpanded}
-              className="text-white opacity-60 hover:opacity-100 flex items-center justify-center transition-all duration-200"
+              className="text-white opacity-60 hover:opacity-100 flex items-center justify-center transition-all duration-300 ease-in-out"
             >
               <i className={`ri-${expanded ? 'arrow-left-s-line' : 'arrow-right-s-line'} text-lg`}></i>
             </button>
@@ -89,37 +89,40 @@ export default function Sidebar() {
               <li key={item.id} className="mb-1">
                 <Link href={item.href}>
                   <div className={cn(
-                    "flex items-center px-4 py-2 text-sm rounded transition cursor-pointer",
+                    "flex items-center px-4 py-2 text-sm rounded transition-all duration-500 ease-in-out cursor-pointer",
                     expanded || hovered ? "justify-start space-x-3" : "justify-center",
                     location === item.href
                       ? "bg-[#15616D] text-white"
                       : "text-white text-opacity-80 hover:bg-[#15616D] hover:text-white"
                   )}>
-                    <i className={cn(item.icon, "text-lg")}></i>
-                    {(expanded || hovered) && (
-                      <>
-                        <span className="transition-all duration-300 whitespace-nowrap opacity-100">{item.label}</span>
-                        {item.children && (
-                          <i className="ri-arrow-right-s-line ml-auto"></i>
-                        )}
-                      </>
-                    )}
+                    <i className={cn(item.icon, "text-lg transition-transform duration-500 ease-in-out", expanded || hovered ? "" : "transform scale-110")}></i>
+                    <div 
+                      className={cn(
+                        "overflow-hidden transition-all duration-500 ease-in-out flex-1 flex",
+                        expanded || hovered ? "max-w-[200px] opacity-100" : "max-w-0 opacity-0"
+                      )}
+                    >
+                      <span className="whitespace-nowrap ml-3">{item.label}</span>
+                      {item.children && (
+                        <i className="ri-arrow-right-s-line ml-auto"></i>
+                      )}
+                    </div>
                   </div>
                 </Link>
                 
                 {(expanded || hovered) && item.children && (
-                  <ul className="ml-8 mt-1 space-y-1">
+                  <ul className="ml-8 mt-1 space-y-1 overflow-hidden animate-fadeIn">
                     {item.children.map((child) => (
-                      <li key={child.id}>
+                      <li key={child.id} className="animate-slideRight">
                         <Link href={child.href}>
                           <div className={cn(
-                            "flex items-center space-x-3 px-4 py-2 text-sm rounded transition cursor-pointer",
+                            "flex items-center space-x-3 px-4 py-2 text-sm rounded transition-all duration-300 ease-in-out cursor-pointer",
                             location === child.href
                               ? "bg-[#15616D] text-white"
                               : "text-white text-opacity-70 hover:bg-[#15616D] hover:text-white"
                           )}>
                             <i className={cn(child.icon, "text-lg")}></i>
-                            <span>{child.label}</span>
+                            <span className="transition-all duration-300 ease-in-out">{child.label}</span>
                           </div>
                         </Link>
                       </li>
