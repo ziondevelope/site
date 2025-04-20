@@ -62,6 +62,7 @@ export interface IStorage {
   getTask(id: number): Promise<Task | undefined>;
   getAllTasks(): Promise<Task[]>;
   getScheduledTasks(): Promise<Task[]>;
+  getTasksByLeadId(leadId: number): Promise<Task[]>;
   createTask(task: InsertTask): Promise<Task>;
   updateTask(id: number, taskData: Partial<InsertTask>): Promise<Task | undefined>;
   deleteTask(id: number): Promise<boolean>;
@@ -575,6 +576,24 @@ export class FirebaseStorage implements IStorage {
       return tasksSnapshot.docs.map(doc => doc.data() as Task);
     } catch (error) {
       console.error('Error fetching scheduled tasks:', error);
+      return [];
+    }
+  }
+  
+  async getTasksByLeadId(leadId: number): Promise<Task[]> {
+    try {
+      // Buscar tarefas associadas a um lead específico
+      const tasksRef = collection(db, 'tasks');
+      const q = query(
+        tasksRef,
+        where('leadId', '==', leadId),
+        orderBy('date', 'asc')
+      );
+      const tasksSnapshot = await getDocs(q);
+      
+      return tasksSnapshot.docs.map(doc => doc.data() as Task);
+    } catch (error) {
+      console.error(`Error fetching tasks for lead ${leadId}:`, error);
       return [];
     }
   }

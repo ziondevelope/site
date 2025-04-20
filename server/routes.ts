@@ -388,6 +388,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Obter todas as tarefas ou filtrar por leadId
+  apiRouter.get("/tasks", async (req, res) => {
+    try {
+      const leadId = req.query.leadId ? parseInt(req.query.leadId as string) : null;
+      
+      // Se leadId foi fornecido, filtrar tarefas por lead
+      if (leadId) {
+        // Implementar método para buscar tarefas por lead (será adicionado ao storage)
+        const tasks = await storageInstance.getTasksByLeadId(leadId);
+        return res.json(tasks);
+      }
+      
+      // Se não, retornar todas as tarefas
+      const tasks = await storageInstance.getAllTasks();
+      res.json(tasks);
+    } catch (error) {
+      console.error("Erro ao buscar tarefas:", error);
+      res.status(500).json({ message: "Erro ao buscar tarefas" });
+    }
+  });
+  
   apiRouter.post("/tasks", async (req, res) => {
     try {
       // Ainda usando o schema Zod para validação
