@@ -109,6 +109,9 @@ export default function CRM() {
     time: string
   } | null>(null);
   
+  // Estado para rastrear quais leads têm tarefas agendadas
+  const [leadsWithTasks, setLeadsWithTasks] = useState<{[leadId: number]: boolean}>({});
+  
   // As funções de formatação não são mais necessárias, o ReactQuill já implementa formatação direta
   
   // Mutation para atualizar dados do lead
@@ -768,6 +771,17 @@ export default function CRM() {
     try {
       // Buscar tarefas que pertencem a este lead
       const tasks = await apiRequest(`/api/tasks?leadId=${leadId}`);
+      
+      // Verificar se existem tarefas pendentes (não concluídas)
+      const hasPendingTasks = tasks.some((task: any) => 
+        task.completed !== true && task.status !== "completed"
+      );
+      
+      // Atualizar o estado de leads com tarefas
+      setLeadsWithTasks(prev => ({
+        ...prev,
+        [leadId]: hasPendingTasks
+      }));
       
       // Atualizar o estado com as tarefas do banco de dados
       setTaskList(prev => ({
