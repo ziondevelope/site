@@ -757,10 +757,10 @@ export default function CRM() {
         (lead.message && lead.message.toLowerCase().includes(searchTerm.toLowerCase()));
         
       // Filtro por origem
-      const matchesSource = !sourceFilter || lead.source === sourceFilter;
+      const matchesSource = !sourceFilter || sourceFilter === "all" || lead.source === sourceFilter;
       
       // Filtro por tipo de interesse
-      const matchesInterestType = !interestTypeFilter || lead.interestType === interestTypeFilter;
+      const matchesInterestType = !interestTypeFilter || interestTypeFilter === "all" || lead.interestType === interestTypeFilter;
       
       return matchesFunnelStage && matchesSearch && matchesSource && matchesInterestType;
     });
