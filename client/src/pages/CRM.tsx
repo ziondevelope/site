@@ -2385,7 +2385,7 @@ export default function CRM() {
                         <TabsList className="w-full mb-4 bg-transparent border-b border-[#f0f0f0] flex justify-start">
                           <TabsTrigger 
                             value="tarefas"
-                            className="px-6 py-2 rounded-none border-b-2 border-transparent data-[state=active]:border-[#3565E7] data-[state=active]:bg-transparent text-sm text-left"
+                            className="px-6 py-2 rounded-none border-b-2 border-transparent data-[state=active]:border-[#f7f7f700] data-[state=active]:bg-transparent text-sm text-left"
                             style={{ 
                               fontFamily: 'Montserrat, sans-serif',
                               fontWeight: 500,
@@ -2397,7 +2397,7 @@ export default function CRM() {
                           </TabsTrigger>
                           <TabsTrigger 
                             value="nota" 
-                            className="px-6 py-2 rounded-none border-b-2 border-transparent data-[state=active]:border-[#3565E7] data-[state=active]:bg-transparent text-sm text-left"
+                            className="px-6 py-2 rounded-none border-b-2 border-transparent data-[state=active]:border-[#f7f7f700] data-[state=active]:bg-transparent text-sm text-left"
                             style={{ 
                               fontFamily: 'Montserrat, sans-serif',
                               fontWeight: 500,
