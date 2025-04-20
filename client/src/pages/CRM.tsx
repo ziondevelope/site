@@ -1416,6 +1416,15 @@ export default function CRM() {
           </div>
         </div>
 
+        <LeadFilters 
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          sourceFilter={sourceFilter}
+          setSourceFilter={setSourceFilter}
+          interestTypeFilter={interestTypeFilter}
+          setInterestTypeFilter={setInterestTypeFilter}
+        />
+
         {isLoading ? (
           <div className="flex justify-center py-8">
             <div className="animate-spin h-8 w-8 border-2 border-blue-600 border-t-transparent rounded-full"></div>
@@ -1434,7 +1443,7 @@ export default function CRM() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {[...newLeads, ...contactedLeads, ...visitLeads, ...proposalLeads]
+                  {filteredLeads
                     .sort((a, b) => {
                       // Ordenar por data (mais recente primeiro)
                       const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
