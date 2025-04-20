@@ -109,7 +109,7 @@ export default function Dashboard() {
                          task.type === 'email' ? 'E-mail' :
                          task.type}
                       </div>
-                      <div className="text-sm text-gray-500 mt-1">{task.description}</div>
+                      <div className="text-xs text-gray-500 mt-1">{task.description}</div>
                     </div>
                     <div className={`text-xs font-medium rounded-full px-2.5 py-1 inline-flex items-center justify-center
                       ${task.status === 'pending' ? 'bg-yellow-50 text-yellow-700' : 
