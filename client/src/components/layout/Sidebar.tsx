@@ -99,7 +99,7 @@ export default function Sidebar() {
           letterSpacing: "0.03em",
           transitionTimingFunction: "cubic-bezier(0.34, 1.25, 0.64, 1)"
         }}>
-          {hovered ? "ZIMOB" : "Z"}
+          {hovered ? "zimob" : "z"}
         </div>
       </div>
       
