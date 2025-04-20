@@ -447,11 +447,11 @@ export default function CRM() {
       body: JSON.stringify({ status: 'completed' })
     })
     .then((updatedTask) => {
-      // Atualizar a lista de tarefas na interface
+      // Atualizar a lista de tarefas na interface imediatamente
       setTaskList(prev => {
         const leadTasks = prev[leadId] || [];
         const updatedTasks = leadTasks.map(task => 
-          task.id === taskId ? { ...task, completed: true } : task
+          task.id === taskId ? { ...task, completed: true, status: 'completed' } : task
         );
         
         return {
@@ -483,6 +483,10 @@ export default function CRM() {
         .catch(error => {
           console.error("Erro ao salvar nota de conclusão de tarefa:", error);
         });
+        
+        // Recarregar os dados do servidor após a conclusão da tarefa
+        // Isso garante que a tarefa não reaparecerá após recarregar a página
+        fetchLeadTasks(leadId);
         
         // Atualizar a lista de tarefas agendadas
         queryClient.invalidateQueries({ queryKey: ['/api/tasks/scheduled'] });
@@ -672,13 +676,18 @@ export default function CRM() {
             new Date(task.date).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) :
             "";
           
+          // Verificar se a tarefa está concluída (campo completed ou status "completed")
+          const isCompleted = 
+            task.completed === true || // Se o campo completed estiver explicitamente como true
+            task.status === "completed"; // OU se o status for "completed"
+          
           return {
             id: task.id,
             type: task.type || "ligacao",
             description: task.description || "",
             date: dateObj,
             time: task.time || timeStr,
-            completed: task.completed || false
+            completed: isCompleted
           };
         })
       }));

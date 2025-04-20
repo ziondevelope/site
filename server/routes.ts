@@ -482,7 +482,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "Status deve ser 'completed'" });
       }
       
-      const updatedTask = await storageInstance.updateTask(taskId, { status });
+      // Atualizamos tanto o status quanto o campo completed
+      const updatedTask = await storageInstance.updateTask(taskId, { 
+        status, 
+        completed: true 
+      });
       
       if (!updatedTask) {
         return res.status(404).json({ message: "Tarefa não encontrada" });
