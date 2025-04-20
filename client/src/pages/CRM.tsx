@@ -1435,13 +1435,13 @@ export default function CRM() {
           <div className="bg-white rounded-md">
             <div className="overflow-x-auto">
               <Table>
-                <TableHeader>
+                <TableHeader className="bg-[#001623]">
                   <TableRow>
-                    <TableHead className="w-[300px]">Nome / Contato</TableHead>
-                    <TableHead>Interesse</TableHead>
-                    <TableHead>WhatsApp</TableHead>
-                    <TableHead>Estágio</TableHead>
-                    <TableHead>Tarefas</TableHead>
+                    <TableHead className="w-[300px] text-white">Nome / Contato</TableHead>
+                    <TableHead className="text-white">Interesse</TableHead>
+                    <TableHead className="text-white">WhatsApp</TableHead>
+                    <TableHead className="text-white">Estágio</TableHead>
+                    <TableHead className="text-white">Tarefas</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
