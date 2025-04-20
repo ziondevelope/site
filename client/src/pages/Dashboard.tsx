@@ -80,7 +80,7 @@ export default function Dashboard() {
         {/* Painel de Tarefas Agendadas */}
         <div className="bg-white p-6 rounded-lg shadow-sm">
           <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-semibold text-gray-800">Tarefas Agendadas</h3>
+            <h3 className="text-lg font-semibold text-gray-800">Tarefas Pendentes</h3>
             <button className="text-blue-600 hover:text-blue-800 text-sm font-medium">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="inline-block mr-1"><path d="M12 5v14M5 12h14"/></svg>
               Nova Tarefa
@@ -91,13 +91,13 @@ export default function Dashboard() {
             <div className="py-6 text-center">
               <p className="text-gray-500">Carregando tarefas...</p>
             </div>
-          ) : !Array.isArray(tasks) || tasks.length === 0 ? (
+          ) : !Array.isArray(tasks) || tasks.filter(task => task.status === 'pending').length === 0 ? (
             <div className="py-6 text-center">
-              <p className="text-gray-500">Nenhuma tarefa agendada.</p>
+              <p className="text-gray-500">Nenhuma tarefa pendente.</p>
             </div>
           ) : (
             <div className="space-y-3 overflow-y-auto max-h-[350px] pr-1">
-              {tasks.map((task) => (
+              {tasks.filter(task => task.status === 'pending').map((task) => (
                 <div key={task.id} className="p-3 border border-gray-100 rounded-lg hover:bg-gray-50 cursor-pointer">
                   <div className="flex justify-between items-start">
                     <div>
