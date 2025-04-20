@@ -80,7 +80,10 @@ export default function Dashboard() {
         {/* Painel de Atividades */}
         <div className="bg-white p-6 rounded-lg shadow-sm">
           <div className="flex items-center mb-4">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgb(21, 97, 109)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2"><path d="M20 6 9 17l-5-5"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" className="mr-2">
+              <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="rgb(21, 97, 109)" strokeWidth="1.5"/>
+              <path d="M8 12L10.5 14.5L16 9" stroke="rgb(21, 97, 109)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
             <h3 className="text-lg font-semibold text-gray-800">Atividades</h3>
           </div>
           
