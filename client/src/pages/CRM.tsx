@@ -748,18 +748,19 @@ export default function CRM() {
         (!selectedFunnelId || lead.funnelId === selectedFunnelId) &&
         (!selectedStageId || lead.stageId === selectedStageId);
       
-      // Filtro por termo de busca (nome, email, telefone)
-      const matchesSearch = searchTerm === "" || 
-        (lead.name && lead.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      // Filtro por termo de busca (nome, email, telefone, mensagem)
+      const matchesSearch = !searchTerm || 
+        lead.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
         (lead.email && lead.email.toLowerCase().includes(searchTerm.toLowerCase())) ||
         (lead.phone && lead.phone.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        (lead.whatsapp && lead.whatsapp.toLowerCase().includes(searchTerm.toLowerCase()));
+        ((lead as any).whatsapp && (lead as any).whatsapp.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (lead.message && lead.message.toLowerCase().includes(searchTerm.toLowerCase()));
         
       // Filtro por origem
-      const matchesSource = sourceFilter === "" || lead.source === sourceFilter;
+      const matchesSource = !sourceFilter || lead.source === sourceFilter;
       
       // Filtro por tipo de interesse
-      const matchesInterestType = interestTypeFilter === "" || lead.interestType === interestTypeFilter;
+      const matchesInterestType = !interestTypeFilter || lead.interestType === interestTypeFilter;
       
       return matchesFunnelStage && matchesSearch && matchesSource && matchesInterestType;
     });

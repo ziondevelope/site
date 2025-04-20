@@ -1,6 +1,8 @@
-import { Search, Filter, Home, Tag } from "lucide-react";
+import React from "react";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Search, Filter } from "lucide-react";
 
 interface LeadFiltersProps {
   searchTerm: string;
@@ -20,54 +22,61 @@ export function LeadFilters({
   setInterestTypeFilter 
 }: LeadFiltersProps) {
   return (
-    <div className="w-full p-4 bg-gray-50 border border-gray-100 rounded-[10px] mb-6" style={{ fontFamily: 'Montserrat, sans-serif' }}>
-      <div className="flex flex-col md:flex-row gap-4">
-        <div className="flex-1">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-            <Input
-              placeholder="Pesquisar por nome, email ou telefone..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-9 bg-white border-gray-200 h-10"
-              style={{ fontSize: '14px' }}
-            />
+    <div className="mb-6 bg-[#F9FAFB] rounded-lg p-4 border border-gray-100">
+      <div className="flex items-center gap-4 flex-wrap">
+        <div className="relative flex-1 min-w-[250px]">
+          <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+            <Search size={16} />
           </div>
+          <Input
+            placeholder="Buscar por nome, email, telefone..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-10 h-10"
+          />
         </div>
         
-        <div className="w-full md:w-[220px]">
-          <div className="relative">
-            <Tag className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-            <Select value={sourceFilter} onValueChange={setSourceFilter}>
-              <SelectTrigger className="pl-9 bg-white border-gray-200 h-10" style={{ fontSize: '14px' }}>
-                <SelectValue placeholder="Filtrar por origem" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="">Todas as origens</SelectItem>
-                <SelectItem value="whatsapp">WhatsApp</SelectItem>
-                <SelectItem value="email">E-mail</SelectItem>
-                <SelectItem value="website">Website</SelectItem>
-                <SelectItem value="manual">Manual</SelectItem>
-                <SelectItem value="reference">Indicação</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+        <div className="w-full md:w-auto min-w-[180px]">
+          <Label htmlFor="sourceFilter" className="text-xs text-gray-500 mb-1 ml-1 block">
+            Filtrar por fonte
+          </Label>
+          <Select 
+            value={sourceFilter} 
+            onValueChange={setSourceFilter}
+          >
+            <SelectTrigger id="sourceFilter" className="h-10">
+              <SelectValue placeholder="Todas as fontes" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Todas as fontes</SelectItem>
+              <SelectItem value="manual">Cadastro manual</SelectItem>
+              <SelectItem value="website">Website</SelectItem>
+              <SelectItem value="whatsapp">WhatsApp</SelectItem>
+              <SelectItem value="instagram">Instagram</SelectItem>
+              <SelectItem value="facebook">Facebook</SelectItem>
+              <SelectItem value="indicacao">Indicação</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
         
-        <div className="w-full md:w-[220px]">
-          <div className="relative">
-            <Home className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-            <Select value={interestTypeFilter} onValueChange={setInterestTypeFilter}>
-              <SelectTrigger className="pl-9 bg-white border-gray-200 h-10" style={{ fontSize: '14px' }}>
-                <SelectValue placeholder="Tipo de interesse" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="">Todos os tipos</SelectItem>
-                <SelectItem value="rent">Aluguel</SelectItem>
-                <SelectItem value="purchase">Compra</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+        <div className="w-full md:w-auto min-w-[180px]">
+          <Label htmlFor="interestFilter" className="text-xs text-gray-500 mb-1 ml-1 block">
+            Filtrar por interesse
+          </Label>
+          <Select 
+            value={interestTypeFilter} 
+            onValueChange={setInterestTypeFilter}
+          >
+            <SelectTrigger id="interestFilter" className="h-10">
+              <SelectValue placeholder="Todos os interesses" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Todos os interesses</SelectItem>
+              <SelectItem value="purchase">Compra</SelectItem>
+              <SelectItem value="rent">Aluguel</SelectItem>
+              <SelectItem value="sale">Venda</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
       </div>
     </div>
