@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import { Pencil, Check, X, User, Mail, Phone, Store, Home, MapPin, DollarSign, Tag, Filter, Trophy, MessageSquare, FileText, Bold, Italic, Underline, AlignLeft, AlignCenter, AlignRight, List, CalendarPlus, CheckCircle, FileEdit, ArrowDown, ArrowUp } from "lucide-react";
+import { LeadFilters } from "@/components/crm/LeadFilters";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { FaWhatsapp } from "react-icons/fa";
@@ -737,23 +738,32 @@ export default function CRM() {
   const visitLeads = allLeads?.filter(lead => lead.status === 'visit') || [];
   const proposalLeads = allLeads?.filter(lead => lead.status === 'proposal') || [];
   
-  // Filter leads by funnel and stage if selected
+  // Filter leads by funnel, stage, search term, and other filters
   const filteredLeads = useMemo(() => {
     if (!allLeads) return [];
     
-    if (selectedFunnelId && selectedStageId) {
-      return allLeads.filter(lead => 
-        lead.funnelId === selectedFunnelId && 
-        lead.stageId === selectedStageId
-      );
-    }
-    
-    if (selectedFunnelId) {
-      return allLeads.filter(lead => lead.funnelId === selectedFunnelId);
-    }
-    
-    return allLeads;
-  }, [allLeads, selectedFunnelId, selectedStageId]);
+    return allLeads.filter(lead => {
+      // Filtro por funil e estágio
+      const matchesFunnelStage = 
+        (!selectedFunnelId || lead.funnelId === selectedFunnelId) &&
+        (!selectedStageId || lead.stageId === selectedStageId);
+      
+      // Filtro por termo de busca (nome, email, telefone)
+      const matchesSearch = searchTerm === "" || 
+        (lead.name && lead.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (lead.email && lead.email.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (lead.phone && lead.phone.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (lead.whatsapp && lead.whatsapp.toLowerCase().includes(searchTerm.toLowerCase()));
+        
+      // Filtro por origem
+      const matchesSource = sourceFilter === "" || lead.source === sourceFilter;
+      
+      // Filtro por tipo de interesse
+      const matchesInterestType = interestTypeFilter === "" || lead.interestType === interestTypeFilter;
+      
+      return matchesFunnelStage && matchesSearch && matchesSource && matchesInterestType;
+    });
+  }, [allLeads, selectedFunnelId, selectedStageId, searchTerm, sourceFilter, interestTypeFilter]);
   
   // Função para carregar notas de um lead específico
   const fetchLeadNotes = async (leadId: number) => {
