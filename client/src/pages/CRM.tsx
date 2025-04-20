@@ -875,10 +875,10 @@ export default function CRM() {
     if (openLeadId !== null && allLeads) {
       const openLead = allLeads.find(lead => lead.id === openLeadId);
       
-      // Definir a aba padrão como "nota" quando abrir o modal
+      // Definir a aba padrão como "tarefas" quando abrir o modal
       setActiveTab(prev => ({
         ...prev,
-        [openLeadId]: "nota"
+        [openLeadId]: "tarefas"
       }));
       
       // Inicializar o formulário de tarefa para o lead
