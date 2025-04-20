@@ -77,23 +77,20 @@ export default function Dashboard() {
     <div className="space-y-6" style={{ fontFamily: 'Montserrat, sans-serif' }}>
       {/* Grid principal de painéis */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Painel de Tarefas Pendentes */}
+        {/* Painel de Atividades */}
         <div className="bg-white p-6 rounded-lg shadow-sm">
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-semibold text-gray-800">Tarefas Pendentes (2 dias)</h3>
-            <button className="text-blue-600 hover:text-blue-800 text-sm font-medium">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="inline-block mr-1"><path d="M12 5v14M5 12h14"/></svg>
-              Nova Tarefa
-            </button>
+          <div className="flex items-center mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgb(21, 97, 109)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2"><path d="M20 6 9 17l-5-5"/></svg>
+            <h3 className="text-lg font-semibold text-gray-800">Atividades</h3>
           </div>
           
           {tasksLoading ? (
             <div className="py-6 text-center">
-              <p className="text-gray-500">Carregando tarefas...</p>
+              <p className="text-gray-500">Carregando atividades...</p>
             </div>
           ) : !Array.isArray(tasks) || tasks.filter(task => task.status === 'pending').length === 0 ? (
             <div className="py-6 text-center">
-              <p className="text-gray-500">Nenhuma tarefa pendente.</p>
+              <p className="text-gray-500">Nenhuma atividade pendente.</p>
             </div>
           ) : (
             <div className="space-y-3 overflow-y-auto max-h-[350px] pr-1">
