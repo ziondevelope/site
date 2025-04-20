@@ -136,18 +136,6 @@ export default function Dashboard() {
                         minute: '2-digit'
                       })}
                     </div>
-                    <div className="flex space-x-2">
-                      {task.leadId && (
-                        <span className="text-xs px-2 py-1 rounded bg-purple-50 text-purple-700">
-                          Lead
-                        </span>
-                      )}
-                      {task.propertyId && (
-                        <span className="text-xs px-2 py-1 rounded bg-green-50 text-green-700">
-                          Imóvel
-                        </span>
-                      )}
-                    </div>
                   </div>
                 </div>
               ))}
