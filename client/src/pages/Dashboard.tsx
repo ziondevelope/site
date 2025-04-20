@@ -101,7 +101,14 @@ export default function Dashboard() {
                 <div key={task.id} className="p-3 border border-gray-100 rounded-lg hover:bg-gray-50 cursor-pointer">
                   <div className="flex justify-between items-start">
                     <div>
-                      <div className="font-medium text-gray-800">{task.title}</div>
+                      <div className="font-medium text-gray-800">
+                        {task.type === 'call' || task.type === 'ligacao' ? 'Ligação' :
+                         task.type === 'visit' || task.type === 'visita' ? 'Visita' :
+                         task.type === 'whatsapp' ? 'WhatsApp' :
+                         task.type === 'meeting' || task.type === 'reuniao' ? 'Reunião' :
+                         task.type === 'email' ? 'E-mail' :
+                         task.type}
+                      </div>
                       <div className="text-sm text-gray-500 mt-1">{task.description}</div>
                     </div>
                     <div className={`text-xs font-medium rounded-full px-2.5 py-1 inline-flex items-center justify-center
@@ -130,14 +137,6 @@ export default function Dashboard() {
                       })}
                     </div>
                     <div className="flex space-x-2">
-                      <span className="text-xs px-2 py-1 rounded bg-blue-50 text-blue-700 capitalize">
-                        {task.type === 'call' || task.type === 'ligacao' ? 'Ligação' :
-                         task.type === 'visit' || task.type === 'visita' ? 'Visita' :
-                         task.type === 'whatsapp' ? 'WhatsApp' :
-                         task.type === 'meeting' || task.type === 'reuniao' ? 'Reunião' :
-                         task.type === 'email' ? 'E-mail' :
-                         task.type}
-                      </span>
                       {task.leadId && (
                         <span className="text-xs px-2 py-1 rounded bg-purple-50 text-purple-700">
                           Lead
