@@ -2,6 +2,9 @@ import { createRoot } from "react-dom/client";
 import App from "./App";
 import "./index.css";
 import { initializeApp } from "firebase/app";
+import "@fontsource/asap/400.css";
+import "@fontsource/asap/700.css";
+import "@fontsource/asap/800.css"; // ExtraBold
 
 // Firebase configuration 
 // Note: In a real implementation, these values should come from environment variables
