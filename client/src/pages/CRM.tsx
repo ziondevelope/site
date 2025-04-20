@@ -926,7 +926,7 @@ export default function CRM() {
               <DialogTrigger asChild>
                 <Button
                   variant="default"
-                  className="bg-blue-600 hover:bg-blue-700"
+                  className="bg-[#12636C] hover:bg-[#12636C]/90 rounded-full px-5"
                   onClick={handleAddClick}
                 >
                   <i className="fas fa-plus mr-2"></i> Novo Lead
@@ -1168,7 +1168,7 @@ export default function CRM() {
                       <Button type="button" variant="outline" onClick={() => setIsAddLeadOpen(false)}>
                         Cancelar
                       </Button>
-                      <Button type="submit" disabled={createLeadMutation.isPending} className="bg-blue-600 hover:bg-blue-700">
+                      <Button type="submit" disabled={createLeadMutation.isPending} className="bg-[#12636C] hover:bg-[#12636C]/90 rounded-full px-5">
                         {createLeadMutation.isPending ? (
                           <>
                             <div className="animate-spin mr-2 h-4 w-4 border-2 border-b-transparent border-white rounded-full"></div>
