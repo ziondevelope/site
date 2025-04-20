@@ -1488,14 +1488,45 @@ export default function CRM() {
                         </TableCell>
                         <TableCell>
                           {leadsWithTasks[lead.id] ? (
-                            <div className="flex items-center">
-                              <span className="inline-flex h-2.5 w-2.5 rounded-full bg-green-600 mr-2"></span>
-                              <span className="text-green-600 font-medium">Sim</span>
-                            </div>
+                            (() => {
+                              // Encontrar todas as tarefas pendentes para este lead
+                              const leadTasks = allTasks?.filter((task: any) => 
+                                task.leadId === lead.id && 
+                                task.completed !== true && 
+                                task.status !== "completed"
+                              );
+                              
+                              // Pegar a primeira tarefa para mostrar o tipo
+                              const leadTask = leadTasks?.[0];
+                              
+                              // Texto para o tipo de tarefa
+                              const taskTypeText = 
+                                leadTask?.type === "ligacao" ? "Ligação" :
+                                leadTask?.type === "email" ? "E-mail" :
+                                leadTask?.type === "whatsapp" ? "WhatsApp" :
+                                "Tarefa";
+                              
+                              return (
+                                <div className="flex items-center">
+                                  <span className="inline-flex h-2.5 w-2.5 rounded-full bg-green-600 mr-2"></span>
+                                  <span className="text-green-600 font-medium">
+                                    {leadTask?.type === "ligacao" && <i className="fas fa-phone-alt text-xs mr-1"></i>}
+                                    {leadTask?.type === "email" && <i className="fas fa-envelope text-xs mr-1"></i>}
+                                    {leadTask?.type === "whatsapp" && <i className="fab fa-whatsapp text-xs mr-1"></i>}
+                                    {taskTypeText}
+                                    {leadTasks && leadTasks.length > 1 ? (
+                                      <span className="ml-1 text-xs bg-green-100 text-green-800 px-1.5 py-0.5 rounded-full">
+                                        +{leadTasks.length - 1}
+                                      </span>
+                                    ) : null}
+                                  </span>
+                                </div>
+                              );
+                            })()
                           ) : (
                             <div className="flex items-center">
                               <span className="inline-flex h-2.5 w-2.5 rounded-full bg-gray-300 mr-2"></span>
-                              <span className="text-gray-500">Não</span>
+                              <span className="text-gray-500">Nenhuma</span>
                             </div>
                           )}
                         </TableCell>
