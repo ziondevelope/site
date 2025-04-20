@@ -75,14 +75,6 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-6" style={{ fontFamily: 'Montserrat, sans-serif' }}>
-      {/* Barra do topo com nome e data */}
-      <div className="flex justify-between items-center bg-white p-5 rounded-lg shadow-sm">
-        <div>
-          <h2 className="text-xl font-semibold text-[#357deb]">Bom dia, Walter!</h2>
-          <p className="text-sm text-gray-600">{formattedDate}</p>
-        </div>
-      </div>
-      
       {/* Grid principal de painéis */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Painel de Tarefas Agendadas */}
