@@ -60,12 +60,12 @@ export default function Sidebar() {
         onMouseLeave={() => setHovered(false)}
       >
         <div className={cn(
-          "p-4 flex items-center space-x-3 transition-all duration-300",
-          expanded || hovered ? "justify-start" : "justify-center"
+          "p-4 flex items-center transition-all duration-300",
+          expanded || hovered ? "justify-between" : "justify-end"
         )}>
           <div className={cn(
             "font-bold text-white transition-all duration-300",
-            expanded || hovered ? "text-2xl" : "text-xl"
+            expanded || hovered ? "text-2xl mr-auto" : "text-xl"
           )}>
             {expanded || hovered ? "arbo" : "a"}
           </div>
@@ -73,7 +73,7 @@ export default function Sidebar() {
           {(expanded || hovered) && (
             <button 
               onClick={toggleExpanded}
-              className="ml-auto text-white opacity-60 hover:opacity-100 flex items-center justify-center transition-all duration-200"
+              className="text-white opacity-60 hover:opacity-100 flex items-center justify-center transition-all duration-200"
             >
               <i className={`ri-${expanded ? 'arrow-left-s-line' : 'arrow-right-s-line'} text-lg`}></i>
             </button>
