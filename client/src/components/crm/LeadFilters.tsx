@@ -37,7 +37,7 @@ export function LeadFilters({
               placeholder="Buscar por nome, email, telefone..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 h-10 border-gray-300 rounded-lg w-full"
+              className="pl-10 h-10 border-gray-300 rounded-full w-full"
             />
           </div>
         </div>
@@ -52,7 +52,7 @@ export function LeadFilters({
                 value={sourceFilter} 
                 onValueChange={setSourceFilter}
               >
-                <SelectTrigger className="h-10 w-full border-gray-300 rounded-lg">
+                <SelectTrigger className="h-10 w-full border-gray-300 rounded-full">
                   <div className="flex items-center">
                     <i className="fas fa-tag mr-2 text-gray-400 text-sm"></i>
                     <SelectValue placeholder="Todas as fontes" />
@@ -77,7 +77,7 @@ export function LeadFilters({
                 value={interestTypeFilter} 
                 onValueChange={setInterestTypeFilter}
               >
-                <SelectTrigger className="h-10 w-full border-gray-300 rounded-lg">
+                <SelectTrigger className="h-10 w-full border-gray-300 rounded-full">
                   <div className="flex items-center">
                     <i className="fas fa-home mr-2 text-gray-400 text-sm"></i>
                     <SelectValue placeholder="Todos os interesses" />
