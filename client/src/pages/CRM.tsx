@@ -607,8 +607,9 @@ export default function CRM() {
         // Isso garante que a tarefa não reaparecerá após recarregar a página
         fetchLeadTasks(leadId);
         
-        // Atualizar a lista de tarefas agendadas
+        // Atualizar a lista de tarefas agendadas e todas as tarefas
         queryClient.invalidateQueries({ queryKey: ['/api/tasks/scheduled'] });
+        queryClient.invalidateQueries({ queryKey: ['/api/tasks'] });
         
         toast({
           title: "Tarefa concluída no banco",
@@ -642,6 +643,28 @@ export default function CRM() {
   const { data: funnels, isLoading: funnelsLoading } = useQuery<SalesFunnel[]>({
     queryKey: ['/api/sales-funnels'],
   });
+  
+  // Fetch all tasks to determine which leads have tasks
+  const { data: allTasks, isLoading: tasksLoading } = useQuery<any[]>({
+    queryKey: ['/api/tasks'],
+    queryFn: () => apiRequest('/api/tasks')
+  });
+  
+  // Atualizar o estado com os leads que têm tarefas pendentes quando as tarefas são carregadas
+  useEffect(() => {
+    if (allTasks) {
+      const leadsWithTasksMap: {[leadId: number]: boolean} = {};
+      
+      allTasks.forEach((task: any) => {
+        if (task.leadId && (task.completed !== true && task.status !== "completed")) {
+          leadsWithTasksMap[task.leadId] = true;
+        }
+      });
+      
+      // Atualizar o estado com os leads que têm tarefas pendentes
+      setLeadsWithTasks(leadsWithTasksMap);
+    }
+  }, [allTasks]);
   
   // Estado para armazenar o ID do funil selecionado para um lead específico quando a modal abrir
   const [currentLeadFunnelId, setCurrentLeadFunnelId] = useState<number | null>(null);
@@ -886,7 +909,7 @@ export default function CRM() {
     });
   }, [activeTab, taskForm]);
   
-  const isLoading = leadsLoading || funnelsLoading || (selectedFunnelId !== null && stagesLoading);
+  const isLoading = leadsLoading || funnelsLoading || tasksLoading || (selectedFunnelId !== null && stagesLoading);
 
   const form = useForm<LeadFormValues>({
     resolver: zodResolver(leadFormSchema),
@@ -1392,6 +1415,7 @@ export default function CRM() {
                     <TableHead>Interesse</TableHead>
                     <TableHead>WhatsApp</TableHead>
                     <TableHead>Estágio</TableHead>
+                    <TableHead>Tarefas</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -1461,6 +1485,19 @@ export default function CRM() {
                                    lead.status === 'proposal' ? 'Proposta' :
                                    'Não definido';
                           })()}
+                        </TableCell>
+                        <TableCell>
+                          {leadsWithTasks[lead.id] ? (
+                            <div className="flex items-center">
+                              <span className="inline-flex h-2.5 w-2.5 rounded-full bg-green-600 mr-2"></span>
+                              <span className="text-green-600 font-medium">Sim</span>
+                            </div>
+                          ) : (
+                            <div className="flex items-center">
+                              <span className="inline-flex h-2.5 w-2.5 rounded-full bg-gray-300 mr-2"></span>
+                              <span className="text-gray-500">Não</span>
+                            </div>
+                          )}
                         </TableCell>
                       </TableRow>
                     ))}
