@@ -120,18 +120,7 @@ export default function Dashboard() {
                       </div>
                       <div className="text-xs text-gray-500 mt-1">{task.description}</div>
                     </div>
-                    <div className={`text-xs font-medium rounded-full px-2.5 py-1 inline-flex items-center justify-center
-                      ${task.status === 'pending' ? 'bg-yellow-50 text-yellow-700' : 
-                        task.status === 'completed' ? 'bg-green-50 text-green-700' : 
-                        task.status === 'cancelled' ? 'bg-red-50 text-red-700' : 
-                        task.status === 'confirmed' ? 'bg-blue-50 text-blue-700' :
-                        'bg-gray-50 text-gray-700'}`}
-                    >
-                      {task.status === 'completed' ? 'Concluída' :
-                       task.status === 'cancelled' ? 'Cancelada' :
-                       task.status === 'confirmed' ? 'Confirmada' :
-                       task.status !== 'pending' ? task.status : ''}
-                    </div>
+
                   </div>
                   <div className="mt-2 flex items-center justify-between">
                     <div className="flex items-center text-[10px] text-gray-500">
