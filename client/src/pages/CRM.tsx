@@ -69,6 +69,11 @@ export default function CRM() {
   const [savedNotes, setSavedNotes] = useState<{[leadId: number]: Array<{text: string, date: Date}>}>({});
   const [activeTab, setActiveTab] = useState<{[leadId: number]: string}>({});
   
+  // Estados para filtros de pesquisa
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sourceFilter, setSourceFilter] = useState('');
+  const [interestTypeFilter, setInterestTypeFilter] = useState('');
+  
   // Estados para gerenciamento de tarefas
   const [taskForm, setTaskForm] = useState<{
     [leadId: number]: {
