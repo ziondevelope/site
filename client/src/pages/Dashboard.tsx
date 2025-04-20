@@ -126,8 +126,8 @@ export default function Dashboard() {
                     </div>
                   </div>
                   <div className="mt-2 flex items-center justify-between">
-                    <div className="flex items-center text-xs text-gray-500">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                    <div className="flex items-center text-[10px] text-gray-500">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
                       {new Date(task.date).toLocaleString('pt-BR', {
                         day: '2-digit',
                         month: '2-digit',
