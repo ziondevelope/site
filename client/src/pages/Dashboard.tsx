@@ -101,7 +101,7 @@ export default function Dashboard() {
                 <div key={task.id} className="p-3 border border-gray-100 rounded-lg hover:bg-gray-50 cursor-pointer">
                   <div className="flex justify-between items-start">
                     <div>
-                      <div className="font-medium text-gray-800">
+                      <div className="font-medium text-gray-800" style={{ fontSize: '14px' }}>
                         {task.type === 'call' || task.type === 'ligacao' ? 'Ligação' :
                          task.type === 'visit' || task.type === 'visita' ? 'Visita' :
                          task.type === 'whatsapp' ? 'WhatsApp' :
