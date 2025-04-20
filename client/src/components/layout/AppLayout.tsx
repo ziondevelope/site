@@ -1,8 +1,9 @@
-import { ReactNode } from "react";
-import Sidebar from "./Sidebar";
+import { ReactNode, useState, useEffect } from "react";
+import Sidebar, { useSidebar } from "./Sidebar";
 import MobileMenu from "./MobileMenu";
 import { Button } from "@/components/ui/button";
 import { useLocation } from "wouter";
+import { cn } from "@/lib/utils";
 
 interface AppLayoutProps {
   children: ReactNode;
@@ -10,23 +11,7 @@ interface AppLayoutProps {
 
 export default function AppLayout({ children }: AppLayoutProps) {
   const [location] = useLocation();
-  
-  /* 
-  // Extrair o nome da página atual da URL (não está sendo usado)
-  const getPageTitle = () => {
-    const path = location.split('/').filter(Boolean);
-    if (path.length <= 1) return "Dashboard";
-    
-    const pageMap: Record<string, string> = {
-      'imoveis': 'Imóveis',
-      'crm': 'Gestão de Leads',
-      'corretores': 'Corretores',
-      'site': 'Configuração do Site'
-    };
-    
-    return pageMap[path[1]] || path[1].charAt(0).toUpperCase() + path[1].slice(1);
-  };
-  */
+  const [isSidebarHovered, setIsSidebarHovered] = useState(false);
   
   const getBreadcrumbs = () => {
     const path = location.split('/').filter(Boolean);
@@ -53,6 +38,26 @@ export default function AppLayout({ children }: AppLayoutProps) {
     return breadcrumbs;
   };
   
+  // Detectar quando o sidebar é expandido/retraído
+  useEffect(() => {
+    const handleSidebarChange = (e: MouseEvent) => {
+      // Verificamos se o evento ocorreu dentro do sidebar
+      const target = e.target as HTMLElement;
+      const sidebar = document.querySelector('aside');
+      
+      if (sidebar && sidebar.contains(target)) {
+        setIsSidebarHovered(true);
+      } else {
+        setIsSidebarHovered(false);
+      }
+    };
+
+    window.addEventListener('mousemove', handleSidebarChange);
+    return () => {
+      window.removeEventListener('mousemove', handleSidebarChange);
+    };
+  }, []);
+  
   const breadcrumbs = getBreadcrumbs();
 
   return (
@@ -60,7 +65,9 @@ export default function AppLayout({ children }: AppLayoutProps) {
       <Sidebar />
       <MobileMenu />
       
-      <main className="flex-1 overflow-y-auto">
+      <main className={cn(
+        "flex-1 overflow-y-auto transition-all duration-300 ease-in-out",
+      )}>
         {/* Header */}
         <header className="bg-white border-b border-gray-200 py-3 px-6 flex justify-between items-center">
           <div className="flex items-center text-sm">
