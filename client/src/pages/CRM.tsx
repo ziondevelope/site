@@ -421,6 +421,9 @@ export default function CRM() {
       // Atualizar a lista de tarefas agendadas
       queryClient.invalidateQueries({ queryKey: ['/api/tasks/scheduled'] });
       
+      // Recarregar as tarefas deste lead específico
+      fetchLeadTasks(leadId);
+      
       toast({
         title: "Tarefa criada no banco",
         description: `${taskTypeText} agendada com sucesso!`,
@@ -640,6 +643,55 @@ export default function CRM() {
     }
   };
 
+  // Função para carregar tarefas de um lead específico
+  const fetchLeadTasks = async (leadId: number) => {
+    try {
+      // Buscar tarefas que pertencem a este lead
+      const tasks = await apiRequest(`/api/tasks?leadId=${leadId}`);
+      
+      // Atualizar o estado com as tarefas do banco de dados
+      setTaskList(prev => ({
+        ...prev,
+        [leadId]: tasks.map((task: any) => {
+          // Garante que temos uma data válida
+          let dateObj;
+          try {
+            dateObj = task.date ? new Date(task.date) : new Date();
+            // Verifica se a data é válida
+            if (isNaN(dateObj.getTime())) {
+              console.log("Data inválida detectada, usando data atual:", task.date);
+              dateObj = new Date(); // Usa a data atual se a data for inválida
+            }
+          } catch (error) {
+            console.log("Erro ao converter data, usando data atual:", error);
+            dateObj = new Date(); // Usa a data atual em caso de erro
+          }
+          
+          // Extrair apenas a hora/minuto da data
+          const timeStr = task.date ? 
+            new Date(task.date).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) :
+            "";
+          
+          return {
+            id: task.id,
+            type: task.type || "ligacao",
+            description: task.description || "",
+            date: dateObj,
+            time: task.time || timeStr,
+            completed: task.completed || false
+          };
+        })
+      }));
+    } catch (error) {
+      console.error("Erro ao carregar tarefas do lead:", error);
+      toast({
+        title: "Erro ao carregar tarefas",
+        description: "Não foi possível recuperar as tarefas deste lead.",
+        variant: "destructive"
+      });
+    }
+  };
+
   // Quando um lead é aberto, carregar seus dados de funil e definir a aba ativa padrão
   useEffect(() => {
     if (openLeadId !== null && allLeads) {
@@ -654,8 +706,9 @@ export default function CRM() {
       // Inicializar o formulário de tarefa para o lead
       initializeTaskForm(openLeadId);
       
-      // Carregar as notas do lead
+      // Carregar as notas e tarefas do lead
       fetchLeadNotes(openLeadId);
+      fetchLeadTasks(openLeadId);
       
       if (openLead && openLead.funnelId) {
         // Se o lead já tem um funil associado, usar esse funil
