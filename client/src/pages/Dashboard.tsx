@@ -131,10 +131,11 @@ export default function Dashboard() {
                     </div>
                     <div className="flex space-x-2">
                       <span className="text-xs px-2 py-1 rounded bg-blue-50 text-blue-700 capitalize">
-                        {task.type === 'call' ? 'Ligação' :
-                         task.type === 'visit' ? 'Visita' :
+                        {task.type === 'call' || task.type === 'ligacao' ? 'Ligação' :
+                         task.type === 'visit' || task.type === 'visita' ? 'Visita' :
                          task.type === 'whatsapp' ? 'WhatsApp' :
-                         task.type === 'meeting' ? 'Reunião' :
+                         task.type === 'meeting' || task.type === 'reuniao' ? 'Reunião' :
+                         task.type === 'email' ? 'E-mail' :
                          task.type}
                       </span>
                       {task.leadId && (
