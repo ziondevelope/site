@@ -2393,7 +2393,7 @@ export default function CRM() {
                               justifyContent: 'flex-start'
                             }}
                           >
-                            Criar tarefa
+                            Tarefas
                           </TabsTrigger>
                           <TabsTrigger 
                             value="nota" 
