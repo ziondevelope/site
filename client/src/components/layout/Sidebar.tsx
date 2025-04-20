@@ -1,6 +1,6 @@
 import { Link, useLocation } from "wouter";
 import { cn } from "@/lib/utils";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 type NavItem = {
   id: string;
@@ -23,32 +23,71 @@ const navItems: NavItem[] = [
 export default function Sidebar() {
   const [location] = useLocation();
   const [hovered, setHovered] = useState(false);
-
-  // Delay para a animação ficar mais suave
-  useEffect(() => {
-    if (!hovered) {
-      const timer = setTimeout(() => {
-        setHovered(false);
-      }, 300);
-      return () => clearTimeout(timer);
+  const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  
+  // Variável para rastrear quando o usuário está realmente interagindo com o menu
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  
+  // Função para lidar com o hover com um pequeno atraso de entrada e saída
+  const handleMouseEnter = () => {
+    if (hoverTimeoutRef.current) {
+      clearTimeout(hoverTimeoutRef.current);
     }
-  }, [hovered]);
+    
+    // Pequeno atraso para entrar, evita expansões acidentais em movimentos rápidos do mouse
+    hoverTimeoutRef.current = setTimeout(() => {
+      setHovered(true);
+    }, 30); // Reduzido para tornar mais responsivo
+  };
+  
+  const handleMouseLeave = () => {
+    if (hoverTimeoutRef.current) {
+      clearTimeout(hoverTimeoutRef.current);
+    }
+    
+    // Atraso maior para sair, dá mais tempo para o usuário interagir
+    hoverTimeoutRef.current = setTimeout(() => {
+      setHovered(false);
+    }, 500); // Aumentado para dar mais tempo
+  };
+  
+  // Atualizar a posição do mouse para animações mais suaves
+  const handleMouseMove = (e: React.MouseEvent) => {
+    setMousePosition({ 
+      x: e.clientX, 
+      y: e.clientY 
+    });
+  };
+  
+  // Limpar os timeouts quando o componente é desmontado
+  useEffect(() => {
+    return () => {
+      if (hoverTimeoutRef.current) {
+        clearTimeout(hoverTimeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
     <aside 
       className={cn(
-        "bg-[#001524] text-white hidden md:block h-screen overflow-y-auto transition-all duration-300 ease-in-out",
+        "bg-[#001524] text-white hidden md:block h-screen overflow-y-auto",
+        // Transição mais suave com cubic-bezier personalizado
+        "transition-all duration-500",
         hovered ? "w-[260px]" : "w-[70px]"
       )}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      onMouseMove={handleMouseMove}
     >
       <div className={cn(
-        "p-4 flex items-center space-x-3 transition-all duration-300",
+        "p-4 flex items-center gap-3",
+        "transition-all duration-500 ease-in-out",
         hovered ? "justify-start" : "justify-center"
       )}>
         <div className={cn(
-          "font-bold text-white transition-all duration-300",
+          "font-bold text-white",
+          "transition-all duration-500",
           hovered ? "text-2xl" : "text-xl"
         )}>
           {hovered ? "arbo" : "a"}
@@ -58,37 +97,63 @@ export default function Sidebar() {
       <nav className="mt-4">
         <ul className={cn(
           "space-y-1",
-          hovered ? "px-2" : "px-1"
+          hovered ? "px-2" : "px-1",
+          "transition-all duration-500"
         )}>
           {navItems.map((item) => (
             <li key={item.id} className="mb-1">
               <Link href={item.href}>
                 <div className={cn(
-                  "flex items-center px-4 py-2 text-sm rounded transition cursor-pointer",
-                  hovered ? "justify-start space-x-3" : "justify-center",
+                  "flex items-center px-4 py-2 text-sm rounded cursor-pointer",
+                  "transition-all duration-300",
+                  hovered ? "justify-start gap-3" : "justify-center",
                   location === item.href
                     ? "bg-[#15616D] text-white"
                     : "text-white text-opacity-80 hover:bg-[#15616D] hover:text-white"
                 )}>
-                  <i className={cn(item.icon, "text-lg")}></i>
-                  {hovered && (
-                    <>
-                      <span className="transition-all duration-300 whitespace-nowrap opacity-100">{item.label}</span>
-                      {item.children && (
-                        <i className="ri-arrow-right-s-line ml-auto"></i>
-                      )}
-                    </>
+                  <i className={cn(
+                    item.icon, 
+                    "text-lg transition-all duration-500",
+                    hovered ? "" : "transform scale-110"
                   )}
+                  style={{
+                    // Adiciona um pequeno movimento suave ao ícone
+                    transform: hovered 
+                      ? "translateX(0)" 
+                      : "translateX(0) scale(1.1)",
+                    transitionTimingFunction: "cubic-bezier(0.34, 1.56, 0.64, 1)"
+                  }}></i>
+                  
+                  {/* Animação de opacidade e largura para labels */}
+                  <div 
+                    className={cn(
+                      "whitespace-nowrap overflow-hidden transition-all duration-500",
+                      hovered ? "max-w-[200px] opacity-100" : "max-w-0 opacity-0"
+                    )}
+                    style={{
+                      transitionTimingFunction: "cubic-bezier(0.34, 1.56, 0.64, 1)",
+                      transform: hovered ? "translateX(0)" : "translateX(-10px)",
+                      transitionDelay: hovered ? "50ms" : "0ms"
+                    }}
+                  >
+                    <span>{item.label}</span>
+                    {item.children && (
+                      <i className="ri-arrow-right-s-line ml-auto"></i>
+                    )}
+                  </div>
                 </div>
               </Link>
               
               {hovered && item.children && (
-                <ul className="ml-8 mt-1 space-y-1">
+                <ul className={cn(
+                  "ml-8 mt-1 space-y-1",
+                  "transition-all duration-500 ease-in-out"
+                )}>
                   {item.children.map((child) => (
                     <li key={child.id}>
                       <Link href={child.href}>
                         <div className={cn(
-                          "flex items-center space-x-3 px-4 py-2 text-sm rounded transition cursor-pointer",
+                          "flex items-center gap-3 px-4 py-2 text-sm rounded transition-all duration-300 cursor-pointer",
                           location === child.href
                             ? "bg-[#15616D] text-white"
                             : "text-white text-opacity-70 hover:bg-[#15616D] hover:text-white"
