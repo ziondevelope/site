@@ -1508,13 +1508,13 @@ export default function CRM() {
                               
                               return (
                                 <div className="flex items-center">
-                                  <span className="text-green-600 font-medium">
+                                  <span className="text-gray-600 font-medium">
                                     {leadTask?.type === "ligacao" && <i className="fas fa-phone-alt text-xs mr-1"></i>}
                                     {leadTask?.type === "email" && <i className="fas fa-envelope text-xs mr-1"></i>}
                                     {leadTask?.type === "whatsapp" && <i className="fab fa-whatsapp text-xs mr-1"></i>}
                                     {taskTypeText}
                                     {leadTasks && leadTasks.length > 1 ? (
-                                      <span className="ml-1 text-xs bg-green-100 text-green-800 px-1.5 py-0.5 rounded-full">
+                                      <span className="ml-1 text-xs bg-gray-100 text-gray-800 px-1.5 py-0.5 rounded-full">
                                         +{leadTasks.length - 1}
                                       </span>
                                     ) : null}
