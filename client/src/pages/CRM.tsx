@@ -1424,6 +1424,7 @@ export default function CRM() {
           setSourceFilter={setSourceFilter}
           interestTypeFilter={interestTypeFilter}
           setInterestTypeFilter={setInterestTypeFilter}
+          filteredLeadsCount={filteredLeads.length}
         />
 
         {isLoading ? (
