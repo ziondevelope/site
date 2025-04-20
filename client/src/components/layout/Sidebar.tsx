@@ -73,9 +73,9 @@ export default function Sidebar() {
           {(expanded || hovered) && (
             <button 
               onClick={toggleExpanded}
-              className="ml-auto text-white opacity-70 hover:opacity-100 flex items-center justify-center w-7 h-7 rounded-full hover:bg-[#15616D]/30 transition-all duration-200"
+              className="ml-auto text-white opacity-60 hover:opacity-100 flex items-center justify-center transition-all duration-200"
             >
-              <i className={`ri-${expanded ? 'layout-left-2-line' : 'layout-right-2-line'} text-lg`}></i>
+              <i className={`ri-${expanded ? 'arrow-left-s-line' : 'arrow-right-s-line'} text-lg`}></i>
             </button>
           )}
         </div>
