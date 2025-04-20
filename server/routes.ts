@@ -1,7 +1,7 @@
 import express, { type Express, type Request, type Response, type NextFunction } from "express";
 import { createServer, type Server } from "http";
 import { storageInstance } from "./storage";
-import { getFirestore, doc, setDoc } from "firebase/firestore";
+import { getFirestore, doc, setDoc, updateDoc, getDoc } from "firebase/firestore";
 import { z } from "zod";
 import {
   insertUserSchema,
@@ -470,6 +470,46 @@ export async function registerRoutes(app: Express): Promise<Server> {
         message: "Error creating task direct",
         error: errorMessage
       });
+    }
+  });
+  
+  // Atualização geral de tarefas
+  apiRouter.patch("/tasks/:id", async (req, res) => {
+    try {
+      const taskId = parseInt(req.params.id);
+      console.log("Atualizando tarefa ID:", taskId, "Dados:", req.body);
+      
+      // Extrair os dados da requisição
+      const { type, title, description, date } = req.body;
+      
+      // Construir objeto de atualização
+      const updateData: any = {};
+      if (type) updateData.type = type;
+      if (title) updateData.title = title;
+      if (description) updateData.description = description;
+      if (date) updateData.date = date;
+      
+      // Atualizar a tarefa diretamente no Firebase (se for muito simples)
+      if (Object.keys(updateData).length > 0) {
+        updateData.updatedAt = new Date().toISOString();
+        
+        // Usar Firebase diretamente
+        const db = getFirestore();
+        await updateDoc(doc(db, 'tasks', taskId.toString()), updateData);
+        
+        // Obter a tarefa atualizada
+        const taskDoc = await getDoc(doc(db, 'tasks', taskId.toString()));
+        if (taskDoc.exists()) {
+          res.json(taskDoc.data());
+        } else {
+          res.status(404).json({ message: "Tarefa não encontrada após atualização" });
+        }
+      } else {
+        res.status(400).json({ message: "Nenhum dado válido fornecido para atualização" });
+      }
+    } catch (error) {
+      console.error("Erro ao atualizar tarefa:", error);
+      res.status(500).json({ message: "Erro ao atualizar tarefa" });
     }
   });
   
