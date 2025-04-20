@@ -2405,7 +2405,7 @@ export default function CRM() {
                               justifyContent: 'flex-start'
                             }}
                           >
-                            Nota
+                            Anotações
                           </TabsTrigger>
                         </TabsList>
                         
@@ -2418,7 +2418,7 @@ export default function CRM() {
                               <ReactQuill
                                 id={`note-textarea-${lead.id}`}
                                 theme="snow"
-                                placeholder="Faça uma anotação"
+                                placeholder="Adicione suas anotações aqui..."
                                 value={leadNotes[lead.id] || lead.notes || ""}
                                 onChange={(content) => setLeadNotes(prev => ({
                                   ...prev,
@@ -2440,7 +2440,7 @@ export default function CRM() {
                               className="bg-[#12636C] hover:bg-[#12636C]/90 text-sm rounded-full px-5"
                               onClick={() => handleSaveNote(lead.id)}
                             >
-                              Salvar Nota
+                              Salvar Anotação
                             </Button>
                           </div>
                         </TabsContent>
