@@ -99,6 +99,16 @@ export default function CRM() {
   const [editingField, setEditingField] = useState<{leadId: number, field: string} | null>(null);
   const [editingValue, setEditingValue] = useState<string>("");
   
+  // Estado para controlar a edição de tarefas
+  const [editingTask, setEditingTask] = useState<{
+    leadId: number, 
+    taskId: number, 
+    type: string, 
+    description: string, 
+    date: Date, 
+    time: string
+  } | null>(null);
+  
   // As funções de formatação não são mais necessárias, o ReactQuill já implementa formatação direta
   
   // Mutation para atualizar dados do lead
@@ -437,6 +447,112 @@ export default function CRM() {
         variant: "destructive"
       });
     });
+  };
+  
+  // Iniciar edição de tarefa
+  const handleStartEditingTask = (leadId: number, task: any) => {
+    // Definir a tarefa em edição
+    setEditingTask({
+      leadId,
+      taskId: task.id,
+      type: task.type,
+      description: task.description,
+      date: task.date,
+      time: task.time
+    });
+  };
+  
+  // Salvar edição de tarefa
+  const handleSaveTaskEdit = () => {
+    if (!editingTask) return;
+    
+    const { leadId, taskId, type, description, date, time } = editingTask;
+    
+    // Formatar a data/hora completa para o backend
+    const taskDate = new Date(date);
+    const [hours, minutes] = time.split(':').map(Number);
+    taskDate.setHours(hours, minutes);
+    
+    // Criar objeto de tarefa para atualização
+    const taskData = {
+      type,
+      title: description,
+      description,
+      date: taskDate.toISOString()
+    };
+    
+    // Atualizar tarefa no banco de dados
+    apiRequest(`/api/tasks/${taskId}`, {
+      method: 'PATCH',
+      body: JSON.stringify(taskData)
+    })
+    .then(() => {
+      // Atualizar a lista de tarefas na interface
+      setTaskList(prev => {
+        const leadTasks = prev[leadId] || [];
+        const updatedTasks = leadTasks.map(task => 
+          task.id === taskId ? { 
+            ...task, 
+            type, 
+            description,
+            date,
+            time
+          } : task
+        );
+        
+        return {
+          ...prev,
+          [leadId]: updatedTasks
+        };
+      });
+      
+      // Adicionar registro de edição ao histórico
+      const taskTypeText = 
+        type === "ligacao" ? "Ligação" :
+        type === "email" ? "E-mail" : 
+        type === "whatsapp" ? "WhatsApp" : "Tarefa";
+      
+      const formattedDate = formatDate(date);
+      
+      // Criar e salvar uma nota para registrar a atividade
+      const noteText = `<strong>${taskTypeText}</strong> editada: ${description} - Nova data: ${formattedDate} às ${time}`;
+      
+      apiRequest(`/api/leads/${leadId}/notes`, {
+        method: 'POST',
+        body: JSON.stringify({ text: noteText })
+      })
+      .then(() => {
+        // Recarregar as notas do lead após registrar a atividade
+        fetchLeadNotes(leadId);
+      })
+      .catch(error => {
+        console.error("Erro ao salvar nota de edição de tarefa:", error);
+      });
+      
+      // Limpar estado de edição
+      setEditingTask(null);
+      
+      // Recarregar as tarefas agendadas
+      queryClient.invalidateQueries({ queryKey: ['/api/tasks/scheduled'] });
+      
+      toast({
+        title: "Tarefa atualizada",
+        description: `${taskTypeText} atualizada com sucesso!`,
+      });
+    })
+    .catch(error => {
+      console.error("Erro ao atualizar tarefa:", error);
+      toast({
+        title: "Erro ao atualizar tarefa",
+        description: "Não foi possível atualizar a tarefa no banco de dados.",
+        variant: "destructive"
+      });
+    });
+  };
+  
+  // Cancelar edição de tarefa
+  const handleCancelTaskEdit = () => {
+    setEditingTask(null);
   };
   
   // Marcar tarefa como concluída
@@ -2343,27 +2459,141 @@ export default function CRM() {
                                             key={task.id} 
                                             className="flex items-center justify-between p-3 border border-gray-100 rounded-md bg-gray-50"
                                           >
-                                            <div className="flex items-start">
-                                              <div className="mr-3 mt-0.5">{taskIcon}</div>
-                                              <div>
-                                                <div className="flex items-center">
-                                                  <span className="text-xs font-medium">{taskTitle}:</span>
-                                                  <span className="text-xs ml-2">{task.description}</span>
+                                            {/* Modo de edição */}
+                                            {editingTask && editingTask.taskId === task.id ? (
+                                              <div className="w-full space-y-3">
+                                                <div className="flex justify-between items-center w-full">
+                                                  <h4 className="text-xs font-medium">Editando tarefa</h4>
+                                                  <div className="flex space-x-1">
+                                                    <Button 
+                                                      variant="ghost" 
+                                                      size="sm"
+                                                      className="h-7 w-7 p-0"
+                                                      onClick={handleSaveTaskEdit}
+                                                    >
+                                                      <Check className="h-4 w-4 text-green-500" />
+                                                    </Button>
+                                                    <Button 
+                                                      variant="ghost" 
+                                                      size="sm"
+                                                      className="h-7 w-7 p-0"
+                                                      onClick={handleCancelTaskEdit}
+                                                    >
+                                                      <X className="h-4 w-4 text-red-500" />
+                                                    </Button>
+                                                  </div>
                                                 </div>
-                                                <div className="text-xs text-gray-500 mt-1">
-                                                  {task.date ? formatDate(task.date) : ""} às {task.time}
+                                                
+                                                <div className="space-y-2">
+                                                  {/* Tipo de tarefa */}
+                                                  <div>
+                                                    <Label className="text-xs mb-1">Tipo</Label>
+                                                    <Select
+                                                      value={editingTask.type}
+                                                      onValueChange={(value) => setEditingTask(prev => prev ? {...prev, type: value} : null)}
+                                                    >
+                                                      <SelectTrigger className="h-7 text-xs">
+                                                        <SelectValue placeholder="Selecione o tipo" />
+                                                      </SelectTrigger>
+                                                      <SelectContent>
+                                                        <SelectItem value="ligacao">
+                                                          <span className="flex items-center">
+                                                            <Phone className="h-3.5 w-3.5 mr-2 text-blue-500" />
+                                                            Ligação
+                                                          </span>
+                                                        </SelectItem>
+                                                        <SelectItem value="email">
+                                                          <span className="flex items-center">
+                                                            <Mail className="h-3.5 w-3.5 mr-2 text-green-500" />
+                                                            E-mail
+                                                          </span>
+                                                        </SelectItem>
+                                                        <SelectItem value="whatsapp">
+                                                          <span className="flex items-center">
+                                                            <MessageSquare className="h-3.5 w-3.5 mr-2 text-purple-500" />
+                                                            WhatsApp
+                                                          </span>
+                                                        </SelectItem>
+                                                      </SelectContent>
+                                                    </Select>
+                                                  </div>
+                                                  
+                                                  {/* Descrição */}
+                                                  <div>
+                                                    <Label className="text-xs mb-1">Descrição</Label>
+                                                    <Input
+                                                      value={editingTask.description}
+                                                      onChange={(e) => setEditingTask(prev => prev ? {...prev, description: e.target.value} : null)}
+                                                      className="h-7 text-xs"
+                                                    />
+                                                  </div>
+                                                  
+                                                  {/* Data e hora */}
+                                                  <div className="flex space-x-2">
+                                                    <div className="flex-1">
+                                                      <Label className="text-xs mb-1">Data</Label>
+                                                      <input
+                                                        type="date"
+                                                        value={editingTask.date 
+                                                          ? new Date(editingTask.date).toISOString().split('T')[0] 
+                                                          : ""}
+                                                        onChange={(e) => {
+                                                          const dateValue = e.target.value 
+                                                            ? new Date(e.target.value) 
+                                                            : new Date();
+                                                          setEditingTask(prev => prev ? {...prev, date: dateValue} : null);
+                                                        }}
+                                                        className="w-full h-7 text-xs px-3 py-1 rounded-md border border-input"
+                                                      />
+                                                    </div>
+                                                    <div className="flex-1">
+                                                      <Label className="text-xs mb-1">Horário</Label>
+                                                      <input
+                                                        type="time"
+                                                        value={editingTask.time || ""}
+                                                        onChange={(e) => setEditingTask(prev => prev ? {...prev, time: e.target.value} : null)}
+                                                        className="w-full h-7 text-xs px-3 py-1 rounded-md border border-input"
+                                                      />
+                                                    </div>
+                                                  </div>
                                                 </div>
                                               </div>
-                                            </div>
-                                            <Button 
-                                              variant="outline" 
-                                              size="sm" 
-                                              className="h-7 text-xs"
-                                              onClick={() => handleCompleteTask(lead.id, task.id)}
-                                            >
-                                              <CheckCircle className="h-3.5 w-3.5 mr-1" />
-                                              Concluir
-                                            </Button>
+                                            ) : (
+                                              <>
+                                                {/* Modo de visualização */}
+                                                <div className="flex items-start">
+                                                  <div className="mr-3 mt-0.5">{taskIcon}</div>
+                                                  <div>
+                                                    <div className="flex items-center">
+                                                      <span className="text-xs font-medium">{taskTitle}:</span>
+                                                      <span className="text-xs ml-2">{task.description}</span>
+                                                    </div>
+                                                    <div className="text-xs text-gray-500 mt-1">
+                                                      {task.date ? formatDate(task.date) : ""} às {task.time}
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                                <div className="flex">
+                                                  <Button 
+                                                    variant="ghost" 
+                                                    size="sm" 
+                                                    className="h-7 w-7 p-0 mx-1"
+                                                    onClick={() => handleStartEditingTask(lead.id, task)}
+                                                  >
+                                                    <Pencil className="h-3.5 w-3.5 text-gray-500" />
+                                                  </Button>
+                                                  <Button 
+                                                    variant="outline" 
+                                                    size="sm" 
+                                                    className="h-7 text-xs"
+                                                    onClick={() => handleCompleteTask(lead.id, task.id)}
+                                                  >
+                                                    <CheckCircle className="h-3.5 w-3.5 mr-1" />
+                                                    Concluir
+                                                  </Button>
+                                                </div>
+                                              </>
+                                            )}
                                           </div>
                                         );
                                       })}
