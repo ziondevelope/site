@@ -136,15 +136,15 @@ export default function Dashboard() {
                         
                         // Exibe uma bolinha vermelha se faltar menos de 2 dias
                         if (diffDays <= 2 && diffDays >= 0) {
-                          return <div className="w-3 h-3 bg-red-500 rounded-full mr-1"></div>;
+                          return <div className="w-2 h-2" style={{ width: '0.5rem', height: '0.5rem', backgroundColor: '#EF4444', borderRadius: '50%', marginRight: '0.25rem' }}></div>;
                         } 
                         // Exibe uma bolinha amarela se faltar entre 3 e 4 dias
                         else if (diffDays > 2 && diffDays <= 4) {
-                          return <div className="w-3 h-3 bg-yellow-500 rounded-full mr-1"></div>;
+                          return <div className="w-2 h-2" style={{ width: '0.5rem', height: '0.5rem', backgroundColor: '#F59E0B', borderRadius: '50%', marginRight: '0.25rem' }}></div>;
                         }
                         // Exibe uma bolinha verde se faltar mais de 4 dias
                         else if (diffDays > 4) {
-                          return <div className="w-3 h-3 bg-green-500 rounded-full mr-1"></div>;
+                          return <div className="w-2 h-2" style={{ width: '0.5rem', height: '0.5rem', backgroundColor: '#10B981', borderRadius: '50%', marginRight: '0.25rem' }}></div>;
                         }
                         // Exibe o ícone de relógio se o prazo já passou
                         else {
