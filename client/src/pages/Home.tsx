@@ -224,7 +224,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Properties Section */}
+      {/* Properties Section - Imóveis em Destaque */}
       {config?.showFeaturedProperties !== false && (
         <section id="properties" className="py-16 bg-gray-50">
           <div className="container mx-auto px-4">
@@ -411,6 +411,121 @@ export default function Home() {
             <div className="text-center mt-12">
               <Button variant="outline" size="lg" onClick={() => setLocation('/properties')}>
                 Ver todos os imóveis
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="ml-2">
+                  <path d="M5 12h14"></path>
+                  <path d="m12 5 7 7-7 7"></path>
+                </svg>
+              </Button>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Properties Section - Imóveis para Venda */}
+      {config?.showFeaturedProperties !== false && (
+        <section id="sale-properties" className="py-16 bg-white">
+          <div className="container mx-auto px-4">
+            <h2 className="text-3xl font-bold text-center mb-12">Imóveis para Venda</h2>
+            
+            {isLoadingProperties ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {[1, 2, 3].map(item => (
+                  <div key={item} className="bg-white rounded-lg shadow-md overflow-hidden animate-pulse">
+                    <div className="h-48 bg-gray-200"></div>
+                    <div className="p-6">
+                      <div className="h-4 bg-gray-200 rounded w-3/4 mb-4"></div>
+                      <div className="h-4 bg-gray-200 rounded w-1/2 mb-4"></div>
+                      <div className="h-4 bg-gray-200 rounded w-5/6"></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {featuredProperties
+                  .filter(property => property.purpose === 'sale')
+                  .slice(0, 3)
+                  .map((property) => (
+                    <div key={property.id}>
+                      <div 
+                        className="property-card h-full bg-white rounded-lg border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-lg hover:bg-white cursor-pointer relative"
+                        onClick={() => openPropertyModal(property.id)}
+                      >
+                        {/* Property Image */}
+                        <div className="property-image-container h-56 bg-gray-200 relative overflow-hidden">
+                          {getFeaturedImage(property) ? (
+                            <img 
+                              src={getFeaturedImage(property)} 
+                              alt={property.title} 
+                              className="property-image w-full h-full object-cover transition-transform duration-500"
+                              loading="lazy"
+                            />
+                          ) : null}
+                          {/* Botão Ver Detalhes que aparece no hover */}
+                          <div className="eye-icon absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300">
+                            <div className="rounded-md bg-white/90 px-4 py-2 backdrop-blur-sm flex items-center gap-2">
+                              <i className="fas fa-eye text-sm" style={{ color: 'rgb(0, 21, 36)' }}></i>
+                              <span className="text-sm font-medium" style={{ color: 'rgb(0, 21, 36)' }}>Ver Detalhes</span>
+                            </div>
+                          </div>
+                          <div 
+                            className="absolute bottom-0 left-0 text-white px-3 py-1 rounded-tr-lg"
+                            style={{
+                              backgroundColor: 'rgb(0, 21, 36)'
+                            }}
+                          >
+                            Venda
+                          </div>
+                        </div>
+                        
+                        <div className="p-4">
+                          <h3 className="text-md mb-1 line-clamp-1">{property.title}</h3>
+                          <div className="flex justify-start items-center mb-2">
+                            <div className="text-lg font-bold text-gray-700">
+                              R$ {property.price.toLocaleString('pt-BR')}
+                            </div>
+                          </div>
+                          <p className="text-gray-500 text-sm mb-4 line-clamp-1">{property.address}</p>
+                          
+                          <div className="flex items-center justify-between mb-4 text-sm text-gray-600">
+                            <span className="flex items-center">
+                              <i className="fas fa-ruler-combined fa-sm mr-1"></i>
+                              {property.area}m²
+                            </span>
+                            <span className="flex items-center">
+                              <i className="fas fa-bed fa-sm mr-1"></i>
+                              {property.bedrooms}
+                            </span>
+                            <span className="flex items-center">
+                              <i className="fas fa-shower fa-sm mr-1"></i>
+                              {property.bathrooms}
+                            </span>
+                            <span className="flex items-center">
+                              <i className="fas fa-car fa-sm mr-1"></i>
+                              {property.parkingSpots || 0}
+                            </span>
+                          </div>
+                        </div>
+                        
+                        {/* Overlay de hover para indicar que é clicável */}
+                        <div className="absolute inset-0 bg-white opacity-0 transition-opacity duration-300 hover:opacity-5"></div>
+                      </div>
+                    </div>
+                ))}
+              </div>
+            )}
+            
+            <div className="text-center mt-12">
+              <Button 
+                variant="outline" 
+                size="lg" 
+                onClick={() => setLocation('/properties?purpose=sale')}
+                style={{
+                  borderColor: 'rgb(0, 21, 36)',
+                  color: 'rgb(0, 21, 36)'
+                }}
+              >
+                Ver todos os imóveis para venda
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="ml-2">
                   <path d="M5 12h14"></path>
                   <path d="m12 5 7 7-7 7"></path>
