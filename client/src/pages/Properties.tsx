@@ -378,7 +378,7 @@ export default function Properties() {
   }
 
   return (
-    <div className="space-y-8 max-w-5xl mx-auto">
+    <div>
       {/* Add Property Dialog */}
       <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
         <DialogContent className="sm:max-w-[600px] p-0 max-h-[90vh] overflow-hidden">
