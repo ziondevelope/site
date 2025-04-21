@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
-import { Trash2, Plus, Image } from "lucide-react";
+import { Trash2, Plus, Upload } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
@@ -33,6 +33,10 @@ export function TestimonialsManager() {
     avatar: "",
     featured: false
   });
+  
+  // Referência para o input de arquivo
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
 
   // Buscar todos os depoimentos
   const { data: testimonials = [], isLoading } = useQuery<Testimonial[]>({
@@ -96,10 +100,39 @@ export function TestimonialsManager() {
   const handleSwitchChange = (checked: boolean) => {
     setNewTestimonial(prev => ({ ...prev, featured: checked }));
   };
+  
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    
+    if (file.size > 2 * 1024 * 1024) { // 2MB limit
+      toast({
+        title: "Arquivo muito grande",
+        description: "O tamanho máximo permitido é 2MB",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const base64String = reader.result as string;
+      setPreviewImage(base64String);
+      setNewTestimonial(prev => ({ ...prev, avatar: base64String }));
+    };
+    reader.readAsDataURL(file);
+  };
+  
+  const handleOpenFileDialog = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     addTestimonialMutation.mutate(newTestimonial);
+    setPreviewImage(null);
   };
 
   const handleDelete = (id: number) => {
@@ -160,14 +193,57 @@ export function TestimonialsManager() {
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="avatar">URL da Foto (opcional)</Label>
-                <Input
-                  id="avatar"
-                  name="avatar"
-                  value={newTestimonial.avatar}
-                  onChange={handleInputChange}
-                  placeholder="https://exemplo.com/foto.jpg"
-                />
+                <Label>Foto do Cliente (opcional)</Label>
+                <div className="mt-1 flex items-center gap-4">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    ref={fileInputRef}
+                    onChange={handleImageUpload}
+                  />
+                  
+                  {previewImage ? (
+                    <div className="relative">
+                      <Avatar className="h-16 w-16">
+                        <AvatarImage src={previewImage} alt="Preview" />
+                      </Avatar>
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        size="icon"
+                        className="absolute -top-2 -right-2 h-6 w-6 rounded-full"
+                        onClick={() => {
+                          setPreviewImage(null);
+                          setNewTestimonial(prev => ({ ...prev, avatar: "" }));
+                        }}
+                      >
+                        <Trash2 className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  ) : (
+                    <div 
+                      className="h-16 w-16 rounded-full border-2 border-dashed border-gray-300 flex items-center justify-center cursor-pointer hover:border-indigo-500 transition-colors"
+                      onClick={handleOpenFileDialog}
+                    >
+                      <Upload className="h-5 w-5 text-gray-400" />
+                    </div>
+                  )}
+                  
+                  <div className="flex-1">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="w-full"
+                      onClick={handleOpenFileDialog}
+                    >
+                      {previewImage ? "Trocar Imagem" : "Selecionar Imagem"}
+                    </Button>
+                    <p className="text-xs text-gray-500 mt-1">
+                      JPG, PNG ou GIF. Tamanho máximo de 2MB.
+                    </p>
+                  </div>
+                </div>
               </div>
               
               <div className="flex items-center space-x-2">
