@@ -31,11 +31,11 @@ export default function AllProperties() {
   const [selectedPropertyId, setSelectedPropertyId] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [location, setLocation] = useLocation();
+  const [locationPath, setLocation] = useLocation();
   const { stopLoading } = useLoading();
   
   // Extrai parâmetros da URL para determinar filtros iniciais
-  const urlParams = new URLSearchParams(location.includes('?') ? location.split('?')[1] : '');
+  const urlParams = new URLSearchParams(locationPath.includes('?') ? locationPath.split('?')[1] : '');
   const purposeFromUrl = urlParams.get('purpose');
   
   // Estados para os filtros
