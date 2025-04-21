@@ -34,6 +34,10 @@ export default function AllProperties() {
   const [location, setLocation] = useLocation();
   const { stopLoading } = useLoading();
   
+  // Extrai parâmetros da URL para determinar filtros iniciais
+  const urlParams = new URLSearchParams(location.includes('?') ? location.split('?')[1] : '');
+  const purposeFromUrl = urlParams.get('purpose');
+  
   // Estados para os filtros
   const [filters, setFilters] = useState({
     search: '',
@@ -42,7 +46,7 @@ export default function AllProperties() {
     bathrooms: 'any-bathrooms',
     minPrice: 0,
     maxPrice: 20000000,
-    purpose: 'all-purposes',
+    purpose: purposeFromUrl || 'all-purposes',
     area: 'any-area'
   });
   
