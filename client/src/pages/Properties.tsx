@@ -427,18 +427,387 @@ export default function Properties() {
                   </TabsList>
                   
                   <TabsContent value="info" className="space-y-4">
-                    {/* Form content here */}
-                    {/* ... */}
+                    <FormField
+                      control={form.control}
+                      name="title"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Título do imóvel</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Ex: Apartamento com 3 quartos na Barra da Tijuca" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <div className="grid grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="type"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Tipo de imóvel</FormLabel>
+                            <Select 
+                              value={field.value} 
+                              onValueChange={field.onChange}
+                            >
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Selecione o tipo" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectItem value="apartment">Apartamento</SelectItem>
+                                <SelectItem value="house">Casa</SelectItem>
+                                <SelectItem value="commercial">Comercial</SelectItem>
+                                <SelectItem value="land">Terreno</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="purpose"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Finalidade</FormLabel>
+                            <Select 
+                              value={field.value} 
+                              onValueChange={field.onChange}
+                            >
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Selecione a finalidade" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectItem value="sale">Venda</SelectItem>
+                                <SelectItem value="rent">Aluguel</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    
+                    <FormField
+                      control={form.control}
+                      name="price"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Preço (R$)</FormLabel>
+                          <FormControl>
+                            <Input 
+                              type="number" 
+                              placeholder="Ex: 450000" 
+                              {...field}
+                              onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
+                              value={field.value || 0}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={form.control}
+                      name="description"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Descrição</FormLabel>
+                          <FormControl>
+                            <Textarea 
+                              placeholder="Descreva o imóvel em detalhes" 
+                              className="min-h-[120px]" 
+                              {...field} 
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={form.control}
+                      name="status"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Status</FormLabel>
+                          <Select 
+                            value={field.value} 
+                            onValueChange={field.onChange}
+                          >
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Selecione o status" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="available">Disponível</SelectItem>
+                              <SelectItem value="sold">Vendido</SelectItem>
+                              <SelectItem value="rented">Alugado</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={form.control}
+                      name="isFeatured"
+                      render={({ field }) => (
+                        <FeaturedCheckbox field={field} />
+                      )}
+                    />
                   </TabsContent>
                   
                   <TabsContent value="details" className="space-y-4">
-                    {/* Form content here */}
-                    {/* ... */}
+                    <div className="grid grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="area"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Área (m²)</FormLabel>
+                            <FormControl>
+                              <Input 
+                                type="number" 
+                                placeholder="Ex: 120" 
+                                {...field}
+                                onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
+                                value={field.value || 0}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="bedrooms"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Quartos</FormLabel>
+                            <FormControl>
+                              <Input 
+                                type="number" 
+                                placeholder="Ex: 3" 
+                                {...field}
+                                onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
+                                value={field.value || 0}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="suites"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Suítes</FormLabel>
+                            <FormControl>
+                              <Input 
+                                type="number" 
+                                placeholder="Ex: 2" 
+                                {...field}
+                                onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
+                                value={field.value || 0}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="bathrooms"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Banheiros</FormLabel>
+                            <FormControl>
+                              <Input 
+                                type="number" 
+                                placeholder="Ex: 2" 
+                                {...field}
+                                onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
+                                value={field.value || 0}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="parkingSpots"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Vagas de garagem</FormLabel>
+                            <FormControl>
+                              <Input 
+                                type="number" 
+                                placeholder="Ex: 1" 
+                                {...field}
+                                onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
+                                value={field.value || 0}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="agentId"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Corretor</FormLabel>
+                            <Select 
+                              value={field.value?.toString() || ""}
+                              onValueChange={(value) => field.onChange(Number(value) || null)}
+                            >
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Selecione o corretor" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectItem value="none">Sem corretor</SelectItem>
+                                {allAgents?.map(agent => (
+                                  <SelectItem key={agent.id} value={agent.id.toString()}>
+                                    {agent.displayName}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    
+                    <FormField
+                      control={form.control}
+                      name="features"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Características</FormLabel>
+                          <FormControl>
+                            <PropertyFeatures 
+                              value={field.value || []} 
+                              onChange={field.onChange}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
                   </TabsContent>
                   
                   <TabsContent value="location" className="space-y-4">
-                    {/* Form content here */}
-                    {/* ... */}
+                    <FormField
+                      control={form.control}
+                      name="zipCode"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>CEP</FormLabel>
+                          <FormControl>
+                            <CepInput
+                              value={field.value}
+                              onChange={field.onChange}
+                              name={field.name}
+                              onBlur={field.onBlur}
+                              onAddressFound={(addressData) => {
+                                form.setValue("address", addressData.logradouro || "");
+                                form.setValue("city", addressData.localidade || "");
+                                form.setValue("neighborhood", addressData.bairro || "");
+                              }}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={form.control}
+                      name="address"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Endereço</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Rua, número" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <div className="grid grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="neighborhood"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Bairro</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Bairro" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="city"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Cidade</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Cidade" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    
+                    <FormField
+                      control={form.control}
+                      name="images"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Imagens do imóvel</FormLabel>
+                          <FormControl>
+                            <MultipleImageUpload
+                              value={field.value || []}
+                              onChange={field.onChange}
+                              maxFiles={10}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
                   </TabsContent>
                 </Tabs>
                 
@@ -503,7 +872,389 @@ export default function Properties() {
                     <TabsTrigger value="location">Localização e Imagem</TabsTrigger>
                   </TabsList>
                   
-                  {/* Tabs content similar to Add dialog */}
+                  <TabsContent value="info" className="space-y-4">
+                    <FormField
+                      control={form.control}
+                      name="title"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Título do imóvel</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Ex: Apartamento com 3 quartos na Barra da Tijuca" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <div className="grid grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="type"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Tipo de imóvel</FormLabel>
+                            <Select 
+                              value={field.value} 
+                              onValueChange={field.onChange}
+                            >
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Selecione o tipo" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectItem value="apartment">Apartamento</SelectItem>
+                                <SelectItem value="house">Casa</SelectItem>
+                                <SelectItem value="commercial">Comercial</SelectItem>
+                                <SelectItem value="land">Terreno</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="purpose"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Finalidade</FormLabel>
+                            <Select 
+                              value={field.value} 
+                              onValueChange={field.onChange}
+                            >
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Selecione a finalidade" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectItem value="sale">Venda</SelectItem>
+                                <SelectItem value="rent">Aluguel</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    
+                    <FormField
+                      control={form.control}
+                      name="price"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Preço (R$)</FormLabel>
+                          <FormControl>
+                            <Input 
+                              type="number" 
+                              placeholder="Ex: 450000" 
+                              {...field}
+                              onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
+                              value={field.value || 0}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={form.control}
+                      name="description"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Descrição</FormLabel>
+                          <FormControl>
+                            <Textarea 
+                              placeholder="Descreva o imóvel em detalhes" 
+                              className="min-h-[120px]" 
+                              {...field} 
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={form.control}
+                      name="status"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Status</FormLabel>
+                          <Select 
+                            value={field.value} 
+                            onValueChange={field.onChange}
+                          >
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Selecione o status" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="available">Disponível</SelectItem>
+                              <SelectItem value="sold">Vendido</SelectItem>
+                              <SelectItem value="rented">Alugado</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={form.control}
+                      name="isFeatured"
+                      render={({ field }) => (
+                        <FeaturedCheckbox field={field} />
+                      )}
+                    />
+                  </TabsContent>
+                  
+                  <TabsContent value="details" className="space-y-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="area"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Área (m²)</FormLabel>
+                            <FormControl>
+                              <Input 
+                                type="number" 
+                                placeholder="Ex: 120" 
+                                {...field}
+                                onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
+                                value={field.value || 0}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="bedrooms"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Quartos</FormLabel>
+                            <FormControl>
+                              <Input 
+                                type="number" 
+                                placeholder="Ex: 3" 
+                                {...field}
+                                onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
+                                value={field.value || 0}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="suites"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Suítes</FormLabel>
+                            <FormControl>
+                              <Input 
+                                type="number" 
+                                placeholder="Ex: 2" 
+                                {...field}
+                                onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
+                                value={field.value || 0}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="bathrooms"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Banheiros</FormLabel>
+                            <FormControl>
+                              <Input 
+                                type="number" 
+                                placeholder="Ex: 2" 
+                                {...field}
+                                onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
+                                value={field.value || 0}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="parkingSpots"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Vagas de garagem</FormLabel>
+                            <FormControl>
+                              <Input 
+                                type="number" 
+                                placeholder="Ex: 1" 
+                                {...field}
+                                onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
+                                value={field.value || 0}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="agentId"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Corretor</FormLabel>
+                            <Select 
+                              value={field.value?.toString() || ""}
+                              onValueChange={(value) => field.onChange(Number(value) || null)}
+                            >
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Selecione o corretor" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectItem value="none">Sem corretor</SelectItem>
+                                {allAgents?.map(agent => (
+                                  <SelectItem key={agent.id} value={agent.id.toString()}>
+                                    {agent.displayName}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    
+                    <FormField
+                      control={form.control}
+                      name="features"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Características</FormLabel>
+                          <FormControl>
+                            <PropertyFeatures 
+                              value={field.value || []} 
+                              onChange={field.onChange}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </TabsContent>
+                  
+                  <TabsContent value="location" className="space-y-4">
+                    <FormField
+                      control={form.control}
+                      name="zipCode"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>CEP</FormLabel>
+                          <FormControl>
+                            <CepInput
+                              value={field.value}
+                              onChange={field.onChange}
+                              name={field.name}
+                              onBlur={field.onBlur}
+                              onAddressFound={(addressData) => {
+                                form.setValue("address", addressData.logradouro || "");
+                                form.setValue("city", addressData.localidade || "");
+                                form.setValue("neighborhood", addressData.bairro || "");
+                              }}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={form.control}
+                      name="address"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Endereço</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Rua, número" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <div className="grid grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="neighborhood"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Bairro</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Bairro" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="city"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Cidade</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Cidade" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    
+                    <FormField
+                      control={form.control}
+                      name="images"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Imagens do imóvel</FormLabel>
+                          <FormControl>
+                            <MultipleImageUpload
+                              value={field.value || []}
+                              onChange={field.onChange}
+                              maxFiles={10}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </TabsContent>
                 </Tabs>
               </form>
             </Form>
