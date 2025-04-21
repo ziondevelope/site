@@ -1416,7 +1416,7 @@ export default function Properties() {
                   <TableHead className="text-white hover:bg-[#001623] hover:text-white">Finalidade</TableHead>
                   <TableHead className="text-white hover:bg-[#001623] hover:text-white">Preço</TableHead>
                   <TableHead className="text-white hover:bg-[#001623] hover:text-white">Detalhes</TableHead>
-                  <TableHead className="text-white hover:bg-[#001623] hover:text-white">Destaque</TableHead>
+                  <TableHead className="text-white hover:bg-[#001623] hover:text-white text-center">Destaque</TableHead>
                   <TableHead className="text-white hover:bg-[#001623] hover:text-white text-right">Ações</TableHead>
                 </TableRow>
               </TableHeader>
@@ -1500,13 +1500,11 @@ export default function Properties() {
                         )}
                       </div>
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="text-center">
                       {property.isFeatured ? (
-                        <div className="inline-flex items-center text-amber-500">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
-                        </div>
+                        <span className="text-amber-500 font-medium text-sm">Em Destaque</span>
                       ) : (
-                        <span className="text-gray-300">-</span>
+                        <span></span>
                       )}
                     </TableCell>
                     <TableCell className="text-right">
