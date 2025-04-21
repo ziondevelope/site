@@ -19,12 +19,8 @@ export function Testimonials() {
     refetchOnWindowFocus: false,
   });
   
-  // Filtrar para mostrar apenas depoimentos destacados (featured)
-  const featuredTestimonials = testimonials.filter((testimonial: Testimonial) => testimonial.featured);
-  const displayedTestimonials = featuredTestimonials.length > 0 ? featuredTestimonials : testimonials;
-  
-  // Limitar para exibir no máximo 3 depoimentos
-  const limitedTestimonials = displayedTestimonials.slice(0, 3);
+  // Mostrar todos os depoimentos sem filtragem ou limitação
+  const displayedTestimonials = testimonials;
   
   if (isLoading) {
     return (
@@ -34,8 +30,8 @@ export function Testimonials() {
             <h2 className="text-3xl font-bold mb-2">Depoimentos</h2>
             <p className="text-gray-600">O que nossos clientes dizem sobre nós</p>
           </div>
-          <div className="grid md:grid-cols-3 gap-8">
-            {[1, 2, 3].map((i) => (
+          <div className="grid md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {[1, 2, 3, 4].map((i) => (
               <div key={i} className="bg-white p-6 rounded-lg shadow-sm">
                 <div className="flex items-center mb-4">
                   <Skeleton className="h-12 w-12 rounded-full" />
@@ -67,8 +63,8 @@ export function Testimonials() {
           <p className="text-gray-600">O que nossos clientes dizem sobre nós</p>
         </div>
         
-        <div className="grid md:grid-cols-3 gap-8">
-          {limitedTestimonials.map((testimonial: Testimonial) => (
+        <div className="grid md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {displayedTestimonials.map((testimonial: Testimonial) => (
             <div key={testimonial.id} className="bg-white p-6 rounded-lg shadow-sm">
               <div className="flex items-center mb-4">
                 <Avatar className="h-12 w-12">
