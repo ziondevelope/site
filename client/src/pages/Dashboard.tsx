@@ -89,45 +89,36 @@ export default function Dashboard() {
         <div className="space-y-6">
           {/* Componente de contagem de imóveis */}
           <div className="bg-white p-6 rounded-lg shadow-sm" style={{ fontFamily: 'Montserrat, sans-serif' }}>
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-base font-medium text-gray-700">Total de Imóveis Cadastrados</h3>
+            <div className="flex items-center mb-4">
+              <Home className="h-5 w-5 text-gray-700 mr-2" />
+              <h3 className="text-base font-medium text-gray-700">Imóveis</h3>
             </div>
             
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="bg-blue-50 p-4 rounded-lg">
-                <div className="flex items-center">
-                  <div className="bg-blue-100 p-2 rounded-lg mr-3">
-                    <Home className="h-6 w-6 text-blue-500" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-500">Imóveis para Venda</p>
-                    <h3 className="text-2xl font-semibold mt-1">
-                      {propertiesLoading ? (
-                        <div className="animate-pulse h-8 w-12 bg-gray-200 rounded"></div>
-                      ) : (
-                        allProperties?.filter(prop => prop.purpose === 'sale').length || 0
-                      )}
-                    </h3>
-                  </div>
-                </div>
-              </div>
+            <div className="flex flex-col items-center text-center">
+              <h1 className="text-5xl font-bold mb-4">
+                {propertiesLoading ? (
+                  <div className="animate-pulse h-16 w-16 bg-gray-200 rounded mx-auto"></div>
+                ) : (
+                  allProperties?.length || 0
+                )}
+              </h1>
+              <p className="text-sm text-gray-500 mb-5">Imóveis</p>
               
-              <div className="bg-green-50 p-4 rounded-lg">
-                <div className="flex items-center">
-                  <div className="bg-green-100 p-2 rounded-lg mr-3">
-                    <Store className="h-6 w-6 text-green-500" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-500">Imóveis para Locação</p>
-                    <h3 className="text-2xl font-semibold mt-1">
-                      {propertiesLoading ? (
-                        <div className="animate-pulse h-8 w-12 bg-gray-200 rounded"></div>
-                      ) : (
-                        allProperties?.filter(prop => prop.purpose === 'rent').length || 0
-                      )}
-                    </h3>
-                  </div>
-                </div>
+              <div className="flex gap-1 w-full">
+                <button className="flex-1 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium py-2 px-4 rounded-lg">
+                  {propertiesLoading ? (
+                    <div className="animate-pulse h-4 w-4 bg-blue-600 rounded mx-auto"></div>
+                  ) : (
+                    `${allProperties?.filter(prop => prop.status === 'pending')?.length || 0} Em aprovação`
+                  )}
+                </button>
+                <button className="flex-1 bg-green-500 hover:bg-green-600 text-white text-sm font-medium py-2 px-4 rounded-lg">
+                  {propertiesLoading ? (
+                    <div className="animate-pulse h-4 w-4 bg-green-600 rounded mx-auto"></div>
+                  ) : (
+                    `${allProperties?.filter(prop => prop.status === 'active')?.length || 0} Atualizados`
+                  )}
+                </button>
               </div>
             </div>
           </div>
