@@ -356,11 +356,11 @@ export default function Home() {
                                 {property.bedrooms}
                               </span>
                               <span className="flex items-center">
-                                <i className="fas fa-shower fa-sm mr-1"></i>
+                                <i className="fas fa-shower fa-sm mr-1" style={{ color: '#4B5563' }}></i>
                                 {property.bathrooms}
                               </span>
                               <span className="flex items-center">
-                                <i className="fas fa-bath fa-sm mr-1" style={{ color: config?.primaryColor || 'var(--primary)' }}></i>
+                                <i className="fas fa-bath fa-sm mr-1" style={{ color: '#4B5563' }}></i>
                                 {property.suites || 0}
                               </span>
                               <span className="flex items-center">
@@ -497,7 +497,7 @@ export default function Home() {
                               {property.bedrooms}
                             </span>
                             <span className="flex items-center">
-                              <i className="fas fa-shower fa-sm mr-1"></i>
+                              <i className="fas fa-shower fa-sm mr-1" style={{ color: '#4B5563' }}></i>
                               {property.bathrooms}
                             </span>
                             <span className="flex items-center">
