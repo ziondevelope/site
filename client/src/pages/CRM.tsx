@@ -2706,6 +2706,50 @@ export default function CRM() {
                                   </div>
                                 </div>
                               )}
+                              
+                              {/* Lista de tarefas concluídas */}
+                              {taskList[lead.id] && taskList[lead.id].filter(task => task.completed).length > 0 && (
+                                <div className="mt-6">
+                                  <h4 className="text-sm font-medium mb-3">Tarefas Concluídas</h4>
+                                  <div className="space-y-3">
+                                    {taskList[lead.id]
+                                      .filter(task => task.completed)
+                                      .map((task) => {
+                                        const taskIcon = 
+                                          task.type === "ligacao" ? <Phone className="h-3.5 w-3.5 text-blue-500" /> :
+                                          task.type === "email" ? <Mail className="h-3.5 w-3.5 text-green-500" /> :
+                                          <MessageSquare className="h-3.5 w-3.5 text-purple-500" />;
+                                          
+                                        const taskTitle = 
+                                          task.type === "ligacao" ? "Ligação" :
+                                          task.type === "email" ? "E-mail" : "WhatsApp";
+                                          
+                                        return (
+                                          <div 
+                                            key={task.id} 
+                                            className="flex items-center justify-between p-3 border border-gray-100 rounded-md bg-gray-50/60"
+                                          >
+                                            <div className="flex items-start">
+                                              <div className="mr-3 mt-0.5">{taskIcon}</div>
+                                              <div>
+                                                <div className="flex items-center">
+                                                  <span className="text-xs font-medium">{taskTitle}:</span>
+                                                  <span className="text-xs ml-2 line-through text-gray-500">{task.description}</span>
+                                                </div>
+                                                <div className="text-xs text-gray-500 mt-1">
+                                                  {task.date ? formatDate(task.date) : ""} às {task.time}
+                                                </div>
+                                              </div>
+                                            </div>
+                                            <div className="flex items-center">
+                                              <CheckCircle className="h-4 w-4 text-green-500" />
+                                            </div>
+                                          </div>
+                                        );
+                                      })}
+                                  </div>
+                                </div>
+                              )}
                             </div>
                           </div>
                         </TabsContent>
