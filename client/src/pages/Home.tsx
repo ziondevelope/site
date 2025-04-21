@@ -464,14 +464,14 @@ export default function Home() {
                           {/* Botão Ver Detalhes que aparece no hover */}
                           <div className="eye-icon absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300">
                             <div className="rounded-md bg-white/90 px-4 py-2 backdrop-blur-sm flex items-center gap-2">
-                              <i className="fas fa-eye text-sm" style={{ color: 'rgb(0, 21, 36)' }}></i>
-                              <span className="text-sm font-medium" style={{ color: 'rgb(0, 21, 36)' }}>Ver Detalhes</span>
+                              <i className="fas fa-eye text-sm" style={{ color: config?.primaryColor || 'var(--primary)' }}></i>
+                              <span className="text-sm font-medium" style={{ color: config?.primaryColor || 'var(--primary)' }}>Ver Detalhes</span>
                             </div>
                           </div>
                           <div 
                             className="absolute bottom-0 left-0 text-white px-3 py-1 rounded-tr-lg"
                             style={{
-                              backgroundColor: 'rgb(0, 21, 36)'
+                              backgroundColor: config?.primaryColor || 'var(--primary)'
                             }}
                           >
                             Venda
@@ -521,8 +521,8 @@ export default function Home() {
                 size="lg" 
                 onClick={() => setLocation('/properties?purpose=sale')}
                 style={{
-                  borderColor: 'rgb(0, 21, 36)',
-                  color: 'rgb(0, 21, 36)'
+                  borderColor: config?.primaryColor || 'var(--primary)',
+                  color: config?.primaryColor || 'var(--primary)'
                 }}
               >
                 Ver todos os imóveis para venda
