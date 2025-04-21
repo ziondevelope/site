@@ -9,6 +9,7 @@ import { Property } from "@shared/schema";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShower, faBed, faRulerCombined, faCar, faBath } from "@fortawesome/free-solid-svg-icons";
 import PropertyDetailsModal from '@/components/website/PropertyDetailsModal';
+import { Testimonials } from '@/components/website/Testimonials';
 import { useLoading } from "@/contexts/LoadingContext";
 import '../styles/hover-effects.css';
 
@@ -713,6 +714,11 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Testimonials Section */}
+      {config?.showTestimonials !== false && (
+        <Testimonials />
+      )}
 
       {/* Contact Section */}
       <section id="contact" className="py-16 bg-gray-50">

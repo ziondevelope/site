@@ -35,7 +35,7 @@ export function TestimonialsManager() {
   });
 
   // Buscar todos os depoimentos
-  const { data: testimonials = [], isLoading } = useQuery({
+  const { data: testimonials = [], isLoading } = useQuery<Testimonial[]>({
     queryKey: ['/api/testimonials'],
     refetchOnWindowFocus: false,
   });
