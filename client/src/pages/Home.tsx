@@ -428,8 +428,8 @@ export default function Home() {
             <h2 className="text-3xl font-bold text-center mb-12">Imóveis para Venda</h2>
             
             {isLoadingProperties ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {[1, 2, 3].map(item => (
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                {[1, 2, 3, 4, 5, 6, 7, 8].map(item => (
                   <div key={item} className="bg-white rounded-lg shadow-md overflow-hidden animate-pulse">
                     <div className="h-48 bg-gray-200"></div>
                     <div className="p-6">
@@ -441,10 +441,10 @@ export default function Home() {
                 ))}
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 {featuredProperties
                   .filter(property => property.purpose === 'sale')
-                  .slice(0, 3)
+                  .slice(0, 8)
                   .map((property) => (
                     <div key={property.id}>
                       <div 
@@ -452,7 +452,7 @@ export default function Home() {
                         onClick={() => openPropertyModal(property.id)}
                       >
                         {/* Property Image */}
-                        <div className="property-image-container h-56 bg-gray-200 relative overflow-hidden">
+                        <div className="property-image-container h-48 bg-gray-200 relative overflow-hidden">
                           {getFeaturedImage(property) ? (
                             <img 
                               src={getFeaturedImage(property)} 
