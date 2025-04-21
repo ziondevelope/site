@@ -1,0 +1,15 @@
+version: '3'
+services:
+  imobsite:
+    build: .
+    container_name: imobsite-crm
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - VITE_FIREBASE_API_KEY=AIzaSyD5NShwJQyEN8znPckPr_KafH-C2MtL-zA
+      - VITE_FIREBASE_PROJECT_ID=cadastro-web-fa5dd
+      - VITE_FIREBASE_APP_ID=1:256771876237:web:299156662370a64c0f89c4
+      - PORT=3000
+      - SESSION_SECRET=imobsite-secret-key
+      - NODE_ENV=production

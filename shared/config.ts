@@ -1,13 +1,33 @@
 // Configurações centralizadas para o sistema
 
+// Verifica se estamos no ambiente do navegador ou do servidor
+const isBrowser = typeof window !== 'undefined';
+
 // Configurações do Firebase
 export const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || process.env.VITE_FIREBASE_API_KEY || "your-api-key",
-  authDomain: `${import.meta.env.VITE_FIREBASE_PROJECT_ID || process.env.VITE_FIREBASE_PROJECT_ID || "your-project-id"}.firebaseapp.com`,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || process.env.VITE_FIREBASE_PROJECT_ID || "your-project-id",
-  storageBucket: `${import.meta.env.VITE_FIREBASE_PROJECT_ID || process.env.VITE_FIREBASE_PROJECT_ID || "your-project-id"}.appspot.com`,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || process.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "your-messaging-sender-id",
-  appId: import.meta.env.VITE_FIREBASE_APP_ID || process.env.VITE_FIREBASE_APP_ID || "your-app-id"
+  apiKey: isBrowser && import.meta.env.VITE_FIREBASE_API_KEY ? 
+    import.meta.env.VITE_FIREBASE_API_KEY : 
+    process.env.VITE_FIREBASE_API_KEY || "AIzaSyD5NShwJQyEN8znPckPr_KafH-C2MtL-zA",
+  
+  authDomain: `${isBrowser && import.meta.env.VITE_FIREBASE_PROJECT_ID ? 
+    import.meta.env.VITE_FIREBASE_PROJECT_ID : 
+    process.env.VITE_FIREBASE_PROJECT_ID || "cadastro-web-fa5dd"}.firebaseapp.com`,
+  
+  projectId: isBrowser && import.meta.env.VITE_FIREBASE_PROJECT_ID ? 
+    import.meta.env.VITE_FIREBASE_PROJECT_ID : 
+    process.env.VITE_FIREBASE_PROJECT_ID || "cadastro-web-fa5dd",
+  
+  storageBucket: `${isBrowser && import.meta.env.VITE_FIREBASE_PROJECT_ID ? 
+    import.meta.env.VITE_FIREBASE_PROJECT_ID : 
+    process.env.VITE_FIREBASE_PROJECT_ID || "cadastro-web-fa5dd"}.appspot.com`,
+  
+  messagingSenderId: isBrowser && import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID ? 
+    import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID : 
+    process.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "256771876237",
+  
+  appId: isBrowser && import.meta.env.VITE_FIREBASE_APP_ID ? 
+    import.meta.env.VITE_FIREBASE_APP_ID : 
+    process.env.VITE_FIREBASE_APP_ID || "1:256771876237:web:299156662370a64c0f89c4"
 };
 
 // Configurações do servidor
@@ -40,7 +60,11 @@ export function checkEnvironmentConfig(): { isValid: boolean; missingVars: strin
   ];
   
   const missingVars = requiredVars.filter(varName => {
-    return !(import.meta.env[varName] || process.env[varName]);
+    if (isBrowser) {
+      return !import.meta.env[varName];
+    } else {
+      return !process.env[varName];
+    }
   });
   
   return {
