@@ -95,15 +95,15 @@ export default function Header({ config, isLoadingConfig }: HeaderProps) {
             }`}
             style={{ 
               borderColor: isPropertiesPage || scrolled 
-                ? (config?.primaryColor ? `${config.primaryColor}33` : 'var(--primary-33)') 
+                ? '#000000' 
                 : 'rgba(255, 255, 255, 0.3)',
-              color: isPropertiesPage || scrolled ? (config?.primaryColor || 'var(--primary)') : 'white'
+              color: isPropertiesPage || scrolled ? '#000000' : 'white'
             }}
             onMouseOver={(e) => {
               e.currentTarget.style.color = '#000000';
             }}
             onMouseOut={(e) => {
-              e.currentTarget.style.color = isPropertiesPage || scrolled ? (config?.primaryColor || 'var(--primary)') : 'white';
+              e.currentTarget.style.color = isPropertiesPage || scrolled ? '#000000' : 'white';
             }}
           >
             {config?.phone && <span className="mr-2">{config.phone}</span>}
