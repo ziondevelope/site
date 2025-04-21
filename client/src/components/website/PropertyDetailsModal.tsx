@@ -406,7 +406,7 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
           <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50">
             <div 
               className="flex items-center shadow-lg rounded-full cursor-pointer px-8 py-3 whitespace-nowrap"
-              style={{ backgroundColor: primaryColor, minWidth: '260px' }}
+              style={{ backgroundColor: '#25D366', minWidth: '260px' }}
               onClick={() => {
                 if (!agent || !currentProperty) return;
                 const phone = agent.phone?.replace(/\D/g, '') || '';
