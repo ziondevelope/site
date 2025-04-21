@@ -147,7 +147,7 @@ export function Testimonials() {
                 key={index}
                 type="button"
                 className={`w-3 h-3 rounded-full transition-colors ${
-                  index === currentIndex ? "bg-indigo-600" : "bg-gray-300 hover:bg-gray-400"
+                  index === currentIndex ? "bg-black" : "bg-gray-300 hover:bg-gray-400"
                 }`}
                 aria-label={`Ir para o depoimento ${index + 1}`}
                 onClick={() => emblaApi?.scrollTo(index)}
