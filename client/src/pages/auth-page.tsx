@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import logoImage from "../assets/logo-dark.png";
+import logoImage from "../assets/logo-new.png";
 
 export default function AuthPage() {
   const [username, setUsername] = useState("");
@@ -125,7 +125,7 @@ export default function AuthPage() {
           
           <Button
             type="submit"
-            className="w-full py-6 text-lg bg-[#00456A] hover:bg-[#003A57] transition-colors"
+            className="w-full py-6 text-lg bg-[#FF9500] hover:bg-[#E08600] transition-colors"
             disabled={isLoading}
           >
             {isLoading ? (
@@ -141,7 +141,7 @@ export default function AuthPage() {
           
           <div className="mt-8 pt-6 border-t border-gray-100">
             <p className="text-sm text-gray-500 text-center">
-              Para acessar a área pública, <a href="/" className="text-[#00456A] hover:text-[#003A57] font-medium hover:underline transition-colors">clique aqui</a>.
+              Para acessar a área pública, <a href="/" className="text-[#FF9500] hover:text-[#E08600] font-medium hover:underline transition-colors">clique aqui</a>.
             </p>
           </div>
         </form>
