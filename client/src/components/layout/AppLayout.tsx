@@ -10,6 +10,7 @@ interface AppLayoutProps {
 }
 
 export default function AppLayout({ children }: AppLayoutProps) {
+  const [, setLocation] = useLocation();
   const [location] = useLocation();
   
   const getBreadcrumbs = () => {
@@ -69,9 +70,21 @@ export default function AppLayout({ children }: AppLayoutProps) {
               Desempenho padrão
             </Button>
             <div className="flex items-center text-sm">
-              <span className="mr-2 text-gray-600">Usuário: Gabriel Teste</span>
-              <Button variant="ghost" size="icon" className="text-gray-500 hover:text-gray-800">
-                <i className="ri-settings-line text-lg"></i>
+              <span className="mr-2 text-gray-600">Usuário: Administrador</span>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="text-gray-500 hover:text-red-600 flex items-center"
+                onClick={() => {
+                  // Remover informações de autenticação
+                  localStorage.removeItem("isAuthenticated");
+                  localStorage.removeItem("authTimestamp");
+                  // Redirecionar para página de login
+                  setLocation("/auth");
+                }}
+              >
+                <i className="ri-logout-box-line text-lg mr-1"></i>
+                Sair
               </Button>
             </div>
           </div>
