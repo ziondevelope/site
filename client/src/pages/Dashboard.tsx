@@ -83,162 +83,165 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-6" style={{ fontFamily: 'Montserrat, sans-serif' }}>
-      {/* Componente de contagem de imóveis */}
-      <div className="bg-white p-6 rounded-lg shadow-sm mb-4" style={{ fontFamily: 'Montserrat, sans-serif' }}>
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-base font-medium text-gray-700">Total de Imóveis Cadastrados</h3>
-        </div>
-        
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="bg-blue-50 p-4 rounded-lg">
-            <div className="flex justify-between items-start">
-              <div>
-                <p className="text-sm text-gray-500">Imóveis para Venda</p>
-                <h3 className="text-2xl font-semibold mt-1">
-                  {propertiesLoading ? (
-                    <div className="animate-pulse h-8 w-12 bg-gray-200 rounded"></div>
-                  ) : (
-                    allProperties?.filter(prop => prop.purpose === 'sale').length || 0
-                  )}
-                </h3>
-              </div>
-              <div className="bg-blue-100 p-2 rounded-lg">
-                <Home className="h-6 w-6 text-blue-500" />
-              </div>
-            </div>
-          </div>
-          
-          <div className="bg-green-50 p-4 rounded-lg">
-            <div className="flex justify-between items-start">
-              <div>
-                <p className="text-sm text-gray-500">Imóveis para Locação</p>
-                <h3 className="text-2xl font-semibold mt-1">
-                  {propertiesLoading ? (
-                    <div className="animate-pulse h-8 w-12 bg-gray-200 rounded"></div>
-                  ) : (
-                    allProperties?.filter(prop => prop.purpose === 'rent').length || 0
-                  )}
-                </h3>
-              </div>
-              <div className="bg-green-100 p-2 rounded-lg">
-                <Store className="h-6 w-6 text-green-500" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      
       {/* Grid principal de painéis */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Painel de Atividades */}
-        <div className="bg-white p-6 rounded-lg shadow-sm">
-          <div className="flex items-center mb-4">
-            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" className="mr-2">
-              <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="rgb(21, 97, 109)" strokeWidth="1.5"/>
-              <path d="M8 12L10.5 14.5L16 9" stroke="rgb(21, 97, 109)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-            <h3 className="text-lg font-semibold text-gray-800">Atividades</h3>
-          </div>
-          
-          {tasksLoading ? (
-            <div className="py-6 text-center">
-              <p className="text-gray-500">Carregando atividades...</p>
+        {/* Coluna 1: Contadores de Imóveis e Atividades */}
+        <div className="space-y-6">
+          {/* Componente de contagem de imóveis */}
+          <div className="bg-white p-6 rounded-lg shadow-sm" style={{ fontFamily: 'Montserrat, sans-serif' }}>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-base font-medium text-gray-700">Total de Imóveis Cadastrados</h3>
             </div>
-          ) : !Array.isArray(tasks) || tasks.filter(task => task.status === 'pending').length === 0 ? (
-            <div className="py-6 text-center">
-              <p className="text-gray-500">Nenhuma atividade pendente.</p>
-            </div>
-          ) : (
-            <div className="space-y-3 overflow-y-auto max-h-[350px] pr-1">
-              {tasks
-                .filter(task => task.status === 'pending')
-                .filter(task => {
-                  const today = new Date();
-                  const taskDate = new Date(task.date);
-                  const diffTime = taskDate.getTime() - today.getTime();
-                  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                  return diffDays <= 2 && diffDays >= -1; // Mostrar tarefas com vencimento em 2 dias ou que venceram ontem
-                })
-                .map((task) => (
-                <div key={task.id} className="p-3 border border-gray-100 rounded-lg hover:bg-gray-50 cursor-pointer">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <div className="font-medium text-gray-800" style={{ fontSize: '14px' }}>
-                        {task.type === 'call' || task.type === 'ligacao' ? 'Ligação' :
-                         task.type === 'visit' || task.type === 'visita' ? 'Visita' :
-                         task.type === 'whatsapp' ? 'WhatsApp' :
-                         task.type === 'meeting' || task.type === 'reuniao' ? 'Reunião' :
-                         task.type === 'email' ? 'E-mail' :
-                         task.type}
-                      </div>
-                      <div className="text-xs text-gray-500 mt-1">{task.description}</div>
-                    </div>
-
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="bg-blue-50 p-4 rounded-lg">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <p className="text-sm text-gray-500">Imóveis para Venda</p>
+                    <h3 className="text-2xl font-semibold mt-1">
+                      {propertiesLoading ? (
+                        <div className="animate-pulse h-8 w-12 bg-gray-200 rounded"></div>
+                      ) : (
+                        allProperties?.filter(prop => prop.purpose === 'sale').length || 0
+                      )}
+                    </h3>
                   </div>
-                  <div className="mt-2 flex items-center justify-between">
-                    <div className="flex items-center text-[10px] text-gray-500">
-                      {(() => {
-                        // Calcula a diferença entre a data atual e a data da tarefa em dias
-                        const today = new Date();
-                        const taskDate = new Date(task.date);
-                        const diffTime = taskDate.getTime() - today.getTime();
-                        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                        
-                        // Exibe uma bolinha vermelha se faltar menos de 2 dias
-                        if (diffDays <= 2 && diffDays >= 0) {
-                          return <div className="w-2 h-2" style={{ width: '0.5rem', height: '0.5rem', backgroundColor: '#EF4444', borderRadius: '50%', marginRight: '0.25rem' }}></div>;
-                        } 
-                        // Exibe uma bolinha amarela se faltar entre 3 e 4 dias
-                        else if (diffDays > 2 && diffDays <= 4) {
-                          return <div className="w-2 h-2" style={{ width: '0.5rem', height: '0.5rem', backgroundColor: '#F59E0B', borderRadius: '50%', marginRight: '0.25rem' }}></div>;
-                        }
-                        // Exibe uma bolinha verde se faltar mais de 4 dias
-                        else if (diffDays > 4) {
-                          return <div className="w-2 h-2" style={{ width: '0.5rem', height: '0.5rem', backgroundColor: '#10B981', borderRadius: '50%', marginRight: '0.25rem' }}></div>;
-                        }
-                        // Exibe o ícone de relógio se o prazo já passou
-                        else {
-                          return <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>;
-                        }
-                      })()}
-                      {new Date(task.date).toLocaleString('pt-BR', {
-                        day: '2-digit',
-                        month: '2-digit',
-                        year: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit'
-                      })}
-                    </div>
-                    <button 
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        fetch(`/api/tasks/${task.id}/complete`, {
-                          method: 'PATCH',
-                          headers: { 'Content-Type': 'application/json' },
-                          body: JSON.stringify({ 
-                            status: 'completed'
-                          })
-                        })
-                        .then(response => response.json())
-                        .then(() => {
-                          // Recarregar os dados após marcar como concluído
-                          setTimeout(() => {
-                            window.location.reload();
-                          }, 300);
-                        })
-                        .catch(error => console.error('Erro ao atualizar tarefa:', error));
-                      }}
-                      className="text-xs bg-green-50 hover:bg-green-100 text-green-700 font-medium rounded-full w-7 h-7 flex items-center justify-center transition-colors"
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                      </svg>
-                    </button>
+                  <div className="bg-blue-100 p-2 rounded-lg">
+                    <Home className="h-6 w-6 text-blue-500" />
                   </div>
                 </div>
-              ))}
+              </div>
+              
+              <div className="bg-green-50 p-4 rounded-lg">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <p className="text-sm text-gray-500">Imóveis para Locação</p>
+                    <h3 className="text-2xl font-semibold mt-1">
+                      {propertiesLoading ? (
+                        <div className="animate-pulse h-8 w-12 bg-gray-200 rounded"></div>
+                      ) : (
+                        allProperties?.filter(prop => prop.purpose === 'rent').length || 0
+                      )}
+                    </h3>
+                  </div>
+                  <div className="bg-green-100 p-2 rounded-lg">
+                    <Store className="h-6 w-6 text-green-500" />
+                  </div>
+                </div>
+              </div>
             </div>
-          )}
+          </div>
+          
+          {/* Painel de Atividades */}
+          <div className="bg-white p-6 rounded-lg shadow-sm">
+            <div className="flex items-center mb-4">
+              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" className="mr-2">
+                <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="rgb(21, 97, 109)" strokeWidth="1.5"/>
+                <path d="M8 12L10.5 14.5L16 9" stroke="rgb(21, 97, 109)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+              <h3 className="text-lg font-semibold text-gray-800">Atividades</h3>
+            </div>
+            
+            {tasksLoading ? (
+              <div className="py-6 text-center">
+                <p className="text-gray-500">Carregando atividades...</p>
+              </div>
+            ) : !Array.isArray(tasks) || tasks.filter(task => task.status === 'pending').length === 0 ? (
+              <div className="py-6 text-center">
+                <p className="text-gray-500">Nenhuma atividade pendente.</p>
+              </div>
+            ) : (
+              <div className="space-y-3 overflow-y-auto max-h-[350px] pr-1">
+                {tasks
+                  .filter(task => task.status === 'pending')
+                  .filter(task => {
+                    const today = new Date();
+                    const taskDate = new Date(task.date);
+                    const diffTime = taskDate.getTime() - today.getTime();
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                    return diffDays <= 2 && diffDays >= -1; // Mostrar tarefas com vencimento em 2 dias ou que venceram ontem
+                  })
+                  .map((task) => (
+                  <div key={task.id} className="p-3 border border-gray-100 rounded-lg hover:bg-gray-50 cursor-pointer">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <div className="font-medium text-gray-800" style={{ fontSize: '14px' }}>
+                          {task.type === 'call' || task.type === 'ligacao' ? 'Ligação' :
+                           task.type === 'visit' || task.type === 'visita' ? 'Visita' :
+                           task.type === 'whatsapp' ? 'WhatsApp' :
+                           task.type === 'meeting' || task.type === 'reuniao' ? 'Reunião' :
+                           task.type === 'email' ? 'E-mail' :
+                           task.type}
+                        </div>
+                        <div className="text-xs text-gray-500 mt-1">{task.description}</div>
+                      </div>
+
+                    </div>
+                    <div className="mt-2 flex items-center justify-between">
+                      <div className="flex items-center text-[10px] text-gray-500">
+                        {(() => {
+                          // Calcula a diferença entre a data atual e a data da tarefa em dias
+                          const today = new Date();
+                          const taskDate = new Date(task.date);
+                          const diffTime = taskDate.getTime() - today.getTime();
+                          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                          
+                          // Exibe uma bolinha vermelha se faltar menos de 2 dias
+                          if (diffDays <= 2 && diffDays >= 0) {
+                            return <div className="w-2 h-2" style={{ width: '0.5rem', height: '0.5rem', backgroundColor: '#EF4444', borderRadius: '50%', marginRight: '0.25rem' }}></div>;
+                          } 
+                          // Exibe uma bolinha amarela se faltar entre 3 e 4 dias
+                          else if (diffDays > 2 && diffDays <= 4) {
+                            return <div className="w-2 h-2" style={{ width: '0.5rem', height: '0.5rem', backgroundColor: '#F59E0B', borderRadius: '50%', marginRight: '0.25rem' }}></div>;
+                          }
+                          // Exibe uma bolinha verde se faltar mais de 4 dias
+                          else if (diffDays > 4) {
+                            return <div className="w-2 h-2" style={{ width: '0.5rem', height: '0.5rem', backgroundColor: '#10B981', borderRadius: '50%', marginRight: '0.25rem' }}></div>;
+                          }
+                          // Exibe o ícone de relógio se o prazo já passou
+                          else {
+                            return <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>;
+                          }
+                        })()}
+                        {new Date(task.date).toLocaleString('pt-BR', {
+                          day: '2-digit',
+                          month: '2-digit',
+                          year: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })}
+                      </div>
+                      <button 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          fetch(`/api/tasks/${task.id}/complete`, {
+                            method: 'PATCH',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ 
+                              status: 'completed'
+                            })
+                          })
+                          .then(response => response.json())
+                          .then(() => {
+                            // Recarregar os dados após marcar como concluído
+                            setTimeout(() => {
+                              window.location.reload();
+                            }, 300);
+                          })
+                          .catch(error => console.error('Erro ao atualizar tarefa:', error));
+                        }}
+                        className="text-xs bg-green-50 hover:bg-green-100 text-green-700 font-medium rounded-full w-7 h-7 flex items-center justify-center transition-colors"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
         
         {/* Painel de Funil de Vendas */}

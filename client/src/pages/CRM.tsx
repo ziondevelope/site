@@ -656,11 +656,7 @@ export default function CRM() {
     queryFn: () => apiRequest('/api/tasks')
   });
   
-  // Fetch all properties for property counters
-  const { data: allProperties, isLoading: propertiesLoading } = useQuery<any[]>({
-    queryKey: ['/api/properties'],
-    queryFn: () => apiRequest('/api/properties')
-  });
+
   
   // Atualizar o estado com os leads que têm tarefas pendentes quando as tarefas são carregadas
   useEffect(() => {
