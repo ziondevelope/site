@@ -109,14 +109,14 @@ export default function Dashboard() {
                   {propertiesLoading ? (
                     <div className="animate-pulse h-4 w-4 bg-blue-600 rounded mx-auto"></div>
                   ) : (
-                    `${allProperties?.filter(prop => prop.status === 'pending')?.length || 0} Em aprovação`
+                    `${allProperties?.filter(prop => prop.purpose === 'sale')?.length || 0} Venda`
                   )}
                 </button>
                 <button className="flex-1 bg-green-500 hover:bg-green-600 text-white text-sm font-medium py-2 px-4 rounded-lg">
                   {propertiesLoading ? (
                     <div className="animate-pulse h-4 w-4 bg-green-600 rounded mx-auto"></div>
                   ) : (
-                    `${allProperties?.filter(prop => prop.status === 'active')?.length || 0} Atualizados`
+                    `${allProperties?.filter(prop => prop.purpose === 'rent')?.length || 0} Aluguel`
                   )}
                 </button>
               </div>
