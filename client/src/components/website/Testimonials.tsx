@@ -4,66 +4,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useCallback, useEffect, useState } from "react";
 import useEmblaCarousel from 'embla-carousel-react';
 
-// Estilos CSS para o carrossel
-const carouselCSS = `
-.embla {
-  position: relative;
-  padding: 20px;
-}
-
-.embla__viewport {
-  overflow: hidden;
-  width: 100%;
-  border-radius: 10px;
-}
-
-.embla__container {
-  display: flex;
-  user-select: none;
-  -webkit-touch-callout: none;
-  -khtml-user-select: none;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.embla__slide {
-  position: relative;
-  min-width: 100%;
-  padding: 0 10px;
-  transition: transform 0.3s ease;
-}
-
-.embla__slide--active {
-  z-index: 1;
-}
-
-@media (min-width: 640px) {
-  .embla__slide {
-    min-width: 50%;
-  }
-}
-
-@media (min-width: 768px) {
-  .embla__slide {
-    min-width: 33.33%;
-  }
-}
-
-.embla__dots {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-}
-
-.embla__dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  margin: 0 5px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-`;
-
 interface Testimonial {
   id: number;
   name: string;
@@ -75,18 +15,6 @@ interface Testimonial {
 }
 
 export function Testimonials() {
-  // Adicionar os estilos do carrossel ao documento
-  useEffect(() => {
-    // Criar um elemento style
-    const styleElement = document.createElement('style');
-    styleElement.textContent = carouselCSS;
-    document.head.appendChild(styleElement);
-    
-    // Limpar o elemento style ao desmontar o componente
-    return () => {
-      document.head.removeChild(styleElement);
-    };
-  }, []);
   
   // Embla carousel setup
   // Configuração do carrossel com 3 slides visíveis em telas grandes
@@ -175,13 +103,13 @@ export function Testimonials() {
         </div>
         
         {/* Carrossel Embla */}
-        <div className="embla">
-          <div className="embla__viewport" ref={emblaRef}>
-            <div className="embla__container">
+        <div className="relative px-4 py-2">
+          <div className="overflow-hidden" ref={emblaRef}>
+            <div className="flex">
               {testimonials.map((testimonial: Testimonial) => (
                 <div 
                   key={testimonial.id} 
-                  className="embla__slide"
+                  className="flex-[0_0_100%] min-w-0 sm:flex-[0_0_50%] md:flex-[0_0_33.33%] px-4"
                 >
                   <div className="bg-white p-6 rounded-lg shadow-sm h-full">
                     <div className="flex items-center mb-4">
@@ -213,12 +141,12 @@ export function Testimonials() {
           </div>
           
           {/* Indicadores de slide */}
-          <div className="embla__dots">
+          <div className="flex justify-center mt-8 space-x-2">
             {testimonials.length > 0 && testimonials.map((_, index) => (
               <button
                 key={index}
                 type="button"
-                className={`embla__dot ${
+                className={`w-3 h-3 rounded-full transition-colors ${
                   index === currentIndex ? "bg-indigo-600" : "bg-gray-300 hover:bg-gray-400"
                 }`}
                 aria-label={`Ir para o depoimento ${index + 1}`}
