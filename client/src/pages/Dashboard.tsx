@@ -105,16 +105,16 @@ export default function Dashboard() {
               <p className="text-sm text-gray-500 mb-5">Imóveis</p>
               
               <div className="flex gap-1 w-full">
-                <button className="flex-1 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium py-2 px-4 rounded-lg">
+                <button className="flex-1 bg-[rgb(0,21,36)] hover:bg-[rgb(0,21,36,0.9)] text-white text-sm font-medium py-2 px-4 rounded-lg">
                   {propertiesLoading ? (
-                    <div className="animate-pulse h-4 w-4 bg-blue-600 rounded mx-auto"></div>
+                    <div className="animate-pulse h-4 w-4 bg-[rgb(0,21,36,0.7)] rounded mx-auto"></div>
                   ) : (
                     `${allProperties?.filter(prop => prop.purpose === 'sale')?.length || 0} Venda`
                   )}
                 </button>
-                <button className="flex-1 bg-green-500 hover:bg-green-600 text-white text-sm font-medium py-2 px-4 rounded-lg">
+                <button className="flex-1 bg-[rgb(21,97,109)] hover:bg-[rgb(21,97,109,0.9)] text-white text-sm font-medium py-2 px-4 rounded-lg">
                   {propertiesLoading ? (
-                    <div className="animate-pulse h-4 w-4 bg-green-600 rounded mx-auto"></div>
+                    <div className="animate-pulse h-4 w-4 bg-[rgb(21,97,109,0.7)] rounded mx-auto"></div>
                   ) : (
                     `${allProperties?.filter(prop => prop.purpose === 'rent')?.length || 0} Aluguel`
                   )}
@@ -277,12 +277,12 @@ export default function Dashboard() {
                       const totalLeads = Array.isArray(leads) ? leads.length : 1;
                       const percentage = Math.round((stageLeads / totalLeads) * 100);
                       
-                      // Define cores para os diferentes estágios
+                      // Define cores para os diferentes estágios usando o esquema institucional
                       const stageColors = [
-                        '#FED659', // Amarelo
-                        '#FEE659', // Amarelo claro
-                        '#39ADDC', // Azul
-                        '#FF3A7C'  // Rosa
+                        'rgb(0, 21, 36)',    // Azul escuro institucional
+                        'rgb(21, 97, 109)',  // Verde-azulado institucional
+                        'rgb(0, 21, 36, 0.8)', // Azul escuro com transparência
+                        'rgb(21, 97, 109, 0.8)' // Verde-azulado com transparência
                       ];
                       
                       const color = stageColors[index % stageColors.length];
@@ -344,7 +344,7 @@ export default function Dashboard() {
                 <Line 
                   type="monotone" 
                   dataKey="valor1" 
-                  stroke="#357DEB" 
+                  stroke="rgb(0, 21, 36)" 
                   strokeWidth={2}
                   dot={{ r: 4 }}
                   activeDot={{ r: 6 }}
@@ -352,7 +352,7 @@ export default function Dashboard() {
                 <Line 
                   type="monotone" 
                   dataKey="valor2" 
-                  stroke="#FF3A7C" 
+                  stroke="rgb(21, 97, 109)" 
                   strokeWidth={2}
                   dot={{ r: 4 }}
                   activeDot={{ r: 6 }}
@@ -364,13 +364,13 @@ export default function Dashboard() {
           {/* Valores */}
           <div className="grid grid-cols-2 gap-4 mt-8">
             <div>
-              <h4 className="text-sm text-teal-500">Venda</h4>
+              <h4 className="text-sm" style={{ color: 'rgb(0, 21, 36)' }}>Venda</h4>
               <div className="font-bold text-xl text-gray-800">R$ 1.763.900,00</div>
               <div className="text-xs text-gray-600 mt-1">Total faturado</div>
               <div className="font-medium text-sm mt-1">R$ 1.792.800,00</div>
             </div>
             <div>
-              <h4 className="text-sm text-pink-500">Locação</h4>
+              <h4 className="text-sm" style={{ color: 'rgb(21, 97, 109)' }}>Locação</h4>
               <div className="font-bold text-xl text-gray-800">R$ 28.900,00</div>
               <div className="text-xs text-gray-600 mt-1">Previsão</div>
               <div className="font-medium text-sm mt-1">R$ 2.100.000,00</div>
