@@ -118,7 +118,7 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
         ref={modalRef}
         className="bg-white w-full md:w-[70%] lg:w-[60%] xl:w-[50%] 2xl:w-[45%] h-full overflow-y-auto mx-auto modal-custom-scrollbar"
         style={{ 
-          scrollbarColor: `${primaryColor} #f1f1f1`,
+          scrollbarColor: '#9e9e9e #f1f1f1',
           scrollbarWidth: 'thin',
           '--primary': primaryColor
         } as React.CSSProperties}
