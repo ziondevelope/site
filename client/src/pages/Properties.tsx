@@ -1482,13 +1482,13 @@ export default function Properties() {
                         )}
                         {property.suites > 0 && (
                           <div className="flex items-center" title={`Suítes: ${property.suites}`}>
-                            <i className="fas fa-bath text-gray-500 mr-1"></i>
+                            <i className="fas fa-bath mr-1" style={{ color: '#4B5563' }}></i>
                             <span className="text-xs text-gray-600">{property.suites}</span>
                           </div>
                         )}
                         {property.bathrooms > 0 && (
                           <div className="flex items-center" title={`Banheiros: ${property.bathrooms}`}>
-                            <i className="fas fa-shower text-gray-500 mr-1"></i>
+                            <i className="fas fa-shower mr-1" style={{ color: '#4B5563' }}></i>
                             <span className="text-xs text-gray-600">{property.bathrooms}</span>
                           </div>
                         )}
