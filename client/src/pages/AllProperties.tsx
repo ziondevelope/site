@@ -285,7 +285,7 @@ export default function AllProperties() {
                   >
                     <SelectTrigger id="bathrooms" className="h-10 w-full border-gray-300 rounded-lg">
                       <div className="flex items-center">
-                        <i className="fas fa-shower mr-2 text-gray-400 text-sm"></i>
+                        <i className="fas fa-shower mr-2 text-sm" style={{ color: '#4B5563' }}></i>
                         <SelectValue placeholder="Banheiros" />
                       </div>
                     </SelectTrigger>
@@ -480,11 +480,11 @@ export default function AllProperties() {
                             {property.bedrooms}
                           </span>
                           <span className="flex items-center">
-                            <i className="fas fa-shower fa-sm mr-1"></i>
+                            <i className="fas fa-shower fa-sm mr-1" style={{ color: '#4B5563' }}></i>
                             {property.bathrooms}
                           </span>
                           <span className="flex items-center">
-                            <i className="fas fa-bath fa-sm mr-1" style={{ color: config?.primaryColor || 'var(--primary)' }}></i>
+                            <i className="fas fa-bath fa-sm mr-1" style={{ color: '#4B5563' }}></i>
                             {property.suites || 0}
                           </span>
                           <span className="flex items-center">

@@ -412,7 +412,7 @@ export default function PropertyDetails() {
                         </div>
                         
                         <div className="flex items-center">
-                          <i className="fas fa-shower text-xl mr-2" style={{ color: primaryColor }}></i>
+                          <i className="fas fa-shower text-xl mr-2" style={{ color: '#4B5563' }}></i>
                           <div>
                             <span className="font-medium">{currentProperty.bathrooms || 0}</span>
                             <span className="text-gray-500 text-sm ml-1">Banheiros</span>
@@ -420,7 +420,7 @@ export default function PropertyDetails() {
                         </div>
                         
                         <div className="flex items-center">
-                          <i className="fas fa-bath text-xl mr-2" style={{ color: primaryColor }}></i>
+                          <i className="fas fa-bath text-xl mr-2" style={{ color: '#4B5563' }}></i>
                           <div>
                             <span className="font-medium">{currentProperty.suites || 0}</span>
                             <span className="text-gray-500 text-sm ml-1">Suítes</span>
