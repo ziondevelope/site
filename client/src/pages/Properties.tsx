@@ -151,9 +151,9 @@ export default function Properties() {
   
   // Search and filter states
   const [searchQuery, setSearchQuery] = useState("");
-  const [typeFilter, setTypeFilter] = useState("");
-  const [statusFilter, setStatusFilter] = useState("");
-  const [purposeFilter, setPurposeFilter] = useState("");
+  const [typeFilter, setTypeFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [purposeFilter, setPurposeFilter] = useState("all");
   
   // Fetch properties
   const { data: properties, isLoading } = useQuery<Property[]>({
@@ -181,13 +181,13 @@ export default function Properties() {
         property.address?.toLowerCase().includes(searchQuery.toLowerCase());
       
       // Type filter
-      const matchesType = typeFilter === "" || property.type === typeFilter;
+      const matchesType = typeFilter === "all" || property.type === typeFilter;
       
       // Status filter
-      const matchesStatus = statusFilter === "" || property.status === statusFilter;
+      const matchesStatus = statusFilter === "all" || property.status === statusFilter;
       
       // Purpose filter
-      const matchesPurpose = purposeFilter === "" || property.purpose === purposeFilter;
+      const matchesPurpose = purposeFilter === "all" || property.purpose === purposeFilter;
       
       return matchesSearch && matchesType && matchesStatus && matchesPurpose;
     });
@@ -566,7 +566,7 @@ export default function Properties() {
                   <SelectValue placeholder="Todos os tipos" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Todos os tipos</SelectItem>
+                  <SelectItem value="all">Todos os tipos</SelectItem>
                   <SelectItem value="apartment">Apartamentos</SelectItem>
                   <SelectItem value="house">Casas</SelectItem>
                   <SelectItem value="commercial">Comerciais</SelectItem>
@@ -585,7 +585,7 @@ export default function Properties() {
                   <SelectValue placeholder="Todos os status" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Todos</SelectItem>
+                  <SelectItem value="all">Todos</SelectItem>
                   <SelectItem value="available">Disponível</SelectItem>
                   <SelectItem value="sold">Vendido</SelectItem>
                   <SelectItem value="rented">Alugado</SelectItem>
@@ -644,9 +644,9 @@ export default function Properties() {
             <Button
               onClick={() => {
                 setSearchQuery("");
-                setTypeFilter("");
-                setStatusFilter("");
-                setPurposeFilter("");
+                setTypeFilter("all");
+                setStatusFilter("all");
+                setPurposeFilter("all");
               }}
               size="sm"
               variant="outline"
