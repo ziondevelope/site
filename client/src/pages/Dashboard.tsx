@@ -7,6 +7,8 @@ import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
 import { PieChart, Pie, Cell, Legend } from 'recharts';
+import { Home, Store } from "lucide-react";
+import { apiRequest } from "@/lib/queryClient";
 
 // Dados de exemplo para o gráfico de torta
 const pieData = [
@@ -73,8 +75,59 @@ export default function Dashboard() {
     enabled: !!defaultFunnel?.id,
   });
 
+  // Fetch all properties for property counters
+  const { data: allProperties, isLoading: propertiesLoading } = useQuery<any[]>({
+    queryKey: ['/api/properties'],
+    queryFn: () => apiRequest('/api/properties')
+  });
+
   return (
     <div className="space-y-6" style={{ fontFamily: 'Montserrat, sans-serif' }}>
+      {/* Componente de contagem de imóveis */}
+      <div className="bg-white p-6 rounded-lg shadow-sm mb-4" style={{ fontFamily: 'Montserrat, sans-serif' }}>
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-base font-medium text-gray-700">Total de Imóveis Cadastrados</h3>
+        </div>
+        
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="bg-blue-50 p-4 rounded-lg">
+            <div className="flex justify-between items-start">
+              <div>
+                <p className="text-sm text-gray-500">Imóveis para Venda</p>
+                <h3 className="text-2xl font-semibold mt-1">
+                  {propertiesLoading ? (
+                    <div className="animate-pulse h-8 w-12 bg-gray-200 rounded"></div>
+                  ) : (
+                    allProperties?.filter(prop => prop.purpose === 'sale').length || 0
+                  )}
+                </h3>
+              </div>
+              <div className="bg-blue-100 p-2 rounded-lg">
+                <Home className="h-6 w-6 text-blue-500" />
+              </div>
+            </div>
+          </div>
+          
+          <div className="bg-green-50 p-4 rounded-lg">
+            <div className="flex justify-between items-start">
+              <div>
+                <p className="text-sm text-gray-500">Imóveis para Locação</p>
+                <h3 className="text-2xl font-semibold mt-1">
+                  {propertiesLoading ? (
+                    <div className="animate-pulse h-8 w-12 bg-gray-200 rounded"></div>
+                  ) : (
+                    allProperties?.filter(prop => prop.purpose === 'rent').length || 0
+                  )}
+                </h3>
+              </div>
+              <div className="bg-green-100 p-2 rounded-lg">
+                <Store className="h-6 w-6 text-green-500" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
       {/* Grid principal de painéis */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Painel de Atividades */}
