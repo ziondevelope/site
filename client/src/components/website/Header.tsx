@@ -100,7 +100,7 @@ export default function Header({ config, isLoadingConfig }: HeaderProps) {
               color: isPropertiesPage || scrolled ? (config?.primaryColor || 'var(--primary)') : 'white'
             }}
             onMouseOver={(e) => {
-              e.currentTarget.style.color = config?.primaryColor || 'var(--primary)';
+              e.currentTarget.style.color = '#000000';
             }}
             onMouseOut={(e) => {
               e.currentTarget.style.color = isPropertiesPage || scrolled ? (config?.primaryColor || 'var(--primary)') : 'white';
