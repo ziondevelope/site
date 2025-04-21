@@ -73,7 +73,11 @@ export function Testimonials() {
               <div className="flex items-center mb-4">
                 <Avatar className="h-12 w-12">
                   {testimonial.avatar ? (
-                    <AvatarImage src={testimonial.avatar} alt={testimonial.name} />
+                    <AvatarImage 
+                      src={testimonial.avatar} 
+                      alt={testimonial.name}
+                      style={{ objectFit: 'cover' }}
+                    />
                   ) : (
                     <AvatarFallback className="bg-indigo-100 text-indigo-600">
                       {testimonial.name.substring(0, 2).toUpperCase()}

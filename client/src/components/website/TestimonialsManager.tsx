@@ -293,7 +293,11 @@ export function TestimonialsManager() {
                 <div className="flex space-x-3">
                   <Avatar className="h-10 w-10">
                     {testimonial.avatar ? (
-                      <AvatarImage src={testimonial.avatar} alt={testimonial.name} />
+                      <AvatarImage 
+                        src={testimonial.avatar} 
+                        alt={testimonial.name} 
+                        style={{ objectFit: 'cover' }}
+                      />
                     ) : (
                       <AvatarFallback className="bg-indigo-100 text-indigo-600">
                         {testimonial.name.substring(0, 2).toUpperCase()}
