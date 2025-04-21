@@ -16,6 +16,7 @@ interface MultipleImageUploadProps {
   label?: string;
   disabled?: boolean;
   maxImages?: number;
+  maxFiles?: number; // Para compatibilidade
 }
 
 export const MultipleImageUpload = ({
@@ -23,16 +24,19 @@ export const MultipleImageUpload = ({
   value = [],
   label,
   disabled,
-  maxImages = 10
+  maxImages = 10,
+  maxFiles
 }: MultipleImageUploadProps) => {
+  // Se maxFiles for fornecido, usar ele no lugar de maxImages
+  const maxImagesCount = maxFiles || maxImages;
   const [images, setImages] = useState<GalleryImage[]>(value || []);
   
   const handleAddImage = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     
-    if (images.length >= maxImages) {
-      alert(`Você pode adicionar no máximo ${maxImages} imagens.`);
+    if (images.length >= maxImagesCount) {
+      alert(`Você pode adicionar no máximo ${maxImagesCount} imagens.`);
       return;
     }
 
@@ -140,7 +144,7 @@ export const MultipleImageUpload = ({
         ))}
         
         {/* Adicionar nova imagem */}
-        {images.length < maxImages && (
+        {images.length < maxImagesCount && (
           <Card 
             className="flex flex-col items-center justify-center h-32 border-dashed cursor-pointer hover:bg-gray-50 transition-colors"
             onClick={() => document.getElementById('gallery-upload')?.click()}
@@ -162,8 +166,8 @@ export const MultipleImageUpload = ({
       
       <p className="text-xs text-gray-500 mt-2">
         {images.length > 0 
-          ? `${images.length} de ${maxImages} imagens adicionadas. Clique na estrela para definir a imagem de capa.`
-          : `Adicione até ${maxImages} imagens. A primeira será a capa.`}
+          ? `${images.length} de ${maxImagesCount} imagens adicionadas. Clique na estrela para definir a imagem de capa.`
+          : `Adicione até ${maxImagesCount} imagens. A primeira será a capa.`}
       </p>
     </div>
   );

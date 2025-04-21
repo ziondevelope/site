@@ -50,7 +50,11 @@ async function fetchAddressByCep(cep: string) {
 export function CepInput(props: CepInputProps) {
   const { form, field, value, onChange, name, onBlur, onAddressFound } = props;
   const [isLoading, setIsLoading] = useState(false);
-  const [inputValue, setInputValue] = useState(field?.value || value || "");
+  const [inputValue, setInputValue] = useState(
+    field?.value !== undefined && field?.value !== null 
+      ? field.value 
+      : (value !== undefined && value !== null ? value : "")
+  );
 
   const handleCepChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
@@ -110,9 +114,13 @@ export function CepInput(props: CepInputProps) {
   };
 
   // Atualiza o inputValue quando as props externas mudam
-  if ((field && field.value !== undefined && field.value !== inputValue) || 
-      (value !== undefined && value !== inputValue)) {
-    setInputValue(field?.value || value || "");
+  if ((field && field.value !== undefined && field.value !== null && field.value !== inputValue) || 
+      (value !== undefined && value !== null && value !== inputValue)) {
+    setInputValue(
+      field?.value !== undefined && field?.value !== null 
+        ? field.value 
+        : (value !== undefined && value !== null ? value : "")
+    );
   }
 
   const handleBlur = () => {
