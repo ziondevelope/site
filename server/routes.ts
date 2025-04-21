@@ -1,7 +1,7 @@
 import express, { type Express, type Request, type Response, type NextFunction } from "express";
 import { createServer, type Server } from "http";
 import { storageInstance } from "./storage";
-import { getFirestore, doc, setDoc, updateDoc, getDoc } from "firebase/firestore";
+import { getFirestore, doc, setDoc, updateDoc, getDoc, collection, getDocs, deleteDoc } from "firebase/firestore";
 import { z } from "zod";
 import {
   insertUserSchema,
@@ -848,6 +848,99 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error fetching leads by funnel stage:", error);
       res.status(500).json({ message: "Error fetching leads by funnel stage" });
+    }
+  });
+  
+  // Rotas para depoimentos (testimonials)
+  apiRouter.get("/testimonials", async (req, res) => {
+    try {
+      const db = getFirestore();
+      const testimonialsCollection = collection(db, 'testimonials');
+      const testimonialsSnapshot = await getDocs(testimonialsCollection);
+      
+      const testimonials = testimonialsSnapshot.docs.map(doc => {
+        const data = doc.data();
+        return {
+          id: parseInt(doc.id),
+          name: data.name,
+          role: data.role || "",
+          content: data.content,
+          avatar: data.avatar || "",
+          featured: data.featured || false,
+          createdAt: data.createdAt || new Date().toISOString()
+        };
+      });
+      
+      res.json(testimonials);
+    } catch (error) {
+      console.error("Erro ao buscar depoimentos:", error);
+      res.status(500).json({ message: "Erro ao buscar depoimentos" });
+    }
+  });
+  
+  apiRouter.post("/testimonials", async (req, res) => {
+    try {
+      const validatedData = insertTestimonialSchema.parse(req.body);
+      console.log("Criando novo depoimento:", validatedData);
+      
+      const db = getFirestore();
+      
+      // Gerar ID sequencial
+      const counterRef = doc(db, 'counters', 'testimonials');
+      let newId = 1;
+      
+      try {
+        const counterDoc = await getDoc(counterRef);
+        if (counterDoc.exists()) {
+          newId = (counterDoc.data().count || 0) + 1;
+        }
+        
+        await setDoc(counterRef, { count: newId });
+      } catch (error) {
+        console.error("Erro ao gerar ID do depoimento:", error);
+        await setDoc(counterRef, { count: newId });
+      }
+      
+      // Criar o depoimento com o ID gerado
+      const testimonialData = {
+        ...validatedData,
+        createdAt: new Date().toISOString()
+      };
+      
+      await setDoc(doc(db, 'testimonials', newId.toString()), testimonialData);
+      
+      const newTestimonial = {
+        id: newId,
+        ...testimonialData
+      };
+      
+      res.status(201).json(newTestimonial);
+    } catch (error) {
+      console.error("Erro ao criar depoimento:", error);
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Dados de depoimento inválidos", errors: error.errors });
+      }
+      res.status(500).json({ message: "Erro ao criar depoimento" });
+    }
+  });
+  
+  apiRouter.delete("/testimonials/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const db = getFirestore();
+      const testimonialRef = doc(db, 'testimonials', id.toString());
+      
+      // Verificar se o depoimento existe
+      const testimonialDoc = await getDoc(testimonialRef);
+      if (!testimonialDoc.exists()) {
+        return res.status(404).json({ message: "Depoimento não encontrado" });
+      }
+      
+      await deleteDoc(testimonialRef);
+      res.status(200).json({ success: true });
+    } catch (error) {
+      console.error("Erro ao excluir depoimento:", error);
+      res.status(500).json({ message: "Erro ao excluir depoimento" });
     }
   });
 
