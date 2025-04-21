@@ -31,7 +31,7 @@ export function TestimonialsManager() {
     role: "",
     content: "",
     avatar: "",
-    featured: false
+    featured: true // Definimos como true por padrão, mas escondemos a opção
   });
   
   // Referência para o input de arquivo
@@ -246,14 +246,7 @@ export function TestimonialsManager() {
                 </div>
               </div>
               
-              <div className="flex items-center space-x-2">
-                <Switch
-                  id="featured"
-                  checked={newTestimonial.featured}
-                  onCheckedChange={handleSwitchChange}
-                />
-                <Label htmlFor="featured">Destacado</Label>
-              </div>
+              {/* Removida a opção de destacado, agora todos os depoimentos são destacados por padrão */}
               
               <DialogFooter>
                 <Button 
@@ -287,7 +280,7 @@ export function TestimonialsManager() {
           {testimonials.map((testimonial: Testimonial) => (
             <div 
               key={testimonial.id} 
-              className={`p-4 rounded-lg border ${testimonial.featured ? 'border-indigo-200 bg-indigo-50' : 'border-gray-200'}`}
+              className="p-4 rounded-lg border border-indigo-200 bg-indigo-50"
             >
               <div className="flex justify-between">
                 <div className="flex space-x-3">
@@ -323,13 +316,7 @@ export function TestimonialsManager() {
                   "{testimonial.content}"
                 </p>
               </div>
-              {testimonial.featured && (
-                <div className="mt-2">
-                  <span className="inline-flex items-center px-2 py-1 text-xs rounded-full bg-indigo-100 text-indigo-800">
-                    Destacado
-                  </span>
-                </div>
-              )}
+              {/* Tag de destacado removida */}
             </div>
           ))}
         </div>
