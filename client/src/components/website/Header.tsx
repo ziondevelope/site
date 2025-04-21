@@ -106,7 +106,7 @@ export default function Header({ config, isLoadingConfig }: HeaderProps) {
               e.currentTarget.style.color = isPropertiesPage || scrolled ? (config?.primaryColor || 'var(--primary)') : 'white';
             }}
           >
-            {config?.phone && <span className="mr-2">{config.phone}</span>}
+            {config?.phone && <span className="mr-2" style={{ color: 'rgb(28 28 27)' }}>{config.phone}</span>}
             <i 
               className="fab fa-whatsapp text-lg transition-colors" 
               style={{ color: isPropertiesPage || scrolled ? "#25D366" : "white" }}
@@ -244,7 +244,7 @@ export default function Header({ config, isLoadingConfig }: HeaderProps) {
                         fontFamily: 'Poppins, sans-serif'
                       }}
                     >
-                      {config?.phone && <span className="mr-2 text-[18px]" style={{ fontFamily: 'Poppins, sans-serif' }}>{config.phone}</span>}
+                      {config?.phone && <span className="mr-2 text-[18px]" style={{ fontFamily: 'Poppins, sans-serif', color: 'white' }}>{config.phone}</span>}
                       <i className="fab fa-whatsapp text-xl text-white"></i>
                     </a>
                   </div>
