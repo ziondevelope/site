@@ -11,11 +11,13 @@ import Agents from "@/pages/Agents";
 import Website from "@/pages/Website";
 import Settings from "@/pages/Settings";
 import Home from "@/pages/Home";
+import AuthPage from "@/pages/auth-page";
 import AppLayout from "@/components/layout/AppLayout";
 import { queryClient } from "./lib/queryClient";
 import { LoadingProvider } from "./contexts/LoadingContext";
 import PageLoadingController from "@/components/ui/PageLoadingController";
 import ScrollToTop from "@/components/ui/scroll-to-top";
+import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 
 function AdminRouter() {
   // Usando useLocation para determinar a rota atual
@@ -52,8 +54,13 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/properties" component={AllProperties} />
       <Route path="/properties/:id" component={PropertyDetails} />
-      <Route path="/admin" component={AdminRouter} />
-      <Route path="/admin/:path*" component={AdminRouter} />
+      <Route path="/auth" component={AuthPage} />
+      <Route path="/admin">
+        <ProtectedRoute component={AdminRouter} />
+      </Route>
+      <Route path="/admin/:path*">
+        <ProtectedRoute component={AdminRouter} />
+      </Route>
       <Route component={NotFound} />
     </Switch>
   );
