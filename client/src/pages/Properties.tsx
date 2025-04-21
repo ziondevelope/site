@@ -846,25 +846,6 @@ export default function Properties() {
           <div className="overflow-y-auto max-h-[calc(90vh-130px)]">
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="p-4">
-                <div className="flex justify-between items-center mb-6">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    className="px-3 py-1 h-10 text-xs rounded-full bg-red-50 border-red-200 text-red-500 hover:bg-red-100"
-                    onClick={() => handleDeleteClick(selectedProperty!)}
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
-                    Excluir Imóvel
-                  </Button>
-                  <Button 
-                    type="submit" 
-                    disabled={updatePropertyMutation.isPending}
-                    className="ml-auto rounded-full px-5 bg-[#12636C] hover:bg-[#12636C]/90"
-                  >
-                    {updatePropertyMutation.isPending ? 'Salvando...' : 'Salvar Alterações'}
-                  </Button>
-                </div>
-                
                 <Tabs defaultValue="info" className="w-full">
                   <TabsList className="grid grid-cols-3 mb-4 sticky top-0">
                     <TabsTrigger value="info">Informações Básicas</TabsTrigger>
@@ -1256,6 +1237,25 @@ export default function Properties() {
                     />
                   </TabsContent>
                 </Tabs>
+                
+                <div className="flex justify-between mt-6 pt-4 border-t border-gray-100">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="px-3 py-1 h-10 text-xs rounded-full bg-red-50 border-red-200 text-red-500 hover:bg-red-100"
+                    onClick={() => handleDeleteClick(selectedProperty!)}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+                    Excluir Imóvel
+                  </Button>
+                  <Button 
+                    type="submit" 
+                    disabled={updatePropertyMutation.isPending}
+                    className="rounded-full px-5 bg-[#12636C] hover:bg-[#12636C]/90"
+                  >
+                    {updatePropertyMutation.isPending ? 'Salvando...' : 'Salvar Alterações'}
+                  </Button>
+                </div>
               </form>
             </Form>
           </div>
