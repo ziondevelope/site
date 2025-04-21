@@ -90,20 +90,14 @@ export default function Header({ config, isLoadingConfig }: HeaderProps) {
             href={config?.phone ? `https://wa.me/${config.phone.replace(/\D/g, '')}` : "#"} 
             target="_blank" 
             rel="noopener noreferrer"
-            className={`hidden md:inline-flex items-center px-4 py-1 rounded-full border border-solid transition-all hover:bg-white ${
-              isPropertiesPage || scrolled ? 'text-primary' : 'text-white'
+            className={`hidden md:inline-flex items-center px-4 py-1 rounded-full border border-solid transition-all hover:bg-[#25D366] hover:text-white hover:border-[#25D366] ${
+              isPropertiesPage || scrolled ? '' : 'text-white'
             }`}
             style={{ 
               borderColor: isPropertiesPage || scrolled 
                 ? '#25D366' 
                 : 'rgba(255, 255, 255, 0.3)',
               color: isPropertiesPage || scrolled ? '#25D366' : 'white'
-            }}
-            onMouseOver={(e) => {
-              e.currentTarget.style.color = '#25D366';
-            }}
-            onMouseOut={(e) => {
-              e.currentTarget.style.color = isPropertiesPage || scrolled ? '#25D366' : 'white';
             }}
           >
             {config?.phone && <span className="mr-2">{config.phone}</span>}
@@ -240,7 +234,7 @@ export default function Header({ config, isLoadingConfig }: HeaderProps) {
                       target="_blank"
                       rel="noopener noreferrer"
                       style={{
-                        backgroundColor: config?.primaryColor || 'var(--primary)',
+                        backgroundColor: '#25D366',
                         fontFamily: 'Poppins, sans-serif'
                       }}
                     >
