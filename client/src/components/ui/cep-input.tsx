@@ -4,12 +4,17 @@ import { toast } from "@/hooks/use-toast";
 import { useState } from "react";
 
 interface CepInputProps {
-  form: any;
-  field: {
+  form?: any;
+  field?: {
     value: string;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     name: string;
   };
+  value?: string;
+  onChange?: (value: string) => void;
+  name?: string;
+  onBlur?: () => void;
+  onAddressFound?: (addressData: any) => void;
 }
 
 // Função para buscar dados do CEP
@@ -42,14 +47,24 @@ async function fetchAddressByCep(cep: string) {
   }
 }
 
-export function CepInput({ form, field }: CepInputProps) {
+export function CepInput(props: CepInputProps) {
+  const { form, field, value, onChange, name, onBlur, onAddressFound } = props;
   const [isLoading, setIsLoading] = useState(false);
+  const [inputValue, setInputValue] = useState(field?.value || value || "");
 
   const handleCepChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    field.onChange(e);
+    const newValue = e.target.value;
+    setInputValue(newValue);
+    
+    // Chama o onChange apropriado conforme a prop passada
+    if (field) {
+      field.onChange(e);
+    } else if (onChange) {
+      onChange(newValue);
+    }
     
     // Se o CEP tiver 8 dígitos (sem contar hífen), busca os dados
-    const cep = e.target.value.replace(/\D/g, '');
+    const cep = newValue.replace(/\D/g, '');
     if (cep.length === 8) {
       setIsLoading(true);
       
@@ -57,10 +72,19 @@ export function CepInput({ form, field }: CepInputProps) {
         const data = await fetchAddressByCep(cep);
         
         if (data) {
-          // Preenche os campos com os dados retornados
-          form.setValue('city', data.city);
-          form.setValue('neighborhood', data.neighborhood);
-          form.setValue('address', data.address);
+          if (form) {
+            // Preenche os campos com os dados retornados via form (versão antiga)
+            form.setValue('city', data.city);
+            form.setValue('neighborhood', data.neighborhood);
+            form.setValue('address', data.address);
+          } else if (onAddressFound) {
+            // Notifica o componente pai sobre os dados encontrados (versão nova)
+            onAddressFound({
+              logradouro: data.address,
+              bairro: data.neighborhood,
+              localidade: data.city,
+            });
+          }
           
           toast({
             title: "CEP encontrado",
@@ -85,6 +109,18 @@ export function CepInput({ form, field }: CepInputProps) {
     }
   };
 
+  // Atualiza o inputValue quando as props externas mudam
+  if ((field && field.value !== undefined && field.value !== inputValue) || 
+      (value !== undefined && value !== inputValue)) {
+    setInputValue(field?.value || value || "");
+  }
+
+  const handleBlur = () => {
+    if (onBlur) {
+      onBlur();
+    }
+  };
+
   return (
     <FormItem>
       <FormLabel>CEP</FormLabel>
@@ -92,8 +128,10 @@ export function CepInput({ form, field }: CepInputProps) {
         <FormControl>
           <Input 
             placeholder="00000-000" 
-            value={field.value} 
+            value={inputValue}
+            name={field?.name || name}
             onChange={handleCepChange}
+            onBlur={handleBlur}
           />
         </FormControl>
         {isLoading && (

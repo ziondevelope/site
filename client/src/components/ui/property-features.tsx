@@ -4,11 +4,14 @@ import { Input } from "./input";
 import { Button } from "./button";
 
 interface PropertyFeaturesProps {
-  features: string[];
+  features?: string[];
+  value?: string[];
   onChange: (features: string[]) => void;
 }
 
-export function PropertyFeatures({ features, onChange }: PropertyFeaturesProps) {
+export function PropertyFeatures(props: PropertyFeaturesProps) {
+  const { features: propFeatures, value, onChange } = props;
+  const features = propFeatures || value || [];
   const [newFeature, setNewFeature] = useState("");
 
   const addFeature = () => {
