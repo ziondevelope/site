@@ -585,7 +585,7 @@ export default function Home() {
                           <div 
                             className="absolute bottom-0 left-0 text-white px-3 py-1 rounded-tr-lg"
                             style={{
-                              backgroundColor: 'rgb(21, 97, 109)'
+                              backgroundColor: config?.primaryColor || 'var(--primary)'
                             }}
                           >
                             Aluguel
@@ -636,8 +636,8 @@ export default function Home() {
                 size="lg" 
                 onClick={() => setLocation('/properties?purpose=rent')}
                 style={{
-                  borderColor: 'rgb(21, 97, 109)',
-                  color: 'rgb(21, 97, 109)'
+                  borderColor: config?.primaryColor || 'var(--primary)',
+                  color: config?.primaryColor || 'var(--primary)'
                 }}
               >
                 Ver todos os imóveis para aluguel
