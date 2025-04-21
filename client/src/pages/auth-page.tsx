@@ -78,7 +78,7 @@ export default function AuthPage() {
           <img 
             src={logoImage} 
             alt="Imobsite" 
-            className="w-64 mb-8"
+            className="w-48 mb-8"
           />
           <p className="text-gray-500 text-center">Acesse a área administrativa</p>
         </div>
