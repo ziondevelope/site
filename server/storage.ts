@@ -10,15 +10,14 @@ import { leadNotes, type LeadNote, type InsertLeadNote } from "@shared/schema";
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, doc, getDocs, getDoc, setDoc, updateDoc, deleteDoc, query, where, orderBy, limit, writeBatch } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
+import { firebaseConfig, checkEnvironmentConfig } from "@shared/config";
 
-// Initialize Firebase - usando o SDK cliente
-const firebaseConfig = {
-  apiKey: process.env.VITE_FIREBASE_API_KEY,
-  authDomain: `${process.env.VITE_FIREBASE_PROJECT_ID}.firebaseapp.com`,
-  projectId: process.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: `${process.env.VITE_FIREBASE_PROJECT_ID}.appspot.com`,
-  appId: process.env.VITE_FIREBASE_APP_ID
-};
+// Verifica se o ambiente está configurado corretamente
+const configCheck = checkEnvironmentConfig();
+if (!configCheck.isValid) {
+  console.warn(`⚠️ AVISO: Algumas variáveis de ambiente estão faltando: ${configCheck.missingVars.join(', ')}`);
+  console.warn("Por favor, configure o arquivo .env com base no .env.example");
+}
 
 console.log('Inicializando Firebase com:', 
   {
