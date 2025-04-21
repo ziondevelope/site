@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import logoImage from "../assets/logo.png";
+import logoImage from "../assets/logo-dark.png";
 
 export default function AuthPage() {
   const [username, setUsername] = useState("");
@@ -72,13 +72,13 @@ export default function AuthPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-white px-4">
-      <div className="w-full max-w-md py-12 px-8 sm:px-10 rounded-lg shadow-lg border border-gray-100">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+      <div className="w-full max-w-md py-12 px-8 sm:px-10 rounded-lg shadow-xl bg-white border border-gray-100">
         <div className="flex flex-col items-center mb-12">
           <img 
             src={logoImage} 
             alt="Imobsite" 
-            className="h-32 mb-8"
+            className="w-64 mb-8"
           />
           <p className="text-gray-500 text-center">Acesse a área administrativa</p>
         </div>
@@ -125,7 +125,7 @@ export default function AuthPage() {
           
           <Button
             type="submit"
-            className="w-full py-6 text-lg bg-[#00323d] hover:bg-[#004350] transition-colors"
+            className="w-full py-6 text-lg bg-[#00456A] hover:bg-[#003A57] transition-colors"
             disabled={isLoading}
           >
             {isLoading ? (
@@ -141,7 +141,7 @@ export default function AuthPage() {
           
           <div className="mt-8 pt-6 border-t border-gray-100">
             <p className="text-sm text-gray-500 text-center">
-              Para acessar a área pública, <a href="/" className="text-[#00323d] hover:text-[#004350] font-medium hover:underline transition-colors">clique aqui</a>.
+              Para acessar a área pública, <a href="/" className="text-[#00456A] hover:text-[#003A57] font-medium hover:underline transition-colors">clique aqui</a>.
             </p>
           </div>
         </form>
