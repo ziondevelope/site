@@ -95,7 +95,7 @@ export default function Header({ config, isLoadingConfig }: HeaderProps) {
             }`}
             style={{ 
               borderColor: isPropertiesPage || scrolled 
-                ? 'rgb(153, 153, 153)' 
+                ? 'rgb(229, 229, 229)' 
                 : 'rgba(255, 255, 255, 0.3)',
               color: isPropertiesPage || scrolled ? '#000000' : 'white'
             }}
