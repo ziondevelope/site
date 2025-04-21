@@ -10,7 +10,8 @@ import {
   insertTaskSchema,
   updateWebsiteConfigSchema,
   insertSalesFunnelSchema,
-  insertFunnelStageSchema
+  insertFunnelStageSchema,
+  insertTestimonialSchema
 } from "@shared/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
