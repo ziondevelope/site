@@ -1416,7 +1416,6 @@ export default function Properties() {
                   <TableHead className="text-white hover:bg-[#001623] hover:text-white">Finalidade</TableHead>
                   <TableHead className="text-white hover:bg-[#001623] hover:text-white">Preço</TableHead>
                   <TableHead className="text-white hover:bg-[#001623] hover:text-white">Detalhes</TableHead>
-                  <TableHead className="text-white hover:bg-[#001623] hover:text-white">Status</TableHead>
                   <TableHead className="text-white hover:bg-[#001623] hover:text-white">Destaque</TableHead>
                   <TableHead className="text-white hover:bg-[#001623] hover:text-white text-right">Ações</TableHead>
                 </TableRow>
@@ -1500,21 +1499,6 @@ export default function Properties() {
                           </div>
                         )}
                       </div>
-                    </TableCell>
-                    <TableCell>
-                      <span
-                        className={cn(
-                          "text-xs font-medium px-2 py-1 rounded",
-                          {
-                            "bg-green-100 text-green-800": property.status === 'available',
-                            "bg-red-100 text-red-800": property.status === 'sold',
-                            "bg-blue-100 text-blue-800": property.status === 'rented',
-                          }
-                        )}
-                      >
-                        {property.status === 'available' ? 'Disponível' : 
-                        property.status === 'sold' ? 'Vendido' : 'Alugado'}
-                      </span>
                     </TableCell>
                     <TableCell>
                       {property.isFeatured ? (
