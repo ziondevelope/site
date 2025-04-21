@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,6 +12,28 @@ export default function AuthPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [, setLocation] = useLocation();
   const { toast } = useToast();
+  
+  // Verificar se o usuário já está autenticado
+  useEffect(() => {
+    const isAuthenticated = localStorage.getItem("isAuthenticated") === "true";
+    const authTimestamp = localStorage.getItem("authTimestamp");
+    const SESSION_DURATION = 8 * 60 * 60 * 1000; // 8 horas em milissegundos
+    
+    if (isAuthenticated && authTimestamp) {
+      const now = Date.now();
+      const lastAuth = parseInt(authTimestamp);
+      
+      // Verificar se a sessão ainda é válida
+      if (now - lastAuth <= SESSION_DURATION) {
+        // Redirecionar para a área administrativa
+        setLocation("/admin");
+      } else {
+        // Sessão expirada, limpar localStorage
+        localStorage.removeItem("isAuthenticated");
+        localStorage.removeItem("authTimestamp");
+      }
+    }
+  }, []);
 
   // Credenciais fixas conforme solicitado
   const FIXED_USERNAME = "imobsite";
