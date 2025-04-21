@@ -378,7 +378,7 @@ export default function Properties() {
   }
 
   return (
-    <div>
+    <div className="bg-[#F9FAFB] min-h-screen p-4">
       {/* Add Property Dialog */}
       <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
         <DialogContent className="sm:max-w-[600px] p-0 max-h-[90vh] overflow-hidden">
