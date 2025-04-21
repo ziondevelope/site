@@ -261,12 +261,12 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
                 {/* Title and price */}
                 <div className="mb-6">
                   <div className="mb-2">
-                    <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2" style={{ lineHeight: '1rem' }}>
+                    <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2" style={{ lineHeight: '2rem' }}>
                       {currentProperty.title}
                     </h1>
                     <div 
-                      className="font-bold"
-                      style={{ color: '#000000', fontSize: '22px' }}
+                      className="font-medium"
+                      style={{ color: '#000000', fontSize: '22px', fontWeight: 500 }}
                     >
                       {formatCurrency(currentProperty.price)}
                       {currentProperty.purpose === 'rent' && 
