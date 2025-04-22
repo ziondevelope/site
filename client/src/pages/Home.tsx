@@ -825,7 +825,7 @@ export default function Home() {
           </div>
           
           <div className="border-t mt-12 pt-8 text-center" style={{ borderColor: 'rgba(255,255,255,0.2)', color: 'rgba(255,255,255,0.7)' }}>
-            <div className="flex flex-col md:flex-row items-center justify-center space-y-2 md:space-y-0 md:space-x-4">
+            <div className="flex flex-col items-center justify-center space-y-3">
               <p>
                 &copy; 2025 Imobiliária. Todos os direitos reservados. 
                 <Link href="/admin">
