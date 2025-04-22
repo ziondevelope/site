@@ -42,6 +42,14 @@ export default function GeneralSettings({ config, configData, onConfigChange }: 
     ? configData.secondaryColor 
     : config?.secondaryColor || '#10B981';
     
+  const footerTextColor = configData.footerTextColor !== undefined 
+    ? configData.footerTextColor 
+    : config?.footerTextColor || '#ffffff';
+    
+  const footerIconsColor = configData.footerIconsColor !== undefined 
+    ? configData.footerIconsColor 
+    : config?.footerIconsColor || primaryColor;
+    
   const footerInfo = configData.footerInfo !== undefined 
     ? configData.footerInfo 
     : config?.footerInfo || '';
@@ -236,13 +244,13 @@ export default function GeneralSettings({ config, configData, onConfigChange }: 
           <div className="flex">
             <Input 
               type="color" 
-              value={configData.footerTextColor !== undefined ? configData.footerTextColor : config?.footerTextColor || '#ffffff'}
+              value={footerTextColor}
               onChange={(e) => onConfigChange({ ...configData, footerTextColor: e.target.value })}
               className="h-10 w-10 border-0 rounded-l-lg p-0"
             />
             <Input 
               type="text" 
-              value={configData.footerTextColor !== undefined ? configData.footerTextColor : config?.footerTextColor || '#ffffff'} 
+              value={footerTextColor}
               onChange={(e) => onConfigChange({ ...configData, footerTextColor: e.target.value })}
               className="border border-l-0 border-gray-200 rounded-r-full px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-transparent"
             />
@@ -258,13 +266,13 @@ export default function GeneralSettings({ config, configData, onConfigChange }: 
           <div className="flex">
             <Input 
               type="color" 
-              value={configData.footerIconsColor !== undefined ? configData.footerIconsColor : config?.footerIconsColor || primaryColor || '#1f4dbe'}
+              value={footerIconsColor}
               onChange={(e) => onConfigChange({ ...configData, footerIconsColor: e.target.value })}
               className="h-10 w-10 border-0 rounded-l-lg p-0"
             />
             <Input 
               type="text" 
-              value={configData.footerIconsColor !== undefined ? configData.footerIconsColor : config?.footerIconsColor || primaryColor || '#1f4dbe'} 
+              value={footerIconsColor}
               onChange={(e) => onConfigChange({ ...configData, footerIconsColor: e.target.value })}
               className="border border-l-0 border-gray-200 rounded-r-full px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-transparent"
             />
