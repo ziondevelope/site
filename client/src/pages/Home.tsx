@@ -731,14 +731,17 @@ export default function Home() {
 
 
       {/* Footer */}
-      <footer className="bg-gray-800 text-white py-12">
+      <footer style={{ 
+        backgroundColor: config?.secondaryColor || '#333', 
+        color: '#fff' 
+      }} className="py-12">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
               <div className="flex items-center space-x-3 mb-6">
                 {isLoadingConfig ? (
                   // Placeholder durante o carregamento - mantém o mesmo tamanho
-                  <div className="h-10 w-24 bg-gray-700 rounded animate-pulse"></div>
+                  <div className="h-10 w-24 rounded animate-pulse" style={{ backgroundColor: 'rgba(255,255,255,0.2)' }}></div>
                 ) : config?.logo ? (
                   <div className="h-10 min-w-[96px]">
                     <img 
@@ -755,27 +758,28 @@ export default function Home() {
                   </div>
                 ) : (
                   <>
-                    <div className="h-10 w-10 rounded bg-primary flex items-center justify-center text-white">
+                    <div className="h-10 w-10 rounded flex items-center justify-center text-white" 
+                      style={{ backgroundColor: config?.primaryColor || 'var(--primary)' }}>
                       <i className="ri-home-line text-xl"></i>
                     </div>
                     <h1 className="text-2xl font-bold">Imobiliária</h1>
                   </>
                 )}
               </div>
-              <p className="text-gray-400 mb-6">
+              <p style={{ color: 'rgba(255,255,255,0.7)' }} className="mb-6">
                 Soluções imobiliárias completas para você encontrar o imóvel dos seus sonhos.
               </p>
               <div className="flex space-x-4">
-                <a href="#" className="text-gray-400 hover:text-white text-xl">
+                <a href="#" style={{ color: 'rgba(255,255,255,0.7)' }} className="hover:text-white text-xl">
                   <i className="ri-facebook-circle-fill"></i>
                 </a>
-                <a href="#" className="text-gray-400 hover:text-white text-xl">
+                <a href="#" style={{ color: 'rgba(255,255,255,0.7)' }} className="hover:text-white text-xl">
                   <i className="ri-instagram-fill"></i>
                 </a>
-                <a href="#" className="text-gray-400 hover:text-white text-xl">
+                <a href="#" style={{ color: 'rgba(255,255,255,0.7)' }} className="hover:text-white text-xl">
                   <i className="ri-linkedin-box-fill"></i>
                 </a>
-                <a href="#" className="text-gray-400 hover:text-white text-xl">
+                <a href="#" style={{ color: 'rgba(255,255,255,0.7)' }} className="hover:text-white text-xl">
                   <i className="ri-youtube-fill"></i>
                 </a>
               </div>
@@ -784,22 +788,22 @@ export default function Home() {
             <div>
               <h3 className="text-lg font-semibold mb-6">Links Rápidos</h3>
               <ul className="space-y-3">
-                <li><a href="#" className="text-gray-400 hover:text-white">Início</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-white">Sobre nós</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-white">Imóveis</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-white">Blog</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-white">Contato</a></li>
+                <li><a href="#" style={{ color: 'rgba(255,255,255,0.7)' }} className="hover:text-white">Início</a></li>
+                <li><a href="#" style={{ color: 'rgba(255,255,255,0.7)' }} className="hover:text-white">Sobre nós</a></li>
+                <li><a href="#" style={{ color: 'rgba(255,255,255,0.7)' }} className="hover:text-white">Imóveis</a></li>
+                <li><a href="#" style={{ color: 'rgba(255,255,255,0.7)' }} className="hover:text-white">Blog</a></li>
+                <li><a href="#" style={{ color: 'rgba(255,255,255,0.7)' }} className="hover:text-white">Contato</a></li>
               </ul>
             </div>
             
             <div>
               <h3 className="text-lg font-semibold mb-6">Tipos de Imóveis</h3>
               <ul className="space-y-3">
-                <li><a href="#" className="text-gray-400 hover:text-white">Apartamentos</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-white">Casas</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-white">Terrenos</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-white">Comerciais</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-white">Rurais</a></li>
+                <li><a href="#" style={{ color: 'rgba(255,255,255,0.7)' }} className="hover:text-white">Apartamentos</a></li>
+                <li><a href="#" style={{ color: 'rgba(255,255,255,0.7)' }} className="hover:text-white">Casas</a></li>
+                <li><a href="#" style={{ color: 'rgba(255,255,255,0.7)' }} className="hover:text-white">Terrenos</a></li>
+                <li><a href="#" style={{ color: 'rgba(255,255,255,0.7)' }} className="hover:text-white">Comerciais</a></li>
+                <li><a href="#" style={{ color: 'rgba(255,255,255,0.7)' }} className="hover:text-white">Rurais</a></li>
               </ul>
             </div>
             
@@ -811,34 +815,34 @@ export default function Home() {
                     className="ri-map-pin-line mr-3 mt-1"
                     style={{ color: config?.primaryColor || 'var(--primary)' }}
                   ></i>
-                  <span className="text-gray-400">{config?.address || 'Av. Paulista, 1000 - São Paulo, SP'}</span>
+                  <span style={{ color: 'rgba(255,255,255,0.7)' }}>{config?.address || 'Av. Paulista, 1000 - São Paulo, SP'}</span>
                 </li>
                 <li className="flex items-start">
                   <i 
                     className="ri-phone-line mr-3 mt-1"
                     style={{ color: config?.primaryColor || 'var(--primary)' }}
                   ></i>
-                  <span className="text-gray-400">{config?.phone || '(21) 9858 59264'}</span>
+                  <span style={{ color: 'rgba(255,255,255,0.7)' }}>{config?.phone || '(21) 9858 59264'}</span>
                 </li>
                 <li className="flex items-start">
                   <i 
                     className="ri-mail-line mr-3 mt-1"
                     style={{ color: config?.primaryColor || 'var(--primary)' }}
                   ></i>
-                  <span className="text-gray-400">{config?.email || 'contato@imobiliaria.com.br'}</span>
+                  <span style={{ color: 'rgba(255,255,255,0.7)' }}>{config?.email || 'contato@imobiliaria.com.br'}</span>
                 </li>
                 <li className="flex items-start">
                   <i 
                     className="ri-time-line mr-3 mt-1"
                     style={{ color: config?.primaryColor || 'var(--primary)' }}
                   ></i>
-                  <span className="text-gray-400">{config?.workingHours || 'Segunda a Sexta, 09:00 às 18:00'}</span>
+                  <span style={{ color: 'rgba(255,255,255,0.7)' }}>{config?.workingHours || 'Segunda a Sexta, 09:00 às 18:00'}</span>
                 </li>
               </ul>
             </div>
           </div>
           
-          <div className="border-t border-gray-700 mt-12 pt-8 text-center text-gray-400">
+          <div className="border-t mt-12 pt-8 text-center" style={{ borderColor: 'rgba(255,255,255,0.2)', color: 'rgba(255,255,255,0.7)' }}>
             <p>
               &copy; 2025 Imobiliária. Todos os direitos reservados. 
               <Link href="/admin">
