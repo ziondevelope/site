@@ -146,6 +146,7 @@ export const websiteConfig = pgTable("website_config", {
   seoTitle: text("seo_title"),
   seoDescription: text("seo_description"),
   seoKeywords: text("seo_keywords"),
+  favicon: text("favicon"),
   // Tags de Marketing e Conversão
   googleTagManagerTag: text("google_tag_manager_tag"),
   googleAdsConversionTag: text("google_ads_conversion_tag"),

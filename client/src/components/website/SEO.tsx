@@ -30,8 +30,8 @@ export default function SEO({
   const pageDescription = description || config?.seoDescription || 'Site de imobiliária';
   const pageKeywords = keywords || config?.seoKeywords || 'imobiliária, imóveis';
   
-  // Usar favicon personalizado ou logo da configuração
-  const siteFavicon = favicon || config?.logo || '';
+  // Usar favicon personalizado, ou o campo favicon das configurações, ou logo como fallback
+  const siteFavicon = favicon || config?.favicon || config?.logo || '';
   
   // Imagem para compartilhamento OG (Open Graph)
   const siteOgImage = ogImage || config?.bannerBackground || '';

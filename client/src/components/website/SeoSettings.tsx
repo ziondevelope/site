@@ -26,10 +26,10 @@ export default function SeoSettings({ config, configData, onConfigChange }: SeoS
     ? configData.seoKeywords 
     : config?.seoKeywords || "imobiliária, imóveis, apartamentos, casas, comprar, alugar, São Paulo";
     
-  // Favicon - usa o logo como padrão
-  const favicon = configData.logo !== undefined
-    ? configData.logo
-    : config?.logo;
+  // Favicon - agora usando o campo específico para favicon
+  const favicon = configData.favicon !== undefined
+    ? configData.favicon
+    : config?.favicon || config?.logo; // Usa logo como fallback se favicon não estiver definido
 
   // Handle change functions
   const handleSeoTitleChange = (newValue: string) => {
@@ -45,7 +45,7 @@ export default function SeoSettings({ config, configData, onConfigChange }: SeoS
   };
   
   const handleFaviconChange = (imageBase64: string) => {
-    onConfigChange({ logo: imageBase64 });
+    onConfigChange({ favicon: imageBase64 });
   };
 
   // Calculate character counts
