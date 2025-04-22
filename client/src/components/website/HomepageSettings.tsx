@@ -328,6 +328,170 @@ export default function HomepageSettings({ config, configData, onConfigChange }:
         />
       </div>
       
+      {/* Cards de Qualidade */}
+      <div className="flex items-center justify-between py-2 border-t">
+        <div>
+          <p className="font-medium">Cards de Qualidade</p>
+          <p className="text-sm text-gray-500">Exibe os cards com diferenciais da imobiliária</p>
+        </div>
+        <Switch 
+          checked={showQualityCards || false} 
+          onCheckedChange={handleShowQualityCardsChange}
+          className="data-[state=checked]:bg-indigo-600"
+        />
+      </div>
+      
+      {showQualityCards && (
+        <div className="space-y-6 border p-4 rounded-md bg-gray-50 mb-4">
+          <h4 className="font-medium">Configurações dos Cards de Qualidade</h4>
+          <p className="text-sm text-gray-500">Personalize o conteúdo dos cards que aparecem sobre o banner principal</p>
+          
+          {/* Card 1 */}
+          <div className="border-t pt-4">
+            <div className="flex items-center justify-between mb-3">
+              <h5 className="font-medium">Card 1</h5>
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-gray-500">Ativar</span>
+                <Switch 
+                  checked={qualityCard1Enabled || false} 
+                  onCheckedChange={handleQualityCard1EnabledChange}
+                  className="data-[state=checked]:bg-indigo-600"
+                />
+              </div>
+            </div>
+            
+            {qualityCard1Enabled && (
+              <div className="space-y-3">
+                <div>
+                  <label htmlFor="qualityCard1Title" className="block text-sm font-medium mb-1">
+                    Título
+                  </label>
+                  <Input
+                    id="qualityCard1Title"
+                    value={qualityCard1Title || ""}
+                    onChange={handleQualityCard1TitleChange}
+                    placeholder="Ex: Os melhores imóveis"
+                    className="w-full"
+                  />
+                </div>
+                
+                <div>
+                  <label htmlFor="qualityCard1Text" className="block text-sm font-medium mb-1">
+                    Texto
+                  </label>
+                  <Textarea
+                    id="qualityCard1Text"
+                    value={qualityCard1Text || ""}
+                    onChange={handleQualityCard1TextChange}
+                    placeholder="Descreva o diferencial..."
+                    className="w-full resize-none"
+                    rows={2}
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+          
+          {/* Card 2 */}
+          <div className="border-t pt-4">
+            <div className="flex items-center justify-between mb-3">
+              <h5 className="font-medium">Card 2</h5>
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-gray-500">Ativar</span>
+                <Switch 
+                  checked={qualityCard2Enabled || false} 
+                  onCheckedChange={handleQualityCard2EnabledChange}
+                  className="data-[state=checked]:bg-indigo-600"
+                />
+              </div>
+            </div>
+            
+            {qualityCard2Enabled && (
+              <div className="space-y-3">
+                <div>
+                  <label htmlFor="qualityCard2Title" className="block text-sm font-medium mb-1">
+                    Título
+                  </label>
+                  <Input
+                    id="qualityCard2Title"
+                    value={qualityCard2Title || ""}
+                    onChange={handleQualityCard2TitleChange}
+                    placeholder="Ex: Vamos acompanhar você"
+                    className="w-full"
+                  />
+                </div>
+                
+                <div>
+                  <label htmlFor="qualityCard2Text" className="block text-sm font-medium mb-1">
+                    Texto
+                  </label>
+                  <Textarea
+                    id="qualityCard2Text"
+                    value={qualityCard2Text || ""}
+                    onChange={handleQualityCard2TextChange}
+                    placeholder="Descreva o diferencial..."
+                    className="w-full resize-none"
+                    rows={2}
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+          
+          {/* Card 3 */}
+          <div className="border-t pt-4">
+            <div className="flex items-center justify-between mb-3">
+              <h5 className="font-medium">Card 3</h5>
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-gray-500">Ativar</span>
+                <Switch 
+                  checked={qualityCard3Enabled || false} 
+                  onCheckedChange={handleQualityCard3EnabledChange}
+                  className="data-[state=checked]:bg-indigo-600"
+                />
+              </div>
+            </div>
+            
+            {qualityCard3Enabled && (
+              <div className="space-y-3">
+                <div>
+                  <label htmlFor="qualityCard3Title" className="block text-sm font-medium mb-1">
+                    Título
+                  </label>
+                  <Input
+                    id="qualityCard3Title"
+                    value={qualityCard3Title || ""}
+                    onChange={handleQualityCard3TitleChange}
+                    placeholder="Ex: Sempre a melhor condição"
+                    className="w-full"
+                  />
+                </div>
+                
+                <div>
+                  <label htmlFor="qualityCard3Text" className="block text-sm font-medium mb-1">
+                    Texto
+                  </label>
+                  <Textarea
+                    id="qualityCard3Text"
+                    value={qualityCard3Text || ""}
+                    onChange={handleQualityCard3TextChange}
+                    placeholder="Descreva o diferencial..."
+                    className="w-full resize-none"
+                    rows={2}
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+          
+          <div className="pt-2">
+            <p className="text-sm text-gray-500 italic">
+              Dica: Os cards usarão a cor primária definida nas configurações gerais como cor de fundo.
+            </p>
+          </div>
+        </div>
+      )}
+      
       {/* Seção Quem Somos */}
       <div className="flex items-center justify-between py-2 border-t">
         <div>
