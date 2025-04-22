@@ -90,6 +90,7 @@ export default function Website() {
     // Create a full config object ensuring all properties have values
     const fullConfig: UpdateWebsiteConfig = {
       logo: configData.logo ?? config.logo ?? '',
+      footerLogo: configData.footerLogo ?? config.footerLogo ?? '',
       bannerBackground: configData.bannerBackground ?? config.bannerBackground ?? '',
       mainFont: configData.mainFont ?? config.mainFont ?? 'Inter',
       headingFont: configData.headingFont ?? config.headingFont ?? 'Inter',

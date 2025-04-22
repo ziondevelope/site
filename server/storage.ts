@@ -697,6 +697,7 @@ export class FirebaseStorage implements IStorage {
         const defaultConfig: WebsiteConfig = {
           id: 1,
           logo: '',
+          footerLogo: '',
           bannerBackground: '',
           mainFont: 'Inter',
           primaryColor: '#3B82F6',
