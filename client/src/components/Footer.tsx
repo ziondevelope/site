@@ -389,7 +389,7 @@ export default function Footer({ config, isLoadingConfig }: FooterProps) {
         </div>
         
         {/* Linha divisória e créditos */}
-        <div className="border-t mt-12 pt-6" style={{ borderColor: 'rgba(255,255,255,0.2)' }}>
+        <div className="border-t mt-12 pt-6" style={{ borderColor: 'rgb(241 241 241 / 5%)' }}>
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="mb-4 md:mb-0">
               <p className="text-sm opacity-80" style={{ color: config?.footerTextColor || 'rgba(255,255,255,0.7)' }}>
