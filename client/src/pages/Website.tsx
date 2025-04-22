@@ -65,6 +65,15 @@ export default function Website() {
         seoTitle: config.seoTitle,
         seoDescription: config.seoDescription,
         seoKeywords: config.seoKeywords,
+        // WhatsApp Chat
+        whatsappChatEnabled: config.whatsappChatEnabled,
+        whatsappNumber: config.whatsappNumber,
+        whatsappMessage: config.whatsappMessage,
+        whatsappButtonText: config.whatsappButtonText,
+        whatsappButtonPosition: config.whatsappButtonPosition,
+        whatsappFormEnabled: config.whatsappFormEnabled,
+        whatsappFormTitle: config.whatsappFormTitle,
+        whatsappFormMessage: config.whatsappFormMessage,
       });
     }
   }, [config]);
@@ -216,6 +225,16 @@ export default function Website() {
       seoDescription: configData.seoDescription ?? config.seoDescription ?? '',
       seoKeywords: configData.seoKeywords ?? config.seoKeywords ?? '',
       favicon: configData.favicon ?? config.favicon ?? '',
+      
+      // WhatsApp Chat
+      whatsappChatEnabled: configData.whatsappChatEnabled ?? config.whatsappChatEnabled ?? false,
+      whatsappNumber: configData.whatsappNumber ?? config.whatsappNumber ?? '',
+      whatsappMessage: configData.whatsappMessage ?? config.whatsappMessage ?? 'Olá! Gostaria de mais informações sobre um imóvel.',
+      whatsappButtonText: configData.whatsappButtonText ?? config.whatsappButtonText ?? 'Falar com corretor',
+      whatsappButtonPosition: configData.whatsappButtonPosition ?? config.whatsappButtonPosition ?? 'right',
+      whatsappFormEnabled: configData.whatsappFormEnabled ?? config.whatsappFormEnabled ?? true,
+      whatsappFormTitle: configData.whatsappFormTitle ?? config.whatsappFormTitle ?? 'Entre em contato com um corretor',
+      whatsappFormMessage: configData.whatsappFormMessage ?? config.whatsappFormMessage ?? 'Preencha seus dados para que um de nossos corretores possa lhe atender da melhor forma.',
     };
     
     saveConfigMutation.mutate(fullConfig);

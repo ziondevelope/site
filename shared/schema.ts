@@ -170,6 +170,17 @@ export const websiteConfig = pgTable("website_config", {
   googleAdsConversionTag: text("google_ads_conversion_tag"),
   googleAdsRemarketingTag: text("google_ads_remarketing_tag"),
   facebookPixelTag: text("facebook_pixel_tag"),
+  
+  // WhatsApp Chat
+  whatsappChatEnabled: boolean("whatsapp_chat_enabled").default(false),
+  whatsappNumber: text("whatsapp_number"),
+  whatsappMessage: text("whatsapp_message").default("Olá! Gostaria de mais informações sobre um imóvel."),
+  whatsappButtonText: text("whatsapp_button_text").default("Falar com corretor"),
+  whatsappButtonPosition: text("whatsapp_button_position").default("right"), // right, left
+  whatsappFormEnabled: boolean("whatsapp_form_enabled").default(true), // Se deve mostrar formulário antes de redirecionar
+  whatsappFormTitle: text("whatsapp_form_title").default("Entre em contato com um corretor"),
+  whatsappFormMessage: text("whatsapp_form_message").default("Preencha seus dados para que um de nossos corretores possa lhe atender da melhor forma."),
+  
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
