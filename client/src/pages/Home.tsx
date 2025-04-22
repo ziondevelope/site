@@ -786,6 +786,7 @@ export default function Home() {
             </div>
             
             <div>
+              <h3 className="text-lg font-semibold mb-6">Fale Conosco</h3>
               <div className="flex flex-col space-y-5">
                 <div className="flex items-center">
                   <i className="fab fa-whatsapp text-xl mr-3" style={{ color: config?.primaryColor || 'var(--primary)' }}></i>
