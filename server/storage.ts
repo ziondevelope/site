@@ -743,11 +743,20 @@ export class FirebaseStorage implements IStorage {
         } as WebsiteConfig;
       } else {
         // Update existing config
+        const existingData = configDoc.data();
+        
+        // Log para diagnóstico
+        console.log('Dados existentes:', existingData);
+        console.log('Dados sendo atualizados:', config);
+        
         updatedConfig = {
-          ...configDoc.data(),
+          ...existingData,
           ...config,
           updatedAt: new Date().toISOString(),
         } as WebsiteConfig;
+        
+        // Log do resultado após a fusão
+        console.log('Dados finais após mesclagem:', updatedConfig);
       }
       
       await setDoc(configRef, updatedConfig);

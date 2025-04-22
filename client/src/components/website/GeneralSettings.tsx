@@ -50,6 +50,16 @@ export default function GeneralSettings({ config, configData, onConfigChange }: 
     ? configData.footerIconsColor 
     : config?.footerIconsColor || primaryColor;
     
+  // Debug para rodapé
+  console.log("GeneralSettings - Estado das cores:", {
+    footerTextColor,
+    footerIconsColor,
+    configDataFooterTextColor: configData.footerTextColor,
+    configDataFooterIconsColor: configData.footerIconsColor,
+    configFooterTextColor: config?.footerTextColor,
+    configFooterIconsColor: config?.footerIconsColor
+  });
+    
   const footerInfo = configData.footerInfo !== undefined 
     ? configData.footerInfo 
     : config?.footerInfo || '';

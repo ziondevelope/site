@@ -87,6 +87,14 @@ export default function Website() {
   const handleSave = () => {
     if (!config) return;
     
+    // Debug para rodapé
+    console.log("Estado atual configData:", {
+      footerTextColor: configData.footerTextColor,
+      footerIconsColor: configData.footerIconsColor,
+      configFooterTextColor: config.footerTextColor,
+      configFooterIconsColor: config.footerIconsColor
+    });
+    
     // Create a full config object ensuring all properties have values
     const fullConfig: UpdateWebsiteConfig = {
       logo: configData.logo ?? config.logo ?? '',
@@ -97,8 +105,8 @@ export default function Website() {
       bodyFont: configData.bodyFont ?? config.bodyFont ?? 'Inter',
       primaryColor: configData.primaryColor ?? config.primaryColor ?? '#3B82F6',
       secondaryColor: configData.secondaryColor ?? config.secondaryColor ?? '#10B981',
-      footerTextColor: configData.footerTextColor ?? config.footerTextColor ?? '#ffffff',
-      footerIconsColor: configData.footerIconsColor ?? config.footerIconsColor ?? '',
+      footerTextColor: configData.footerTextColor || config.footerTextColor || '#ffffff',
+      footerIconsColor: configData.footerIconsColor || config.footerIconsColor || '',
       footerInfo: configData.footerInfo ?? config.footerInfo ?? '',
       bannerTitle: configData.bannerTitle ?? config.bannerTitle ?? 'Encontre o imóvel dos seus sonhos',
       bannerSubtitle: configData.bannerSubtitle ?? config.bannerSubtitle ?? 'Oferecemos as melhores opções de imóveis para compra e aluguel com atendimento personalizado.',
