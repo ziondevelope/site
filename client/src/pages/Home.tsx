@@ -903,12 +903,9 @@ export default function Home() {
             <div className="border-t mt-12 pt-8 text-center" style={{ borderColor: 'rgba(255,255,255,0.2)', color: config?.footerTextColor || 'rgba(255,255,255,0.7)' }}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="flex justify-center md:justify-start items-center">
-                  <p className="text-sm">
-                    &copy; 2025 ImobSite. 
-                    <Link href="/admin">
-                      <span className="ml-3 hover:text-white cursor-pointer">Área do Administrador</span>
-                    </Link>
-                  </p>
+                  <Link href="/admin">
+                    <span className="text-sm hover:text-white cursor-pointer">Área do Administrador</span>
+                  </Link>
                 </div>
                 <div className="flex justify-center md:justify-end items-center">
                   <span className="mr-2 text-sm text-white">Tecnologia</span>
