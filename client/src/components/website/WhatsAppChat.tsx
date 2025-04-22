@@ -1,8 +1,9 @@
 import { useState, useRef, useEffect } from "react";
-import { MessageSquare, X, Send } from "lucide-react";
+import { X, Send } from "lucide-react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { WebsiteConfig } from "@shared/schema";
+import { FaWhatsapp } from "react-icons/fa";
 
 // Componente simplificado de WhatsApp Chat
 export default function WhatsAppChat() {
@@ -156,7 +157,7 @@ export default function WhatsAppChat() {
       >
         {!isOpen ? (
           <div className="flex items-center justify-center">
-            <MessageSquare className="h-6 w-6" />
+            <FaWhatsapp className="h-6 w-6" />
             <span className="ml-2 whitespace-nowrap">{config.whatsappButtonText || "Falar com corretor"}</span>
           </div>
         ) : (
@@ -239,7 +240,7 @@ export default function WhatsAppChat() {
                   </>
                 ) : (
                   <>
-                    <Send className="h-4 w-4 mr-2" />
+                    <FaWhatsapp className="h-4 w-4 mr-2" />
                     Continuar para WhatsApp
                   </>
                 )}
