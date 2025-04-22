@@ -13,6 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Label } from '@/components/ui/label';
 import { PriceRangeSlider } from '@/components/ui/price-range-slider';
 import { useLoading } from '@/contexts/LoadingContext';
+import SEO from '@/components/website/SEO';
 import '@/styles/hover-effects.css';
 
 // Função para obter a imagem em destaque do imóvel
@@ -179,6 +180,21 @@ export default function AllProperties() {
 
   return (
     <div className="min-h-screen flex flex-col">
+      {/* SEO Component */}
+      <SEO 
+        title={config?.seoTitle ? 
+          filters.purpose === 'sale' ? `Imóveis à Venda | ${config.seoTitle}` : 
+          filters.purpose === 'rent' ? `Imóveis para Alugar | ${config.seoTitle}` : 
+          `Todos os Imóveis | ${config.seoTitle}`
+          : 'Imóveis'
+        }
+        description={config?.seoDescription}
+        keywords={config?.seoKeywords}
+        favicon={config?.logo}
+        ogImage={config?.bannerBackground}
+        path="/properties"
+      />
+      
       {/* Header */}
       <Header config={config} isLoadingConfig={isLoadingConfig} />
       

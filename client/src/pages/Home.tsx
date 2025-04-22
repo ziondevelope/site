@@ -11,6 +11,7 @@ import { faShower, faBed, faRulerCombined, faCar, faBath } from "@fortawesome/fr
 import PropertyDetailsModal from '@/components/website/PropertyDetailsModal';
 import { Testimonials } from '@/components/website/Testimonials';
 import { useLoading } from "@/contexts/LoadingContext";
+import SEO from '@/components/website/SEO';
 import '../styles/hover-effects.css';
 import imobsiteLogo from '../assets/imobsite-logo.png';
 
@@ -133,6 +134,15 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col">
+      {/* SEO Component */}
+      <SEO 
+        title={config?.seoTitle}
+        description={config?.seoDescription}
+        keywords={config?.seoKeywords}
+        favicon={config?.logo}
+        ogImage={config?.bannerBackground}
+      />
+      
       {/* Usar o componente Header reutilizável */}
       <Header config={config} isLoadingConfig={isLoadingConfig} />
       

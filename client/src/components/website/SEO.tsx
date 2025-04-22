@@ -3,11 +3,11 @@ import { useQuery } from '@tanstack/react-query';
 import { WebsiteConfig } from '@shared/schema';
 
 interface SEOProps {
-  title?: string;
-  description?: string;
-  keywords?: string;
-  favicon?: string;
-  ogImage?: string;
+  title?: string | null;
+  description?: string | null;
+  keywords?: string | null;
+  favicon?: string | null;
+  ogImage?: string | null;
   path?: string;
 }
 

@@ -4,6 +4,7 @@ import { Property, WebsiteConfig } from '@shared/schema';
 import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import Header from '@/components/website/Header';
+import SEO from '@/components/website/SEO';
 
 export default function PropertyDetails() {
   const { id } = useParams();
@@ -171,6 +172,19 @@ export default function PropertyDetails() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
+      {/* SEO Component */}
+      <SEO 
+        title={property ? `${property.title} | ${property.purpose === 'sale' ? 'Venda' : 'Aluguel'}` : config?.seoTitle}
+        description={property?.description || config?.seoDescription}
+        keywords={config?.seoKeywords}
+        favicon={config?.logo}
+        ogImage={property?.images && property.images.length > 0 ? 
+          (typeof property.images[0] === 'object' ? property.images[0].url : property.images[0]) 
+          : config?.bannerBackground
+        }
+        path={`/properties/${id}`}
+      />
+      
       {/* Usar o componente Header */}
       <Header config={config} isLoadingConfig={isLoadingConfig} />
 
