@@ -228,6 +228,48 @@ export default function GeneralSettings({ config, configData, onConfigChange }: 
             />
           </div>
         </div>
+        
+        <div>
+          <Label className="block text-sm font-medium text-gray-700 mb-2">
+            Cor do Texto do Rodapé
+          </Label>
+          <div className="flex">
+            <Input 
+              type="color" 
+              value={configData.footerTextColor !== undefined ? configData.footerTextColor : config?.footerTextColor || '#ffffff'}
+              onChange={(e) => onConfigChange({ ...configData, footerTextColor: e.target.value })}
+              className="h-10 w-10 border-0 rounded-l-lg p-0"
+            />
+            <Input 
+              type="text" 
+              value={configData.footerTextColor !== undefined ? configData.footerTextColor : config?.footerTextColor || '#ffffff'} 
+              onChange={(e) => onConfigChange({ ...configData, footerTextColor: e.target.value })}
+              className="border border-l-0 border-gray-200 rounded-r-full px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-transparent"
+            />
+          </div>
+        </div>
+      </div>
+      
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+        <div>
+          <Label className="block text-sm font-medium text-gray-700 mb-2">
+            Cor dos Ícones do Rodapé
+          </Label>
+          <div className="flex">
+            <Input 
+              type="color" 
+              value={configData.footerIconsColor !== undefined ? configData.footerIconsColor : config?.footerIconsColor || primaryColor || '#1f4dbe'}
+              onChange={(e) => onConfigChange({ ...configData, footerIconsColor: e.target.value })}
+              className="h-10 w-10 border-0 rounded-l-lg p-0"
+            />
+            <Input 
+              type="text" 
+              value={configData.footerIconsColor !== undefined ? configData.footerIconsColor : config?.footerIconsColor || primaryColor || '#1f4dbe'} 
+              onChange={(e) => onConfigChange({ ...configData, footerIconsColor: e.target.value })}
+              className="border border-l-0 border-gray-200 rounded-r-full px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-transparent"
+            />
+          </div>
+        </div>
       </div>
       
       <div>

@@ -734,7 +734,7 @@ export default function Home() {
       {/* Footer */}
       <footer style={{ 
         backgroundColor: config?.secondaryColor || '#333', 
-        color: '#fff' 
+        color: config?.footerTextColor || '#fff' 
       }} className="py-12">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -781,7 +781,7 @@ export default function Home() {
                   </>
                 )}
               </div>
-              <p style={{ color: 'rgba(255,255,255,0.7)' }} className="mb-6">
+              <p style={{ color: config?.footerTextColor || 'rgba(255,255,255,0.7)' }} className="mb-6">
                 {config?.footerInfo || 'Soluções imobiliárias completas para você encontrar o imóvel dos seus sonhos.'}
               </p>
 
@@ -791,12 +791,12 @@ export default function Home() {
               <h3 className="text-lg font-semibold mb-6">Fale Conosco</h3>
               <div className="flex flex-col space-y-3">
                 <div className="flex items-center">
-                  <i className="fab fa-whatsapp text-xl mr-3" style={{ color: config?.primaryColor || 'var(--primary)' }}></i>
-                  <span style={{ color: 'rgba(255,255,255,0.9)' }}>{config?.phone || '(11) 4063-4100'}</span>
+                  <i className="fab fa-whatsapp text-xl mr-3" style={{ color: config?.footerIconsColor || config?.primaryColor || 'var(--primary)' }}></i>
+                  <span style={{ color: config?.footerTextColor || 'rgba(255,255,255,0.9)' }}>{config?.phone || '(11) 4063-4100'}</span>
                 </div>
                 <div className="flex items-center">
-                  <i className="far fa-envelope text-xl mr-3" style={{ color: config?.primaryColor || 'var(--primary)' }}></i>
-                  <span style={{ color: 'rgba(255,255,255,0.9)' }}>{config?.email || 'suporte@imobzi.com'}</span>
+                  <i className="far fa-envelope text-xl mr-3" style={{ color: config?.footerIconsColor || config?.primaryColor || 'var(--primary)' }}></i>
+                  <span style={{ color: config?.footerTextColor || 'rgba(255,255,255,0.9)' }}>{config?.email || 'suporte@imobzi.com'}</span>
                 </div>
                 <div className="flex space-x-3 mt-2">
                   <a href="#" className="flex items-center justify-center w-8 h-8 rounded-full bg-white">
@@ -822,23 +822,23 @@ export default function Home() {
                 <div className="flex items-center">
                   <i 
                     className="ri-map-pin-line text-xl mr-3"
-                    style={{ color: config?.primaryColor || 'var(--primary)' }}
+                    style={{ color: config?.footerIconsColor || config?.primaryColor || 'var(--primary)' }}
                   ></i>
-                  <span style={{ color: 'rgba(255,255,255,0.9)' }}>{config?.address || 'Av. Paulista, 1000 - São Paulo, SP'}</span>
+                  <span style={{ color: config?.footerTextColor || 'rgba(255,255,255,0.9)' }}>{config?.address || 'Av. Paulista, 1000 - São Paulo, SP'}</span>
                 </div>
                 <div className="flex items-center">
                   <i 
                     className="ri-time-line text-xl mr-3"
-                    style={{ color: config?.primaryColor || 'var(--primary)' }}
+                    style={{ color: config?.footerIconsColor || config?.primaryColor || 'var(--primary)' }}
                   ></i>
-                  <span style={{ color: 'rgba(255,255,255,0.9)' }}>{config?.workingHours || 'Segunda a Sexta, 09:00 às 18:00'}</span>
+                  <span style={{ color: config?.footerTextColor || 'rgba(255,255,255,0.9)' }}>{config?.workingHours || 'Segunda a Sexta, 09:00 às 18:00'}</span>
                 </div>
 
               </div>
             </div>
           </div>
           
-          <div className="border-t mt-12 pt-8 text-center" style={{ borderColor: 'rgba(255,255,255,0.2)', color: 'rgba(255,255,255,0.7)' }}>
+          <div className="border-t mt-12 pt-8 text-center" style={{ borderColor: 'rgba(255,255,255,0.2)', color: config?.footerTextColor || 'rgba(255,255,255,0.7)' }}>
             <div className="flex flex-col items-center justify-center space-y-3">
               <p className="text-sm">
                 &copy; 2025 ImobSite. 

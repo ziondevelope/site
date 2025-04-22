@@ -702,6 +702,8 @@ export class FirebaseStorage implements IStorage {
           mainFont: 'Inter',
           primaryColor: '#3B82F6',
           secondaryColor: '#10B981',
+          footerTextColor: '#ffffff',
+          footerIconsColor: '#3B82F6',
           footerInfo: 'Imobiliária XYZ\nAv. Paulista, 1000 - São Paulo, SP\ncontato@imobiliariaxyz.com.br\n(11) 3333-4444',
           showSearchBar: true,
           showFeaturedProperties: true,

@@ -113,6 +113,8 @@ export const websiteConfig = pgTable("website_config", {
   bodyFont: text("body_font").default("Inter"),
   primaryColor: text("primary_color").default("#3B82F6"),
   secondaryColor: text("secondary_color").default("#10B981"),
+  footerTextColor: text("footer_text_color").default("#ffffff"),
+  footerIconsColor: text("footer_icons_color"),
   footerInfo: text("footer_info"),
   bannerTitle: text("banner_title").default("Encontre o imóvel dos seus sonhos"),
   bannerSubtitle: text("banner_subtitle").default("Oferecemos as melhores opções de imóveis para compra e aluguel com atendimento personalizado"),
