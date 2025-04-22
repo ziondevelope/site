@@ -39,6 +39,17 @@ export default function Website() {
         showSaleProperties: config.showSaleProperties,
         showRentProperties: config.showRentProperties,
         showTestimonials: config.showTestimonials,
+        // Cards de Qualidade
+        showQualityCards: config.showQualityCards,
+        qualityCard1Title: config.qualityCard1Title,
+        qualityCard1Text: config.qualityCard1Text,
+        qualityCard1Enabled: config.qualityCard1Enabled,
+        qualityCard2Title: config.qualityCard2Title,
+        qualityCard2Text: config.qualityCard2Text,
+        qualityCard2Enabled: config.qualityCard2Enabled,
+        qualityCard3Title: config.qualityCard3Title,
+        qualityCard3Text: config.qualityCard3Text,
+        qualityCard3Enabled: config.qualityCard3Enabled,
         // Informações de contato
         address: config.address,
         email: config.email,
@@ -170,6 +181,19 @@ export default function Website() {
       showSaleProperties: configData.showSaleProperties ?? config.showSaleProperties ?? true,
       showRentProperties: configData.showRentProperties ?? config.showRentProperties ?? true,
       showTestimonials: configData.showTestimonials ?? config.showTestimonials ?? true,
+      
+      // Cards de Qualidade
+      showQualityCards: configData.showQualityCards ?? config.showQualityCards ?? true,
+      qualityCard1Title: configData.qualityCard1Title ?? config.qualityCard1Title ?? 'Os melhores imóveis',
+      qualityCard1Text: configData.qualityCard1Text ?? config.qualityCard1Text ?? 'Escolha entre apartamentos, casas, salas, ... Considere uma visita com um dos nossos corretores',
+      qualityCard1Enabled: configData.qualityCard1Enabled ?? config.qualityCard1Enabled ?? true,
+      qualityCard2Title: configData.qualityCard2Title ?? config.qualityCard2Title ?? 'Vamos acompanhar você',
+      qualityCard2Text: configData.qualityCard2Text ?? config.qualityCard2Text ?? 'Oferecemos a você a melhor consultoria na escolha do seu imóvel, desde a escolha da localização, tipo e características',
+      qualityCard2Enabled: configData.qualityCard2Enabled ?? config.qualityCard2Enabled ?? true,
+      qualityCard3Title: configData.qualityCard3Title ?? config.qualityCard3Title ?? 'Sempre a melhor condição',
+      qualityCard3Text: configData.qualityCard3Text ?? config.qualityCard3Text ?? 'Nossa equipe irá buscar a melhor condição de fechamento, inclusive oferecendo consultoria no financiamento',
+      qualityCard3Enabled: configData.qualityCard3Enabled ?? config.qualityCard3Enabled ?? true,
+      
       // Informações de contato
       address: configData.address ?? config.address ?? '',
       email: configData.email ?? config.email ?? '',
