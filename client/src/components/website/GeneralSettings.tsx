@@ -253,6 +253,20 @@ export default function GeneralSettings({ config, configData, onConfigChange }: 
         
         <div>
           <Label className="block text-sm font-medium text-gray-700 mb-2">
+            Estilo do Rodapé
+          </Label>
+          <select
+            value={configData?.footerStyle || 'default'}
+            onChange={(e) => onConfigChange({ ...configData, footerStyle: e.target.value })}
+            className="border border-gray-200 rounded-lg px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-transparent"
+          >
+            <option value="default">Completo (3 colunas)</option>
+            <option value="minimal">Minimalista</option>
+          </select>
+        </div>
+        
+        <div>
+          <Label className="block text-sm font-medium text-gray-700 mb-2">
             Cor do Texto do Rodapé
           </Label>
           <div className="flex">
