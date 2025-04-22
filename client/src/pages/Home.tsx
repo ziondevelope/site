@@ -767,7 +767,7 @@ export default function Home() {
                 )}
               </div>
               <p style={{ color: 'rgba(255,255,255,0.7)' }} className="mb-6">
-                Soluções imobiliárias completas para você encontrar o imóvel dos seus sonhos.
+                {config?.footerInfo || 'Soluções imobiliárias completas para você encontrar o imóvel dos seus sonhos.'}
               </p>
 
             </div>
