@@ -241,54 +241,38 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Seção de Imagem com Qualidades da Imobiliária */}
-      <section className="relative">
-        {/* Imagem de fundo */}
-        <div className="w-full h-[500px] relative">
-          <img 
-            src="https://images.unsplash.com/photo-1513584684374-8bab748fbf90?q=80&w=2065&auto=format&fit=crop" 
-            alt="Família feliz em casa" 
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#001219] opacity-90"></div>
-        </div>
-        
-        {/* Cards de qualidades sobrepostos na parte inferior da imagem */}
-        <div className="absolute bottom-0 left-0 right-0 mb-[-50px]">
-          <div className="container mx-auto px-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              
-              {/* Primeiro Card */}
-              <div className="bg-[#001219] rounded-lg p-6 shadow-lg text-white">
-                <h3 className="text-xl font-semibold mb-3">Os melhores imóveis</h3>
-                <p className="text-gray-300 text-sm leading-relaxed">
-                  Escolha entre apartamentos, casas, salas, ... Considere uma visita com um dos nossos corretores
-                </p>
-              </div>
-              
-              {/* Segundo Card */}
-              <div className="bg-[#001219] rounded-lg p-6 shadow-lg text-white">
-                <h3 className="text-xl font-semibold mb-3">Vamos acompanhar você</h3>
-                <p className="text-gray-300 text-sm leading-relaxed">
-                  Oferecemos a você a melhor consultoria na escolha do seu imóvel, desde a escolha da localização, tipo e características
-                </p>
-              </div>
-              
-              {/* Terceiro Card */}
-              <div className="bg-[#001219] rounded-lg p-6 shadow-lg text-white">
-                <h3 className="text-xl font-semibold mb-3">Sempre a melhor condição</h3>
-                <p className="text-gray-300 text-sm leading-relaxed">
-                  Nossa equipe irá buscar a melhor condição de fechamento, inclusive oferecendo consultoria no financiamento
-                </p>
-              </div>
-              
+      {/* Cards de qualidades sobrepostos no rodapé do Hero */}
+      <div className="relative z-10 -mt-24 mb-24">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            
+            {/* Primeiro Card */}
+            <div className="bg-[#001219] rounded-lg p-6 shadow-lg text-white">
+              <h3 className="text-xl font-semibold mb-3">Os melhores imóveis</h3>
+              <p className="text-gray-300 text-sm leading-relaxed">
+                Escolha entre apartamentos, casas, salas, ... Considere uma visita com um dos nossos corretores
+              </p>
             </div>
+            
+            {/* Segundo Card */}
+            <div className="bg-[#001219] rounded-lg p-6 shadow-lg text-white">
+              <h3 className="text-xl font-semibold mb-3">Vamos acompanhar você</h3>
+              <p className="text-gray-300 text-sm leading-relaxed">
+                Oferecemos a você a melhor consultoria na escolha do seu imóvel, desde a escolha da localização, tipo e características
+              </p>
+            </div>
+            
+            {/* Terceiro Card */}
+            <div className="bg-[#001219] rounded-lg p-6 shadow-lg text-white">
+              <h3 className="text-xl font-semibold mb-3">Sempre a melhor condição</h3>
+              <p className="text-gray-300 text-sm leading-relaxed">
+                Nossa equipe irá buscar a melhor condição de fechamento, inclusive oferecendo consultoria no financiamento
+              </p>
+            </div>
+            
           </div>
         </div>
-      </section>
-      
-      {/* Espaçamento para compensar os cards sobrepostos */}
-      <div className="h-[70px]"></div>
+      </div>
       
       {/* Properties Section - Imóveis em Destaque */}
       {config?.showFeaturedProperties !== false && (
