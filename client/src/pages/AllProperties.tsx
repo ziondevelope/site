@@ -14,6 +14,7 @@ import { Label } from '@/components/ui/label';
 import { PriceRangeSlider } from '@/components/ui/price-range-slider';
 import { useLoading } from '@/contexts/LoadingContext';
 import SEO from '@/components/website/SEO';
+import Footer from '@/components/Footer';
 import '@/styles/hover-effects.css';
 
 // Função para obter a imagem em destaque do imóvel
@@ -542,12 +543,8 @@ export default function AllProperties() {
         </div>
       </main>
       
-      {/* Footer simples */}
-      <footer className="bg-gray-800 text-white py-6">
-        <div className="container mx-auto px-4 text-center">
-          <p>&copy; {new Date().getFullYear()} Imobiliária. Todos os direitos reservados.</p>
-        </div>
-      </footer>
+      {/* Footer */}
+      <Footer config={config} isLoadingConfig={isLoadingConfig} />
       
       {/* Modal de detalhes do imóvel */}
       {isModalOpen && selectedPropertyId && (
