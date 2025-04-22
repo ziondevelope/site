@@ -91,137 +91,235 @@ export default function Footer({ config, isLoadingConfig }: FooterProps) {
     );
   }
 
-  // Rodapé padrão completo com 3 colunas
+  // Rodapé padrão completo com design moderno
   return (
     <footer style={{ 
-      backgroundColor: config?.secondaryColor || '#333', 
-      color: config?.footerTextColor || '#fff' 
-    }} className="py-12">
-      <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div>
-            <div className="flex items-center space-x-3 mb-6">
+      backgroundColor: config?.secondaryColor || '#333',
+    }} className="py-16 relative overflow-hidden">
+      {/* Elemento decorativo */}
+      <div className="absolute top-0 right-0 w-1/3 h-full opacity-10" style={{ 
+        backgroundColor: config?.primaryColor || '#f7f7f7',
+        clipPath: 'polygon(100% 0, 0% 100%, 100% 100%)'
+      }}></div>
+      
+      <div className="container mx-auto px-4 relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
+          {/* Coluna 1: Logo e Informações */}
+          <div className="md:col-span-1">
+            <div className="flex flex-col">
               {isLoadingConfig ? (
-                // Placeholder durante o carregamento - mantém o mesmo tamanho
-                <div className="h-10 w-24 rounded animate-pulse" style={{ backgroundColor: 'rgba(255,255,255,0.2)' }}></div>
+                <div className="h-12 w-32 rounded animate-pulse mb-6" style={{ backgroundColor: 'rgba(255,255,255,0.2)' }}></div>
               ) : config?.footerLogo ? (
-                <div className="h-10 min-w-[96px]">
+                <div className="h-12 min-w-[128px] mb-6">
                   <img 
                     src={config.footerLogo} 
                     alt="Logo da Imobiliária" 
                     className="h-full object-contain"
                     loading="eager" 
                     onLoad={(e) => {
-                      // Torna a imagem visível quando carregada
                       (e.target as HTMLImageElement).style.opacity = "1";
                     }}
-                    style={{ opacity: 0, transition: "opacity 0.2s ease" }}
+                    style={{ opacity: 0, transition: "opacity 0.3s ease" }}
                   />
                 </div>
               ) : config?.logo ? (
-                <div className="h-10 min-w-[96px]">
+                <div className="h-12 min-w-[128px] mb-6">
                   <img 
                     src={config.logo} 
                     alt="Logo da Imobiliária" 
                     className="h-full object-contain"
                     loading="eager" 
                     onLoad={(e) => {
-                      // Torna a imagem visível quando carregada
                       (e.target as HTMLImageElement).style.opacity = "1";
                     }}
-                    style={{ opacity: 0, transition: "opacity 0.2s ease" }}
+                    style={{ opacity: 0, transition: "opacity 0.3s ease" }}
                   />
                 </div>
               ) : (
-                <>
-                  <div className="h-10 w-10 rounded flex items-center justify-center text-white" 
+                <div className="flex items-center space-x-3 mb-6">
+                  <div className="h-12 w-12 rounded-lg flex items-center justify-center text-white" 
                     style={{ backgroundColor: config?.primaryColor || 'var(--primary)' }}>
-                    <i className="ri-home-line text-xl"></i>
+                    <i className="ri-home-line text-2xl"></i>
                   </div>
-                  <h1 className="text-2xl font-bold">Imobiliária</h1>
-                </>
+                  <h1 className="text-2xl font-bold text-white">Imobiliária</h1>
+                </div>
               )}
-            </div>
-            <p style={{ color: config?.footerTextColor || 'rgba(255,255,255,0.7)' }} className="mb-6">
-              {config?.footerInfo || 'Soluções imobiliárias completas para você encontrar o imóvel dos seus sonhos.'}
-            </p>
-
-          </div>
-          
-          <div>
-            <h3 className="text-lg font-semibold mb-6">Fale Conosco</h3>
-            <div className="flex flex-col space-y-3">
-              <div className="flex items-center">
-                <i className="fab fa-whatsapp text-xl mr-3" style={{ color: config?.footerIconsColor || config?.primaryColor || 'var(--primary)' }}></i>
-                <span style={{ color: config?.footerTextColor || 'rgba(255,255,255,0.9)' }}>{config?.phone || '(11) 4063-4100'}</span>
-              </div>
-              <div className="flex items-center">
-                <i className="far fa-envelope text-xl mr-3" style={{ color: config?.footerIconsColor || config?.primaryColor || 'var(--primary)' }}></i>
-                <span style={{ color: config?.footerTextColor || 'rgba(255,255,255,0.9)' }}>{config?.email || 'suporte@imobzi.com'}</span>
-              </div>
-              <div className="flex space-x-3 mt-2">
+              
+              <p className="text-gray-300 mb-8 max-w-xs leading-relaxed">
+                {config?.footerInfo || 'Soluções imobiliárias completas para você encontrar o imóvel dos seus sonhos.'}
+              </p>
+              
+              {/* Social icons */}
+              <div className="flex flex-wrap gap-3 mt-auto">
                 {config?.facebookUrl && (
-                  <a href={config.facebookUrl} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-8 h-8 rounded-full bg-white">
-                    <i className="fab fa-facebook-f" style={{ color: config?.secondaryColor || '#333' }}></i>
+                  <a 
+                    href={config.facebookUrl} 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="h-10 w-10 rounded-full flex items-center justify-center transition-transform hover:scale-110"
+                    style={{ backgroundColor: config?.primaryColor || '#4a5568' }}
+                  >
+                    <i className="fab fa-facebook-f text-white"></i>
                   </a>
                 )}
                 {config?.linkedinUrl && (
-                  <a href={config.linkedinUrl} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-8 h-8 rounded-full bg-white">
-                    <i className="fab fa-linkedin-in" style={{ color: config?.secondaryColor || '#333' }}></i>
+                  <a 
+                    href={config.linkedinUrl} 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="h-10 w-10 rounded-full flex items-center justify-center transition-transform hover:scale-110"
+                    style={{ backgroundColor: config?.primaryColor || '#4a5568' }}
+                  >
+                    <i className="fab fa-linkedin-in text-white"></i>
                   </a>
                 )}
                 {config?.youtubeUrl && (
-                  <a href={config.youtubeUrl} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-8 h-8 rounded-full bg-white">
-                    <i className="fab fa-youtube" style={{ color: config?.secondaryColor || '#333' }}></i>
+                  <a 
+                    href={config.youtubeUrl} 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="h-10 w-10 rounded-full flex items-center justify-center transition-transform hover:scale-110"
+                    style={{ backgroundColor: config?.primaryColor || '#4a5568' }}
+                  >
+                    <i className="fab fa-youtube text-white"></i>
                   </a>
                 )}
                 {config?.instagramUrl && (
-                  <a href={config.instagramUrl} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-8 h-8 rounded-full bg-white">
-                    <i className="fab fa-instagram" style={{ color: config?.secondaryColor || '#333' }}></i>
+                  <a 
+                    href={config.instagramUrl} 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="h-10 w-10 rounded-full flex items-center justify-center transition-transform hover:scale-110"
+                    style={{ backgroundColor: config?.primaryColor || '#4a5568' }}
+                  >
+                    <i className="fab fa-instagram text-white"></i>
                   </a>
                 )}
                 {config?.tiktokUrl && (
-                  <a href={config.tiktokUrl} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-8 h-8 rounded-full bg-white">
-                    <i className="fab fa-tiktok" style={{ color: config?.secondaryColor || '#333' }}></i>
+                  <a 
+                    href={config.tiktokUrl} 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="h-10 w-10 rounded-full flex items-center justify-center transition-transform hover:scale-110"
+                    style={{ backgroundColor: config?.primaryColor || '#4a5568' }}
+                  >
+                    <i className="fab fa-tiktok text-white"></i>
                   </a>
                 )}
               </div>
             </div>
           </div>
           
-
-          <div>
-            <h3 className="text-lg font-semibold mb-6">Localização</h3>
-            <div className="space-y-3">
-              <div className="flex items-center">
-                <i 
-                  className="ri-map-pin-line text-xl mr-3"
-                  style={{ color: config?.footerIconsColor || config?.primaryColor || 'var(--primary)' }}
-                ></i>
-                <span style={{ color: config?.footerTextColor || 'rgba(255,255,255,0.9)' }}>{config?.address || 'Av. Paulista, 1000 - São Paulo, SP'}</span>
+          {/* Coluna 2: Links Rápidos */}
+          <div className="md:col-span-1">
+            <h3 className="text-white text-lg font-semibold mb-6 pb-2 border-b border-opacity-20" style={{ borderColor: config?.primaryColor || 'white' }}>
+              Links Rápidos
+            </h3>
+            <ul className="space-y-3">
+              <li>
+                <Link href="/" className="text-gray-300 hover:text-white transition-colors duration-200 flex items-center">
+                  <i className="fas fa-chevron-right mr-2 text-xs" style={{ color: config?.primaryColor || 'white' }}></i>
+                  <span>Home</span>
+                </Link>
+              </li>
+              <li>
+                <Link href="/properties?purpose=sale" className="text-gray-300 hover:text-white transition-colors duration-200 flex items-center">
+                  <i className="fas fa-chevron-right mr-2 text-xs" style={{ color: config?.primaryColor || 'white' }}></i>
+                  <span>Imóveis à Venda</span>
+                </Link>
+              </li>
+              <li>
+                <Link href="/properties?purpose=rent" className="text-gray-300 hover:text-white transition-colors duration-200 flex items-center">
+                  <i className="fas fa-chevron-right mr-2 text-xs" style={{ color: config?.primaryColor || 'white' }}></i>
+                  <span>Imóveis para Alugar</span>
+                </Link>
+              </li>
+              <li>
+                <Link href="/about" className="text-gray-300 hover:text-white transition-colors duration-200 flex items-center">
+                  <i className="fas fa-chevron-right mr-2 text-xs" style={{ color: config?.primaryColor || 'white' }}></i>
+                  <span>Sobre Nós</span>
+                </Link>
+              </li>
+              <li>
+                <Link href="/contact" className="text-gray-300 hover:text-white transition-colors duration-200 flex items-center">
+                  <i className="fas fa-chevron-right mr-2 text-xs" style={{ color: config?.primaryColor || 'white' }}></i>
+                  <span>Contato</span>
+                </Link>
+              </li>
+            </ul>
+          </div>
+          
+          {/* Coluna 3: Fale Conosco */}
+          <div className="md:col-span-1">
+            <h3 className="text-white text-lg font-semibold mb-6 pb-2 border-b border-opacity-20" style={{ borderColor: config?.primaryColor || 'white' }}>
+              Fale Conosco
+            </h3>
+            <div className="space-y-4">
+              <div className="flex items-center space-x-3 group">
+                <div className="w-10 h-10 rounded-lg flex items-center justify-center transition-colors" 
+                     style={{ backgroundColor: 'rgba(255,255,255,0.1)' }}>
+                  <i className="fab fa-whatsapp text-lg" style={{ color: config?.primaryColor || 'white' }}></i>
+                </div>
+                <a href={`https://wa.me/${config?.phone?.replace(/\D/g, '')}`} 
+                   className="text-gray-300 group-hover:text-white transition-colors">
+                  {config?.phone || '(11) 4063-4100'}
+                </a>
               </div>
-              <div className="flex items-center">
-                <i 
-                  className="ri-time-line text-xl mr-3"
-                  style={{ color: config?.footerIconsColor || config?.primaryColor || 'var(--primary)' }}
-                ></i>
-                <span style={{ color: config?.footerTextColor || 'rgba(255,255,255,0.9)' }}>{config?.workingHours || 'Segunda a Sexta, 09:00 às 18:00'}</span>
+              
+              <div className="flex items-center space-x-3 group">
+                <div className="w-10 h-10 rounded-lg flex items-center justify-center transition-colors" 
+                     style={{ backgroundColor: 'rgba(255,255,255,0.1)' }}>
+                  <i className="far fa-envelope text-lg" style={{ color: config?.primaryColor || 'white' }}></i>
+                </div>
+                <a href={`mailto:${config?.email}`} 
+                   className="text-gray-300 group-hover:text-white transition-colors">
+                  {config?.email || 'suporte@imobzi.com'}
+                </a>
               </div>
-
+            </div>
+          </div>
+          
+          {/* Coluna 4: Localização */}
+          <div className="md:col-span-1">
+            <h3 className="text-white text-lg font-semibold mb-6 pb-2 border-b border-opacity-20" style={{ borderColor: config?.primaryColor || 'white' }}>
+              Localização
+            </h3>
+            <div className="space-y-4">
+              <div className="flex items-start space-x-3">
+                <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0" 
+                     style={{ backgroundColor: 'rgba(255,255,255,0.1)' }}>
+                  <i className="ri-map-pin-line text-lg" style={{ color: config?.primaryColor || 'white' }}></i>
+                </div>
+                <span className="text-gray-300">{config?.address || 'Av. Paulista, 1000 - São Paulo, SP'}</span>
+              </div>
+              
+              <div className="flex items-start space-x-3">
+                <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0" 
+                     style={{ backgroundColor: 'rgba(255,255,255,0.1)' }}>
+                  <i className="ri-time-line text-lg" style={{ color: config?.primaryColor || 'white' }}></i>
+                </div>
+                <span className="text-gray-300">{config?.workingHours || 'Segunda a Sexta, 09:00 às 18:00'}</span>
+              </div>
             </div>
           </div>
         </div>
         
-        <div className="border-t mt-12 pt-8 text-center" style={{ borderColor: 'rgba(255,255,255,0.2)', color: config?.footerTextColor || 'rgba(255,255,255,0.7)' }}>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="flex justify-center md:justify-start items-center">
-              <Link href="/admin">
-                <span className="text-sm hover:text-white cursor-pointer">Área do Administrador</span>
-              </Link>
+        {/* Linha divisória e créditos */}
+        <div className="border-t border-gray-600 mt-12 pt-6">
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            <div className="mb-4 md:mb-0">
+              <p className="text-gray-400 text-sm">
+                &copy; {new Date().getFullYear()} {config?.companyName || 'Imobiliária'}. Todos os direitos reservados.
+              </p>
             </div>
-            <div className="flex justify-center md:justify-end items-center">
-              <span className="mr-2 text-sm text-white">Tecnologia</span>
-              <img src={imobsiteLogo} alt="Imobsite" className="h-7" />
+            <div className="flex items-center">
+              <Link href="/admin" className="text-gray-400 text-sm hover:text-white mr-6 transition-colors">
+                Área do Administrador
+              </Link>
+              <div className="flex items-center">
+                <span className="text-sm text-gray-400 mr-2">Tecnologia</span>
+                <img src={imobsiteLogo} alt="Imobsite" className="h-7 opacity-80 hover:opacity-100 transition-opacity" />
+              </div>
             </div>
           </div>
         </div>
