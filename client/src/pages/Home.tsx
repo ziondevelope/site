@@ -831,13 +831,7 @@ export default function Home() {
                   ></i>
                   <span style={{ color: 'rgba(255,255,255,0.7)' }}>{config?.workingHours || 'Segunda a Sexta, 09:00 às 18:00'}</span>
                 </div>
-                
-                {/* Mapa simplificado representativo */}
-                <div className="mt-2 h-32 bg-gray-700 rounded-lg overflow-hidden relative">
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <i className="ri-map-pin-fill text-2xl" style={{ color: config?.primaryColor || 'var(--primary)' }}></i>
-                  </div>
-                </div>
+
               </div>
             </div>
           </div>
