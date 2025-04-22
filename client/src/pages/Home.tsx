@@ -797,15 +797,15 @@ export default function Home() {
             {/* Div com fundo branco e dois grids */}
             <div className="bg-gray-100 text-gray-800 mt-4 mb-4 py-6 rounded">
               <div className="container mx-auto">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-0">
                   {/* Grid esquerdo com "Feito por" e logo */}
-                  <div className="flex flex-col items-center md:items-start justify-center">
+                  <div className="flex flex-col items-center md:items-start justify-center pl-4">
                     <p className="mb-2 text-sm font-medium">Feito por</p>
                     <img src={imobsiteLogo} alt="Imobsite" className="h-8" />
                   </div>
                   
                   {/* Grid direito */}
-                  <div className="flex flex-col items-center md:items-end justify-center">
+                  <div className="flex flex-col items-center md:items-end justify-center pr-4">
                     <p className="text-sm">
                       &copy; 2025 ImobSite. 
                       <Link href="/admin">
@@ -933,15 +933,15 @@ export default function Home() {
             {/* Div com fundo branco e dois grids */}
             <div className="bg-white text-gray-800 mt-12 py-6 rounded">
               <div className="container mx-auto">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-0">
                   {/* Grid esquerdo com "Feito por" e logo */}
-                  <div className="flex flex-col items-center md:items-start justify-center">
+                  <div className="flex flex-col items-center md:items-start justify-center pl-4">
                     <p className="mb-2 text-sm font-medium">Feito por</p>
                     <img src={imobsiteLogo} alt="Imobsite" className="h-8" />
                   </div>
                   
                   {/* Grid direito */}
-                  <div className="flex flex-col items-center md:items-end justify-center">
+                  <div className="flex flex-col items-center md:items-end justify-center pr-4">
                     <p className="text-sm">
                       &copy; 2025 ImobSite. 
                       <Link href="/admin">
