@@ -734,90 +734,60 @@ export default function Home() {
       {/* Footer */}
       {config?.footerStyle === 'minimal' ? (
         // Rodapé minimalista
-        <footer className="border-t border-gray-200">
+        <footer className="py-4 border-t border-gray-200">
           <div className="container mx-auto px-4">
-            {/* Primeira parte do rodapé */}
-            <div className="py-4">
-              <div className="flex flex-wrap items-center justify-between">
-                {/* Logo à esquerda */}
-                <div className="w-auto">
-                  {isLoadingConfig ? (
-                    <div className="h-8 w-24 rounded animate-pulse bg-gray-200"></div>
-                  ) : config?.footerLogo ? (
-                    <div className="h-8">
-                      <img 
-                        src={config.footerLogo} 
-                        alt="Logo" 
-                        className="h-full object-contain"
-                        loading="eager" 
-                        onLoad={(e) => {
-                          (e.target as HTMLImageElement).style.opacity = "1";
-                        }}
-                        style={{ opacity: 0, transition: "opacity 0.2s ease" }}
-                      />
-                    </div>
-                  ) : config?.logo ? (
-                    <div className="h-8">
-                      <img 
-                        src={config.logo} 
-                        alt="Logo" 
-                        className="h-full object-contain"
-                        loading="eager" 
-                        onLoad={(e) => {
-                          (e.target as HTMLImageElement).style.opacity = "1";
-                        }}
-                        style={{ opacity: 0, transition: "opacity 0.2s ease" }}
-                      />
-                    </div>
-                  ) : (
-                    <div className="h-8">
-                      <p className="text-gray-800 font-semibold">Imobiliária</p>
-                    </div>
-                  )}
-                </div>
-                
-                {/* Ícones sociais à direita */}
-                <div className="flex items-center space-x-3">
-                  <a href="#" className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition-colors">
-                    <i className="fab fa-facebook-f"></i>
-                  </a>
-                  <a href="#" className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition-colors">
-                    <i className="fab fa-linkedin-in"></i>
-                  </a>
-                  <a href="#" className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition-colors">
-                    <i className="fab fa-youtube"></i>
-                  </a>
-                  <a href="#" className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition-colors">
-                    <i className="fab fa-instagram"></i>
-                  </a>
-                </div>
+            <div className="flex flex-wrap items-center justify-between">
+              {/* Logo à esquerda */}
+              <div className="w-auto">
+                {isLoadingConfig ? (
+                  <div className="h-8 w-24 rounded animate-pulse bg-gray-200"></div>
+                ) : config?.footerLogo ? (
+                  <div className="h-8">
+                    <img 
+                      src={config.footerLogo} 
+                      alt="Logo" 
+                      className="h-full object-contain"
+                      loading="eager" 
+                      onLoad={(e) => {
+                        (e.target as HTMLImageElement).style.opacity = "1";
+                      }}
+                      style={{ opacity: 0, transition: "opacity 0.2s ease" }}
+                    />
+                  </div>
+                ) : config?.logo ? (
+                  <div className="h-8">
+                    <img 
+                      src={config.logo} 
+                      alt="Logo" 
+                      className="h-full object-contain"
+                      loading="eager" 
+                      onLoad={(e) => {
+                        (e.target as HTMLImageElement).style.opacity = "1";
+                      }}
+                      style={{ opacity: 0, transition: "opacity 0.2s ease" }}
+                    />
+                  </div>
+                ) : (
+                  <div className="h-8">
+                    <p className="text-gray-800 font-semibold">Imobiliária</p>
+                  </div>
+                )}
               </div>
-            </div>
-            
-            {/* Div com fundo branco e dois grids */}
-            <div className="bg-gray-100 text-gray-800 mt-4 mb-4 py-6 rounded">
-              <div className="container mx-auto">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {/* Grid esquerdo com "Feito por" e logo */}
-                  <div className="flex flex-col items-center md:items-start justify-center">
-                    <p className="mb-2 text-sm font-medium">Feito por</p>
-                    <img src={imobsiteLogo} alt="Imobsite" className="h-8" />
-                  </div>
-                  
-                  {/* Grid direito */}
-                  <div className="flex flex-col items-center md:items-end justify-center">
-                    <p className="text-sm">
-                      &copy; 2025 ImobSite. 
-                      <Link href="/admin">
-                        <span className="ml-3 hover:text-gray-600 cursor-pointer">Área do Administrador</span>
-                      </Link>
-                    </p>
-                    <div className="flex items-center mt-2">
-                      <span className="mr-2 text-sm">Tecnologia</span>
-                      <img src={imobsiteLogo} alt="Imobsite" className="h-6" />
-                    </div>
-                  </div>
-                </div>
+              
+              {/* Ícones sociais à direita */}
+              <div className="flex items-center space-x-3">
+                <a href="#" className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition-colors">
+                  <i className="fab fa-facebook-f"></i>
+                </a>
+                <a href="#" className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition-colors">
+                  <i className="fab fa-linkedin-in"></i>
+                </a>
+                <a href="#" className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition-colors">
+                  <i className="fab fa-youtube"></i>
+                </a>
+                <a href="#" className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition-colors">
+                  <i className="fab fa-instagram"></i>
+                </a>
               </div>
             </div>
           </div>
@@ -930,29 +900,17 @@ export default function Home() {
               </div>
             </div>
             
-            {/* Div com fundo branco e dois grids */}
-            <div className="bg-white text-gray-800 mt-12 py-6 rounded">
-              <div className="container mx-auto">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {/* Grid esquerdo com "Feito por" e logo */}
-                  <div className="flex flex-col items-center md:items-start justify-center">
-                    <p className="mb-2 text-sm font-medium">Feito por</p>
-                    <img src={imobsiteLogo} alt="Imobsite" className="h-8" />
-                  </div>
-                  
-                  {/* Grid direito */}
-                  <div className="flex flex-col items-center md:items-end justify-center">
-                    <p className="text-sm">
-                      &copy; 2025 ImobSite. 
-                      <Link href="/admin">
-                        <span className="ml-3 hover:text-gray-600 cursor-pointer">Área do Administrador</span>
-                      </Link>
-                    </p>
-                    <div className="flex items-center mt-2">
-                      <span className="mr-2 text-sm">Tecnologia</span>
-                      <img src={imobsiteLogo} alt="Imobsite" className="h-6" />
-                    </div>
-                  </div>
+            <div className="border-t mt-12 pt-8 text-center" style={{ borderColor: 'rgba(255,255,255,0.2)', color: config?.footerTextColor || 'rgba(255,255,255,0.7)' }}>
+              <div className="flex flex-col items-center justify-center space-y-3">
+                <p className="text-sm">
+                  &copy; 2025 ImobSite. 
+                  <Link href="/admin">
+                    <span className="ml-3 hover:text-white cursor-pointer">Área do Administrador</span>
+                  </Link>
+                </p>
+                <div className="flex items-center">
+                  <span className="mr-2 text-sm text-white">Tecnologia</span>
+                  <img src={imobsiteLogo} alt="Imobsite" className="h-7" />
                 </div>
               </div>
             </div>
