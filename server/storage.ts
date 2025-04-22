@@ -717,6 +717,19 @@ export class FirebaseStorage implements IStorage {
           showRentProperties: true,
           showTestimonials: false,
           showAboutSection: true,
+          
+          // Cards de Qualidade
+          showQualityCards: true,
+          qualityCard1Title: 'Os melhores imóveis',
+          qualityCard1Text: 'Escolha entre apartamentos, casas, salas, ... Considere uma visita com um dos nossos corretores',
+          qualityCard1Enabled: true,
+          qualityCard2Title: 'Vamos acompanhar você',
+          qualityCard2Text: 'Oferecemos a você a melhor consultoria na escolha do seu imóvel, desde a escolha da localização, tipo e características',
+          qualityCard2Enabled: true,
+          qualityCard3Title: 'Sempre a melhor condição',
+          qualityCard3Text: 'Nossa equipe irá buscar a melhor condição de fechamento, inclusive oferecendo consultoria no financiamento',
+          qualityCard3Enabled: true,
+          
           address: '',
           email: '',
           phone: '',

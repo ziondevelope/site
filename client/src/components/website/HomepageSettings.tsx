@@ -67,6 +67,50 @@ export default function HomepageSettings({ config, configData, onConfigChange }:
   const aboutImage = configData.aboutImage !== undefined
     ? configData.aboutImage
     : config?.aboutImage ?? "";
+    
+  // Variáveis para Cards de Qualidade
+  const showQualityCards = configData.showQualityCards !== undefined
+    ? configData.showQualityCards
+    : config?.showQualityCards ?? true;
+    
+  // Card 1
+  const qualityCard1Enabled = configData.qualityCard1Enabled !== undefined
+    ? configData.qualityCard1Enabled
+    : config?.qualityCard1Enabled ?? true;
+    
+  const qualityCard1Title = configData.qualityCard1Title !== undefined
+    ? configData.qualityCard1Title
+    : config?.qualityCard1Title ?? "Os melhores imóveis";
+    
+  const qualityCard1Text = configData.qualityCard1Text !== undefined
+    ? configData.qualityCard1Text
+    : config?.qualityCard1Text ?? "Escolha entre apartamentos, casas, salas, ... Considere uma visita com um dos nossos corretores";
+    
+  // Card 2
+  const qualityCard2Enabled = configData.qualityCard2Enabled !== undefined
+    ? configData.qualityCard2Enabled
+    : config?.qualityCard2Enabled ?? true;
+    
+  const qualityCard2Title = configData.qualityCard2Title !== undefined
+    ? configData.qualityCard2Title
+    : config?.qualityCard2Title ?? "Vamos acompanhar você";
+    
+  const qualityCard2Text = configData.qualityCard2Text !== undefined
+    ? configData.qualityCard2Text
+    : config?.qualityCard2Text ?? "Oferecemos a você a melhor consultoria na escolha do seu imóvel, desde a escolha da localização, tipo e características";
+    
+  // Card 3
+  const qualityCard3Enabled = configData.qualityCard3Enabled !== undefined
+    ? configData.qualityCard3Enabled
+    : config?.qualityCard3Enabled ?? true;
+    
+  const qualityCard3Title = configData.qualityCard3Title !== undefined
+    ? configData.qualityCard3Title
+    : config?.qualityCard3Title ?? "Sempre a melhor condição";
+    
+  const qualityCard3Text = configData.qualityCard3Text !== undefined
+    ? configData.qualityCard3Text
+    : config?.qualityCard3Text ?? "Nossa equipe irá buscar a melhor condição de fechamento, inclusive oferecendo consultoria no financiamento";
 
   // Handle change functions
   const handleShowSearchBarChange = (checked: boolean) => {
@@ -129,6 +173,50 @@ export default function HomepageSettings({ config, configData, onConfigChange }:
       onConfigChange({ aboutImage: base64String });
     };
     reader.readAsDataURL(file);
+  };
+  
+  // Manipuladores de eventos para Cards de Qualidade
+  const handleShowQualityCardsChange = (checked: boolean) => {
+    onConfigChange({ showQualityCards: checked });
+  };
+  
+  // Card 1
+  const handleQualityCard1EnabledChange = (checked: boolean) => {
+    onConfigChange({ qualityCard1Enabled: checked });
+  };
+  
+  const handleQualityCard1TitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onConfigChange({ qualityCard1Title: e.target.value });
+  };
+  
+  const handleQualityCard1TextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    onConfigChange({ qualityCard1Text: e.target.value });
+  };
+  
+  // Card 2
+  const handleQualityCard2EnabledChange = (checked: boolean) => {
+    onConfigChange({ qualityCard2Enabled: checked });
+  };
+  
+  const handleQualityCard2TitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onConfigChange({ qualityCard2Title: e.target.value });
+  };
+  
+  const handleQualityCard2TextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    onConfigChange({ qualityCard2Text: e.target.value });
+  };
+  
+  // Card 3
+  const handleQualityCard3EnabledChange = (checked: boolean) => {
+    onConfigChange({ qualityCard3Enabled: checked });
+  };
+  
+  const handleQualityCard3TitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onConfigChange({ qualityCard3Title: e.target.value });
+  };
+  
+  const handleQualityCard3TextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    onConfigChange({ qualityCard3Text: e.target.value });
   };
 
   return (

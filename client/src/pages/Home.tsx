@@ -242,78 +242,92 @@ export default function Home() {
       </section>
 
       {/* Cards de qualidades sobrepostos no rodapé do Hero */}
-      <div className="relative z-10 -mt-24 mb-8">
-        <div className="container mx-auto px-4">
-          {/* Exibição em desktop: grid normal */}
-          <div className="hidden md:grid md:grid-cols-3 gap-4">
-            
-            {/* Primeiro Card */}
-            <div className="rounded-lg p-6 shadow-lg text-white" style={{ backgroundColor: config?.primaryColor || '#001219' }}>
-              <h3 className="text-xl font-semibold mb-3">Os melhores imóveis</h3>
-              <p className="text-gray-300 text-sm leading-relaxed">
-                Escolha entre apartamentos, casas, salas, ... Considere uma visita com um dos nossos corretores
-              </p>
-            </div>
-            
-            {/* Segundo Card */}
-            <div className="rounded-lg p-6 shadow-lg text-white" style={{ backgroundColor: config?.primaryColor || '#001219' }}>
-              <h3 className="text-xl font-semibold mb-3">Vamos acompanhar você</h3>
-              <p className="text-gray-300 text-sm leading-relaxed">
-                Oferecemos a você a melhor consultoria na escolha do seu imóvel, desde a escolha da localização, tipo e características
-              </p>
-            </div>
-            
-            {/* Terceiro Card */}
-            <div className="rounded-lg p-6 shadow-lg text-white" style={{ backgroundColor: config?.primaryColor || '#001219' }}>
-              <h3 className="text-xl font-semibold mb-3">Sempre a melhor condição</h3>
-              <p className="text-gray-300 text-sm leading-relaxed">
-                Nossa equipe irá buscar a melhor condição de fechamento, inclusive oferecendo consultoria no financiamento
-              </p>
-            </div>
-            
-          </div>
-          
-          {/* Exibição em mobile: carrossel */}
-          <div className="md:hidden relative">
-            <div className="overflow-x-auto pb-4 flex snap-x snap-mandatory scrollbar-hide">
-              {/* Cards do carrossel */}
-              <div className="snap-center flex-shrink-0 w-full px-1">
+      {config?.showQualityCards !== false && (
+        <div className="relative z-10 -mt-24 mb-8">
+          <div className="container mx-auto px-4">
+            {/* Exibição em desktop: grid normal */}
+            <div className="hidden md:grid md:grid-cols-3 gap-4">
+              
+              {/* Primeiro Card */}
+              {config?.qualityCard1Enabled !== false && (
                 <div className="rounded-lg p-6 shadow-lg text-white" style={{ backgroundColor: config?.primaryColor || '#001219' }}>
-                  <h3 className="text-xl font-semibold mb-3">Os melhores imóveis</h3>
+                  <h3 className="text-xl font-semibold mb-3">{config?.qualityCard1Title || 'Os melhores imóveis'}</h3>
                   <p className="text-gray-300 text-sm leading-relaxed">
-                    Escolha entre apartamentos, casas, salas, ... Considere uma visita com um dos nossos corretores
+                    {config?.qualityCard1Text || 'Escolha entre apartamentos, casas, salas, ... Considere uma visita com um dos nossos corretores'}
                   </p>
                 </div>
+              )}
+              
+              {/* Segundo Card */}
+              {config?.qualityCard2Enabled !== false && (
+                <div className="rounded-lg p-6 shadow-lg text-white" style={{ backgroundColor: config?.primaryColor || '#001219' }}>
+                  <h3 className="text-xl font-semibold mb-3">{config?.qualityCard2Title || 'Vamos acompanhar você'}</h3>
+                  <p className="text-gray-300 text-sm leading-relaxed">
+                    {config?.qualityCard2Text || 'Oferecemos a você a melhor consultoria na escolha do seu imóvel, desde a escolha da localização, tipo e características'}
+                  </p>
+                </div>
+              )}
+              
+              {/* Terceiro Card */}
+              {config?.qualityCard3Enabled !== false && (
+                <div className="rounded-lg p-6 shadow-lg text-white" style={{ backgroundColor: config?.primaryColor || '#001219' }}>
+                  <h3 className="text-xl font-semibold mb-3">{config?.qualityCard3Title || 'Sempre a melhor condição'}</h3>
+                  <p className="text-gray-300 text-sm leading-relaxed">
+                    {config?.qualityCard3Text || 'Nossa equipe irá buscar a melhor condição de fechamento, inclusive oferecendo consultoria no financiamento'}
+                  </p>
+                </div>
+              )}
+              
+            </div>
+            
+            {/* Exibição em mobile: carrossel */}
+            <div className="md:hidden relative">
+              <div className="overflow-x-auto pb-4 flex snap-x snap-mandatory scrollbar-hide">
+                {/* Cards do carrossel */}
+                {config?.qualityCard1Enabled !== false && (
+                  <div className="snap-center flex-shrink-0 w-full px-1">
+                    <div className="rounded-lg p-6 shadow-lg text-white" style={{ backgroundColor: config?.primaryColor || '#001219' }}>
+                      <h3 className="text-xl font-semibold mb-3">{config?.qualityCard1Title || 'Os melhores imóveis'}</h3>
+                      <p className="text-gray-300 text-sm leading-relaxed">
+                        {config?.qualityCard1Text || 'Escolha entre apartamentos, casas, salas, ... Considere uma visita com um dos nossos corretores'}
+                      </p>
+                    </div>
+                  </div>
+                )}
+                
+                {config?.qualityCard2Enabled !== false && (
+                  <div className="snap-center flex-shrink-0 w-full px-1">
+                    <div className="rounded-lg p-6 shadow-lg text-white" style={{ backgroundColor: config?.primaryColor || '#001219' }}>
+                      <h3 className="text-xl font-semibold mb-3">{config?.qualityCard2Title || 'Vamos acompanhar você'}</h3>
+                      <p className="text-gray-300 text-sm leading-relaxed">
+                        {config?.qualityCard2Text || 'Oferecemos a você a melhor consultoria na escolha do seu imóvel, desde a escolha da localização, tipo e características'}
+                      </p>
+                    </div>
+                  </div>
+                )}
+                
+                {config?.qualityCard3Enabled !== false && (
+                  <div className="snap-center flex-shrink-0 w-full px-1">
+                    <div className="rounded-lg p-6 shadow-lg text-white" style={{ backgroundColor: config?.primaryColor || '#001219' }}>
+                      <h3 className="text-xl font-semibold mb-3">{config?.qualityCard3Title || 'Sempre a melhor condição'}</h3>
+                      <p className="text-gray-300 text-sm leading-relaxed">
+                        {config?.qualityCard3Text || 'Nossa equipe irá buscar a melhor condição de fechamento, inclusive oferecendo consultoria no financiamento'}
+                      </p>
+                    </div>
+                  </div>
+                )}
               </div>
               
-              <div className="snap-center flex-shrink-0 w-full px-1">
-                <div className="rounded-lg p-6 shadow-lg text-white" style={{ backgroundColor: config?.primaryColor || '#001219' }}>
-                  <h3 className="text-xl font-semibold mb-3">Vamos acompanhar você</h3>
-                  <p className="text-gray-300 text-sm leading-relaxed">
-                    Oferecemos a você a melhor consultoria na escolha do seu imóvel, desde a escolha da localização, tipo e características
-                  </p>
-                </div>
+              {/* Indicadores de página (pontos) */}
+              <div className="flex justify-center space-x-2 mt-4">
+                <div className="w-2 h-2 rounded-full bg-gray-800"></div>
+                <div className="w-2 h-2 rounded-full bg-gray-300"></div>
+                <div className="w-2 h-2 rounded-full bg-gray-300"></div>
               </div>
-              
-              <div className="snap-center flex-shrink-0 w-full px-1">
-                <div className="rounded-lg p-6 shadow-lg text-white" style={{ backgroundColor: config?.primaryColor || '#001219' }}>
-                  <h3 className="text-xl font-semibold mb-3">Sempre a melhor condição</h3>
-                  <p className="text-gray-300 text-sm leading-relaxed">
-                    Nossa equipe irá buscar a melhor condição de fechamento, inclusive oferecendo consultoria no financiamento
-                  </p>
-                </div>
-              </div>
-            </div>
-            
-            {/* Indicadores de página (pontos) */}
-            <div className="flex justify-center space-x-2 mt-4">
-              <div className="w-2 h-2 rounded-full bg-gray-800"></div>
-              <div className="w-2 h-2 rounded-full bg-gray-300"></div>
-              <div className="w-2 h-2 rounded-full bg-gray-300"></div>
             </div>
           </div>
         </div>
-      </div>
+      )}
       
       {/* Properties Section - Imóveis em Destaque */}
       {config?.showFeaturedProperties !== false && (

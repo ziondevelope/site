@@ -142,6 +142,24 @@ export const websiteConfig = pgTable("website_config", {
   aboutDescription: text("about_description"),
   aboutImage: text("about_image"),
   showAboutSection: boolean("show_about_section").default(true),
+  
+  // Seção de Cards de Qualidade
+  showQualityCards: boolean("show_quality_cards").default(true),
+  
+  // Card 1
+  qualityCard1Title: text("quality_card1_title").default("Os melhores imóveis"),
+  qualityCard1Text: text("quality_card1_text").default("Escolha entre apartamentos, casas, salas, ... Considere uma visita com um dos nossos corretores"),
+  qualityCard1Enabled: boolean("quality_card1_enabled").default(true),
+  
+  // Card 2
+  qualityCard2Title: text("quality_card2_title").default("Vamos acompanhar você"),
+  qualityCard2Text: text("quality_card2_text").default("Oferecemos a você a melhor consultoria na escolha do seu imóvel, desde a escolha da localização, tipo e características"),
+  qualityCard2Enabled: boolean("quality_card2_enabled").default(true),
+  
+  // Card 3
+  qualityCard3Title: text("quality_card3_title").default("Sempre a melhor condição"),
+  qualityCard3Text: text("quality_card3_text").default("Nossa equipe irá buscar a melhor condição de fechamento, inclusive oferecendo consultoria no financiamento"),
+  qualityCard3Enabled: boolean("quality_card3_enabled").default(true),
   // Campos SEO
   seoTitle: text("seo_title"),
   seoDescription: text("seo_description"),
