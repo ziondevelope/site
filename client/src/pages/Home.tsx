@@ -790,6 +790,11 @@ export default function Home() {
                 </a>
               </div>
             </div>
+            <div className="w-full mt-3 text-center">
+              <p className="text-xs text-gray-500">
+                Sistema completo para imobiliárias, com gestão de clientes, imóveis e contratos
+              </p>
+            </div>
           </div>
         </footer>
       ) : (
@@ -912,6 +917,9 @@ export default function Home() {
                   <span className="mr-2 text-sm text-white">Tecnologia</span>
                   <img src={imobsiteLogo} alt="Imobsite" className="h-7" />
                 </div>
+                <p className="text-xs mt-2" style={{ color: config?.footerTextColor || 'rgba(255,255,255,0.5)' }}>
+                  Sistema completo para imobiliárias, com gestão de clientes, imóveis e contratos
+                </p>
               </div>
             </div>
           </div>
