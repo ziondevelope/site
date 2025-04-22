@@ -923,7 +923,7 @@ export default function Home() {
                     className="ri-map-pin-line mr-3 mt-1"
                     style={{ color: config?.primaryColor || 'var(--primary)' }}
                   ></i>
-                  <span className="text-gray-400">Av. Paulista, 1000 - São Paulo, SP</span>
+                  <span className="text-gray-400">{config?.address || 'Av. Paulista, 1000 - São Paulo, SP'}</span>
                 </li>
                 <li className="flex items-start">
                   <i 
