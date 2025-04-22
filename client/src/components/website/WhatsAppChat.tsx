@@ -1,9 +1,28 @@
 import { useState, useRef, useEffect } from "react";
-import { X, Send } from "lucide-react";
+import { X } from "lucide-react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { WebsiteConfig } from "@shared/schema";
-import { FaWhatsapp } from "react-icons/fa";
+import { FaWhatsapp, FaPaperPlane } from "react-icons/fa";
+
+// Definindo a animação de bounce para o botão de WhatsApp
+const WhatsAppBounceAnimation = `
+  @keyframes whatsapp-bounce {
+    0%, 100% { transform: translateY(0); }
+    25% { transform: translateY(-6px); }
+    50% { transform: translateY(0); }
+    75% { transform: translateY(-3px); }
+  }
+
+  @keyframes fade-in {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.5s ease-in-out forwards;
+  }
+`;
 
 // Componente simplificado de WhatsApp Chat
 export default function WhatsAppChat() {
@@ -149,17 +168,24 @@ export default function WhatsAppChat() {
   
   return (
     <>
+      {/* Adiciona os estilos CSS no DOM */}
+      <style>{WhatsAppBounceAnimation}</style>
+      
       {/* Botão flutuante */}
       <button
         onClick={handleButtonClick}
-        className={`fixed bottom-5 ${buttonPosition} z-50 bg-[#25D366] text-white rounded-full p-3 shadow-lg hover:bg-[#128C7E] transition-all`}
+        className={`fixed bottom-5 ${buttonPosition} z-50 bg-[#25D366] text-white rounded-full p-3 md:px-5 shadow-xl hover:shadow-2xl hover:scale-105 hover:bg-[#128C7E] transition-all duration-300 ease-in-out flex items-center justify-center gap-2 backdrop-blur-sm group animate-fade-in`}
         aria-label={config.whatsappButtonText || "Falar com corretor"}
+        style={{
+          boxShadow: '0 4px 12px rgba(37, 211, 102, 0.4)',
+          animation: 'whatsapp-bounce 2.5s ease-in-out infinite'
+        }}
       >
         {!isOpen ? (
-          <div className="flex items-center justify-center">
-            <FaWhatsapp className="h-6 w-6" />
-            <span className="ml-2 whitespace-nowrap">{config.whatsappButtonText || "Falar com corretor"}</span>
-          </div>
+          <>
+            <FaWhatsapp className="h-7 w-7 md:h-6 md:w-6 animate-pulse" />
+            <span className="hidden md:inline ml-1 whitespace-nowrap font-medium text-sm group-hover:font-semibold">{config.whatsappButtonText || "Falar com corretor"}</span>
+          </>
         ) : (
           <X className="h-6 w-6" />
         )}
@@ -170,84 +196,100 @@ export default function WhatsAppChat() {
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
           <div
             ref={formRef}
-            className="bg-white rounded-lg shadow-xl w-full max-w-md mx-4 relative"
+            className="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 relative overflow-hidden animate-fade-in"
           >
             <button
               onClick={() => setIsOpen(false)}
-              className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
+              className="absolute top-3 right-3 z-10 text-white bg-[#25D366]/30 hover:bg-[#25D366]/60 rounded-full p-1 transition-all duration-200"
             >
               <X className="h-5 w-5" />
             </button>
             
-            <div className="bg-[#25D366] text-white p-4 rounded-t-lg">
-              <h2 className="text-xl font-bold">
+            <div className="bg-[#25D366] text-white p-6 pb-7 relative">
+              {/* Ícone decorativo */}
+              <div className="absolute right-4 top-4 opacity-10">
+                <FaWhatsapp className="h-20 w-20" />
+              </div>
+              
+              <h2 className="text-2xl font-bold relative z-[1]">
                 {config.whatsappFormTitle || "Entre em contato com um corretor"}
               </h2>
-              <p className="text-sm mt-1 text-white text-opacity-90">
+              <p className="text-sm mt-2 text-white text-opacity-90 max-w-[80%] relative z-[1]">
                 {config.whatsappFormMessage || "Preencha seus dados para que um de nossos corretores possa lhe atender da melhor forma."}
               </p>
+              
+              {/* Onda decorativa */}
+              <div className="absolute -bottom-5 left-0 right-0 h-10 bg-white" style={{ 
+                borderTopLeftRadius: '50%', 
+                borderTopRightRadius: '50%',
+                transform: 'scaleX(1.5)'
+              }}></div>
             </div>
             
-            <form onSubmit={handleSubmit} className="p-6 space-y-4">
+            <form onSubmit={handleSubmit} className="p-8 pt-4 space-y-5">
               {errorMessage && (
-                <div className="bg-red-50 text-red-700 p-3 rounded-md text-sm">
+                <div className="bg-red-50 text-red-700 p-3 rounded-xl text-sm border-l-4 border-red-500 shadow-sm">
                   {errorMessage}
                 </div>
               )}
               
-              <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+              <div className="transition-all duration-200 transform hover:translate-y-[-2px]">
+                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1.5">
                   Nome
                 </label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="Digite seu nome"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#25D366] focus:border-transparent"
-                  required
-                />
+                <div className="relative">
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="Digite seu nome"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#25D366] focus:border-transparent shadow-sm"
+                    required
+                  />
+                </div>
               </div>
               
-              <div>
-                <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
+              <div className="transition-all duration-200 transform hover:translate-y-[-2px]">
+                <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1.5">
                   Telefone
                 </label>
-                <input
-                  type="tel"
-                  id="phone"
-                  name="phone"
-                  value={phone}
-                  onChange={handlePhoneChange}
-                  placeholder="(00) 0 0000-0000"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#25D366] focus:border-transparent"
-                  required
-                />
+                <div className="relative">
+                  <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    value={phone}
+                    onChange={handlePhoneChange}
+                    placeholder="(00) 0 0000-0000"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#25D366] focus:border-transparent shadow-sm"
+                    required
+                  />
+                </div>
               </div>
               
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className={`w-full bg-[#25D366] text-white py-2 px-4 rounded-md hover:bg-[#128C7E] transition-colors flex items-center justify-center
-                  ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''}`}
+                className={`w-full mt-6 bg-[#25D366] text-white py-3 px-4 rounded-xl hover:bg-[#128C7E] hover:shadow-lg transition-all duration-300 flex items-center justify-center shadow-md
+                  ${isSubmitting ? 'opacity-70 cursor-not-allowed' : 'transform hover:translate-y-[-2px]'}`}
               >
                 {isSubmitting ? (
                   <>
-                    <div className="mr-2 w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                    Enviando...
+                    <div className="mr-2 w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    <span className="font-medium">Enviando...</span>
                   </>
                 ) : (
                   <>
-                    <FaWhatsapp className="h-4 w-4 mr-2" />
-                    Continuar para WhatsApp
+                    <FaWhatsapp className="h-5 w-5 mr-2" />
+                    <span className="font-medium">Continuar para WhatsApp</span>
                   </>
                 )}
               </button>
               
-              <p className="text-xs text-gray-500 text-center mt-4">
-                Ao clicar em "Continuar para WhatsApp", você será redirecionado para o aplicativo do WhatsApp para iniciar uma conversa com um de nossos corretores.
+              <p className="text-xs text-gray-500 text-center mt-4 px-2">
+                Ao clicar em "Continuar para WhatsApp", você será redirecionado para o WhatsApp para iniciar uma conversa com nossos corretores.
               </p>
             </form>
           </div>
