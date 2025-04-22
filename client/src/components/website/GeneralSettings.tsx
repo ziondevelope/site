@@ -233,7 +233,7 @@ export default function GeneralSettings({ config, configData, onConfigChange }: 
         
         <div>
           <Label className="block text-sm font-medium text-gray-700 mb-2">
-            Cor Secundária
+            Background Rodapé
           </Label>
           <div className="flex">
             <Input 
