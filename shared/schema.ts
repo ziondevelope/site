@@ -130,6 +130,12 @@ export const websiteConfig = pgTable("website_config", {
   email: text("email"),
   phone: text("phone"),
   workingHours: text("working_hours"),
+  // Redes Sociais
+  instagramUrl: text("instagram_url"),
+  facebookUrl: text("facebook_url"),
+  youtubeUrl: text("youtube_url"),
+  linkedinUrl: text("linkedin_url"),
+  tiktokUrl: text("tiktok_url"),
   // Campos SEO
   seoTitle: text("seo_title"),
   seoDescription: text("seo_description"),

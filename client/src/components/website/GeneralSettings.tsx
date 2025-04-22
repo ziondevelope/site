@@ -50,6 +50,27 @@ export default function GeneralSettings({ config, configData, onConfigChange }: 
     ? configData.footerIconsColor 
     : config?.footerIconsColor || primaryColor;
     
+  // Redes sociais
+  const instagramUrl = configData.instagramUrl !== undefined 
+    ? configData.instagramUrl 
+    : config?.instagramUrl || '';
+    
+  const facebookUrl = configData.facebookUrl !== undefined 
+    ? configData.facebookUrl 
+    : config?.facebookUrl || '';
+    
+  const youtubeUrl = configData.youtubeUrl !== undefined 
+    ? configData.youtubeUrl 
+    : config?.youtubeUrl || '';
+    
+  const linkedinUrl = configData.linkedinUrl !== undefined 
+    ? configData.linkedinUrl 
+    : config?.linkedinUrl || '';
+    
+  const tiktokUrl = configData.tiktokUrl !== undefined 
+    ? configData.tiktokUrl 
+    : config?.tiktokUrl || '';
+    
   // Debug para rodapé
   console.log("GeneralSettings - Estado das cores:", {
     footerTextColor,
@@ -304,6 +325,102 @@ export default function GeneralSettings({ config, configData, onConfigChange }: 
               onChange={(e) => onConfigChange({ ...configData, footerIconsColor: e.target.value })}
               className="border border-l-0 border-gray-200 rounded-r-full px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-transparent"
             />
+          </div>
+        </div>
+      </div>
+      
+      {/* Seção de Redes Sociais */}
+      <div className="mt-6">
+        <h3 className="text-lg font-medium text-gray-800 mb-4">Redes Sociais</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <Label className="block text-sm font-medium text-gray-700 mb-2">
+              Instagram URL
+            </Label>
+            <div className="flex items-center">
+              <div className="bg-pink-500 text-white p-2 rounded-l-lg">
+                <i className="fab fa-instagram"></i>
+              </div>
+              <Input 
+                type="text" 
+                value={instagramUrl || ''} 
+                onChange={(e) => onConfigChange({ ...configData, instagramUrl: e.target.value })}
+                className="border border-gray-200 rounded-r-lg flex-grow"
+                placeholder="https://instagram.com/seu_perfil"
+              />
+            </div>
+          </div>
+
+          <div>
+            <Label className="block text-sm font-medium text-gray-700 mb-2">
+              Facebook URL
+            </Label>
+            <div className="flex items-center">
+              <div className="bg-blue-600 text-white p-2 rounded-l-lg">
+                <i className="fab fa-facebook-f"></i>
+              </div>
+              <Input 
+                type="text" 
+                value={facebookUrl || ''} 
+                onChange={(e) => onConfigChange({ ...configData, facebookUrl: e.target.value })}
+                className="border border-gray-200 rounded-r-lg flex-grow"
+                placeholder="https://facebook.com/sua_pagina"
+              />
+            </div>
+          </div>
+
+          <div>
+            <Label className="block text-sm font-medium text-gray-700 mb-2">
+              YouTube URL
+            </Label>
+            <div className="flex items-center">
+              <div className="bg-red-600 text-white p-2 rounded-l-lg">
+                <i className="fab fa-youtube"></i>
+              </div>
+              <Input 
+                type="text" 
+                value={youtubeUrl || ''} 
+                onChange={(e) => onConfigChange({ ...configData, youtubeUrl: e.target.value })}
+                className="border border-gray-200 rounded-r-lg flex-grow"
+                placeholder="https://youtube.com/c/seu_canal"
+              />
+            </div>
+          </div>
+
+          <div>
+            <Label className="block text-sm font-medium text-gray-700 mb-2">
+              LinkedIn URL
+            </Label>
+            <div className="flex items-center">
+              <div className="bg-blue-700 text-white p-2 rounded-l-lg">
+                <i className="fab fa-linkedin-in"></i>
+              </div>
+              <Input 
+                type="text" 
+                value={linkedinUrl || ''} 
+                onChange={(e) => onConfigChange({ ...configData, linkedinUrl: e.target.value })}
+                className="border border-gray-200 rounded-r-lg flex-grow"
+                placeholder="https://linkedin.com/company/sua_empresa"
+              />
+            </div>
+          </div>
+
+          <div>
+            <Label className="block text-sm font-medium text-gray-700 mb-2">
+              TikTok URL
+            </Label>
+            <div className="flex items-center">
+              <div className="bg-black text-white p-2 rounded-l-lg">
+                <i className="fab fa-tiktok"></i>
+              </div>
+              <Input 
+                type="text" 
+                value={tiktokUrl || ''} 
+                onChange={(e) => onConfigChange({ ...configData, tiktokUrl: e.target.value })}
+                className="border border-gray-200 rounded-r-lg flex-grow"
+                placeholder="https://tiktok.com/@seu_perfil"
+              />
+            </div>
           </div>
         </div>
       </div>
