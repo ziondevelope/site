@@ -445,6 +445,20 @@ export default function GeneralSettings({ config, configData, onConfigChange }: 
         <div className="space-y-6">
           <div>
             <Label className="block text-sm font-medium text-gray-700 mb-2">
+              Google Tag Manager
+            </Label>
+            <Textarea 
+              rows={4} 
+              className="w-full rounded-xl font-mono text-sm"
+              placeholder="<!-- Cole o código do Google Tag Manager (apenas a parte que vai no head) -->"
+              value={configData.googleTagManagerTag !== undefined ? configData.googleTagManagerTag : config?.googleTagManagerTag || ''}
+              onChange={(e) => onConfigChange({ ...configData, googleTagManagerTag: e.target.value })}
+            />
+            <p className="text-sm text-gray-500 mt-1">Cole apenas o script principal do Google Tag Manager que vai no &lt;head&gt; do site.</p>
+          </div>
+          
+          <div>
+            <Label className="block text-sm font-medium text-gray-700 mb-2">
               Google Ads - Tag de Conversão
             </Label>
             <Textarea 
