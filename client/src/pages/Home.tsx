@@ -930,7 +930,7 @@ export default function Home() {
                     className="ri-phone-line mr-3 mt-1"
                     style={{ color: config?.primaryColor || 'var(--primary)' }}
                   ></i>
-                  <span className="text-gray-400">(11) 3333-4444</span>
+                  <span className="text-gray-400">{config?.phone || '(21) 9858 59264'}</span>
                 </li>
                 <li className="flex items-start">
                   <i 
