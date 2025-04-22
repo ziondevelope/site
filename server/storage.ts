@@ -689,7 +689,7 @@ export class FirebaseStorage implements IStorage {
   // Website configuration
   async getWebsiteConfig(): Promise<WebsiteConfig | undefined> {
     try {
-      const configRef = doc(db, 'websiteConfig', 'config');
+      const configRef = doc(db, 'websiteConfig', '1');
       const configDoc = await getDoc(configRef);
       
       if (!configDoc.exists()) {
@@ -730,7 +730,7 @@ export class FirebaseStorage implements IStorage {
   async updateWebsiteConfig(config: UpdateWebsiteConfig): Promise<WebsiteConfig> {
     try {
       // Importante: Usar o ID '1' para manter consistência com getWebsiteConfig
-      const configRef = doc(this.db, 'websiteConfig', '1');
+      const configRef = doc(db, 'websiteConfig', '1');
       const configDoc = await getDoc(configRef);
       
       let updatedConfig: WebsiteConfig;
@@ -764,8 +764,19 @@ export class FirebaseStorage implements IStorage {
         console.log('showAboutSection após mesclagem:', updatedConfig.showAboutSection);
       }
       
-      await setDoc(configRef, updatedConfig);
-      return updatedConfig;
+      try {
+        await setDoc(configRef, updatedConfig);
+        return updatedConfig;
+      } catch (setDocError) {
+        console.error('Erro específico ao chamar setDoc:', setDocError);
+        // Tenta alternativa usando updateDoc se o documento já existir
+        if (configDoc.exists()) {
+          await updateDoc(configRef, updatedConfig);
+          return updatedConfig;
+        } else {
+          throw setDocError;
+        }
+      }
     } catch (error) {
       console.error('Error updating website config:', error);
       throw new Error('Failed to update website configuration');
