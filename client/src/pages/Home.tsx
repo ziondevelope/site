@@ -833,7 +833,7 @@ export default function Home() {
                 </Link>
               </p>
               <div className="flex items-center">
-                <span className="mr-2">Desenvolvido com Tecnologia</span>
+                <span className="mr-2 text-sm text-white">Tecnologia</span>
                 <img src={imobsiteLogo} alt="Imobsite" className="h-7" />
               </div>
             </div>
