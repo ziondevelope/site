@@ -173,9 +173,6 @@ export default function Home() {
           {config?.showSearchBar && (
             <div 
               className="w-full max-w-3xl mx-auto bg-white/80 backdrop-blur-sm rounded-md p-3 md:p-5 shadow-xl"
-              style={{ 
-                border: `2px solid ${config?.primaryColor || '#033334'}`
-              }}
             >
               <form 
                 className="flex flex-col md:flex-row gap-2 md:gap-3"
