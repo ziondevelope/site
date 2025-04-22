@@ -660,69 +660,98 @@ export default function Home() {
         </section>
       )}
 
-      {/* About Section */}
-      <section id="about" className="py-16">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            <div>
-              <div className="bg-gray-200 h-96 rounded-lg"></div>
-            </div>
-            <div>
-              <h2 className="text-3xl font-bold mb-6">Sobre a Imobiliária</h2>
-              <p className="text-gray-600 mb-6">
-                Nossa imobiliária atua no mercado há mais de 15 anos, oferecendo as melhores opções de imóveis para nossos clientes. 
-                Contamos com uma equipe de corretores especializados prontos para encontrar o imóvel ideal para você.
-              </p>
-              <p className="text-gray-600 mb-8">
-                Trabalhamos com imóveis residenciais e comerciais, tanto para compra quanto para locação. 
-                Nosso objetivo é proporcionar uma experiência tranquila e segura em todas as etapas da negociação.
-              </p>
-              <ul className="space-y-3 mb-8">
-                <li className="flex items-start">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="mr-2 flex-shrink-0"
-                    style={{ color: config?.primaryColor || 'var(--primary)' }}
-                  >
-                    <path d="M20 6 9 17l-5-5"></path>
-                  </svg>
-                  <span>Atendimento personalizado</span>
-                </li>
-                <li className="flex items-start">
-                  <i 
-                    className="ri-check-line text-xl mr-2"
-                    style={{ color: config?.primaryColor || 'var(--primary)' }}
-                  ></i>
-                  <span>Assessoria jurídica completa</span>
-                </li>
-                <li className="flex items-start">
-                  <i 
-                    className="ri-check-line text-xl mr-2"
-                    style={{ color: config?.primaryColor || 'var(--primary)' }}
-                  ></i>
-                  <span>Corretores experientes</span>
-                </li>
-                <li className="flex items-start">
-                  <i 
-                    className="ri-check-line text-xl mr-2"
-                    style={{ color: config?.primaryColor || 'var(--primary)' }}
-                  ></i>
-                  <span>Parceria com os principais bancos</span>
-                </li>
-              </ul>
-              <Button>Conheça nossa equipe</Button>
+      {/* About Section - só exibe se showAboutSection for true */}
+      {config?.showAboutSection && (
+        <section id="about" className="py-16">
+          <div className="container mx-auto px-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+              <div>
+                {config.aboutImage ? (
+                  <div className="h-96 rounded-lg overflow-hidden">
+                    <img 
+                      src={config.aboutImage} 
+                      alt={config.aboutTitle || "Quem Somos"} 
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                ) : (
+                  <div className="bg-gray-200 h-96 rounded-lg"></div>
+                )}
+              </div>
+              <div>
+                <h2 className="text-3xl font-bold mb-3">
+                  {config.aboutTitle || "Quem Somos"}
+                </h2>
+                {config.aboutSubtitle && (
+                  <h3 className="text-xl text-gray-700 mb-6">
+                    {config.aboutSubtitle}
+                  </h3>
+                )}
+                
+                {config.aboutDescription ? (
+                  <div className="text-gray-600 mb-8 whitespace-pre-line">
+                    {config.aboutDescription}
+                  </div>
+                ) : (
+                  <>
+                    <p className="text-gray-600 mb-6">
+                      Nossa imobiliária atua no mercado há mais de 15 anos, oferecendo as melhores opções de imóveis para nossos clientes. 
+                      Contamos com uma equipe de corretores especializados prontos para encontrar o imóvel ideal para você.
+                    </p>
+                    <p className="text-gray-600 mb-8">
+                      Trabalhamos com imóveis residenciais e comerciais, tanto para compra quanto para locação. 
+                      Nosso objetivo é proporcionar uma experiência tranquila e segura em todas as etapas da negociação.
+                    </p>
+                    <ul className="space-y-3 mb-8">
+                      <li className="flex items-start">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="20"
+                          height="20"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className="mr-2 flex-shrink-0"
+                          style={{ color: config?.primaryColor || 'var(--primary)' }}
+                        >
+                          <path d="M20 6 9 17l-5-5"></path>
+                        </svg>
+                        <span>Atendimento personalizado</span>
+                      </li>
+                      <li className="flex items-start">
+                        <i 
+                          className="ri-check-line text-xl mr-2"
+                          style={{ color: config?.primaryColor || 'var(--primary)' }}
+                        ></i>
+                        <span>Assessoria jurídica completa</span>
+                      </li>
+                      <li className="flex items-start">
+                        <i 
+                          className="ri-check-line text-xl mr-2"
+                          style={{ color: config?.primaryColor || 'var(--primary)' }}
+                        ></i>
+                        <span>Corretores experientes</span>
+                      </li>
+                      <li className="flex items-start">
+                        <i 
+                          className="ri-check-line text-xl mr-2"
+                          style={{ color: config?.primaryColor || 'var(--primary)' }}
+                        ></i>
+                        <span>Parceria com os principais bancos</span>
+                      </li>
+                    </ul>
+                  </>
+                )}
+                
+                <Button>Conheça nossa equipe</Button>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Testimonials Section */}
       {config?.showTestimonials !== false && (
