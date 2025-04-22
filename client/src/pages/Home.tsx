@@ -212,7 +212,11 @@ export default function Home() {
                   <div className="relative">
                     <select 
                       name="tipo"
-                      className="w-full appearance-none rounded-md px-4 py-3 bg-white border border-gray-200 text-black text-sm"
+                      className="w-full appearance-none rounded-md px-4 py-3 bg-white border text-black text-sm"
+                      style={{ 
+                        borderWidth: '0.5px', 
+                        borderColor: config?.primaryColor ? `${config.primaryColor}40` : '#8BC34A40' 
+                      }}
                       defaultValue="all"
                     >
                       <option value="all">Tipo de Imóvel</option>
@@ -233,7 +237,11 @@ export default function Home() {
                     type="text"
                     name="cidade"
                     placeholder="Cidade"
-                    className="w-full rounded-md px-4 py-3 bg-white border border-gray-200 text-black text-sm"
+                    className="w-full rounded-md px-4 py-3 bg-white border text-black text-sm"
+                    style={{ 
+                      borderWidth: '0.5px', 
+                      borderColor: config?.primaryColor ? `${config.primaryColor}40` : '#8BC34A40' 
+                    }}
                   />
                 </div>
                 
@@ -242,7 +250,11 @@ export default function Home() {
                   <div className="relative">
                     <select 
                       name="finalidade"
-                      className="w-full appearance-none rounded-md px-4 py-3 bg-white border border-gray-200 text-black text-sm"
+                      className="w-full appearance-none rounded-md px-4 py-3 bg-white border text-black text-sm"
+                      style={{ 
+                        borderWidth: '0.5px', 
+                        borderColor: config?.primaryColor ? `${config.primaryColor}40` : '#8BC34A40' 
+                      }}
                       defaultValue="all"
                     >
                       <option value="all">Comprar ou Alugar</option>
