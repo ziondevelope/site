@@ -177,15 +177,48 @@ export default function Home() {
                 border: `2px solid ${config?.primaryColor || '#033334'}`
               }}
             >
-              <form className="flex flex-col md:flex-row gap-2 md:gap-3">
+              <form 
+                className="flex flex-col md:flex-row gap-2 md:gap-3"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  
+                  // Obter os valores dos campos
+                  const formData = new FormData(e.currentTarget);
+                  const tipo = formData.get('tipo') as string;
+                  const cidade = formData.get('cidade') as string;
+                  const finalidade = formData.get('finalidade') as string;
+                  
+                  // Construir a URL com os parâmetros de busca
+                  let url = '/properties?';
+                  const params = new URLSearchParams();
+                  
+                  if (tipo && tipo !== 'all') {
+                    params.append('type', tipo);
+                  }
+                  
+                  if (cidade) {
+                    params.append('city', cidade);
+                  }
+                  
+                  if (finalidade === 'comprar') {
+                    params.append('purpose', 'sale');
+                  } else if (finalidade === 'alugar') {
+                    params.append('purpose', 'rent');
+                  }
+                  
+                  // Redirecionar para a página de propriedades com os filtros
+                  setLocation(`/properties?${params.toString()}`);
+                }}
+              >
                 {/* Tipo de Imóvel */}
                 <div className="flex-1">
                   <div className="relative">
                     <select 
+                      name="tipo"
                       className="w-full appearance-none rounded-md px-4 py-3 bg-white border border-gray-200 text-black text-sm"
-                      defaultValue="apartment"
+                      defaultValue="all"
                     >
-                      <option value="apartment">Tipo de Imóvel</option>
+                      <option value="all">Tipo de Imóvel</option>
                       <option value="apartment">Apartamento</option>
                       <option value="house">Casa</option>
                       <option value="commercial">Comercial</option>
@@ -201,6 +234,7 @@ export default function Home() {
                 <div className="flex-1">
                   <input 
                     type="text"
+                    name="cidade"
                     placeholder="Cidade"
                     className="w-full rounded-md px-4 py-3 bg-white border border-gray-200 text-black text-sm"
                   />
@@ -210,10 +244,11 @@ export default function Home() {
                 <div className="flex-1">
                   <div className="relative">
                     <select 
+                      name="finalidade"
                       className="w-full appearance-none rounded-md px-4 py-3 bg-white border border-gray-200 text-black text-sm"
-                      defaultValue="comprar"
+                      defaultValue="all"
                     >
-                      <option value="comprar">Comprar ou Alugar</option>
+                      <option value="all">Comprar ou Alugar</option>
                       <option value="comprar">Comprar</option>
                       <option value="alugar">Alugar</option>
                     </select>
