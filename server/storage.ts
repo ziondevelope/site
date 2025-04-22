@@ -700,19 +700,44 @@ export class FirebaseStorage implements IStorage {
           footerLogo: '',
           bannerBackground: '',
           mainFont: 'Inter',
+          headingFont: 'Inter',
+          bodyFont: 'Inter',
           primaryColor: '#3B82F6',
           secondaryColor: '#10B981',
           footerTextColor: '#ffffff',
           footerIconsColor: '#3B82F6',
           footerInfo: 'Imobiliária XYZ\nAv. Paulista, 1000 - São Paulo, SP\ncontato@imobiliariaxyz.com.br\n(11) 3333-4444',
+          footerStyle: 'default',
+          bannerTitle: 'Encontre o imóvel dos seus sonhos',
+          bannerSubtitle: 'Oferecemos as melhores opções de imóveis para compra e aluguel com atendimento personalizado',
+          showBannerText: true,
           showSearchBar: true,
           showFeaturedProperties: true,
           showSaleProperties: true,
           showRentProperties: true,
           showTestimonials: false,
+          showAboutSection: true,
+          address: '',
+          email: '',
+          phone: '',
+          workingHours: '',
+          instagramUrl: '',
+          facebookUrl: '',
+          youtubeUrl: '',
+          linkedinUrl: '',
+          tiktokUrl: '',
+          aboutTitle: 'Quem Somos',
+          aboutSubtitle: 'Conheça Nossa História',
+          aboutDescription: '',
+          aboutImage: '',
           seoTitle: 'Imobiliária XYZ - Imóveis à venda e para alugar em São Paulo',
           seoDescription: 'A Imobiliária XYZ oferece os melhores imóveis à venda e para alugar em São Paulo. Encontre apartamentos, casas, salas comerciais e terrenos com a ajuda de nossos corretores especializados.',
           seoKeywords: 'imobiliária, imóveis, apartamentos, casas, comprar, alugar, São Paulo',
+          favicon: '', // Adicionando o campo favicon à configuração padrão
+          googleTagManagerTag: '',
+          googleAdsConversionTag: '',
+          googleAdsRemarketingTag: '',
+          facebookPixelTag: '',
           updatedAt: new Date().toISOString(),
         };
         
@@ -753,6 +778,13 @@ export class FirebaseStorage implements IStorage {
         console.log('showAboutSection antes:', existingData.showAboutSection);
         console.log('showAboutSection sendo atualizado para:', config.showAboutSection);
         
+        // Logs específicos para favicon
+        console.log('Favicon sendo recebido para atualização?', !!config.favicon);
+        console.log('Favicon existente?', !!existingData.favicon);
+        if (config.favicon) {
+          console.log('Primeiros 50 caracteres do favicon novo:', config.favicon.substring(0, 50));
+        }
+        
         updatedConfig = {
           ...existingData,
           ...config,
@@ -762,6 +794,7 @@ export class FirebaseStorage implements IStorage {
         // Log do resultado após a fusão
         console.log('Dados finais após mesclagem:', updatedConfig);
         console.log('showAboutSection após mesclagem:', updatedConfig.showAboutSection);
+        console.log('Favicon presente após mesclagem?', !!updatedConfig.favicon);
       }
       
       try {
