@@ -827,7 +827,7 @@ export default function Home() {
           <div className="border-t mt-12 pt-8 text-center" style={{ borderColor: 'rgba(255,255,255,0.2)', color: 'rgba(255,255,255,0.7)' }}>
             <div className="flex flex-col items-center justify-center space-y-3">
               <p className="text-sm">
-                &copy; 2025 ImobSite — Sites profissionais para imobiliárias. 
+                &copy; 2025 ImobSite. 
                 <Link href="/admin">
                   <span className="ml-3 hover:text-white cursor-pointer">Área do Administrador</span>
                 </Link>
