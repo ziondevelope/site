@@ -242,7 +242,7 @@ export default function Home() {
       </section>
 
       {/* Cards de qualidades sobrepostos no rodapé do Hero */}
-      <div className="relative z-10 -mt-24 mb-24">
+      <div className="relative z-10 -mt-24 mb-8">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             
