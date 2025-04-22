@@ -238,42 +238,42 @@ export default function Home() {
               </form>
             </div>
           )}
-          
-          {/* Grid de Qualidades da Imobiliária */}
-          <div className="mt-12 md:mt-16 container mx-auto px-4">
-            <div className="bg-gray-900 rounded-md overflow-hidden shadow-xl">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-0 divide-y md:divide-y-0 md:divide-x divide-gray-700">
-                
-                {/* Primeira Coluna */}
-                <div className="p-6 md:p-8 text-white">
-                  <h3 className="text-xl font-semibold mb-3">Os melhores imóveis</h3>
-                  <p className="text-gray-300 text-sm leading-relaxed">
-                    Escolha entre apartamentos, casas, salas, ... Considere uma visita com um dos nossos corretores
-                  </p>
-                </div>
-                
-                {/* Segunda Coluna */}
-                <div className="p-6 md:p-8 text-white">
-                  <h3 className="text-xl font-semibold mb-3">Vamos acompanhar você</h3>
-                  <p className="text-gray-300 text-sm leading-relaxed">
-                    Oferecemos a você a melhor consultoria na escolha do seu imóvel, desde a escolha da localização, tipo e características
-                  </p>
-                </div>
-                
-                {/* Terceira Coluna */}
-                <div className="p-6 md:p-8 text-white">
-                  <h3 className="text-xl font-semibold mb-3">Sempre a melhor condição</h3>
-                  <p className="text-gray-300 text-sm leading-relaxed">
-                    Nossa equipe irá buscar a melhor condição de fechamento, inclusive oferecendo consultoria no financiamento
-                  </p>
-                </div>
-                
-              </div>
-            </div>
-          </div>
         </div>
       </section>
 
+      {/* Grid de Qualidades da Imobiliária */}
+      <section className="bg-gray-900 py-12">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-0 divide-y md:divide-y-0 md:divide-x divide-gray-700">
+            
+            {/* Primeira Coluna */}
+            <div className="p-6 md:p-8 text-white">
+              <h3 className="text-xl font-semibold mb-3">Os melhores imóveis</h3>
+              <p className="text-gray-300 text-sm leading-relaxed">
+                Escolha entre apartamentos, casas, salas, ... Considere uma visita com um dos nossos corretores
+              </p>
+            </div>
+            
+            {/* Segunda Coluna */}
+            <div className="p-6 md:p-8 text-white">
+              <h3 className="text-xl font-semibold mb-3">Vamos acompanhar você</h3>
+              <p className="text-gray-300 text-sm leading-relaxed">
+                Oferecemos a você a melhor consultoria na escolha do seu imóvel, desde a escolha da localização, tipo e características
+              </p>
+            </div>
+            
+            {/* Terceira Coluna */}
+            <div className="p-6 md:p-8 text-white">
+              <h3 className="text-xl font-semibold mb-3">Sempre a melhor condição</h3>
+              <p className="text-gray-300 text-sm leading-relaxed">
+                Nossa equipe irá buscar a melhor condição de fechamento, inclusive oferecendo consultoria no financiamento
+              </p>
+            </div>
+            
+          </div>
+        </div>
+      </section>
+      
       {/* Properties Section - Imóveis em Destaque */}
       {config?.showFeaturedProperties !== false && (
         <section id="properties" className="py-16 bg-gray-50">
