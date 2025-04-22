@@ -20,6 +20,7 @@ import PageLoadingController from "@/components/ui/PageLoadingController";
 import ScrollToTop from "@/components/ui/scroll-to-top";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import MarketingTags from "@/components/MarketingTags";
+import WhatsAppChat from "@/components/website/WhatsAppChat";
 
 function AdminRouter() {
   // Usando useLocation para determinar a rota atual
@@ -69,12 +70,18 @@ function Router() {
 }
 
 function App() {
+  // Usa o hook useLocation para determinar se estamos na área administrativa
+  const [location] = useLocation();
+  const isAdmin = location.startsWith('/admin');
+  
   return (
     <QueryClientProvider client={queryClient}>
       <HelmetProvider>
         <LoadingProvider>
           <MarketingTags />
           <Router />
+          {/* Só mostra o WhatsApp Chat fora da área administrativa */}
+          {!isAdmin && <WhatsAppChat />}
           <ScrollToTop />
           <PageLoadingController />
           <Toaster />
