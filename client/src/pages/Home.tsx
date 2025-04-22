@@ -728,119 +728,7 @@ export default function Home() {
         <Testimonials />
       )}
 
-      {/* Contact Section */}
-      <section id="contact" className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">Entre em contato</h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-            <div>
-              <form className="space-y-6">
-                <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">Nome</label>
-                  <input
-                    type="text"
-                    id="name"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                  <input
-                    type="email"
-                    id="email"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">Telefone</label>
-                  <input
-                    type="tel"
-                    id="phone"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">Mensagem</label>
-                  <textarea
-                    id="message"
-                    rows={4}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary"
-                  ></textarea>
-                </div>
-                <Button type="submit" className="w-full">Enviar mensagem</Button>
-              </form>
-            </div>
-            
-            <div>
-              <div className="mb-8">
-                <h3 className="text-xl font-semibold mb-4">Informações de contato</h3>
-                <ul className="space-y-4">
-                  <li className="flex items-start">
-                    <i 
-                      className="ri-map-pin-line text-xl mr-3 mt-1"
-                      style={{ color: config?.primaryColor || 'var(--primary)' }}
-                    ></i>
-                    <div>
-                      <p className="font-medium">Endereço</p>
-                      <p className="text-gray-600">Av. Paulista, 1000 - São Paulo, SP</p>
-                    </div>
-                  </li>
-                  <li className="flex items-start">
-                    <i 
-                      className="ri-phone-line text-xl mr-3 mt-1"
-                      style={{ color: config?.primaryColor || 'var(--primary)' }}
-                    ></i>
-                    <div>
-                      <p className="font-medium">Telefone</p>
-                      <p className="text-gray-600">(11) 3333-4444</p>
-                    </div>
-                  </li>
-                  <li className="flex items-start">
-                    <i 
-                      className="ri-mail-line text-xl mr-3 mt-1"
-                      style={{ color: config?.primaryColor || 'var(--primary)' }}
-                    ></i>
-                    <div>
-                      <p className="font-medium">Email</p>
-                      <p className="text-gray-600">contato@imobiliaria.com.br</p>
-                    </div>
-                  </li>
-                  <li className="flex items-start">
-                    <i 
-                      className="ri-time-line text-xl mr-3 mt-1"
-                      style={{ color: config?.primaryColor || 'var(--primary)' }}
-                    ></i>
-                    <div>
-                      <p className="font-medium">Horário de funcionamento</p>
-                      <p className="text-gray-600">Segunda a Sexta: 9h às 18h</p>
-                      <p className="text-gray-600">Sábados: 9h às 13h</p>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-              
-              <div>
-                <h3 className="text-xl font-semibold mb-4">Siga-nos</h3>
-                <div className="flex space-x-4">
-                  <a href="#" className="text-gray-600 hover:text-primary text-2xl">
-                    <i className="ri-facebook-circle-fill"></i>
-                  </a>
-                  <a href="#" className="text-gray-600 hover:text-primary text-2xl">
-                    <i className="ri-instagram-fill"></i>
-                  </a>
-                  <a href="#" className="text-gray-600 hover:text-primary text-2xl">
-                    <i className="ri-linkedin-box-fill"></i>
-                  </a>
-                  <a href="#" className="text-gray-600 hover:text-primary text-2xl">
-                    <i className="ri-youtube-fill"></i>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+
 
       {/* Footer */}
       <footer className="bg-gray-800 text-white py-12">
@@ -944,7 +832,7 @@ export default function Home() {
                     className="ri-time-line mr-3 mt-1"
                     style={{ color: config?.primaryColor || 'var(--primary)' }}
                   ></i>
-                  <span className="text-gray-400">{config?.businessHours || 'Segunda a Sexta, 09:00 às 18:00'}</span>
+                  <span className="text-gray-400">{config?.workingHours || 'Segunda a Sexta, 09:00 às 18:00'}</span>
                 </li>
               </ul>
             </div>
