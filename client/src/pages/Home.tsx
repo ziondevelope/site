@@ -248,7 +248,7 @@ export default function Home() {
           <div className="hidden md:grid md:grid-cols-3 gap-4">
             
             {/* Primeiro Card */}
-            <div className="bg-[#001219] rounded-lg p-6 shadow-lg text-white">
+            <div className="rounded-lg p-6 shadow-lg text-white" style={{ backgroundColor: config?.primaryColor || '#001219' }}>
               <h3 className="text-xl font-semibold mb-3">Os melhores imóveis</h3>
               <p className="text-gray-300 text-sm leading-relaxed">
                 Escolha entre apartamentos, casas, salas, ... Considere uma visita com um dos nossos corretores
@@ -256,7 +256,7 @@ export default function Home() {
             </div>
             
             {/* Segundo Card */}
-            <div className="bg-[#001219] rounded-lg p-6 shadow-lg text-white">
+            <div className="rounded-lg p-6 shadow-lg text-white" style={{ backgroundColor: config?.primaryColor || '#001219' }}>
               <h3 className="text-xl font-semibold mb-3">Vamos acompanhar você</h3>
               <p className="text-gray-300 text-sm leading-relaxed">
                 Oferecemos a você a melhor consultoria na escolha do seu imóvel, desde a escolha da localização, tipo e características
@@ -264,7 +264,7 @@ export default function Home() {
             </div>
             
             {/* Terceiro Card */}
-            <div className="bg-[#001219] rounded-lg p-6 shadow-lg text-white">
+            <div className="rounded-lg p-6 shadow-lg text-white" style={{ backgroundColor: config?.primaryColor || '#001219' }}>
               <h3 className="text-xl font-semibold mb-3">Sempre a melhor condição</h3>
               <p className="text-gray-300 text-sm leading-relaxed">
                 Nossa equipe irá buscar a melhor condição de fechamento, inclusive oferecendo consultoria no financiamento
@@ -278,7 +278,7 @@ export default function Home() {
             <div className="overflow-x-auto pb-4 flex snap-x snap-mandatory scrollbar-hide">
               {/* Cards do carrossel */}
               <div className="snap-center flex-shrink-0 w-full px-1">
-                <div className="bg-[#001219] rounded-lg p-6 shadow-lg text-white">
+                <div className="rounded-lg p-6 shadow-lg text-white" style={{ backgroundColor: config?.primaryColor || '#001219' }}>
                   <h3 className="text-xl font-semibold mb-3">Os melhores imóveis</h3>
                   <p className="text-gray-300 text-sm leading-relaxed">
                     Escolha entre apartamentos, casas, salas, ... Considere uma visita com um dos nossos corretores
@@ -287,7 +287,7 @@ export default function Home() {
               </div>
               
               <div className="snap-center flex-shrink-0 w-full px-1">
-                <div className="bg-[#001219] rounded-lg p-6 shadow-lg text-white">
+                <div className="rounded-lg p-6 shadow-lg text-white" style={{ backgroundColor: config?.primaryColor || '#001219' }}>
                   <h3 className="text-xl font-semibold mb-3">Vamos acompanhar você</h3>
                   <p className="text-gray-300 text-sm leading-relaxed">
                     Oferecemos a você a melhor consultoria na escolha do seu imóvel, desde a escolha da localização, tipo e características
@@ -296,7 +296,7 @@ export default function Home() {
               </div>
               
               <div className="snap-center flex-shrink-0 w-full px-1">
-                <div className="bg-[#001219] rounded-lg p-6 shadow-lg text-white">
+                <div className="rounded-lg p-6 shadow-lg text-white" style={{ backgroundColor: config?.primaryColor || '#001219' }}>
                   <h3 className="text-xl font-semibold mb-3">Sempre a melhor condição</h3>
                   <p className="text-gray-300 text-sm leading-relaxed">
                     Nossa equipe irá buscar a melhor condição de fechamento, inclusive oferecendo consultoria no financiamento
