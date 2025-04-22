@@ -27,7 +27,10 @@ export default function Website() {
         bodyFont: config.bodyFont,
         primaryColor: config.primaryColor,
         secondaryColor: config.secondaryColor,
+        footerTextColor: config.footerTextColor,
+        footerIconsColor: config.footerIconsColor,
         footerInfo: config.footerInfo,
+        footerStyle: config.footerStyle,
         bannerTitle: config.bannerTitle,
         bannerSubtitle: config.bannerSubtitle,
         showBannerText: config.showBannerText,
@@ -41,6 +44,12 @@ export default function Website() {
         email: config.email,
         phone: config.phone,
         workingHours: config.workingHours,
+        // Redes sociais
+        instagramUrl: config.instagramUrl,
+        facebookUrl: config.facebookUrl,
+        youtubeUrl: config.youtubeUrl,
+        linkedinUrl: config.linkedinUrl,
+        tiktokUrl: config.tiktokUrl,
         // SEO
         seoTitle: config.seoTitle,
         seoDescription: config.seoDescription,
@@ -92,7 +101,19 @@ export default function Website() {
       footerTextColor: configData.footerTextColor,
       footerIconsColor: configData.footerIconsColor,
       configFooterTextColor: config.footerTextColor,
-      configFooterIconsColor: config.footerIconsColor
+      configFooterIconsColor: config.footerIconsColor,
+      // Redes sociais
+      instagramUrl: configData.instagramUrl,
+      facebookUrl: configData.facebookUrl,
+      youtubeUrl: configData.youtubeUrl,
+      linkedinUrl: configData.linkedinUrl,
+      tiktokUrl: configData.tiktokUrl,
+      // Redes sociais da configuração
+      configInstagramUrl: config.instagramUrl,
+      configFacebookUrl: config.facebookUrl,
+      configYoutubeUrl: config.youtubeUrl,
+      configLinkedinUrl: config.linkedinUrl,
+      configTiktokUrl: config.tiktokUrl
     });
     
     // Create a full config object ensuring all properties have values
@@ -108,6 +129,7 @@ export default function Website() {
       footerTextColor: configData.footerTextColor || config.footerTextColor || '#ffffff',
       footerIconsColor: configData.footerIconsColor || config.footerIconsColor || '',
       footerInfo: configData.footerInfo ?? config.footerInfo ?? '',
+      footerStyle: configData.footerStyle ?? config.footerStyle ?? 'default',
       bannerTitle: configData.bannerTitle ?? config.bannerTitle ?? 'Encontre o imóvel dos seus sonhos',
       bannerSubtitle: configData.bannerSubtitle ?? config.bannerSubtitle ?? 'Oferecemos as melhores opções de imóveis para compra e aluguel com atendimento personalizado.',
       showBannerText: configData.showBannerText ?? config.showBannerText ?? true,
@@ -121,6 +143,12 @@ export default function Website() {
       email: configData.email ?? config.email ?? '',
       phone: configData.phone ?? config.phone ?? '',
       workingHours: configData.workingHours ?? config.workingHours ?? '',
+      // Redes sociais
+      instagramUrl: configData.instagramUrl ?? config.instagramUrl ?? '',
+      facebookUrl: configData.facebookUrl ?? config.facebookUrl ?? '',
+      youtubeUrl: configData.youtubeUrl ?? config.youtubeUrl ?? '',
+      linkedinUrl: configData.linkedinUrl ?? config.linkedinUrl ?? '',
+      tiktokUrl: configData.tiktokUrl ?? config.tiktokUrl ?? '',
       // SEO
       seoTitle: configData.seoTitle ?? config.seoTitle ?? '',
       seoDescription: configData.seoDescription ?? config.seoDescription ?? '',
