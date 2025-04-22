@@ -937,7 +937,7 @@ export default function Home() {
                     className="ri-mail-line mr-3 mt-1"
                     style={{ color: config?.primaryColor || 'var(--primary)' }}
                   ></i>
-                  <span className="text-gray-400">contato@imobiliaria.com.br</span>
+                  <span className="text-gray-400">{config?.email || 'contato@imobiliaria.com.br'}</span>
                 </li>
               </ul>
             </div>
