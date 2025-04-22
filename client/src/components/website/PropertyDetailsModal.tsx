@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { X } from 'lucide-react';
 import './scrollbar.css';
+import { useUI } from '@/contexts/UIContext';
 
 interface PropertyDetailsModalProps {
   propertyId: number;

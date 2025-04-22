@@ -16,6 +16,7 @@ import AuthPage from "@/pages/auth-page";
 import AppLayout from "@/components/layout/AppLayout";
 import { queryClient } from "./lib/queryClient";
 import { LoadingProvider } from "./contexts/LoadingContext";
+import { UIProvider } from "./contexts/UIContext";
 import PageLoadingController from "@/components/ui/PageLoadingController";
 import ScrollToTop from "@/components/ui/scroll-to-top";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
@@ -78,13 +79,15 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <HelmetProvider>
         <LoadingProvider>
-          <MarketingTags />
-          <Router />
-          {/* Só mostra o WhatsApp Chat fora da área administrativa */}
-          {!isAdmin && <WhatsAppChat />}
-          <ScrollToTop />
-          <PageLoadingController />
-          <Toaster />
+          <UIProvider>
+            <MarketingTags />
+            <Router />
+            {/* Só mostra o WhatsApp Chat fora da área administrativa */}
+            {!isAdmin && <WhatsAppChat />}
+            <ScrollToTop />
+            <PageLoadingController />
+            <Toaster />
+          </UIProvider>
         </LoadingProvider>
       </HelmetProvider>
     </QueryClientProvider>
