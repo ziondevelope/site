@@ -101,7 +101,7 @@ export default function GeneralSettings({ config, configData, onConfigChange }: 
 
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div>
           <Label className="block text-sm font-medium text-gray-700 mb-2">
             Logo
@@ -112,6 +112,20 @@ export default function GeneralSettings({ config, configData, onConfigChange }: 
               onImageChange={handleLogoChange}
               onRemoveImage={removeLogo}
               label="Upload Logo"
+            />
+          </div>
+        </div>
+
+        <div>
+          <Label className="block text-sm font-medium text-gray-700 mb-2">
+            Logo do Rodapé
+          </Label>
+          <div className="flex items-start">
+            <ImageUpload
+              currentImage={configData.footerLogo !== undefined ? configData.footerLogo : config?.footerLogo || ''}
+              onImageChange={(value) => onConfigChange({ ...configData, footerLogo: value })}
+              onRemoveImage={() => onConfigChange({ ...configData, footerLogo: '' })}
+              label="Upload Logo Rodapé"
             />
           </div>
         </div>

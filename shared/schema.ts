@@ -106,6 +106,7 @@ export const insertTaskSchema = createInsertSchema(tasks).omit({
 export const websiteConfig = pgTable("website_config", {
   id: serial("id").primaryKey(),
   logo: text("logo"),
+  footerLogo: text("footer_logo"),
   bannerBackground: text("banner_background"),
   mainFont: text("main_font").default("Inter"),
   headingFont: text("heading_font").default("Inter"),
