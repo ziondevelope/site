@@ -12,6 +12,7 @@ import PropertyDetailsModal from '@/components/website/PropertyDetailsModal';
 import { Testimonials } from '@/components/website/Testimonials';
 import { useLoading } from "@/contexts/LoadingContext";
 import '../styles/hover-effects.css';
+import imobsiteLogo from '../assets/imobsite-logo.png';
 
 // Função utilitária para obter a imagem de destaque do imóvel
 const getFeaturedImage = (property: Property): string | undefined => {
@@ -824,12 +825,18 @@ export default function Home() {
           </div>
           
           <div className="border-t mt-12 pt-8 text-center" style={{ borderColor: 'rgba(255,255,255,0.2)', color: 'rgba(255,255,255,0.7)' }}>
-            <p>
-              &copy; 2025 Imobiliária. Todos os direitos reservados. 
-              <Link href="/admin">
-                <span className="ml-3 hover:text-white cursor-pointer">Área do Administrador</span>
-              </Link>
-            </p>
+            <div className="flex flex-col md:flex-row items-center justify-center space-y-2 md:space-y-0 md:space-x-4">
+              <p>
+                &copy; 2025 Imobiliária. Todos os direitos reservados. 
+                <Link href="/admin">
+                  <span className="ml-3 hover:text-white cursor-pointer">Área do Administrador</span>
+                </Link>
+              </p>
+              <div className="flex items-center">
+                <span className="mr-2">Desenvolvido com Tecnologia</span>
+                <img src={imobsiteLogo} alt="Imobsite" className="h-7" />
+              </div>
+            </div>
           </div>
         </div>
       </footer>
