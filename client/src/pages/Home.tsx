@@ -939,6 +939,13 @@ export default function Home() {
                   ></i>
                   <span className="text-gray-400">{config?.email || 'contato@imobiliaria.com.br'}</span>
                 </li>
+                <li className="flex items-start">
+                  <i 
+                    className="ri-time-line mr-3 mt-1"
+                    style={{ color: config?.primaryColor || 'var(--primary)' }}
+                  ></i>
+                  <span className="text-gray-400">{config?.businessHours || 'Segunda a Sexta, 09:00 às 18:00'}</span>
+                </li>
               </ul>
             </div>
           </div>
