@@ -786,14 +786,30 @@ export default function Home() {
             </div>
             
             <div>
-              <h3 className="text-lg font-semibold mb-6">Links Rápidos</h3>
-              <ul className="space-y-3">
-                <li><a href="#" style={{ color: 'rgba(255,255,255,0.7)' }} className="hover:text-white">Início</a></li>
-                <li><a href="#" style={{ color: 'rgba(255,255,255,0.7)' }} className="hover:text-white">Sobre nós</a></li>
-                <li><a href="#" style={{ color: 'rgba(255,255,255,0.7)' }} className="hover:text-white">Imóveis</a></li>
-                <li><a href="#" style={{ color: 'rgba(255,255,255,0.7)' }} className="hover:text-white">Blog</a></li>
-                <li><a href="#" style={{ color: 'rgba(255,255,255,0.7)' }} className="hover:text-white">Contato</a></li>
-              </ul>
+              <div className="flex flex-col space-y-5">
+                <div className="flex items-center">
+                  <i className="fab fa-whatsapp text-xl mr-3" style={{ color: config?.primaryColor || 'var(--primary)' }}></i>
+                  <span style={{ color: 'rgba(255,255,255,0.9)' }}>{config?.phone || '(11) 4063-4100'}</span>
+                </div>
+                <div className="flex items-center">
+                  <i className="far fa-envelope text-xl mr-3" style={{ color: config?.primaryColor || 'var(--primary)' }}></i>
+                  <span style={{ color: 'rgba(255,255,255,0.9)' }}>{config?.email || 'suporte@imobzi.com'}</span>
+                </div>
+                <div className="flex space-x-3 mt-4">
+                  <a href="#" className="flex items-center justify-center w-8 h-8 rounded-full bg-white">
+                    <i className="fab fa-facebook-f" style={{ color: config?.secondaryColor || '#333' }}></i>
+                  </a>
+                  <a href="#" className="flex items-center justify-center w-8 h-8 rounded-full bg-white">
+                    <i className="fab fa-linkedin-in" style={{ color: config?.secondaryColor || '#333' }}></i>
+                  </a>
+                  <a href="#" className="flex items-center justify-center w-8 h-8 rounded-full bg-white">
+                    <i className="fab fa-youtube" style={{ color: config?.secondaryColor || '#333' }}></i>
+                  </a>
+                  <a href="#" className="flex items-center justify-center w-8 h-8 rounded-full bg-white">
+                    <i className="fab fa-instagram" style={{ color: config?.secondaryColor || '#333' }}></i>
+                  </a>
+                </div>
+              </div>
             </div>
             
             <div>
