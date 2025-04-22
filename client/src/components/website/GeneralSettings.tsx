@@ -59,6 +59,10 @@ export default function GeneralSettings({ config, configData, onConfigChange }: 
     configFooterTextColor: config?.footerTextColor,
     configFooterIconsColor: config?.footerIconsColor
   });
+  
+  // Garantindo que as cores nunca sejam null ou undefined
+  const safeFooterTextColor = footerTextColor || '#ffffff';
+  const safeFooterIconsColor = footerIconsColor || primaryColor || '#1f4dbe';
     
   const footerInfo = configData.footerInfo !== undefined 
     ? configData.footerInfo 
@@ -254,13 +258,13 @@ export default function GeneralSettings({ config, configData, onConfigChange }: 
           <div className="flex">
             <Input 
               type="color" 
-              value={footerTextColor}
+              value={safeFooterTextColor}
               onChange={(e) => onConfigChange({ ...configData, footerTextColor: e.target.value })}
               className="h-10 w-10 border-0 rounded-l-lg p-0"
             />
             <Input 
               type="text" 
-              value={footerTextColor}
+              value={safeFooterTextColor}
               onChange={(e) => onConfigChange({ ...configData, footerTextColor: e.target.value })}
               className="border border-l-0 border-gray-200 rounded-r-full px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-transparent"
             />
@@ -276,13 +280,13 @@ export default function GeneralSettings({ config, configData, onConfigChange }: 
           <div className="flex">
             <Input 
               type="color" 
-              value={footerIconsColor}
+              value={safeFooterIconsColor}
               onChange={(e) => onConfigChange({ ...configData, footerIconsColor: e.target.value })}
               className="h-10 w-10 border-0 rounded-l-lg p-0"
             />
             <Input 
               type="text" 
-              value={footerIconsColor}
+              value={safeFooterIconsColor}
               onChange={(e) => onConfigChange({ ...configData, footerIconsColor: e.target.value })}
               className="border border-l-0 border-gray-200 rounded-r-full px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-transparent"
             />
