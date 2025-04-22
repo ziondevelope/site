@@ -15,6 +15,7 @@ interface PropertyDetailsModalProps {
 export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: PropertyDetailsModalProps) {
   const [activeImage, setActiveImage] = useState<string | null>(null);
   const modalRef = useRef<HTMLDivElement>(null);
+  const { setPropertyModalOpen } = useUI();
   
   // Fetch property details
   const { data: property, isLoading: isLoadingProperty } = useQuery<Property>({
@@ -88,16 +89,20 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
   }, [isOpen, onClose]);
 
   // Add/remove overflow:hidden to body when modal opens/closes
+  // and update global state for WhatsApp button visibility
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
+      setPropertyModalOpen(true);
     } else {
       document.body.style.overflow = '';
+      setPropertyModalOpen(false);
     }
     return () => {
       document.body.style.overflow = '';
+      setPropertyModalOpen(false);
     };
-  }, [isOpen]);
+  }, [isOpen, setPropertyModalOpen]);
 
   // Format currency
   const formatCurrency = (value: number) => {

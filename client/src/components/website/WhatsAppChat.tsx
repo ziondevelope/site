@@ -3,7 +3,8 @@ import { X } from "lucide-react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { WebsiteConfig } from "@shared/schema";
-import { FaWhatsapp, FaPaperPlane } from "react-icons/fa";
+import { FaWhatsapp } from "react-icons/fa";
+import { useUI } from "@/contexts/UIContext";
 
 // Definindo a animação de bounce para o botão de WhatsApp
 const WhatsAppBounceAnimation = `
@@ -32,6 +33,9 @@ export default function WhatsAppChat() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const formRef = useRef<HTMLDivElement>(null);
+  
+  // Obtém o estado global do modal de propriedade
+  const { isPropertyModalOpen } = useUI();
   
   // Consulta para obter a configuração do site
   const { data: config, isLoading } = useQuery<WebsiteConfig>({
@@ -158,8 +162,8 @@ export default function WhatsAppChat() {
     return null;
   }
   
-  // Se não tiver configuração ou o chat não estiver habilitado, não mostre nada
-  if (!config || config.whatsappChatEnabled === false) {
+  // Se não tiver configuração, o chat não estiver habilitado ou o modal de propriedade estiver aberto, não mostre nada
+  if (!config || config.whatsappChatEnabled === false || isPropertyModalOpen) {
     return null;
   }
   
