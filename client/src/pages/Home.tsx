@@ -736,7 +736,7 @@ export default function Home() {
         color: '#fff' 
       }} className="py-12">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
               <div className="flex items-center space-x-3 mb-6">
                 {isLoadingConfig ? (
@@ -813,49 +813,32 @@ export default function Home() {
               </div>
             </div>
             
+
             <div>
-              <h3 className="text-lg font-semibold mb-6">Tipos de Imóveis</h3>
-              <ul className="space-y-3">
-                <li><a href="#" style={{ color: 'rgba(255,255,255,0.7)' }} className="hover:text-white">Apartamentos</a></li>
-                <li><a href="#" style={{ color: 'rgba(255,255,255,0.7)' }} className="hover:text-white">Casas</a></li>
-                <li><a href="#" style={{ color: 'rgba(255,255,255,0.7)' }} className="hover:text-white">Terrenos</a></li>
-                <li><a href="#" style={{ color: 'rgba(255,255,255,0.7)' }} className="hover:text-white">Comerciais</a></li>
-                <li><a href="#" style={{ color: 'rgba(255,255,255,0.7)' }} className="hover:text-white">Rurais</a></li>
-              </ul>
-            </div>
-            
-            <div>
-              <h3 className="text-lg font-semibold mb-6">Contato</h3>
-              <ul className="space-y-3">
-                <li className="flex items-start">
+              <h3 className="text-lg font-semibold mb-6">Localização</h3>
+              <div className="space-y-4">
+                <div className="flex items-start">
                   <i 
                     className="ri-map-pin-line mr-3 mt-1"
                     style={{ color: config?.primaryColor || 'var(--primary)' }}
                   ></i>
                   <span style={{ color: 'rgba(255,255,255,0.7)' }}>{config?.address || 'Av. Paulista, 1000 - São Paulo, SP'}</span>
-                </li>
-                <li className="flex items-start">
-                  <i 
-                    className="ri-phone-line mr-3 mt-1"
-                    style={{ color: config?.primaryColor || 'var(--primary)' }}
-                  ></i>
-                  <span style={{ color: 'rgba(255,255,255,0.7)' }}>{config?.phone || '(21) 9858 59264'}</span>
-                </li>
-                <li className="flex items-start">
-                  <i 
-                    className="ri-mail-line mr-3 mt-1"
-                    style={{ color: config?.primaryColor || 'var(--primary)' }}
-                  ></i>
-                  <span style={{ color: 'rgba(255,255,255,0.7)' }}>{config?.email || 'contato@imobiliaria.com.br'}</span>
-                </li>
-                <li className="flex items-start">
+                </div>
+                <div className="flex items-start">
                   <i 
                     className="ri-time-line mr-3 mt-1"
                     style={{ color: config?.primaryColor || 'var(--primary)' }}
                   ></i>
                   <span style={{ color: 'rgba(255,255,255,0.7)' }}>{config?.workingHours || 'Segunda a Sexta, 09:00 às 18:00'}</span>
-                </li>
-              </ul>
+                </div>
+                
+                {/* Mapa simplificado representativo */}
+                <div className="mt-2 h-32 bg-gray-700 rounded-lg overflow-hidden relative">
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <i className="ri-map-pin-fill text-2xl" style={{ color: config?.primaryColor || 'var(--primary)' }}></i>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
           
