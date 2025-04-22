@@ -12,6 +12,7 @@ import PropertyDetailsModal from '@/components/website/PropertyDetailsModal';
 import { Testimonials } from '@/components/website/Testimonials';
 import { useLoading } from "@/contexts/LoadingContext";
 import SEO from '@/components/website/SEO';
+import Footer from '@/components/Footer';
 import '../styles/hover-effects.css';
 import imobsiteLogo from '../assets/imobsite-logo.png';
 
