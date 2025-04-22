@@ -93,11 +93,33 @@ export default function SeoSettings({ config, configData, onConfigChange }: SeoS
           Palavras-chave
         </Label>
         <Input 
-          value={seoKeywords}
+          value={seoKeywords || ''}
           onChange={(e) => handleSeoKeywordsChange(e.target.value)}
           className="rounded-full"
         />
         <p className="text-sm text-gray-500 mt-1">Separadas por vírgula</p>
+      </div>
+      
+      <div>
+        <Label className="block text-sm font-medium text-gray-700 mb-2">
+          Favicon
+        </Label>
+        <div className="flex items-start gap-4">
+          <ImageUpload 
+            currentImage={favicon || undefined}
+            onImageChange={handleFaviconChange}
+            previewClassName="w-16 h-16"
+            label="Favicon"
+          />
+          <div className="flex-1">
+            <p className="text-sm text-gray-500 mb-2">
+              O favicon é o ícone que aparece na aba do navegador. Recomendamos usar o logotipo da sua imobiliária como favicon.
+            </p>
+            <p className="text-sm text-gray-500">
+              Formato recomendado: quadrado, pelo menos 32x32 pixels.
+            </p>
+          </div>
+        </div>
       </div>
       
       <div className="pt-4">
