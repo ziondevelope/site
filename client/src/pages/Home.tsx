@@ -743,6 +743,20 @@ export default function Home() {
                 {isLoadingConfig ? (
                   // Placeholder durante o carregamento - mantém o mesmo tamanho
                   <div className="h-10 w-24 rounded animate-pulse" style={{ backgroundColor: 'rgba(255,255,255,0.2)' }}></div>
+                ) : config?.footerLogo ? (
+                  <div className="h-10 min-w-[96px]">
+                    <img 
+                      src={config.footerLogo} 
+                      alt="Logo da Imobiliária" 
+                      className="h-full object-contain"
+                      loading="eager" 
+                      onLoad={(e) => {
+                        // Torna a imagem visível quando carregada
+                        (e.target as HTMLImageElement).style.opacity = "1";
+                      }}
+                      style={{ opacity: 0, transition: "opacity 0.2s ease" }}
+                    />
+                  </div>
                 ) : config?.logo ? (
                   <div className="h-10 min-w-[96px]">
                     <img 
