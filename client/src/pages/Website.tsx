@@ -113,7 +113,17 @@ export default function Website() {
       configFacebookUrl: config.facebookUrl,
       configYoutubeUrl: config.youtubeUrl,
       configLinkedinUrl: config.linkedinUrl,
-      configTiktokUrl: config.tiktokUrl
+      configTiktokUrl: config.tiktokUrl,
+      // Seção Quem Somos
+      aboutTitle: configData.aboutTitle,
+      aboutSubtitle: configData.aboutSubtitle,
+      aboutDescription: configData.aboutDescription,
+      showAboutSection: configData.showAboutSection,
+      // Valores da configuração
+      configAboutTitle: config.aboutTitle,
+      configAboutSubtitle: config.aboutSubtitle,
+      configAboutDescription: config.aboutDescription,
+      configShowAboutSection: config.showAboutSection
     });
     
     // Create a full config object ensuring all properties have values
@@ -149,6 +159,12 @@ export default function Website() {
       youtubeUrl: configData.youtubeUrl ?? config.youtubeUrl ?? '',
       linkedinUrl: configData.linkedinUrl ?? config.linkedinUrl ?? '',
       tiktokUrl: configData.tiktokUrl ?? config.tiktokUrl ?? '',
+      // Seção Quem Somos
+      aboutTitle: configData.aboutTitle ?? config.aboutTitle ?? 'Quem Somos',
+      aboutSubtitle: configData.aboutSubtitle ?? config.aboutSubtitle ?? 'Conheça Nossa História',
+      aboutDescription: configData.aboutDescription ?? config.aboutDescription ?? '',
+      aboutImage: configData.aboutImage ?? config.aboutImage ?? '',
+      showAboutSection: configData.showAboutSection ?? config.showAboutSection ?? true,
       // SEO
       seoTitle: configData.seoTitle ?? config.seoTitle ?? '',
       seoDescription: configData.seoDescription ?? config.seoDescription ?? '',
