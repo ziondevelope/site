@@ -136,6 +136,12 @@ export const websiteConfig = pgTable("website_config", {
   youtubeUrl: text("youtube_url"),
   linkedinUrl: text("linkedin_url"),
   tiktokUrl: text("tiktok_url"),
+  // Seção Quem Somos
+  aboutTitle: text("about_title"),
+  aboutSubtitle: text("about_subtitle"),
+  aboutDescription: text("about_description"),
+  aboutImage: text("about_image"),
+  showAboutSection: boolean("show_about_section").default(true),
   // Campos SEO
   seoTitle: text("seo_title"),
   seoDescription: text("seo_description"),
