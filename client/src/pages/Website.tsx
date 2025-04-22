@@ -86,10 +86,23 @@ export default function Website() {
   
   // Handle configuration changes from child components
   const handleConfigChange = (partialConfig: Partial<UpdateWebsiteConfig>) => {
-    setConfigData(prev => ({
-      ...prev,
-      ...partialConfig
-    }));
+    console.log("handleConfigChange recebeu:", partialConfig);
+    
+    // Verificar especificamente se temos um favicon chegando
+    if (partialConfig.favicon) {
+      console.log("Favicon detectado no handleConfigChange, primeiros 50 caracteres:", 
+        partialConfig.favicon.substring(0, 50));
+    }
+    
+    setConfigData(prev => {
+      const newState = {
+        ...prev,
+        ...partialConfig
+      };
+      
+      console.log("configData atualizado, tem favicon?", !!newState.favicon);
+      return newState;
+    });
   };
 
   // Handle save button click
@@ -125,6 +138,15 @@ export default function Website() {
       configAboutDescription: config.aboutDescription,
       configShowAboutSection: config.showAboutSection
     });
+    
+    // Debug de SEO e favicon
+    console.log("Verificando favicon antes de salvar:");
+    console.log("Favicon em configData?", !!configData.favicon);
+    console.log("Favicon em config?", !!config.favicon);
+    
+    if (configData.favicon) {
+      console.log("Primeiros 50 caracteres do favicon em configData:", configData.favicon.substring(0, 50));
+    }
     
     // Create a full config object ensuring all properties have values
     const fullConfig: UpdateWebsiteConfig = {

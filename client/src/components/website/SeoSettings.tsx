@@ -45,6 +45,7 @@ export default function SeoSettings({ config, configData, onConfigChange }: SeoS
   };
   
   const handleFaviconChange = (imageBase64: string) => {
+    console.log("Atualizando favicon:", imageBase64.substring(0, 50) + "...");
     onConfigChange({ favicon: imageBase64 });
   };
 
