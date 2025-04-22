@@ -729,7 +729,8 @@ export class FirebaseStorage implements IStorage {
 
   async updateWebsiteConfig(config: UpdateWebsiteConfig): Promise<WebsiteConfig> {
     try {
-      const configRef = doc(db, 'websiteConfig', 'config');
+      // Importante: Usar o ID '1' para manter consistência com getWebsiteConfig
+      const configRef = doc(this.db, 'websiteConfig', '1');
       const configDoc = await getDoc(configRef);
       
       let updatedConfig: WebsiteConfig;
@@ -741,6 +742,7 @@ export class FirebaseStorage implements IStorage {
           id: 1,
           updatedAt: new Date().toISOString(),
         } as WebsiteConfig;
+        console.log('Criando nova configuração:', updatedConfig);
       } else {
         // Update existing config
         const existingData = configDoc.data();
@@ -748,6 +750,8 @@ export class FirebaseStorage implements IStorage {
         // Log para diagnóstico
         console.log('Dados existentes:', existingData);
         console.log('Dados sendo atualizados:', config);
+        console.log('showAboutSection antes:', existingData.showAboutSection);
+        console.log('showAboutSection sendo atualizado para:', config.showAboutSection);
         
         updatedConfig = {
           ...existingData,
@@ -757,6 +761,7 @@ export class FirebaseStorage implements IStorage {
         
         // Log do resultado após a fusão
         console.log('Dados finais após mesclagem:', updatedConfig);
+        console.log('showAboutSection após mesclagem:', updatedConfig.showAboutSection);
       }
       
       await setDoc(configRef, updatedConfig);

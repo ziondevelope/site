@@ -661,7 +661,6 @@ export default function Home() {
       )}
 
       {/* About Section - só exibe se showAboutSection for true */}
-      {console.log("showAboutSection:", config?.showAboutSection)}
       {config?.showAboutSection && (
         <section id="about" className="py-16">
           <div className="container mx-auto px-4">
@@ -746,8 +745,6 @@ export default function Home() {
                     </ul>
                   </>
                 )}
-                
-                <Button>Conheça nossa equipe</Button>
               </div>
             </div>
           </div>
