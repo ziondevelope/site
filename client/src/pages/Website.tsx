@@ -169,6 +169,7 @@ export default function Website() {
       seoTitle: configData.seoTitle ?? config.seoTitle ?? '',
       seoDescription: configData.seoDescription ?? config.seoDescription ?? '',
       seoKeywords: configData.seoKeywords ?? config.seoKeywords ?? '',
+      favicon: configData.favicon ?? config.favicon ?? '',
     };
     
     saveConfigMutation.mutate(fullConfig);
