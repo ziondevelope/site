@@ -337,7 +337,7 @@ export default function Home() {
                           
                           <div className="p-4">
                             <h3 className="text-md mb-1 line-clamp-1">{property.title}</h3>
-                            <p className="text-gray-600 text-sm line-clamp-1">{property.location || property.city}</p>
+                            <p className="text-gray-600 text-sm line-clamp-1">{property.city || property.address || 'Localização não disponível'}</p>
                             
                             <div className="flex justify-between items-center mt-3">
                               <span className="font-semibold" style={{ color: config?.primaryColor || 'var(--primary)' }}>
@@ -425,6 +425,218 @@ export default function Home() {
           </div>
         </section>
       )}
+
+      {/* Imóveis para Venda */}
+      <section id="venda" className="py-16 bg-white">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold text-center mb-12" style={{ color: config?.primaryColor || 'var(--primary)' }}>Imóveis para Venda</h2>
+          
+          {isLoadingProperties ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {[1, 2, 3].map(item => (
+                <div key={item} className="bg-white rounded-lg shadow-md overflow-hidden animate-pulse">
+                  <div className="h-48 bg-gray-200"></div>
+                  <div className="p-6">
+                    <div className="h-4 bg-gray-200 rounded w-3/4 mb-4"></div>
+                    <div className="h-4 bg-gray-200 rounded w-1/2 mb-4"></div>
+                    <div className="h-4 bg-gray-200 rounded w-5/6"></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {properties
+                ?.filter(property => property.purpose === 'sale')
+                .slice(0, 8)
+                .map((property) => (
+                  <div 
+                    key={property.id} 
+                    className="property-card bg-white rounded-lg border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-lg cursor-pointer"
+                    onClick={() => openPropertyModal(property.id)}
+                  >
+                    <div className="h-48 bg-gray-200 relative overflow-hidden">
+                      {getFeaturedImage(property) ? (
+                        <img 
+                          src={getFeaturedImage(property)} 
+                          alt={property.title} 
+                          className="w-full h-full object-cover"
+                          loading="lazy"
+                        />
+                      ) : null}
+                      <div 
+                        className="absolute bottom-0 left-0 text-white px-3 py-1 rounded-tr-lg"
+                        style={{
+                          backgroundColor: config?.primaryColor || 'var(--primary)'
+                        }}
+                      >
+                        Venda
+                      </div>
+                    </div>
+                    
+                    <div className="p-4">
+                      <h3 className="text-md mb-1 line-clamp-1">{property.title}</h3>
+                      <p className="text-gray-600 text-sm line-clamp-1">{property.location || property.city}</p>
+                      
+                      <div className="flex justify-between items-center mt-3">
+                        <span className="font-semibold" style={{ color: config?.primaryColor || 'var(--primary)' }}>
+                          {property.price && property.price > 0 
+                            ? `R$ ${property.price.toLocaleString('pt-BR')}`
+                            : 'Sob consulta'
+                          }
+                        </span>
+                      </div>
+                      
+                      <div className="flex flex-wrap gap-3 mt-3 text-gray-600">
+                        {property.bedrooms ? (
+                          <div className="flex items-center text-xs">
+                            <FontAwesomeIcon icon={faBed} className="mr-1" />
+                            <span>{property.bedrooms} {property.bedrooms === 1 ? 'Quarto' : 'Quartos'}</span>
+                          </div>
+                        ) : null}
+                        
+                        {property.bathrooms ? (
+                          <div className="flex items-center text-xs">
+                            <FontAwesomeIcon icon={faBath} style={{ color: config?.primaryColor }} className="mr-1" />
+                            <span>{property.bathrooms} {property.bathrooms === 1 ? 'Banheiro' : 'Banheiros'}</span>
+                          </div>
+                        ) : null}
+                        
+                        {property.area ? (
+                          <div className="flex items-center text-xs">
+                            <FontAwesomeIcon icon={faRulerCombined} className="mr-1" />
+                            <span>{property.area} m²</span>
+                          </div>
+                        ) : null}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+            </div>
+          )}
+          
+          {/* Ver todos os imóveis para venda */}
+          <div className="text-center mt-10">
+            <Link href="/imoveis?purpose=sale">
+              <Button 
+                className="px-6 py-2.5 rounded-md font-medium transition-colors hover:bg-opacity-90"
+                style={{ 
+                  backgroundColor: config?.primaryColor || 'var(--primary)',
+                  color: '#fff'
+                }}
+              >
+                Ver mais imóveis para venda
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Imóveis para Aluguel */}
+      <section id="aluguel" className="py-16 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold text-center mb-12" style={{ color: config?.primaryColor || 'var(--primary)' }}>Imóveis para Aluguel</h2>
+          
+          {isLoadingProperties ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {[1, 2, 3].map(item => (
+                <div key={item} className="bg-white rounded-lg shadow-md overflow-hidden animate-pulse">
+                  <div className="h-48 bg-gray-200"></div>
+                  <div className="p-6">
+                    <div className="h-4 bg-gray-200 rounded w-3/4 mb-4"></div>
+                    <div className="h-4 bg-gray-200 rounded w-1/2 mb-4"></div>
+                    <div className="h-4 bg-gray-200 rounded w-5/6"></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {properties
+                ?.filter(property => property.purpose === 'rent')
+                .slice(0, 8)
+                .map((property) => (
+                  <div 
+                    key={property.id} 
+                    className="property-card bg-white rounded-lg border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-lg cursor-pointer"
+                    onClick={() => openPropertyModal(property.id)}
+                  >
+                    <div className="h-48 bg-gray-200 relative overflow-hidden">
+                      {getFeaturedImage(property) ? (
+                        <img 
+                          src={getFeaturedImage(property)} 
+                          alt={property.title} 
+                          className="w-full h-full object-cover"
+                          loading="lazy"
+                        />
+                      ) : null}
+                      <div 
+                        className="absolute bottom-0 left-0 text-white px-3 py-1 rounded-tr-lg"
+                        style={{
+                          backgroundColor: config?.primaryColor || 'var(--primary)'
+                        }}
+                      >
+                        Aluguel
+                      </div>
+                    </div>
+                    
+                    <div className="p-4">
+                      <h3 className="text-md mb-1 line-clamp-1">{property.title}</h3>
+                      <p className="text-gray-600 text-sm line-clamp-1">{property.location || property.city}</p>
+                      
+                      <div className="flex justify-between items-center mt-3">
+                        <span className="font-semibold" style={{ color: config?.primaryColor || 'var(--primary)' }}>
+                          {property.price && property.price > 0 
+                            ? `R$ ${property.price.toLocaleString('pt-BR')}`
+                            : 'Sob consulta'
+                          }
+                        </span>
+                      </div>
+                      
+                      <div className="flex flex-wrap gap-3 mt-3 text-gray-600">
+                        {property.bedrooms ? (
+                          <div className="flex items-center text-xs">
+                            <FontAwesomeIcon icon={faBed} className="mr-1" />
+                            <span>{property.bedrooms} {property.bedrooms === 1 ? 'Quarto' : 'Quartos'}</span>
+                          </div>
+                        ) : null}
+                        
+                        {property.bathrooms ? (
+                          <div className="flex items-center text-xs">
+                            <FontAwesomeIcon icon={faBath} style={{ color: config?.primaryColor }} className="mr-1" />
+                            <span>{property.bathrooms} {property.bathrooms === 1 ? 'Banheiro' : 'Banheiros'}</span>
+                          </div>
+                        ) : null}
+                        
+                        {property.area ? (
+                          <div className="flex items-center text-xs">
+                            <FontAwesomeIcon icon={faRulerCombined} className="mr-1" />
+                            <span>{property.area} m²</span>
+                          </div>
+                        ) : null}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+            </div>
+          )}
+          
+          {/* Ver todos os imóveis para aluguel */}
+          <div className="text-center mt-10">
+            <Link href="/imoveis?purpose=rent">
+              <Button 
+                className="px-6 py-2.5 rounded-md font-medium transition-colors hover:bg-opacity-90"
+                style={{ 
+                  backgroundColor: config?.primaryColor || 'var(--primary)',
+                  color: '#fff'
+                }}
+              >
+                Ver mais imóveis para aluguel
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
 
       {/* Testimonials Section */}
       {config?.showTestimonials !== false && (
