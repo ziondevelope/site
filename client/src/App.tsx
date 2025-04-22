@@ -19,6 +19,7 @@ import { LoadingProvider } from "./contexts/LoadingContext";
 import PageLoadingController from "@/components/ui/PageLoadingController";
 import ScrollToTop from "@/components/ui/scroll-to-top";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
+import MarketingTags from "@/components/MarketingTags";
 
 function AdminRouter() {
   // Usando useLocation para determinar a rota atual
@@ -72,6 +73,7 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <HelmetProvider>
         <LoadingProvider>
+          <MarketingTags />
           <Router />
           <ScrollToTop />
           <PageLoadingController />
