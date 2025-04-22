@@ -337,303 +337,389 @@ export default function Home() {
                           
                           <div className="p-4">
                             <h3 className="text-md mb-1 line-clamp-1">{property.title}</h3>
-                            <p className="text-gray-600 text-sm line-clamp-1">{property.city || property.address || 'Localização não disponível'}</p>
+                            <div className="flex justify-start items-center mb-2">
+                              <div 
+                                className="text-lg font-bold text-gray-700"
+                              >
+                                R$ {property.price.toLocaleString('pt-BR')}
+                                {property.purpose === 'rent' && <span className="text-xs font-normal text-gray-500">/mês</span>}
+                              </div>
+                            </div>
+                            <p className="text-gray-500 text-sm mb-4 line-clamp-1">{property.address}</p>
                             
-                            <div className="flex justify-between items-center mt-3">
-                              <span className="font-semibold" style={{ color: config?.primaryColor || 'var(--primary)' }}>
-                                {property.price && property.price > 0 
-                                  ? `R$ ${property.price.toLocaleString('pt-BR')}`
-                                  : 'Sob consulta'
-                                }
+                            <div className="flex items-center justify-between mb-4 text-sm text-gray-600">
+                              <span className="flex items-center">
+                                <i className="fas fa-ruler-combined fa-sm mr-1"></i>
+                                {property.area}m²
+                              </span>
+                              <span className="flex items-center">
+                                <i className="fas fa-bed fa-sm mr-1"></i>
+                                {property.bedrooms}
+                              </span>
+                              <span className="flex items-center">
+                                <i className="fas fa-shower fa-sm mr-1" style={{ color: '#4B5563' }}></i>
+                                {property.bathrooms}
+                              </span>
+                              <span className="flex items-center">
+                                <i className="fas fa-bath fa-sm mr-1" style={{ color: '#4B5563' }}></i>
+                                {property.suites || 0}
+                              </span>
+                              <span className="flex items-center">
+                                <i className="fas fa-car fa-sm mr-1"></i>
+                                {property.parkingSpots || 0}
                               </span>
                             </div>
-                            
-                            <div className="flex flex-wrap gap-3 mt-3 text-gray-600">
-                              {property.bedrooms ? (
-                                <div className="flex items-center text-xs">
-                                  <FontAwesomeIcon icon={faBed} className="mr-1" />
-                                  <span>{property.bedrooms} {property.bedrooms === 1 ? 'Quarto' : 'Quartos'}</span>
-                                </div>
-                              ) : null}
-                              
-                              {property.bathrooms ? (
-                                <div className="flex items-center text-xs">
-                                  <FontAwesomeIcon icon={faBath} style={{ color: config?.primaryColor }} className="mr-1" />
-                                  <span>{property.bathrooms} {property.bathrooms === 1 ? 'Banheiro' : 'Banheiros'}</span>
-                                </div>
-                              ) : null}
-                              
-                              {property.area ? (
-                                <div className="flex items-center text-xs">
-                                  <FontAwesomeIcon icon={faRulerCombined} className="mr-1" />
-                                  <span>{property.area} m²</span>
-                                </div>
-                              ) : null}
-                            </div>
                           </div>
+                          
+                          {/* Overlay de hover para indicar que é clicável */}
+                          <div className="absolute inset-0 bg-white opacity-0 transition-opacity duration-300 hover:opacity-5"></div>
                         </div>
                       </div>
                     ))}
                   </div>
-                </div>
-                
-                {/* Indicadores de página */}
-                <div className="flex justify-center mt-6 gap-2">
-                  {Array.from({ length: totalCarouselPages }).map((_, index) => (
-                    <button
-                      key={index}
-                      onClick={() => {
-                        if (!carouselTrackRef.current) return;
-                        const containerWidth = carouselTrackRef.current.parentElement?.clientWidth || 0;
-                        carouselTrackRef.current.scrollTo({
-                          left: containerWidth * index,
-                          behavior: 'smooth'
-                        });
-                        setCarouselPage(index);
-                      }}
-                      className={`w-2.5 h-2.5 rounded-full transition-all ${
-                        index === carouselPage 
-                          ? 'bg-primary w-5' 
-                          : 'bg-gray-300 hover:bg-gray-400'
-                      }`}
-                      style={{ 
-                        backgroundColor: index === carouselPage 
-                          ? config?.primaryColor || 'var(--primary)' 
-                          : undefined
-                      }}
-                      aria-label={`Ir para página ${index + 1}`}
-                    />
-                  ))}
-                </div>
-                
-                {/* Ver todos os imóveis */}
-                <div className="text-center mt-10">
-                  <Link href="/imoveis">
-                    <Button 
-                      className="px-6 py-2.5 rounded-md font-medium transition-colors hover:bg-opacity-90"
-                      style={{ 
-                        backgroundColor: config?.primaryColor || 'var(--primary)',
-                        color: '#fff'
-                      }}
-                    >
-                      Ver todos os imóveis
-                    </Button>
-                  </Link>
+                  
+                  {/* Indicadores de página */}
+                  <div className="flex justify-center space-x-2 mt-6">
+                    {[...Array(totalCarouselPages)].map((_, index) => (
+                      <button 
+                        key={index} 
+                        className={`h-2 rounded-full transition-all ${
+                          index === carouselPage 
+                            ? 'w-8 bg-gray-800' 
+                            : 'w-2 bg-gray-300'
+                        }`}
+                        aria-label={`Página ${index + 1}`}
+                        onClick={() => {
+                          if (!carouselTrackRef.current) return;
+                          const containerWidth = carouselTrackRef.current.parentElement?.clientWidth || 0;
+                          carouselTrackRef.current.scrollTo({
+                            left: containerWidth * index,
+                            behavior: 'smooth'
+                          });
+                          setCarouselPage(index);
+                        }}
+                        style={{
+                          backgroundColor: index === carouselPage 
+                            ? (config?.primaryColor || 'var(--primary)') 
+                            : undefined
+                        }}
+                      ></button>
+                    ))}
+                  </div>
                 </div>
               </div>
             )}
+            
+            <div className="text-center mt-12">
+              <Button 
+                variant="outline" 
+                size="lg" 
+                onClick={() => setLocation('/properties')}
+                style={{
+                  borderColor: config?.primaryColor || 'var(--primary)',
+                  color: config?.primaryColor || 'var(--primary)'
+                }}
+              >
+                Ver todos os imóveis
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="ml-2">
+                  <path d="M5 12h14"></path>
+                  <path d="m12 5 7 7-7 7"></path>
+                </svg>
+              </Button>
+            </div>
           </div>
         </section>
       )}
 
-      {/* Imóveis para Venda */}
-      <section id="venda" className="py-16 bg-white">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12" style={{ color: config?.primaryColor || 'var(--primary)' }}>Imóveis para Venda</h2>
-          
-          {isLoadingProperties ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {[1, 2, 3].map(item => (
-                <div key={item} className="bg-white rounded-lg shadow-md overflow-hidden animate-pulse">
-                  <div className="h-48 bg-gray-200"></div>
-                  <div className="p-6">
-                    <div className="h-4 bg-gray-200 rounded w-3/4 mb-4"></div>
-                    <div className="h-4 bg-gray-200 rounded w-1/2 mb-4"></div>
-                    <div className="h-4 bg-gray-200 rounded w-5/6"></div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {properties
-                ?.filter(property => property.purpose === 'sale')
-                .slice(0, 8)
-                .map((property) => (
-                  <div 
-                    key={property.id} 
-                    className="property-card bg-white rounded-lg border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-lg cursor-pointer"
-                    onClick={() => openPropertyModal(property.id)}
-                  >
-                    <div className="h-48 bg-gray-200 relative overflow-hidden">
-                      {getFeaturedImage(property) ? (
-                        <img 
-                          src={getFeaturedImage(property)} 
-                          alt={property.title} 
-                          className="w-full h-full object-cover"
-                          loading="lazy"
-                        />
-                      ) : null}
-                      <div 
-                        className="absolute bottom-0 left-0 text-white px-3 py-1 rounded-tr-lg"
-                        style={{
-                          backgroundColor: config?.primaryColor || 'var(--primary)'
-                        }}
-                      >
-                        Venda
-                      </div>
-                    </div>
-                    
-                    <div className="p-4">
-                      <h3 className="text-md mb-1 line-clamp-1">{property.title}</h3>
-                      <p className="text-gray-600 text-sm line-clamp-1">{property.location || property.city}</p>
-                      
-                      <div className="flex justify-between items-center mt-3">
-                        <span className="font-semibold" style={{ color: config?.primaryColor || 'var(--primary)' }}>
-                          {property.price && property.price > 0 
-                            ? `R$ ${property.price.toLocaleString('pt-BR')}`
-                            : 'Sob consulta'
-                          }
-                        </span>
-                      </div>
-                      
-                      <div className="flex flex-wrap gap-3 mt-3 text-gray-600">
-                        {property.bedrooms ? (
-                          <div className="flex items-center text-xs">
-                            <FontAwesomeIcon icon={faBed} className="mr-1" />
-                            <span>{property.bedrooms} {property.bedrooms === 1 ? 'Quarto' : 'Quartos'}</span>
-                          </div>
-                        ) : null}
-                        
-                        {property.bathrooms ? (
-                          <div className="flex items-center text-xs">
-                            <FontAwesomeIcon icon={faBath} style={{ color: config?.primaryColor }} className="mr-1" />
-                            <span>{property.bathrooms} {property.bathrooms === 1 ? 'Banheiro' : 'Banheiros'}</span>
-                          </div>
-                        ) : null}
-                        
-                        {property.area ? (
-                          <div className="flex items-center text-xs">
-                            <FontAwesomeIcon icon={faRulerCombined} className="mr-1" />
-                            <span>{property.area} m²</span>
-                          </div>
-                        ) : null}
-                      </div>
+      {/* Properties Section - Imóveis para Venda */}
+      {config?.showSaleProperties !== false && (
+        <section id="sale-properties" className="py-16 bg-white">
+          <div className="container mx-auto px-4">
+            <h2 className="text-3xl font-bold text-center mb-12">Imóveis para Venda</h2>
+            
+            {isLoadingProperties ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                {[1, 2, 3, 4, 5, 6, 7, 8].map(item => (
+                  <div key={item} className="bg-white rounded-lg shadow-md overflow-hidden animate-pulse">
+                    <div className="h-48 bg-gray-200"></div>
+                    <div className="p-6">
+                      <div className="h-4 bg-gray-200 rounded w-3/4 mb-4"></div>
+                      <div className="h-4 bg-gray-200 rounded w-1/2 mb-4"></div>
+                      <div className="h-4 bg-gray-200 rounded w-5/6"></div>
                     </div>
                   </div>
                 ))}
-            </div>
-          )}
-          
-          {/* Ver todos os imóveis para venda */}
-          <div className="text-center mt-10">
-            <Link href="/imoveis?purpose=sale">
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                {properties?.filter(property => property.purpose === 'sale' && property.status === 'available')
+                  .slice(0, 8)
+                  .map((property) => (
+                    <div key={property.id}>
+                      <div 
+                        className="property-card h-full bg-white rounded-lg border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-lg hover:bg-white cursor-pointer relative"
+                        onClick={() => openPropertyModal(property.id)}
+                      >
+                        {/* Property Image */}
+                        <div className="property-image-container h-48 bg-gray-200 relative overflow-hidden">
+                          {getFeaturedImage(property) ? (
+                            <img 
+                              src={getFeaturedImage(property)} 
+                              alt={property.title} 
+                              className="property-image w-full h-full object-cover transition-transform duration-500"
+                              loading="lazy"
+                            />
+                          ) : null}
+                          {/* Botão Ver Detalhes que aparece no hover */}
+                          <div className="eye-icon absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300">
+                            <div className="rounded-md bg-white/90 px-4 py-2 backdrop-blur-sm flex items-center gap-2">
+                              <i className="fas fa-eye text-sm" style={{ color: config?.primaryColor || 'var(--primary)' }}></i>
+                              <span className="text-sm font-medium" style={{ color: config?.primaryColor || 'var(--primary)' }}>Ver Detalhes</span>
+                            </div>
+                          </div>
+                          <div 
+                            className="absolute bottom-0 left-0 text-white px-3 py-1 rounded-tr-lg"
+                            style={{
+                              backgroundColor: config?.primaryColor || 'var(--primary)'
+                            }}
+                          >
+                            Venda
+                          </div>
+                        </div>
+                        
+                        <div className="p-4">
+                          <h3 className="text-md mb-1 line-clamp-1">{property.title}</h3>
+                          <div className="flex justify-start items-center mb-2">
+                            <div className="text-lg font-bold text-gray-700">
+                              R$ {property.price.toLocaleString('pt-BR')}
+                            </div>
+                          </div>
+                          <p className="text-gray-500 text-sm mb-4 line-clamp-1">{property.address}</p>
+                          
+                          <div className="flex items-center justify-between mb-4 text-sm text-gray-600">
+                            <span className="flex items-center">
+                              <i className="fas fa-ruler-combined fa-sm mr-1"></i>
+                              {property.area}m²
+                            </span>
+                            <span className="flex items-center">
+                              <i className="fas fa-bed fa-sm mr-1"></i>
+                              {property.bedrooms}
+                            </span>
+                            <span className="flex items-center">
+                              <i className="fas fa-shower fa-sm mr-1" style={{ color: '#4B5563' }}></i>
+                              {property.bathrooms}
+                            </span>
+                            <span className="flex items-center">
+                              <i className="fas fa-car fa-sm mr-1"></i>
+                              {property.parkingSpots || 0}
+                            </span>
+                          </div>
+                        </div>
+                        
+                        {/* Overlay de hover para indicar que é clicável */}
+                        <div className="absolute inset-0 bg-white opacity-0 transition-opacity duration-300 hover:opacity-5"></div>
+                      </div>
+                    </div>
+                ))}
+              </div>
+            )}
+            
+            <div className="text-center mt-12">
               <Button 
-                className="px-6 py-2.5 rounded-md font-medium transition-colors hover:bg-opacity-90"
-                style={{ 
-                  backgroundColor: config?.primaryColor || 'var(--primary)',
-                  color: '#fff'
+                variant="outline" 
+                size="lg" 
+                onClick={() => setLocation('/properties?purpose=sale')}
+                style={{
+                  borderColor: config?.primaryColor || 'var(--primary)',
+                  color: config?.primaryColor || 'var(--primary)'
                 }}
               >
-                Ver mais imóveis para venda
+                Ver todos os imóveis para venda
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="ml-2">
+                  <path d="M5 12h14"></path>
+                  <path d="m12 5 7 7-7 7"></path>
+                </svg>
               </Button>
-            </Link>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
-      {/* Imóveis para Aluguel */}
-      <section id="aluguel" className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12" style={{ color: config?.primaryColor || 'var(--primary)' }}>Imóveis para Aluguel</h2>
-          
-          {isLoadingProperties ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {[1, 2, 3].map(item => (
-                <div key={item} className="bg-white rounded-lg shadow-md overflow-hidden animate-pulse">
-                  <div className="h-48 bg-gray-200"></div>
-                  <div className="p-6">
-                    <div className="h-4 bg-gray-200 rounded w-3/4 mb-4"></div>
-                    <div className="h-4 bg-gray-200 rounded w-1/2 mb-4"></div>
-                    <div className="h-4 bg-gray-200 rounded w-5/6"></div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {properties
-                ?.filter(property => property.purpose === 'rent')
-                .slice(0, 8)
-                .map((property) => (
-                  <div 
-                    key={property.id} 
-                    className="property-card bg-white rounded-lg border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-lg cursor-pointer"
-                    onClick={() => openPropertyModal(property.id)}
-                  >
-                    <div className="h-48 bg-gray-200 relative overflow-hidden">
-                      {getFeaturedImage(property) ? (
-                        <img 
-                          src={getFeaturedImage(property)} 
-                          alt={property.title} 
-                          className="w-full h-full object-cover"
-                          loading="lazy"
-                        />
-                      ) : null}
-                      <div 
-                        className="absolute bottom-0 left-0 text-white px-3 py-1 rounded-tr-lg"
-                        style={{
-                          backgroundColor: config?.primaryColor || 'var(--primary)'
-                        }}
-                      >
-                        Aluguel
-                      </div>
-                    </div>
-                    
-                    <div className="p-4">
-                      <h3 className="text-md mb-1 line-clamp-1">{property.title}</h3>
-                      <p className="text-gray-600 text-sm line-clamp-1">{property.location || property.city}</p>
-                      
-                      <div className="flex justify-between items-center mt-3">
-                        <span className="font-semibold" style={{ color: config?.primaryColor || 'var(--primary)' }}>
-                          {property.price && property.price > 0 
-                            ? `R$ ${property.price.toLocaleString('pt-BR')}`
-                            : 'Sob consulta'
-                          }
-                        </span>
-                      </div>
-                      
-                      <div className="flex flex-wrap gap-3 mt-3 text-gray-600">
-                        {property.bedrooms ? (
-                          <div className="flex items-center text-xs">
-                            <FontAwesomeIcon icon={faBed} className="mr-1" />
-                            <span>{property.bedrooms} {property.bedrooms === 1 ? 'Quarto' : 'Quartos'}</span>
-                          </div>
-                        ) : null}
-                        
-                        {property.bathrooms ? (
-                          <div className="flex items-center text-xs">
-                            <FontAwesomeIcon icon={faBath} style={{ color: config?.primaryColor }} className="mr-1" />
-                            <span>{property.bathrooms} {property.bathrooms === 1 ? 'Banheiro' : 'Banheiros'}</span>
-                          </div>
-                        ) : null}
-                        
-                        {property.area ? (
-                          <div className="flex items-center text-xs">
-                            <FontAwesomeIcon icon={faRulerCombined} className="mr-1" />
-                            <span>{property.area} m²</span>
-                          </div>
-                        ) : null}
-                      </div>
+      {/* Properties Section - Imóveis para Aluguel */}
+      {config?.showRentProperties !== false && (
+        <section id="rent-properties" className="py-16 bg-gray-50">
+          <div className="container mx-auto px-4">
+            <h2 className="text-3xl font-bold text-center mb-12">Imóveis para Aluguel</h2>
+            
+            {isLoadingProperties ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                {[1, 2, 3, 4, 5, 6, 7, 8].map(item => (
+                  <div key={item} className="bg-white rounded-lg shadow-md overflow-hidden animate-pulse">
+                    <div className="h-48 bg-gray-200"></div>
+                    <div className="p-6">
+                      <div className="h-4 bg-gray-200 rounded w-3/4 mb-4"></div>
+                      <div className="h-4 bg-gray-200 rounded w-1/2 mb-4"></div>
+                      <div className="h-4 bg-gray-200 rounded w-5/6"></div>
                     </div>
                   </div>
                 ))}
-            </div>
-          )}
-          
-          {/* Ver todos os imóveis para aluguel */}
-          <div className="text-center mt-10">
-            <Link href="/imoveis?purpose=rent">
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                {properties?.filter(property => property.purpose === 'rent' && property.status === 'available')
+                  .slice(0, 8)
+                  .map((property) => (
+                    <div key={property.id}>
+                      <div 
+                        className="property-card h-full bg-white rounded-lg border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-lg hover:bg-white cursor-pointer relative"
+                        onClick={() => openPropertyModal(property.id)}
+                      >
+                        {/* Property Image */}
+                        <div className="property-image-container h-48 bg-gray-200 relative overflow-hidden">
+                          {getFeaturedImage(property) ? (
+                            <img 
+                              src={getFeaturedImage(property)} 
+                              alt={property.title} 
+                              className="property-image w-full h-full object-cover transition-transform duration-500"
+                              loading="lazy"
+                            />
+                          ) : null}
+                          {/* Botão Ver Detalhes que aparece no hover */}
+                          <div className="eye-icon absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300">
+                            <div className="rounded-md bg-white/90 px-4 py-2 backdrop-blur-sm flex items-center gap-2">
+                              <i className="fas fa-eye text-sm" style={{ color: config?.primaryColor || 'var(--primary)' }}></i>
+                              <span className="text-sm font-medium" style={{ color: config?.primaryColor || 'var(--primary)' }}>Ver Detalhes</span>
+                            </div>
+                          </div>
+                          <div 
+                            className="absolute bottom-0 left-0 text-white px-3 py-1 rounded-tr-lg"
+                            style={{
+                              backgroundColor: config?.primaryColor || 'var(--primary)'
+                            }}
+                          >
+                            Aluguel
+                          </div>
+                        </div>
+                        
+                        <div className="p-4">
+                          <h3 className="text-md mb-1 line-clamp-1">{property.title}</h3>
+                          <div className="flex justify-start items-center mb-2">
+                            <div className="text-lg font-bold text-gray-700">
+                              R$ {property.price.toLocaleString('pt-BR')}
+                              <span className="text-xs font-normal text-gray-500">/mês</span>
+                            </div>
+                          </div>
+                          <p className="text-gray-500 text-sm mb-4 line-clamp-1">{property.address}</p>
+                          
+                          <div className="flex items-center justify-between mb-4 text-sm text-gray-600">
+                            <span className="flex items-center">
+                              <i className="fas fa-ruler-combined fa-sm mr-1"></i>
+                              {property.area}m²
+                            </span>
+                            <span className="flex items-center">
+                              <i className="fas fa-bed fa-sm mr-1"></i>
+                              {property.bedrooms}
+                            </span>
+                            <span className="flex items-center">
+                              <i className="fas fa-shower fa-sm mr-1" style={{ color: '#4B5563' }}></i>
+                              {property.bathrooms}
+                            </span>
+                            <span className="flex items-center">
+                              <i className="fas fa-car fa-sm mr-1"></i>
+                              {property.parkingSpots || 0}
+                            </span>
+                          </div>
+                        </div>
+                        
+                        {/* Overlay de hover para indicar que é clicável */}
+                        <div className="absolute inset-0 bg-white opacity-0 transition-opacity duration-300 hover:opacity-5"></div>
+                      </div>
+                    </div>
+                ))}
+              </div>
+            )}
+            
+            <div className="text-center mt-12">
               <Button 
-                className="px-6 py-2.5 rounded-md font-medium transition-colors hover:bg-opacity-90"
-                style={{ 
-                  backgroundColor: config?.primaryColor || 'var(--primary)',
-                  color: '#fff'
+                variant="outline" 
+                size="lg" 
+                onClick={() => setLocation('/properties?purpose=rent')}
+                style={{
+                  borderColor: config?.primaryColor || 'var(--primary)',
+                  color: config?.primaryColor || 'var(--primary)'
                 }}
               >
-                Ver mais imóveis para aluguel
+                Ver todos os imóveis para aluguel
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="ml-2">
+                  <path d="M5 12h14"></path>
+                  <path d="m12 5 7 7-7 7"></path>
+                </svg>
               </Button>
-            </Link>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* About Section */}
+      <section id="about" className="py-16">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div>
+              <div className="bg-gray-200 h-96 rounded-lg"></div>
+            </div>
+            <div>
+              <h2 className="text-3xl font-bold mb-6">Sobre a Imobiliária</h2>
+              <p className="text-gray-600 mb-6">
+                Nossa imobiliária atua no mercado há mais de 15 anos, oferecendo as melhores opções de imóveis para nossos clientes. 
+                Contamos com uma equipe de corretores especializados prontos para encontrar o imóvel ideal para você.
+              </p>
+              <p className="text-gray-600 mb-8">
+                Trabalhamos com imóveis residenciais e comerciais, tanto para compra quanto para locação. 
+                Nosso objetivo é proporcionar uma experiência tranquila e segura em todas as etapas da negociação.
+              </p>
+              <ul className="space-y-3 mb-8">
+                <li className="flex items-start">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="mr-2 flex-shrink-0"
+                    style={{ color: config?.primaryColor || 'var(--primary)' }}
+                  >
+                    <path d="M20 6 9 17l-5-5"></path>
+                  </svg>
+                  <span>Atendimento personalizado</span>
+                </li>
+                <li className="flex items-start">
+                  <i 
+                    className="ri-check-line text-xl mr-2"
+                    style={{ color: config?.primaryColor || 'var(--primary)' }}
+                  ></i>
+                  <span>Assessoria jurídica completa</span>
+                </li>
+                <li className="flex items-start">
+                  <i 
+                    className="ri-check-line text-xl mr-2"
+                    style={{ color: config?.primaryColor || 'var(--primary)' }}
+                  ></i>
+                  <span>Corretores experientes</span>
+                </li>
+                <li className="flex items-start">
+                  <i 
+                    className="ri-check-line text-xl mr-2"
+                    style={{ color: config?.primaryColor || 'var(--primary)' }}
+                  ></i>
+                  <span>Parceria com os principais bancos</span>
+                </li>
+              </ul>
+              <Button>Conheça nossa equipe</Button>
+            </div>
           </div>
         </div>
       </section>
@@ -642,6 +728,8 @@ export default function Home() {
       {config?.showTestimonials !== false && (
         <Testimonials />
       )}
+
+
 
       {/* Footer */}
       {config?.footerStyle === 'minimal' ? (
@@ -655,42 +743,80 @@ export default function Home() {
                 <div className="w-auto">
                   {isLoadingConfig ? (
                     <div className="h-8 w-24 rounded animate-pulse bg-gray-200"></div>
+                  ) : config?.footerLogo ? (
+                    <div className="h-8">
+                      <img 
+                        src={config.footerLogo} 
+                        alt="Logo" 
+                        className="h-full object-contain"
+                        loading="eager" 
+                        onLoad={(e) => {
+                          (e.target as HTMLImageElement).style.opacity = "1";
+                        }}
+                        style={{ opacity: 0, transition: "opacity 0.2s ease" }}
+                      />
+                    </div>
                   ) : config?.logo ? (
                     <div className="h-8">
                       <img 
                         src={config.logo} 
-                        alt="Logo da Imobiliária" 
-                        className="h-full"
-                        loading="eager"
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).style.display = 'none';
+                        alt="Logo" 
+                        className="h-full object-contain"
+                        loading="eager" 
+                        onLoad={(e) => {
+                          (e.target as HTMLImageElement).style.opacity = "1";
                         }}
+                        style={{ opacity: 0, transition: "opacity 0.2s ease" }}
                       />
                     </div>
                   ) : (
-                    <div className="flex items-center">
-                      <div className="w-8 h-8 rounded-full flex items-center justify-center text-white" 
-                           style={{ backgroundColor: config?.primaryColor || 'var(--primary)' }}>
-                        <i className="ri-home-line text-xl"></i>
-                      </div>
-                      <span className="ml-2 text-lg font-semibold">Imobiliária</span>
+                    <div className="h-8">
+                      <p className="text-gray-800 font-semibold">Imobiliária</p>
                     </div>
                   )}
                 </div>
-                {/* Redes sociais à direita */}
-                <div className="flex space-x-3">
+                
+                {/* Ícones sociais à direita */}
+                <div className="flex items-center space-x-3">
                   <a href="#" className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition-colors">
                     <i className="fab fa-facebook-f"></i>
                   </a>
                   <a href="#" className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition-colors">
-                    <i className="fab fa-instagram"></i>
+                    <i className="fab fa-linkedin-in"></i>
                   </a>
                   <a href="#" className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition-colors">
                     <i className="fab fa-youtube"></i>
                   </a>
                   <a href="#" className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition-colors">
-                    <i className="fab fa-linkedin-in"></i>
+                    <i className="fab fa-instagram"></i>
                   </a>
+                </div>
+              </div>
+            </div>
+            
+            {/* Div com fundo branco e dois grids */}
+            <div className="bg-gray-100 text-gray-800 mt-4 mb-4 py-6 rounded">
+              <div className="container mx-auto">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-0">
+                  {/* Grid esquerdo com "Feito por" e logo */}
+                  <div className="flex flex-col items-center md:items-start justify-center pl-4">
+                    <p className="mb-2 text-sm font-medium">Feito por</p>
+                    <img src={imobsiteLogo} alt="Imobsite" className="h-8" />
+                  </div>
+                  
+                  {/* Grid direito */}
+                  <div className="flex flex-col items-center md:items-end justify-center pr-4">
+                    <p className="text-sm">
+                      &copy; 2025 ImobSite. 
+                      <Link href="/admin">
+                        <span className="ml-3 hover:text-gray-600 cursor-pointer">Área do Administrador</span>
+                      </Link>
+                    </p>
+                    <div className="flex items-center mt-2">
+                      <span className="mr-2 text-sm">Tecnologia</span>
+                      <img src={imobsiteLogo} alt="Imobsite" className="h-6" />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -803,37 +929,37 @@ export default function Home() {
                 </div>
               </div>
             </div>
+            
+            {/* Div com fundo branco e dois grids */}
+            <div className="bg-white text-gray-800 mt-12 py-6 rounded">
+              <div className="container mx-auto">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-0">
+                  {/* Grid esquerdo com "Feito por" e logo */}
+                  <div className="flex flex-col items-center md:items-start justify-center pl-4">
+                    <p className="mb-2 text-sm font-medium">Feito por</p>
+                    <img src={imobsiteLogo} alt="Imobsite" className="h-8" />
+                  </div>
+                  
+                  {/* Grid direito */}
+                  <div className="flex flex-col items-center md:items-end justify-center pr-4">
+                    <p className="text-sm">
+                      &copy; 2025 ImobSite. 
+                      <Link href="/admin">
+                        <span className="ml-3 hover:text-gray-600 cursor-pointer">Área do Administrador</span>
+                      </Link>
+                    </p>
+                    <div className="flex items-center mt-2">
+                      <span className="mr-2 text-sm">Tecnologia</span>
+                      <img src={imobsiteLogo} alt="Imobsite" className="h-6" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </footer>
       )}
       
-      {/* Div com fundo branco e dois grids - fora dos rodapés mas parte visual dele */}
-      <div className="bg-white text-gray-800 py-6">
-        <div className="container mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-0">
-            {/* Grid esquerdo com "Feito por" e logo */}
-            <div className="flex flex-col items-center md:items-start justify-center pl-4">
-              <p className="mb-2 text-sm font-medium">Feito por</p>
-              <img src={imobsiteLogo} alt="Imobsite" className="h-8" />
-            </div>
-            
-            {/* Grid direito */}
-            <div className="flex flex-col items-center md:items-end justify-center pr-4">
-              <p className="text-sm">
-                &copy; 2025 ImobSite. 
-                <Link href="/admin">
-                  <span className="ml-3 hover:text-gray-600 cursor-pointer">Área do Administrador</span>
-                </Link>
-              </p>
-              <div className="flex items-center mt-2">
-                <span className="mr-2 text-sm">Tecnologia</span>
-                <img src={imobsiteLogo} alt="Imobsite" className="h-6" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* Modal de detalhes do imóvel */}
       {isModalOpen && selectedPropertyId && (
         <PropertyDetailsModal
