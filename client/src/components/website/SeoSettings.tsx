@@ -2,6 +2,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
+import { ImageUpload } from "@/components/ui/image-upload";
 import { WebsiteConfig, UpdateWebsiteConfig } from "@shared/schema";
 
 interface SeoSettingsProps {
@@ -24,6 +25,11 @@ export default function SeoSettings({ config, configData, onConfigChange }: SeoS
   const seoKeywords = configData.seoKeywords !== undefined 
     ? configData.seoKeywords 
     : config?.seoKeywords || "imobiliária, imóveis, apartamentos, casas, comprar, alugar, São Paulo";
+    
+  // Favicon - usa o logo como padrão
+  const favicon = configData.logo !== undefined
+    ? configData.logo
+    : config?.logo;
 
   // Handle change functions
   const handleSeoTitleChange = (newValue: string) => {
@@ -37,12 +43,16 @@ export default function SeoSettings({ config, configData, onConfigChange }: SeoS
   const handleSeoKeywordsChange = (newValue: string) => {
     onConfigChange({ seoKeywords: newValue });
   };
+  
+  const handleFaviconChange = (imageBase64: string) => {
+    onConfigChange({ logo: imageBase64 });
+  };
 
   // Calculate character counts
-  const titleLength = seoTitle.length;
+  const titleLength = (seoTitle || '').length;
   const titleClass = titleLength > 70 ? "text-red-500" : titleLength < 40 ? "text-yellow-500" : "text-green-500";
   
-  const descriptionLength = seoDescription.length;
+  const descriptionLength = (seoDescription || '').length;
   const descriptionClass = descriptionLength > 160 ? "text-red-500" : descriptionLength < 120 ? "text-yellow-500" : "text-green-500";
 
   return (
@@ -52,7 +62,7 @@ export default function SeoSettings({ config, configData, onConfigChange }: SeoS
           Título da Página (SEO)
         </Label>
         <Input 
-          value={seoTitle}
+          value={seoTitle || ''}
           onChange={(e) => handleSeoTitleChange(e.target.value)}
           className="rounded-full"
         />
@@ -68,7 +78,7 @@ export default function SeoSettings({ config, configData, onConfigChange }: SeoS
         </Label>
         <Textarea 
           rows={3} 
-          value={seoDescription}
+          value={seoDescription || ''}
           onChange={(e) => handleSeoDescriptionChange(e.target.value)}
           className="rounded-xl"
         />
