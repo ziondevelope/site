@@ -146,6 +146,10 @@ export const websiteConfig = pgTable("website_config", {
   seoTitle: text("seo_title"),
   seoDescription: text("seo_description"),
   seoKeywords: text("seo_keywords"),
+  // Tags de Marketing e Conversão
+  googleAdsConversionTag: text("google_ads_conversion_tag"),
+  googleAdsRemarketingTag: text("google_ads_remarketing_tag"),
+  facebookPixelTag: text("facebook_pixel_tag"),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 

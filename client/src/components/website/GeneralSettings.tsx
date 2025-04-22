@@ -437,6 +437,55 @@ export default function GeneralSettings({ config, configData, onConfigChange }: 
           onChange={(e) => handleFooterInfoChange(e.target.value)}
         />
       </div>
+      
+      {/* Seção de Tags de Marketing */}
+      <div className="mt-8 border-t pt-6">
+        <h3 className="text-lg font-medium text-gray-800 mb-4">Tags de Conversão e Remarketing</h3>
+        
+        <div className="space-y-6">
+          <div>
+            <Label className="block text-sm font-medium text-gray-700 mb-2">
+              Google Ads - Tag de Conversão
+            </Label>
+            <Textarea 
+              rows={4} 
+              className="w-full rounded-xl font-mono text-sm"
+              placeholder="<!-- Cole o código fornecido pelo Google Ads para rastreamento de conversão -->"
+              value={configData.googleAdsConversionTag !== undefined ? configData.googleAdsConversionTag : config?.googleAdsConversionTag || ''}
+              onChange={(e) => onConfigChange({ ...configData, googleAdsConversionTag: e.target.value })}
+            />
+            <p className="text-sm text-gray-500 mt-1">Cole o snippet de código JavaScript fornecido pelo Google Ads para rastreamento de conversão.</p>
+          </div>
+          
+          <div>
+            <Label className="block text-sm font-medium text-gray-700 mb-2">
+              Google Ads - Tag de Remarketing
+            </Label>
+            <Textarea 
+              rows={4} 
+              className="w-full rounded-xl font-mono text-sm"
+              placeholder="<!-- Cole o código fornecido pelo Google Ads para remarketing -->"
+              value={configData.googleAdsRemarketingTag !== undefined ? configData.googleAdsRemarketingTag : config?.googleAdsRemarketingTag || ''}
+              onChange={(e) => onConfigChange({ ...configData, googleAdsRemarketingTag: e.target.value })}
+            />
+            <p className="text-sm text-gray-500 mt-1">Cole o snippet de código JavaScript fornecido pelo Google Ads para remarketing.</p>
+          </div>
+          
+          <div>
+            <Label className="block text-sm font-medium text-gray-700 mb-2">
+              Meta (Facebook) Pixel
+            </Label>
+            <Textarea 
+              rows={4} 
+              className="w-full rounded-xl font-mono text-sm"
+              placeholder="<!-- Cole o código fornecido pelo Facebook para o Pixel -->"
+              value={configData.facebookPixelTag !== undefined ? configData.facebookPixelTag : config?.facebookPixelTag || ''}
+              onChange={(e) => onConfigChange({ ...configData, facebookPixelTag: e.target.value })}
+            />
+            <p className="text-sm text-gray-500 mt-1">Cole o snippet de código JavaScript fornecido pelo Meta Ads (Facebook Pixel).</p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
