@@ -769,20 +769,7 @@ export default function Home() {
               <p style={{ color: 'rgba(255,255,255,0.7)' }} className="mb-6">
                 Soluções imobiliárias completas para você encontrar o imóvel dos seus sonhos.
               </p>
-              <div className="flex space-x-4">
-                <a href="#" style={{ color: 'rgba(255,255,255,0.7)' }} className="hover:text-white text-xl">
-                  <i className="ri-facebook-circle-fill"></i>
-                </a>
-                <a href="#" style={{ color: 'rgba(255,255,255,0.7)' }} className="hover:text-white text-xl">
-                  <i className="ri-instagram-fill"></i>
-                </a>
-                <a href="#" style={{ color: 'rgba(255,255,255,0.7)' }} className="hover:text-white text-xl">
-                  <i className="ri-linkedin-box-fill"></i>
-                </a>
-                <a href="#" style={{ color: 'rgba(255,255,255,0.7)' }} className="hover:text-white text-xl">
-                  <i className="ri-youtube-fill"></i>
-                </a>
-              </div>
+
             </div>
             
             <div>
