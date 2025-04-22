@@ -20,6 +20,7 @@ export default function Website() {
     if (config) {
       setConfigData({
         logo: config.logo,
+        footerLogo: config.footerLogo,
         bannerBackground: config.bannerBackground,
         mainFont: config.mainFont,
         headingFont: config.headingFont,
