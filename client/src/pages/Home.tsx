@@ -776,18 +776,31 @@ export default function Home() {
               
               {/* Ícones sociais à direita */}
               <div className="flex items-center space-x-3">
-                <a href="#" className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition-colors">
-                  <i className="fab fa-facebook-f"></i>
-                </a>
-                <a href="#" className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition-colors">
-                  <i className="fab fa-linkedin-in"></i>
-                </a>
-                <a href="#" className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition-colors">
-                  <i className="fab fa-youtube"></i>
-                </a>
-                <a href="#" className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition-colors">
-                  <i className="fab fa-instagram"></i>
-                </a>
+                {config?.facebookUrl && (
+                  <a href={config.facebookUrl} target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition-colors">
+                    <i className="fab fa-facebook-f"></i>
+                  </a>
+                )}
+                {config?.linkedinUrl && (
+                  <a href={config.linkedinUrl} target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition-colors">
+                    <i className="fab fa-linkedin-in"></i>
+                  </a>
+                )}
+                {config?.youtubeUrl && (
+                  <a href={config.youtubeUrl} target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition-colors">
+                    <i className="fab fa-youtube"></i>
+                  </a>
+                )}
+                {config?.instagramUrl && (
+                  <a href={config.instagramUrl} target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition-colors">
+                    <i className="fab fa-instagram"></i>
+                  </a>
+                )}
+                {config?.tiktokUrl && (
+                  <a href={config.tiktokUrl} target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition-colors">
+                    <i className="fab fa-tiktok"></i>
+                  </a>
+                )}
               </div>
             </div>
           </div>
@@ -861,18 +874,31 @@ export default function Home() {
                     <span style={{ color: config?.footerTextColor || 'rgba(255,255,255,0.9)' }}>{config?.email || 'suporte@imobzi.com'}</span>
                   </div>
                   <div className="flex space-x-3 mt-2">
-                    <a href="#" className="flex items-center justify-center w-8 h-8 rounded-full bg-white">
-                      <i className="fab fa-facebook-f" style={{ color: config?.secondaryColor || '#333' }}></i>
-                    </a>
-                    <a href="#" className="flex items-center justify-center w-8 h-8 rounded-full bg-white">
-                      <i className="fab fa-linkedin-in" style={{ color: config?.secondaryColor || '#333' }}></i>
-                    </a>
-                    <a href="#" className="flex items-center justify-center w-8 h-8 rounded-full bg-white">
-                      <i className="fab fa-youtube" style={{ color: config?.secondaryColor || '#333' }}></i>
-                    </a>
-                    <a href="#" className="flex items-center justify-center w-8 h-8 rounded-full bg-white">
-                      <i className="fab fa-instagram" style={{ color: config?.secondaryColor || '#333' }}></i>
-                    </a>
+                    {config?.facebookUrl && (
+                      <a href={config.facebookUrl} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-8 h-8 rounded-full bg-white">
+                        <i className="fab fa-facebook-f" style={{ color: config?.secondaryColor || '#333' }}></i>
+                      </a>
+                    )}
+                    {config?.linkedinUrl && (
+                      <a href={config.linkedinUrl} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-8 h-8 rounded-full bg-white">
+                        <i className="fab fa-linkedin-in" style={{ color: config?.secondaryColor || '#333' }}></i>
+                      </a>
+                    )}
+                    {config?.youtubeUrl && (
+                      <a href={config.youtubeUrl} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-8 h-8 rounded-full bg-white">
+                        <i className="fab fa-youtube" style={{ color: config?.secondaryColor || '#333' }}></i>
+                      </a>
+                    )}
+                    {config?.instagramUrl && (
+                      <a href={config.instagramUrl} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-8 h-8 rounded-full bg-white">
+                        <i className="fab fa-instagram" style={{ color: config?.secondaryColor || '#333' }}></i>
+                      </a>
+                    )}
+                    {config?.tiktokUrl && (
+                      <a href={config.tiktokUrl} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-8 h-8 rounded-full bg-white">
+                        <i className="fab fa-tiktok" style={{ color: config?.secondaryColor || '#333' }}></i>
+                      </a>
+                    )}
                   </div>
                 </div>
               </div>
