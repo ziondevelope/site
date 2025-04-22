@@ -229,10 +229,9 @@ export default function Footer({ config, isLoadingConfig }: FooterProps) {
           {/* Coluna 2: Links Rápidos */}
           <div className="md:col-span-1">
             <h3 
-              className="text-lg font-semibold mb-6 pb-2 border-b border-opacity-20" 
+              className="text-lg font-semibold mb-6" 
               style={{ 
-                color: config?.footerTextColor || '#fff',
-                borderColor: config?.footerIconsColor || config?.primaryColor || 'rgba(255,255,255,0.2)' 
+                color: config?.footerTextColor || '#fff'
               }}
             >
               Links Rápidos
@@ -309,10 +308,9 @@ export default function Footer({ config, isLoadingConfig }: FooterProps) {
           {/* Coluna 3: Fale Conosco */}
           <div className="md:col-span-1">
             <h3 
-              className="text-lg font-semibold mb-6 pb-2 border-b border-opacity-20" 
+              className="text-lg font-semibold mb-6" 
               style={{ 
-                color: config?.footerTextColor || '#fff',
-                borderColor: config?.footerIconsColor || config?.primaryColor || 'rgba(255,255,255,0.2)' 
+                color: config?.footerTextColor || '#fff'
               }}
             >
               Fale Conosco
@@ -357,10 +355,9 @@ export default function Footer({ config, isLoadingConfig }: FooterProps) {
           {/* Coluna 4: Localização */}
           <div className="md:col-span-1">
             <h3 
-              className="text-lg font-semibold mb-6 pb-2 border-b border-opacity-20" 
+              className="text-lg font-semibold mb-6" 
               style={{ 
-                color: config?.footerTextColor || '#fff',
-                borderColor: config?.footerIconsColor || config?.primaryColor || 'rgba(255,255,255,0.2)' 
+                color: config?.footerTextColor || '#fff'
               }}
             >
               Localização
