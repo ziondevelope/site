@@ -817,19 +817,19 @@ export default function Home() {
             <div>
               <h3 className="text-lg font-semibold mb-6">Localização</h3>
               <div className="space-y-4">
-                <div className="flex items-start">
+                <div className="flex items-center">
                   <i 
-                    className="ri-map-pin-line mr-3 mt-1"
+                    className="ri-map-pin-line text-xl mr-3"
                     style={{ color: config?.primaryColor || 'var(--primary)' }}
                   ></i>
-                  <span style={{ color: 'rgba(255,255,255,0.7)' }}>{config?.address || 'Av. Paulista, 1000 - São Paulo, SP'}</span>
+                  <span style={{ color: 'rgba(255,255,255,0.9)' }}>{config?.address || 'Av. Paulista, 1000 - São Paulo, SP'}</span>
                 </div>
-                <div className="flex items-start">
+                <div className="flex items-center">
                   <i 
-                    className="ri-time-line mr-3 mt-1"
+                    className="ri-time-line text-xl mr-3"
                     style={{ color: config?.primaryColor || 'var(--primary)' }}
                   ></i>
-                  <span style={{ color: 'rgba(255,255,255,0.7)' }}>{config?.workingHours || 'Segunda a Sexta, 09:00 às 18:00'}</span>
+                  <span style={{ color: 'rgba(255,255,255,0.9)' }}>{config?.workingHours || 'Segunda a Sexta, 09:00 às 18:00'}</span>
                 </div>
 
               </div>
