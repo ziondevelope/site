@@ -68,14 +68,13 @@ export default function PropertyFeaturedSlider() {
   
   return (
     <div 
-      className="mx-auto py-10 relative text-white"
+      className="mx-auto py-10 relative bg-white"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      style={{ backgroundColor: primaryColor }}
     >
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center mb-8">
-          <h2 className="text-2xl md:text-3xl font-bold text-white">
+          <h2 className="text-2xl md:text-3xl font-bold" style={{ color: primaryColor }}>
             Imóveis Exclusivos
           </h2>
           
@@ -86,9 +85,10 @@ export default function PropertyFeaturedSlider() {
                 key={index}
                 onClick={() => setCurrentSlide(index)}
                 className={`w-3 h-3 rounded-full transition-all ${
-                  index === currentSlide ? 'bg-white w-6' : 'bg-white/30'
+                  index === currentSlide ? 'bg-orange-500 w-6' : 'bg-gray-300'
                 }`}
                 aria-label={`Ir para slide ${index + 1}`}
+                style={index === currentSlide ? { backgroundColor: primaryColor } : {}}
               />
             ))}
           </div>
