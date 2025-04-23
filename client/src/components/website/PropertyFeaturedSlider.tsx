@@ -126,14 +126,14 @@ export default function PropertyFeaturedSlider() {
                   </div>
                   
                   {/* Informações do imóvel (lado direito) */}
-                  <div className="p-6 md:p-8 flex flex-col justify-between text-white" style={{ backgroundColor: primaryColor }}>
-                    <div>
-                      <h3 className="text-xl md:text-2xl font-bold mb-2 line-clamp-2 text-white">
+                  <div className="p-6 md:p-8 flex flex-col justify-center items-center text-center text-white h-full" style={{ backgroundColor: primaryColor }}>
+                    <div className="flex flex-col items-center">
+                      <h3 className="text-xl md:text-2xl font-bold mb-4 line-clamp-2 text-white">
                         {property.title}
                       </h3>
                       
-                      <div className="mb-4">
-                        <p className="text-white/80 mb-1 flex items-center text-sm">
+                      <div className="mb-6">
+                        <p className="text-white/80 mb-2 flex items-center justify-center text-sm">
                           <i className="ri-map-pin-line mr-2 text-white"></i>
                           {property.address || `${property.neighborhood}, ${property.city}`}
                         </p>
@@ -143,34 +143,34 @@ export default function PropertyFeaturedSlider() {
                         </p>
                       </div>
                       
-                      <div className="grid grid-cols-3 gap-4 mb-6">
-                        <div className="flex items-center">
-                          <i className="fas fa-bed text-xl mr-2 text-white"></i>
-                          <div>
-                            <span className="font-medium text-white">{property.bedrooms || 0}</span>
-                            <span className="text-white/70 text-sm ml-1">Quartos</span>
+                      <div className="grid grid-cols-3 gap-6 mb-8 w-full max-w-sm mx-auto">
+                        <div className="flex flex-col items-center">
+                          <i className="fas fa-bed text-xl mb-1 text-white"></i>
+                          <div className="text-center">
+                            <span className="font-medium text-white block">{property.bedrooms || 0}</span>
+                            <span className="text-white/70 text-xs">Quartos</span>
                           </div>
                         </div>
                         
-                        <div className="flex items-center">
-                          <i className="fas fa-shower text-xl mr-2 text-white"></i>
-                          <div>
-                            <span className="font-medium text-white">{property.bathrooms || 0}</span>
-                            <span className="text-white/70 text-sm ml-1">Banhos</span>
+                        <div className="flex flex-col items-center">
+                          <i className="fas fa-shower text-xl mb-1 text-white"></i>
+                          <div className="text-center">
+                            <span className="font-medium text-white block">{property.bathrooms || 0}</span>
+                            <span className="text-white/70 text-xs">Banhos</span>
                           </div>
                         </div>
                         
-                        <div className="flex items-center">
-                          <i className="fas fa-ruler-combined text-xl mr-2 text-white"></i>
-                          <div>
-                            <span className="font-medium text-white">{property.area}</span>
-                            <span className="text-white/70 text-sm ml-1">m²</span>
+                        <div className="flex flex-col items-center">
+                          <i className="fas fa-ruler-combined text-xl mb-1 text-white"></i>
+                          <div className="text-center">
+                            <span className="font-medium text-white block">{property.area}</span>
+                            <span className="text-white/70 text-xs">m²</span>
                           </div>
                         </div>
                       </div>
                     </div>
                     
-                    <div className="mt-auto">
+                    <div className="w-full max-w-xs">
                       <Link to={`/properties/${property.id}`}>
                         <span 
                           className="inline-block px-6 py-3 rounded-lg bg-white font-medium transition-all hover:shadow-lg w-full text-center"
