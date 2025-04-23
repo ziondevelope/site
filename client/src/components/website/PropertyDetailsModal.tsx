@@ -129,15 +129,86 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
           '--primary': primaryColor
         } as React.CSSProperties}
       >
-        {/* Content */}
-        {/* Close button */}
-        <div className="absolute top-4 right-4 z-50">
+        {/* Imagem principal do imóvel - Estendida até as bordas */}
+        <div className="relative w-full" style={{ aspectRatio: '16/9', maxHeight: '500px' }}>
+          {activeImage ? (
+            <img 
+              src={activeImage} 
+              alt={currentProperty?.title || "Imagem do imóvel"} 
+              className="w-full h-full object-cover"
+              style={{ objectPosition: 'center center' }}
+            />
+          ) : (
+            <div className="flex items-center justify-center bg-gray-200 w-full h-full">
+              <i className="ri-image-line text-4xl text-gray-400"></i>
+            </div>
+          )}
+          
+          {/* Botão de fechar sobre a imagem */}
           <button 
             onClick={onClose}
-            className="w-10 h-10 rounded-full bg-white bg-opacity-90 hover:bg-opacity-100 shadow-lg flex items-center justify-center transition-all"
+            className="absolute top-4 right-4 z-50 w-10 h-10 rounded-full bg-white bg-opacity-75 hover:bg-opacity-100 shadow-lg flex items-center justify-center transition-all"
           >
             <X className="w-5 h-5 text-gray-800" />
           </button>
+          
+          {/* Controles de navegação das imagens */}
+          {currentProperty?.images && currentProperty.images.length > 1 && (
+            <>
+              <button 
+                className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white bg-opacity-70 hover:bg-opacity-100 shadow-md flex items-center justify-center transition-all opacity-80 hover:opacity-100"
+                onClick={() => {
+                  if (currentProperty.images && activeImage) {
+                    const index = currentProperty.images.findIndex(img => {
+                      if (typeof img === 'object' && 'url' in img) return img.url === activeImage;
+                      if (typeof img === 'string') return img === activeImage;
+                      return false;
+                    });
+                    if (index > 0) {
+                      const prevImg = currentProperty.images[index - 1];
+                      let imgUrl = '';
+                      
+                      if (typeof prevImg === 'object' && 'url' in prevImg) {
+                        imgUrl = prevImg.url;
+                      } else if (typeof prevImg === 'string') {
+                        imgUrl = prevImg;
+                      }
+                      
+                      if (imgUrl) setActiveImage(imgUrl);
+                    }
+                  }
+                }}
+              >
+                <i className="ri-arrow-left-s-line text-2xl text-gray-800"></i>
+              </button>
+              <button 
+                className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white bg-opacity-70 hover:bg-opacity-100 shadow-md flex items-center justify-center transition-all opacity-80 hover:opacity-100"
+                onClick={() => {
+                  if (currentProperty?.images && activeImage) {
+                    const index = currentProperty.images.findIndex(img => {
+                      if (typeof img === 'object' && 'url' in img) return img.url === activeImage;
+                      if (typeof img === 'string') return img === activeImage;
+                      return false;
+                    });
+                    if (index < currentProperty.images.length - 1) {
+                      const nextImg = currentProperty.images[index + 1];
+                      let imgUrl = '';
+                      
+                      if (typeof nextImg === 'object' && 'url' in nextImg) {
+                        imgUrl = nextImg.url;
+                      } else if (typeof nextImg === 'string') {
+                        imgUrl = nextImg;
+                      }
+                      
+                      if (imgUrl) setActiveImage(imgUrl);
+                    }
+                  }
+                }}
+              >
+                <i className="ri-arrow-right-s-line text-2xl text-gray-800"></i>
+              </button>
+            </>
+          )}
         </div>
 
         <div className="p-6">
@@ -151,90 +222,11 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
             <div className="grid grid-cols-1 gap-8">
               {/* Detalhes do imóvel */}
               <div className="col-span-1">
-                {/* Main property image */}
-                <div className="rounded-xl overflow-hidden relative mb-6 group">
-                  <div 
-                    className="relative rounded overflow-hidden"
-                    style={{ aspectRatio: '16/9', maxHeight: '600px' }}
-                  >
-                    {activeImage ? (
-                      <img 
-                        src={activeImage} 
-                        alt={currentProperty.title || "Imagem do imóvel"} 
-                        className="w-full h-full object-cover"
-                        style={{ objectPosition: 'center center' }}
-                      />
-                    ) : (
-                      <div className="flex items-center justify-center bg-gray-200 w-full h-full">
-                        <i className="ri-image-line text-4xl text-gray-400"></i>
-                      </div>
-                    )}
-                    
-                    {/* Image navigation controls */}
-                    {currentProperty.images && currentProperty.images.length > 1 && (
-                      <>
-                        <button 
-                          className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white bg-opacity-70 hover:bg-opacity-100 shadow-md flex items-center justify-center transition-all opacity-0 group-hover:opacity-100"
-                          onClick={() => {
-                            if (currentProperty.images && activeImage) {
-                              const index = currentProperty.images.findIndex(img => {
-                                if (typeof img === 'object' && img.url) return img.url === activeImage;
-                                if (typeof img === 'string') return img === activeImage;
-                                return false;
-                              });
-                              if (index > 0) {
-                                const prevImg = currentProperty.images[index - 1];
-                                let imgUrl = '';
-                                
-                                if (typeof prevImg === 'object' && prevImg.url) {
-                                  imgUrl = prevImg.url;
-                                } else if (typeof prevImg === 'string') {
-                                  imgUrl = prevImg;
-                                }
-                                
-                                if (imgUrl) setActiveImage(imgUrl);
-                              }
-                            }
-                          }}
-                        >
-                          <i className="ri-arrow-left-s-line text-2xl text-gray-800"></i>
-                        </button>
-                        <button 
-                          className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white bg-opacity-70 hover:bg-opacity-100 shadow-md flex items-center justify-center transition-all opacity-0 group-hover:opacity-100"
-                          onClick={() => {
-                            if (currentProperty.images && activeImage) {
-                              const index = currentProperty.images.findIndex(img => {
-                                if (typeof img === 'object' && img.url) return img.url === activeImage;
-                                if (typeof img === 'string') return img === activeImage;
-                                return false;
-                              });
-                              if (index < currentProperty.images.length - 1) {
-                                const nextImg = currentProperty.images[index + 1];
-                                let imgUrl = '';
-                                
-                                if (typeof nextImg === 'object' && nextImg.url) {
-                                  imgUrl = nextImg.url;
-                                } else if (typeof nextImg === 'string') {
-                                  imgUrl = nextImg;
-                                }
-                                
-                                if (imgUrl) setActiveImage(imgUrl);
-                              }
-                            }
-                          }}
-                        >
-                          <i className="ri-arrow-right-s-line text-2xl text-gray-800"></i>
-                        </button>
-                      </>
-                    )}
-                  </div>
-                </div>
-                
                 {/* Thumbnails */}
                 {currentProperty.images && currentProperty.images.length > 1 && (
                   <div className="flex overflow-x-auto space-x-2 mb-6 pb-2 scrollbar-hide">
                     {currentProperty.images.map((image, index) => {
-                      const imageUrl = typeof image === 'object' && image.url 
+                      const imageUrl = typeof image === 'object' && 'url' in image 
                         ? image.url 
                         : typeof image === 'string' 
                           ? image 
@@ -342,8 +334,7 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
                 </div>
                 
                 {/* Características */}
-                
-                {currentProperty?.features && Array.isArray(currentProperty.features) && currentProperty.features.length > 0 && (
+                {currentProperty.features && Array.isArray(currentProperty.features) && currentProperty.features.length > 0 && (
                   <div className="mb-8">
                     <h2 className="text-xl font-bold mb-3">Características</h2>
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-y-4">
