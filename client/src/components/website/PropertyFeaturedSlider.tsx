@@ -68,13 +68,14 @@ export default function PropertyFeaturedSlider() {
   
   return (
     <div 
-      className="mx-auto py-10 relative bg-white"
+      className="mx-auto py-10 relative text-white"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      style={{ backgroundColor: primaryColor }}
     >
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center mb-8">
-          <h2 className="text-2xl md:text-3xl font-bold" style={{ color: primaryColor }}>
+          <h2 className="text-2xl md:text-3xl font-bold text-white">
             Imóveis Exclusivos
           </h2>
           
@@ -85,10 +86,9 @@ export default function PropertyFeaturedSlider() {
                 key={index}
                 onClick={() => setCurrentSlide(index)}
                 className={`w-3 h-3 rounded-full transition-all ${
-                  index === currentSlide ? 'bg-orange-500 w-6' : 'bg-gray-300'
+                  index === currentSlide ? 'bg-white w-6' : 'bg-white/30'
                 }`}
                 aria-label={`Ir para slide ${index + 1}`}
-                style={index === currentSlide ? { backgroundColor: primaryColor } : {}}
               />
             ))}
           </div>
@@ -126,45 +126,45 @@ export default function PropertyFeaturedSlider() {
                   </div>
                   
                   {/* Informações do imóvel (lado direito) */}
-                  <div className="p-6 md:p-8 flex flex-col justify-between bg-white">
+                  <div className="p-6 md:p-8 flex flex-col justify-between text-white" style={{ backgroundColor: primaryColor }}>
                     <div>
-                      <h3 className="text-xl md:text-2xl font-bold mb-2 line-clamp-2">
+                      <h3 className="text-xl md:text-2xl font-bold mb-2 line-clamp-2 text-white">
                         {property.title}
                       </h3>
                       
                       <div className="mb-4">
-                        <p className="text-gray-600 mb-1 flex items-center text-sm">
-                          <i className="ri-map-pin-line mr-2"></i>
+                        <p className="text-white/80 mb-1 flex items-center text-sm">
+                          <i className="ri-map-pin-line mr-2 text-white"></i>
                           {property.address || `${property.neighborhood}, ${property.city}`}
                         </p>
-                        <p className="text-2xl font-bold" style={{ color: primaryColor }}>
+                        <p className="text-2xl font-bold text-white">
                           {formatCurrency(property.price)}
-                          {property.purpose === 'rent' && <span className="text-gray-500 text-base font-normal">/mês</span>}
+                          {property.purpose === 'rent' && <span className="text-white/70 text-base font-normal">/mês</span>}
                         </p>
                       </div>
                       
                       <div className="grid grid-cols-3 gap-4 mb-6">
                         <div className="flex items-center">
-                          <i className="fas fa-bed text-xl mr-2" style={{ color: primaryColor }}></i>
+                          <i className="fas fa-bed text-xl mr-2 text-white"></i>
                           <div>
-                            <span className="font-medium">{property.bedrooms || 0}</span>
-                            <span className="text-gray-500 text-sm ml-1">Quartos</span>
+                            <span className="font-medium text-white">{property.bedrooms || 0}</span>
+                            <span className="text-white/70 text-sm ml-1">Quartos</span>
                           </div>
                         </div>
                         
                         <div className="flex items-center">
-                          <i className="fas fa-shower text-xl mr-2" style={{ color: primaryColor }}></i>
+                          <i className="fas fa-shower text-xl mr-2 text-white"></i>
                           <div>
-                            <span className="font-medium">{property.bathrooms || 0}</span>
-                            <span className="text-gray-500 text-sm ml-1">Banhos</span>
+                            <span className="font-medium text-white">{property.bathrooms || 0}</span>
+                            <span className="text-white/70 text-sm ml-1">Banhos</span>
                           </div>
                         </div>
                         
                         <div className="flex items-center">
-                          <i className="fas fa-ruler-combined text-xl mr-2" style={{ color: primaryColor }}></i>
+                          <i className="fas fa-ruler-combined text-xl mr-2 text-white"></i>
                           <div>
-                            <span className="font-medium">{property.area}</span>
-                            <span className="text-gray-500 text-sm ml-1">m²</span>
+                            <span className="font-medium text-white">{property.area}</span>
+                            <span className="text-white/70 text-sm ml-1">m²</span>
                           </div>
                         </div>
                       </div>
@@ -173,8 +173,8 @@ export default function PropertyFeaturedSlider() {
                     <div className="mt-auto">
                       <Link to={`/properties/${property.id}`}>
                         <span 
-                          className="inline-block px-6 py-3 rounded-lg text-white font-medium transition-all hover:shadow-lg w-full text-center"
-                          style={{ backgroundColor: primaryColor }}
+                          className="inline-block px-6 py-3 rounded-lg bg-white font-medium transition-all hover:shadow-lg w-full text-center"
+                          style={{ color: primaryColor }}
                         >
                           Ver Detalhes
                         </span>
