@@ -172,12 +172,12 @@ export default function PropertyFeaturedSlider() {
                     
                     <div className="mt-auto">
                       <Link to={`/properties/${property.id}`}>
-                        <a 
+                        <span 
                           className="inline-block px-6 py-3 rounded-lg text-white font-medium transition-all hover:shadow-lg w-full text-center"
                           style={{ backgroundColor: primaryColor }}
                         >
                           Ver Detalhes
-                        </a>
+                        </span>
                       </Link>
                     </div>
                   </div>

@@ -287,9 +287,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Slider de Imóveis em Destaque (Horizontal) */}
-      <PropertyFeaturedSlider />
-
       {/* Cards de qualidades sobrepostos no rodapé do Hero */}
       {config?.showQualityCards !== false && (
         <div className="relative z-10 -mt-24 mb-8">
@@ -377,6 +374,9 @@ export default function Home() {
           </div>
         </div>
       )}
+      
+      {/* Slider de Imóveis em Destaque (Horizontal) */}
+      <PropertyFeaturedSlider />
       
       {/* Properties Section - Imóveis em Destaque */}
       {config?.showFeaturedProperties !== false && (
