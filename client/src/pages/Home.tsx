@@ -9,6 +9,7 @@ import { Property } from "@shared/schema";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShower, faBed, faRulerCombined, faCar, faBath } from "@fortawesome/free-solid-svg-icons";
 import PropertyDetailsModal from '@/components/website/PropertyDetailsModal';
+import PropertyFeaturedSlider from '@/components/website/PropertyFeaturedSlider';
 import { Testimonials } from '@/components/website/Testimonials';
 import { useLoading } from "@/contexts/LoadingContext";
 import SEO from '@/components/website/SEO';
@@ -285,6 +286,9 @@ export default function Home() {
           )}
         </div>
       </section>
+
+      {/* Slider de Imóveis em Destaque (Horizontal) */}
+      <PropertyFeaturedSlider />
 
       {/* Cards de qualidades sobrepostos no rodapé do Hero */}
       {config?.showQualityCards !== false && (
