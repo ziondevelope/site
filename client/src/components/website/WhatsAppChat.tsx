@@ -266,25 +266,29 @@ export default function WhatsAppChat() {
       {/* Modal do formulário */}
       {isOpen && config.whatsappFormEnabled && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
-          {/* Botão de fechar fora do modal */}
-          <button
-            type="button"
-            onClick={() => setIsOpen(false)}
-            className="absolute top-4 right-4 text-white hover:text-gray-200 transition-colors p-2 z-20 bg-black bg-opacity-25 hover:bg-opacity-40 rounded-full"
-            aria-label="Fechar"
-          >
-            <X className="h-6 w-6" />
-          </button>
-          
           <div
             ref={formRef}
             className="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 relative overflow-hidden animate-fade-in"
           >
             {/* Cabeçalho simplificado */}
-            <div className="text-center p-4 pb-6 relative">
+            <div className="text-center p-4 pb-3 relative">
               <h2 className="text-2xl font-bold" style={{ color: "#333" }}>
                 Fale pelo WhatsApp
               </h2>
+              
+              <p className="text-sm text-gray-600 mt-2 px-4">
+                Preencha seus dados para que um de nossos corretores possa lhe atender da melhor forma.
+              </p>
+              
+              {/* Botão de fechar dentro do modal */}
+              <button
+                type="button"
+                onClick={() => setIsOpen(false)}
+                className="absolute top-2 right-2 text-gray-400 hover:text-gray-700 transition-colors p-2 rounded-full"
+                aria-label="Fechar"
+              >
+                <X className="h-5 w-5" />
+              </button>
             </div>
 
             {/* Fundo de padrão de WhatsApp em baixa opacidade */}
