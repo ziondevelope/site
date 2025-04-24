@@ -74,6 +74,7 @@ export default function Website() {
         whatsappFormEnabled: config.whatsappFormEnabled,
         whatsappFormTitle: config.whatsappFormTitle,
         whatsappFormMessage: config.whatsappFormMessage,
+        whatsappInitialMessage: config.whatsappInitialMessage,
         
         // Cores da página de detalhes
         propertyDetailsBackgroundColor: config.propertyDetailsBackgroundColor,
@@ -240,6 +241,7 @@ export default function Website() {
       whatsappFormEnabled: configData.whatsappFormEnabled ?? config.whatsappFormEnabled ?? true,
       whatsappFormTitle: configData.whatsappFormTitle ?? config.whatsappFormTitle ?? 'Entre em contato com um corretor',
       whatsappFormMessage: configData.whatsappFormMessage ?? config.whatsappFormMessage ?? 'Preencha seus dados para que um de nossos corretores possa lhe atender da melhor forma.',
+      whatsappInitialMessage: configData.whatsappInitialMessage ?? config.whatsappInitialMessage ?? 'Está com dificuldades para achar o imóvel dos seus sonhos? De Imóveis Populares a de Alto Padrão, CHAME O CAPITÃO!!',
       
       // Cores da página de detalhes do imóvel
       propertyDetailsBackgroundColor: configData.propertyDetailsBackgroundColor ?? config.propertyDetailsBackgroundColor ?? (configData.primaryColor ?? config.primaryColor ?? '#3B82F6'),
