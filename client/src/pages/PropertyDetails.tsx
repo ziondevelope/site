@@ -1,10 +1,11 @@
 import { useEffect, useState, useRef } from 'react';
 import { useParams, Link } from 'wouter';
-import { Property, WebsiteConfig } from '@shared/schema';
+import { Property, WebsiteConfig, User } from '@shared/schema';
 import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import Header from '@/components/website/Header';
 import SEO from '@/components/website/SEO';
+import Footer from '@/components/Footer';
 
 export default function PropertyDetails() {
   const { id } = useParams();

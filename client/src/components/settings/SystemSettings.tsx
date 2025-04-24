@@ -206,6 +206,100 @@ export default function SystemSettings({ config, isLoading }: SystemSettingsProp
         </div>
       </div>
 
+      {/* Aparência da Página de Detalhes do Imóvel */}
+      <div className="space-y-4">
+        <h4 className="font-medium text-md">Aparência da Página de Detalhes do Imóvel</h4>
+        
+        <div className="grid grid-cols-3 gap-4">
+          <div className="space-y-2">
+            <Label htmlFor="property-details-background">Cor de Fundo</Label>
+            <div className="flex">
+              <Input 
+                id="property-details-background" 
+                type="color"
+                className="w-12 h-10 p-1 mr-2"
+                value={getValue('propertyDetailsBackgroundColor') || '#ffffff'} 
+                onChange={(e) => handleConfigChange({ propertyDetailsBackgroundColor: e.target.value })}
+              />
+              <Input 
+                type="text"
+                className="flex-1"
+                value={getValue('propertyDetailsBackgroundColor') || '#ffffff'} 
+                onChange={(e) => handleConfigChange({ propertyDetailsBackgroundColor: e.target.value })}
+              />
+            </div>
+            <p className="text-xs text-gray-500">
+              Cor de fundo para a página de detalhes do imóvel
+            </p>
+          </div>
+          
+          <div className="space-y-2">
+            <Label htmlFor="property-details-text">Cor do Texto</Label>
+            <div className="flex">
+              <Input 
+                id="property-details-text" 
+                type="color"
+                className="w-12 h-10 p-1 mr-2"
+                value={getValue('propertyDetailsTextColor') || '#333333'} 
+                onChange={(e) => handleConfigChange({ propertyDetailsTextColor: e.target.value })}
+              />
+              <Input 
+                type="text"
+                className="flex-1"
+                value={getValue('propertyDetailsTextColor') || '#333333'} 
+                onChange={(e) => handleConfigChange({ propertyDetailsTextColor: e.target.value })}
+              />
+            </div>
+            <p className="text-xs text-gray-500">
+              Cor do texto na página de detalhes do imóvel
+            </p>
+          </div>
+          
+          <div className="space-y-2">
+            <Label htmlFor="property-details-icons">Cor dos Ícones</Label>
+            <div className="flex">
+              <Input 
+                id="property-details-icons" 
+                type="color"
+                className="w-12 h-10 p-1 mr-2"
+                value={getValue('propertyDetailsIconsColor') || config?.primaryColor || '#3B82F6'} 
+                onChange={(e) => handleConfigChange({ propertyDetailsIconsColor: e.target.value })}
+              />
+              <Input 
+                type="text"
+                className="flex-1"
+                value={getValue('propertyDetailsIconsColor') || config?.primaryColor || '#3B82F6'} 
+                onChange={(e) => handleConfigChange({ propertyDetailsIconsColor: e.target.value })}
+              />
+            </div>
+            <p className="text-xs text-gray-500">
+              Cor dos ícones e elementos visuais na página de detalhes
+            </p>
+          </div>
+        </div>
+        
+        {/* Preview */}
+        <div className="mt-4 p-4 rounded-lg border" style={{ backgroundColor: getValue('propertyDetailsBackgroundColor') || '#ffffff' }}>
+          <h5 className="font-medium mb-2" style={{ color: getValue('propertyDetailsTextColor') || '#333333' }}>
+            Prévia da Página de Detalhes
+          </h5>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center">
+              <i className="fas fa-bed mr-2" style={{ color: getValue('propertyDetailsIconsColor') || config?.primaryColor || '#3B82F6' }}></i>
+              <span style={{ color: getValue('propertyDetailsTextColor') || '#333333' }}>3 Quartos</span>
+            </div>
+            <div className="flex items-center">
+              <i className="fas fa-shower mr-2" style={{ color: getValue('propertyDetailsIconsColor') || config?.primaryColor || '#3B82F6' }}></i>
+              <span style={{ color: getValue('propertyDetailsTextColor') || '#333333' }}>2 Banheiros</span>
+            </div>
+            <div className="flex items-center">
+              <i className="fas fa-ruler-combined mr-2" style={{ color: getValue('propertyDetailsIconsColor') || config?.primaryColor || '#3B82F6' }}></i>
+              <span style={{ color: getValue('propertyDetailsTextColor') || '#333333' }}>120 m²</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className="flex justify-end space-x-2 mt-6">
         <Button variant="outline" onClick={() => setConfigData({})}>
           Cancelar
