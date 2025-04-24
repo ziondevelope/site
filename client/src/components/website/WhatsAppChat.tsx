@@ -16,12 +16,12 @@ const WhatsAppBounceAnimation = `
   }
 
   @keyframes fade-in {
-    from { opacity: 0; transform: translateY(10px); }
+    from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
   }
 
   .animate-fade-in {
-    animation: fade-in 0.5s ease-in-out forwards;
+    animation: fade-in 0.6s ease-out forwards;
   }
 `;
 
@@ -32,6 +32,7 @@ export default function WhatsAppChat() {
   const [phone, setPhone] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [showButton, setShowButton] = useState(false);
   const formRef = useRef<HTMLDivElement>(null);
   
   // Obtém o estado global do modal de propriedade
@@ -41,6 +42,25 @@ export default function WhatsAppChat() {
   const { data: config, isLoading } = useQuery<WebsiteConfig>({
     queryKey: ['/api/website/config']
   });
+  
+  // Controla a exibição do botão com base na rolagem da página
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY;
+      const pageHeight = document.body.scrollHeight - window.innerHeight;
+      const scrollPercentage = (scrollPosition / pageHeight) * 100;
+      
+      // Mostra o botão somente quando o usuário rolar 75% da página
+      if (scrollPercentage >= 75) {
+        setShowButton(true);
+      } else {
+        setShowButton(false);
+      }
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
   
   // Fechar formulário ao clicar fora dele
   useEffect(() => {
@@ -175,25 +195,27 @@ export default function WhatsAppChat() {
       {/* Adiciona os estilos CSS no DOM */}
       <style>{WhatsAppBounceAnimation}</style>
       
-      {/* Botão flutuante */}
-      <button
-        onClick={handleButtonClick}
-        className={`fixed bottom-5 ${buttonPosition} z-50 bg-[#25D366] text-white rounded-full p-3 md:px-5 shadow-xl hover:shadow-2xl hover:scale-105 hover:bg-[#128C7E] transition-all duration-300 ease-in-out flex items-center justify-center gap-2 backdrop-blur-sm group animate-fade-in`}
-        aria-label={config.whatsappButtonText || "Falar com corretor"}
-        style={{
-          boxShadow: '0 4px 12px rgba(37, 211, 102, 0.4)',
-          animation: 'whatsapp-bounce 2.5s ease-in-out infinite'
-        }}
-      >
-        {!isOpen ? (
-          <>
-            <FaWhatsapp className="h-7 w-7 md:h-6 md:w-6 animate-pulse" />
-            <span className="hidden md:inline ml-1 whitespace-nowrap font-medium text-sm group-hover:font-semibold">{config.whatsappButtonText || "Falar com corretor"}</span>
-          </>
-        ) : (
-          <X className="h-6 w-6" />
-        )}
-      </button>
+      {/* Botão flutuante - visível somente após rolar 75% da página */}
+      {showButton && (
+        <button
+          onClick={handleButtonClick}
+          className={`fixed bottom-5 ${buttonPosition} z-50 bg-[#25D366] text-white rounded-full p-3 md:px-5 shadow-xl hover:shadow-2xl hover:scale-105 hover:bg-[#128C7E] transition-all duration-300 ease-in-out flex items-center justify-center gap-2 backdrop-blur-sm group animate-fade-in`}
+          aria-label={config.whatsappButtonText || "Falar com corretor"}
+          style={{
+            boxShadow: '0 4px 12px rgba(37, 211, 102, 0.4)',
+            animation: 'whatsapp-bounce 2.5s ease-in-out infinite'
+          }}
+        >
+          {!isOpen ? (
+            <>
+              <FaWhatsapp className="h-7 w-7 md:h-6 md:w-6 animate-pulse" />
+              <span className="hidden md:inline ml-1 whitespace-nowrap font-medium text-sm group-hover:font-semibold">{config.whatsappButtonText || "Falar com corretor"}</span>
+            </>
+          ) : (
+            <X className="h-6 w-6" />
+          )}
+        </button>
+      )}
 
       {/* Modal do formulário */}
       {isOpen && config.whatsappFormEnabled && (
