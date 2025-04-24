@@ -267,6 +267,8 @@ export default function Website() {
       whatsappInitialMessage: configData.whatsappInitialMessage ?? config.whatsappInitialMessage ?? 'Está com dificuldades para achar o imóvel dos seus sonhos? De Imóveis Populares a de Alto Padrão, CHAME O CAPITÃO!!',
       whatsappChatBackgroundColor: configData.whatsappChatBackgroundColor ?? config.whatsappChatBackgroundColor ?? '#ffffff',
       whatsappChatTextColor: configData.whatsappChatTextColor ?? config.whatsappChatTextColor ?? '#333333',
+      whatsappButtonBackgroundColor: configData.whatsappButtonBackgroundColor ?? config.whatsappButtonBackgroundColor ?? '#25D366',
+      whatsappButtonTextColor: configData.whatsappButtonTextColor ?? config.whatsappButtonTextColor ?? '#ffffff',
       
       // Cores da página de detalhes do imóvel
       propertyDetailsBackgroundColor: configData.propertyDetailsBackgroundColor ?? config.propertyDetailsBackgroundColor ?? (configData.primaryColor ?? config.primaryColor ?? '#3B82F6'),
@@ -296,16 +298,22 @@ export default function Website() {
     // Log das cores do WhatsApp específicamente
     console.log("Cores do WhatsApp ao salvar:", {
       configData: {
-        background: configData.whatsappChatBackgroundColor,
-        text: configData.whatsappChatTextColor
+        chatBackground: configData.whatsappChatBackgroundColor,
+        chatText: configData.whatsappChatTextColor,
+        buttonBackground: configData.whatsappButtonBackgroundColor,
+        buttonText: configData.whatsappButtonTextColor
       },
       config: {
-        background: config.whatsappChatBackgroundColor,
-        text: config.whatsappChatTextColor
+        chatBackground: config.whatsappChatBackgroundColor,
+        chatText: config.whatsappChatTextColor,
+        buttonBackground: config.whatsappButtonBackgroundColor,
+        buttonText: config.whatsappButtonTextColor
       },
       fullConfig: {
-        background: fullConfig.whatsappChatBackgroundColor,
-        text: fullConfig.whatsappChatTextColor
+        chatBackground: fullConfig.whatsappChatBackgroundColor,
+        chatText: fullConfig.whatsappChatTextColor,
+        buttonBackground: fullConfig.whatsappButtonBackgroundColor,
+        buttonText: fullConfig.whatsappButtonTextColor
       }
     });
     
