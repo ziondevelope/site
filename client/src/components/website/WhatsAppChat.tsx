@@ -32,6 +32,8 @@ export default function WhatsAppChat() {
   const [phone, setPhone] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [showInitialMessage, setShowInitialMessage] = useState(true);
+  const [showButtonTooltip, setShowButtonTooltip] = useState(false);
   const formRef = useRef<HTMLDivElement>(null);
   
   // Obtém o estado global do modal de propriedade
@@ -175,25 +177,67 @@ export default function WhatsAppChat() {
       {/* Adiciona os estilos CSS no DOM */}
       <style>{WhatsAppBounceAnimation}</style>
       
-      {/* Botão flutuante */}
-      <button
-        onClick={handleButtonClick}
-        className={`fixed bottom-5 ${buttonPosition} z-50 bg-[#25D366] text-white rounded-full p-3 md:px-5 shadow-xl hover:shadow-2xl hover:scale-105 hover:bg-[#128C7E] transition-all duration-300 ease-in-out flex items-center justify-center gap-2 backdrop-blur-sm group animate-fade-in`}
-        aria-label={config.whatsappButtonText || "Falar com corretor"}
-        style={{
-          boxShadow: '0 4px 12px rgba(37, 211, 102, 0.4)',
-          animation: 'whatsapp-bounce 2.5s ease-in-out infinite'
-        }}
-      >
-        {!isOpen ? (
-          <>
-            <FaWhatsapp className="h-7 w-7 md:h-6 md:w-6 animate-pulse" />
-            <span className="hidden md:inline ml-1 whitespace-nowrap font-medium text-sm group-hover:font-semibold">{config.whatsappButtonText || "Falar com corretor"}</span>
-          </>
-        ) : (
-          <X className="h-6 w-6" />
+      {/* Botão flutuante com caixa de mensagem */}
+      <div className="fixed bottom-5 right-5 z-50 flex flex-col items-end">
+        {/* Caixa de mensagem */}
+        {showInitialMessage && !isOpen && (
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 mb-3 max-w-xs animate-fade-in relative">
+            {/* Indicador "Online" */}
+            <div className="absolute top-4 left-4 flex items-center">
+              <div className="h-3 w-3 bg-[#25D366] rounded-full mr-2"></div>
+              <span className="text-xs text-gray-600 dark:text-gray-300">Online</span>
+            </div>
+            
+            {/* Botão de fechar */}
+            <button 
+              onClick={() => setShowInitialMessage(false)}
+              className="absolute top-2 right-2 text-gray-400 hover:text-gray-600 dark:text-gray-300"
+            >
+              <X className="h-4 w-4" />
+            </button>
+            
+            {/* Mensagem */}
+            <div className="mt-6 text-center px-4">
+              <p className="text-sm text-gray-700 dark:text-gray-200 font-medium">
+                {config.whatsappInitialMessage || "Está com dificuldades para achar o imóvel dos seus sonhos? De Imóveis Populares a de Alto Padrão, CHAME O CAPITÃO!!"}
+              </p>
+              
+              <button
+                onClick={handleButtonClick}
+                className="mt-4 bg-[#f0e68c] text-gray-800 py-2 px-5 rounded-full font-medium text-sm hover:bg-[#f0dc82] transition-all duration-200 w-full shadow-sm"
+              >
+                Fale com um corretor
+              </button>
+            </div>
+          </div>
         )}
-      </button>
+        
+        {/* Botão do WhatsApp */}
+        <button
+          onClick={handleButtonClick}
+          className="bg-[#25D366] text-white rounded-full p-3 shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 flex items-center justify-center"
+          aria-label={config.whatsappButtonText || "Falar com corretor"}
+          style={{
+            boxShadow: '0 4px 12px rgba(37, 211, 102, 0.4)',
+            animation: showInitialMessage ? '' : 'whatsapp-bounce 2.5s ease-in-out infinite'
+          }}
+          onMouseEnter={() => !showInitialMessage && setShowButtonTooltip(true)}
+          onMouseLeave={() => setShowButtonTooltip(false)}
+        >
+          {!isOpen ? (
+            <FaWhatsapp className="h-7 w-7 animate-pulse" />
+          ) : (
+            <X className="h-6 w-6" />
+          )}
+        </button>
+        
+        {/* Tooltip ao passar o mouse */}
+        {showButtonTooltip && !showInitialMessage && !isOpen && (
+          <div className="absolute bottom-14 right-0 bg-white shadow-md rounded-lg p-2 text-sm text-gray-700 animate-fade-in whitespace-nowrap">
+            {config.whatsappButtonText || "Falar com corretor"}
+          </div>
+        )}
+      </div>
 
       {/* Modal do formulário */}
       {isOpen && config.whatsappFormEnabled && (
