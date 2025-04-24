@@ -279,12 +279,17 @@ export const leadNotes = pgTable("lead_notes", {
   text: text("text").notNull(),
   date: timestamp("date").notNull().defaultNow(),
   createdAt: timestamp("created_at").defaultNow(),
+  createdBy: text("created_by"),
+  type: text("type"),
 });
 
 export const insertLeadNoteSchema = createInsertSchema(leadNotes)
   .extend({
     // Permitir que date seja um objeto Date
-    date: z.date().optional()
+    date: z.date().optional(),
+    // Campos adicionais
+    createdBy: z.string().optional(),
+    type: z.string().optional()
   })
   .omit({
     id: true,

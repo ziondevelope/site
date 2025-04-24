@@ -580,21 +580,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
   apiRouter.post("/leads/:id/notes", async (req, res) => {
     try {
       const leadId = parseInt(req.params.id);
-      const { text } = req.body;
+      console.log("Criando nota para lead ID:", leadId, "Dados recebidos:", req.body);
       
-      if (!text || text.trim() === "") {
+      // Verificar se há texto na nota
+      if (!req.body.text && !req.body.content) {
         return res.status(400).json({ message: "O texto da nota não pode estar vazio" });
       }
       
+      // Compatibilidade com diferentes formatos de envio (do formulário ou do CRM)
+      const noteText = req.body.text || req.body.content;
+      const createdBy = req.body.createdBy || "Sistema";
+      const type = req.body.type || "manual";
+      
+      // Criar a nota
       const note = await storageInstance.createLeadNote({
         leadId,
-        text,
-        date: new Date()
+        text: noteText,
+        createdBy,
+        type
       });
       
       res.status(201).json(note);
     } catch (error) {
-      console.error("Error creating lead note:", error);
+      console.error("Erro ao criar nota para o lead:", error);
       res.status(500).json({ message: "Erro ao criar nota para o lead" });
     }
   });
