@@ -526,18 +526,6 @@ function PropertyDetailsContent({ propertyId, isOpen, onClose, propConfig }: {
                       <p className="text-base" style={{ color: `${detailsTextColor}CC` }}>
                         Fale com um de nossos especialistas e agende uma visita hoje mesmo!
                       </p>
-                      
-                      {/* Indicadores de tempo de resposta e características */}
-                      <div className="flex items-center mt-3 space-x-4">
-                        <div className="flex items-center" style={{ color: `${detailsTextColor}BB` }}>
-                          <i className="fas fa-clock mr-1 text-sm"></i>
-                          <span className="text-xs">Resposta em até 15 min</span>
-                        </div>
-                        <div className="flex items-center" style={{ color: `${detailsTextColor}BB` }}>
-                          <i className="fas fa-calendar-check mr-1 text-sm"></i>
-                          <span className="text-xs">Agende visitas online</span>
-                        </div>
-                      </div>
                     </div>
                     
                     {/* Detalhes do corretor */}
