@@ -121,45 +121,28 @@ export default function Header({ config, isLoadingConfig }: HeaderProps) {
           <Sheet>
             <SheetTrigger asChild>
               <button 
-                className="hidden md:flex items-center justify-center w-10 h-10 rounded-md border relative overflow-hidden group"
+                className="hidden md:flex items-center justify-center w-11 h-11 rounded-full shadow-sm relative overflow-hidden group"
                 style={{ 
-                  backgroundColor: isPropertiesPage || scrolled ? 'white' : 'rgba(255, 255, 255, 0.1)',
-                  borderColor: isPropertiesPage || scrolled 
-                    ? (config?.primaryColor ? `${config.primaryColor}33` : 'var(--primary-33)') 
-                    : 'rgba(255, 255, 255, 0.2)'
+                  backgroundColor: isPropertiesPage || scrolled 
+                    ? (config?.primaryColor ? `${config.primaryColor}15` : 'rgba(21, 97, 109, 0.08)') 
+                    : 'rgba(255, 255, 255, 0.15)'
                 }}
               >
-                <div className="relative z-10 flex flex-col items-center justify-center gap-1.5 w-6 h-6">
-                  <span 
-                    className="h-0.5 rounded-full transform transition-all duration-300"
-                    style={{ 
-                      width: '16px',
-                      backgroundColor: isPropertiesPage || scrolled 
+                <div className="relative z-10 flex items-center justify-center w-6 h-6">
+                  <svg width="20" height="14" viewBox="0 0 20 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path 
+                      d="M1 1H19M1 7H13M1 13H19" 
+                      stroke={isPropertiesPage || scrolled 
                         ? (config?.primaryColor || 'var(--primary)') 
                         : 'white'
-                    }}
-                  ></span>
-                  <span 
-                    className="h-0.5 rounded-full transform transition-all duration-300"
-                    style={{ 
-                      width: '22px',
-                      backgroundColor: isPropertiesPage || scrolled 
-                        ? (config?.primaryColor || 'var(--primary)') 
-                        : 'white'
-                    }}
-                  ></span>
-                  <span 
-                    className="h-0.5 rounded-full transform transition-all duration-300"
-                    style={{ 
-                      width: '18px',
-                      backgroundColor: isPropertiesPage || scrolled 
-                        ? (config?.primaryColor || 'var(--primary)') 
-                        : 'white'
-                    }}
-                  ></span>
+                      } 
+                      strokeWidth="2" 
+                      strokeLinecap="round"
+                    />
+                  </svg>
                 </div>
                 <div 
-                  className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-10"
+                  className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-15"
                   style={{ 
                     backgroundColor: config?.primaryColor || 'var(--primary)'
                   }}
@@ -249,45 +232,28 @@ export default function Header({ config, isLoadingConfig }: HeaderProps) {
           <Sheet>
             <SheetTrigger asChild>
               <button 
-                className="md:hidden flex items-center justify-center w-10 h-10 rounded-md border relative overflow-hidden group"
+                className="md:hidden flex items-center justify-center w-10 h-10 rounded-full shadow-sm relative overflow-hidden group"
                 style={{ 
-                  backgroundColor: isPropertiesPage || scrolled ? 'white' : 'rgba(255, 255, 255, 0.1)',
-                  borderColor: isPropertiesPage || scrolled 
-                    ? (config?.primaryColor ? `${config.primaryColor}33` : 'var(--primary-33)') 
-                    : 'rgba(255, 255, 255, 0.2)'
+                  backgroundColor: isPropertiesPage || scrolled 
+                    ? (config?.primaryColor ? `${config.primaryColor}15` : 'rgba(21, 97, 109, 0.08)') 
+                    : 'rgba(255, 255, 255, 0.15)'
                 }}
               >
-                <div className="relative z-10 flex flex-col items-center justify-center gap-1.5 w-6 h-6">
-                  <span 
-                    className="w-4 h-0.5 rounded-full transform origin-center transition-all duration-300"
-                    style={{ 
-                      width: '16px',
-                      backgroundColor: isPropertiesPage || scrolled 
+                <div className="relative z-10 flex items-center justify-center w-6 h-6">
+                  <svg width="20" height="14" viewBox="0 0 20 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path 
+                      d="M1 1H19M1 7H13M1 13H19" 
+                      stroke={isPropertiesPage || scrolled 
                         ? (config?.primaryColor || 'var(--primary)') 
                         : 'white'
-                    }}
-                  ></span>
-                  <span 
-                    className="w-6 h-0.5 rounded-full transform origin-center transition-all duration-300"
-                    style={{ 
-                      width: '22px',
-                      backgroundColor: isPropertiesPage || scrolled 
-                        ? (config?.primaryColor || 'var(--primary)') 
-                        : 'white'
-                    }}
-                  ></span>
-                  <span 
-                    className="w-5 h-0.5 rounded-full transform origin-center transition-all duration-300"
-                    style={{ 
-                      width: '18px',
-                      backgroundColor: isPropertiesPage || scrolled 
-                        ? (config?.primaryColor || 'var(--primary)') 
-                        : 'white'
-                    }}
-                  ></span>
+                      } 
+                      strokeWidth="2" 
+                      strokeLinecap="round"
+                    />
+                  </svg>
                 </div>
                 <div 
-                  className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-10"
+                  className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-15"
                   style={{ 
                     backgroundColor: config?.primaryColor || 'var(--primary)'
                   }}
