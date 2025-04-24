@@ -29,6 +29,7 @@ const WhatsAppBounceAnimation = `
 export default function WhatsAppChat() {
   const [isOpen, setIsOpen] = useState(false);
   const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -82,6 +83,11 @@ export default function WhatsAppChat() {
       setErrorMessage("Por favor, digite seu nome.");
       return false;
     }
+
+    if (email && !/^\S+@\S+\.\S+$/.test(email)) {
+      setErrorMessage("Por favor, digite um e-mail válido.");
+      return false;
+    }
     
     const phoneNumbers = phone.replace(/\D/g, '');
     if (phoneNumbers.length < 10) {
@@ -94,11 +100,12 @@ export default function WhatsAppChat() {
   };
   
   const createLeadMutation = useMutation({
-    mutationFn: async (data: { name: string, phone: string }) => {
+    mutationFn: async (data: { name: string, email: string, phone: string }) => {
       return apiRequest('/api/leads', {
         method: 'POST',
         body: JSON.stringify({
           name: data.name,
+          email: data.email,
           phone: data.phone.replace(/\D/g, ''),
           source: 'whatsapp-chat',
           status: 'new'
@@ -126,6 +133,7 @@ export default function WhatsAppChat() {
     
     setIsOpen(false);
     setName("");
+    setEmail("");
     setPhone("");
   };
   
@@ -145,6 +153,7 @@ export default function WhatsAppChat() {
     
     createLeadMutation.mutate({
       name,
+      email,
       phone
     });
   };
@@ -301,18 +310,22 @@ export default function WhatsAppChat() {
               }}></div>
             </div>
             
-            <form onSubmit={handleSubmit} className="p-8 pt-4 space-y-5">
+            <form onSubmit={handleSubmit} className="p-6 pt-4 space-y-4">
               {errorMessage && (
-                <div className="bg-red-50 text-red-700 p-3 rounded-xl text-sm border-l-4 border-red-500 shadow-sm">
+                <div className="bg-red-50 text-red-700 p-3 rounded-md text-sm border-l-4 border-red-500 shadow-sm mb-3">
                   {errorMessage}
                 </div>
               )}
               
-              <div className="transition-all duration-200 transform hover:translate-y-[-2px]">
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1.5">
-                  Nome
-                </label>
-                <div className="relative">
+              {/* Formulário simplificado com ícones */}
+              <div className="grid grid-cols-1 gap-4">
+                {/* Campo Nome */}
+                <div className="relative transition-all duration-200 transform hover:translate-y-[-2px] group bg-gray-50 rounded-md overflow-hidden">
+                  <div className="absolute left-3 inset-y-0 flex items-center text-gray-400 pointer-events-none group-focus-within:text-[#25D366]">
+                    <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                  </div>
                   <input
                     type="text"
                     id="name"
@@ -320,17 +333,36 @@ export default function WhatsAppChat() {
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="Digite seu nome"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#25D366] focus:border-transparent shadow-sm"
+                    className="block w-full pl-10 pr-3 py-3.5 text-gray-700 bg-transparent border-0 focus:ring-0 focus:outline-none"
                     required
                   />
                 </div>
-              </div>
-              
-              <div className="transition-all duration-200 transform hover:translate-y-[-2px]">
-                <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1.5">
-                  Telefone
-                </label>
-                <div className="relative">
+                
+                {/* Campo Email */}
+                <div className="relative transition-all duration-200 transform hover:translate-y-[-2px] group bg-gray-50 rounded-md overflow-hidden">
+                  <div className="absolute left-3 inset-y-0 flex items-center text-gray-400 pointer-events-none group-focus-within:text-[#25D366]">
+                    <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                  </div>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Digite seu e-mail (opcional)"
+                    className="block w-full pl-10 pr-3 py-3.5 text-gray-700 bg-transparent border-0 focus:ring-0 focus:outline-none"
+                  />
+                </div>
+                
+                {/* Campo Telefone */}
+                <div className="relative transition-all duration-200 transform hover:translate-y-[-2px] group bg-gray-50 rounded-md overflow-hidden">
+                  <div className="absolute left-3 inset-y-0 flex items-center text-gray-400 pointer-events-none group-focus-within:text-[#25D366]">
+                    <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                    </svg>
+                  </div>
                   <input
                     type="tel"
                     id="phone"
@@ -338,7 +370,7 @@ export default function WhatsAppChat() {
                     value={phone}
                     onChange={handlePhoneChange}
                     placeholder="(00) 0 0000-0000"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#25D366] focus:border-transparent shadow-sm"
+                    className="block w-full pl-10 pr-3 py-3.5 text-gray-700 bg-transparent border-0 focus:ring-0 focus:outline-none"
                     required
                   />
                 </div>
@@ -347,8 +379,8 @@ export default function WhatsAppChat() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className={`w-full mt-6 py-3 px-4 rounded-xl hover:shadow-lg transition-all duration-300 flex items-center justify-center shadow-md
-                  ${isSubmitting ? 'opacity-70 cursor-not-allowed' : 'transform hover:translate-y-[-2px]'}`}
+                className={`w-full mt-4 py-3.5 px-4 rounded-md transition-all duration-300 flex items-center justify-center shadow-sm
+                  ${isSubmitting ? 'opacity-70 cursor-not-allowed' : 'hover:shadow-md transform hover:translate-y-[-2px]'}`}
                 style={{
                   backgroundColor: config.whatsappButtonBackgroundColor || '#25D366',
                   color: config.whatsappButtonTextColor || '#ffffff',
@@ -367,8 +399,8 @@ export default function WhatsAppChat() {
                 )}
               </button>
               
-              <p className="text-xs text-gray-500 text-center mt-4 px-2">
-                Ao clicar em "Continuar para WhatsApp", você será redirecionado para o WhatsApp para iniciar uma conversa com nossos corretores.
+              <p className="text-xs text-gray-500 text-center mt-3">
+                Ao prosseguir, você será redirecionado para o WhatsApp para iniciar uma conversa com nossos corretores.
               </p>
             </form>
           </div>
