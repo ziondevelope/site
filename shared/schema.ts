@@ -187,6 +187,8 @@ export const websiteConfig = pgTable("website_config", {
   whatsappInitialMessage: text("whatsapp_initial_message").default("Está com dificuldades para achar o imóvel dos seus sonhos? De Imóveis Populares a de Alto Padrão, CHAME O CAPITÃO!!"),
   whatsappChatBackgroundColor: text("whatsapp_chat_background_color").default("#ffffff"),
   whatsappChatTextColor: text("whatsapp_chat_text_color").default("#333333"),
+  whatsappButtonBackgroundColor: text("whatsapp_button_background_color").default("#25D366"),
+  whatsappButtonTextColor: text("whatsapp_button_text_color").default("#ffffff"),
   
   updatedAt: timestamp("updated_at").defaultNow(),
 });

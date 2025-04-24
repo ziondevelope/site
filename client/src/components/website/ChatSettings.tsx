@@ -270,8 +270,68 @@ export default function ChatSettings({
                 </RadioGroup>
               </div>
               
+              <div className="grid grid-cols-2 gap-4 mt-4">
+                <div className="space-y-2">
+                  <Label htmlFor="buttonBackgroundColor">Cor de fundo do botão</Label>
+                  <div className="flex">
+                    <input
+                      type="color"
+                      id="buttonBackgroundColor"
+                      value={configData.whatsappButtonBackgroundColor ?? config?.whatsappButtonBackgroundColor ?? "#25D366"}
+                      onChange={(e) => {
+                        console.log("Color picker botão alterado para:", e.target.value);
+                        const color = e.target.value;
+                        onConfigChange({ whatsappButtonBackgroundColor: color });
+                      }}
+                      className="w-10 h-10 rounded-l-md cursor-pointer border border-r-0 border-gray-300"
+                    />
+                    <Input
+                      value={configData.whatsappButtonBackgroundColor ?? config?.whatsappButtonBackgroundColor ?? "#25D366"}
+                      onChange={(e) => {
+                        console.log("Input text botão alterado para:", e.target.value);
+                        const color = e.target.value;
+                        onConfigChange({ whatsappButtonBackgroundColor: color });
+                      }}
+                      className="rounded-l-none"
+                    />
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="buttonTextColor">Cor do texto do botão</Label>
+                  <div className="flex">
+                    <input
+                      type="color"
+                      id="buttonTextColor"
+                      value={configData.whatsappButtonTextColor ?? config?.whatsappButtonTextColor ?? "#ffffff"}
+                      onChange={(e) => {
+                        console.log("Color picker texto botão alterado para:", e.target.value);
+                        const color = e.target.value;
+                        onConfigChange({ whatsappButtonTextColor: color });
+                      }}
+                      className="w-10 h-10 rounded-l-md cursor-pointer border border-r-0 border-gray-300"
+                    />
+                    <Input
+                      value={configData.whatsappButtonTextColor ?? config?.whatsappButtonTextColor ?? "#ffffff"}
+                      onChange={(e) => {
+                        console.log("Input text color botão alterado para:", e.target.value);
+                        const color = e.target.value;
+                        onConfigChange({ whatsappButtonTextColor: color });
+                      }}
+                      className="rounded-l-none"
+                    />
+                  </div>
+                </div>
+              </div>
+              
               <div className="mt-4 flex items-center justify-center">
-                <div className={`bg-[#25D366] text-white px-4 py-2 rounded-full flex items-center shadow-md`}>
+                <div 
+                  className={`px-4 py-2 rounded-full flex items-center shadow-md`}
+                  style={{
+                    backgroundColor: configData.whatsappButtonBackgroundColor ?? config?.whatsappButtonBackgroundColor ?? "#25D366",
+                    color: configData.whatsappButtonTextColor ?? config?.whatsappButtonTextColor ?? "#ffffff"
+                  }}
+                >
                   <MessageSquare className="h-4 w-4 mr-2" />
                   <span>{configData.whatsappButtonText || "Falar com corretor"}</span>
                 </div>
