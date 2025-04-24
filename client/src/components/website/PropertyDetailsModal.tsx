@@ -24,12 +24,10 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose, conf
   const [showContactButton, setShowContactButton] = useState(false);
   const controls = useAnimation();
   
-  // Limpa a imagem ativa quando muda de imóvel (evita exibir imagem do imóvel anterior)
+  // Limpa a imagem ativa quando muda de imóvel ou quando abre/fecha o modal
   useEffect(() => {
-    if (isOpen) {
-      // Limpa a imagem ativa ao abrir o modal com um novo propertyId
-      setActiveImage(null);
-    }
+    // Limpa a imagem ativa ao abrir o modal com um novo propertyId ou ao fechar o modal
+    setActiveImage(null);
   }, [propertyId, isOpen]);
   
   // Fetch property details
