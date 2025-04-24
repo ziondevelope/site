@@ -6,10 +6,15 @@ import { Button } from '@/components/ui/button';
 import Header from '@/components/website/Header';
 import SEO from '@/components/website/SEO';
 import Footer from '@/components/Footer';
+import { motion, useAnimation } from 'framer-motion';
 
 export default function PropertyDetails() {
   const { id } = useParams();
   const [activeImage, setActiveImage] = useState<string | null>(null);
+  
+  // Estados para controle de rolagem e animação do botão "Falar com corretor"
+  const [showContactButton, setShowContactButton] = useState(false);
+  const controls = useAnimation();
   
   // Estado e referências para o carrossel
   const [carouselPage, setCarouselPage] = useState(0);
@@ -175,6 +180,44 @@ export default function PropertyDetails() {
       return () => trackElement.removeEventListener('scroll', handleCarouselScroll);
     }
   }, [carouselPage]);
+
+  // Detectar scroll da página para mostrar/esconder o botão "Falar com corretor"
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollHeight = document.documentElement.scrollHeight;
+      const scrollTop = window.scrollY;
+      const clientHeight = document.documentElement.clientHeight;
+      
+      // Calcular a porcentagem de rolagem (75% = 0.75)
+      const scrollPercentage = (scrollTop + clientHeight) / scrollHeight;
+      
+      if (scrollPercentage >= 0.75 && !showContactButton) {
+        setShowContactButton(true);
+        // Animar o botão quando aparecer
+        controls.start({
+          opacity: 1,
+          y: 0,
+          transition: { duration: 0.5, ease: "easeOut" }
+        });
+      } else if (scrollPercentage < 0.75 && showContactButton) {
+        // Animar a saída do botão
+        controls.start({
+          opacity: 0,
+          y: 20,
+          transition: { duration: 0.3, ease: "easeIn" }
+        }).then(() => {
+          setShowContactButton(false);
+        });
+      }
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    
+    // Verificar inicialmente (caso a página já carregue em uma posição abaixo de 75%)
+    handleScroll();
+    
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [showContactButton, controls]);
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
