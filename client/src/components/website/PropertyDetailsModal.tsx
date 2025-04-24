@@ -378,16 +378,6 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
                     )}
                   </div>
                 </div>
-                
-                {/* Action buttons */}
-                <div className="mt-8 flex flex-wrap gap-4 justify-end">
-                  <Button
-                    onClick={() => window.location.href = `/properties/${propertyId}`}
-                    className="bg-white hover:bg-white/90 text-black"
-                  >
-                    Ver página completa
-                  </Button>
-                </div>
               </div>
             </div>
           ) : (
