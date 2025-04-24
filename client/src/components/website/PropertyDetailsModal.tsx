@@ -115,6 +115,11 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
   // Property current visual
   const currentProperty = property;
   const primaryColor = config?.primaryColor || 'var(--primary)';
+  
+  // Cores personalizadas para o modal de detalhes
+  const detailsBackgroundColor = config?.propertyDetailsBackgroundColor || primaryColor;
+  const detailsTextColor = config?.propertyDetailsTextColor || '#ffffff';
+  const detailsIconsColor = config?.propertyDetailsIconsColor || '#f0f0f0';
 
   if (!isOpen) return null;
 
@@ -211,7 +216,7 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
           )}
         </div>
 
-        <div className="p-6 text-white" style={{ backgroundColor: primaryColor }}>
+        <div className="p-6" style={{ backgroundColor: detailsBackgroundColor, color: detailsTextColor }}>
           {isLoadingProperty ? (
             <div className="animate-pulse">
               <div className="h-10 bg-white/20 rounded w-3/4 mb-4"></div>
@@ -259,68 +264,68 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
                 {/* Title and price */}
                 <div className="mb-6">
                   <div className="mb-2">
-                    <h1 className="text-2xl md:text-3xl font-bold text-white mb-2" style={{ lineHeight: '2rem' }}>
+                    <h1 className="text-2xl md:text-3xl font-bold mb-2" style={{ lineHeight: '2rem', color: detailsTextColor }}>
                       {currentProperty.title}
                     </h1>
                     <div 
                       className="font-medium"
-                      style={{ color: 'white', fontSize: '22px', fontWeight: 500 }}
+                      style={{ color: detailsTextColor, fontSize: '22px', fontWeight: 500 }}
                     >
                       {formatCurrency(currentProperty.price)}
                       {currentProperty.purpose === 'rent' && 
-                        <span className="text-base font-normal text-white/70">/mês</span>
+                        <span className="text-base font-normal" style={{ color: `${detailsTextColor}BB` }}>/mês</span>
                       }
                     </div>
                   </div>
                   
-                  <div className="flex items-center mb-4 text-white/90">
-                    <i className="ri-map-pin-line mr-2 text-white"></i>
+                  <div className="flex items-center mb-4" style={{ color: `${detailsTextColor}DD` }}>
+                    <i className="ri-map-pin-line mr-2" style={{ color: detailsIconsColor }}></i>
                     <span>{currentProperty.address}</span>
-                    <div className="ml-auto text-sm text-white/90 flex items-center">
-                      <i className="ri-code-line mr-1 text-white"></i>
+                    <div className="ml-auto text-sm flex items-center" style={{ color: `${detailsTextColor}DD` }}>
+                      <i className="ri-code-line mr-1" style={{ color: detailsIconsColor }}></i>
                       <span>Cód. LL{currentProperty.id}</span>
                     </div>
                   </div>
                   
-                  <div className="border-t border-b border-white/20 py-4 my-4">
+                  <div className="border-t border-b py-4 my-4" style={{ borderColor: `${detailsTextColor}22` }}>
                     <div className="flex flex-wrap gap-4 justify-between">
                       <div className="flex items-center">
-                        <i className="fas fa-bed text-xl mr-2 text-white"></i>
+                        <i className="fas fa-bed text-xl mr-2" style={{ color: detailsIconsColor }}></i>
                         <div>
-                          <span className="font-medium text-white">{currentProperty.bedrooms || 0}</span>
-                          <span className="text-white/70 text-sm ml-1">Quartos</span>
+                          <span className="font-medium" style={{ color: detailsTextColor }}>{currentProperty.bedrooms || 0}</span>
+                          <span className="text-sm ml-1" style={{ color: `${detailsTextColor}BB` }}>Quartos</span>
                         </div>
                       </div>
                       
                       <div className="flex items-center">
-                        <i className="fas fa-shower text-xl mr-2 text-white"></i>
+                        <i className="fas fa-shower text-xl mr-2" style={{ color: detailsIconsColor }}></i>
                         <div>
-                          <span className="font-medium text-white">{currentProperty.bathrooms || 0}</span>
-                          <span className="text-white/70 text-sm ml-1">Banheiros</span>
+                          <span className="font-medium" style={{ color: detailsTextColor }}>{currentProperty.bathrooms || 0}</span>
+                          <span className="text-sm ml-1" style={{ color: `${detailsTextColor}BB` }}>Banheiros</span>
                         </div>
                       </div>
                       
                       <div className="flex items-center">
-                        <i className="fas fa-bath text-xl mr-2 text-white"></i>
+                        <i className="fas fa-bath text-xl mr-2" style={{ color: detailsIconsColor }}></i>
                         <div>
-                          <span className="font-medium text-white">{currentProperty.suites || 0}</span>
-                          <span className="text-white/70 text-sm ml-1">Suítes</span>
+                          <span className="font-medium" style={{ color: detailsTextColor }}>{currentProperty.suites || 0}</span>
+                          <span className="text-sm ml-1" style={{ color: `${detailsTextColor}BB` }}>Suítes</span>
                         </div>
                       </div>
                       
                       <div className="flex items-center">
-                        <i className="fas fa-car text-xl mr-2 text-white"></i>
+                        <i className="fas fa-car text-xl mr-2" style={{ color: detailsIconsColor }}></i>
                         <div>
-                          <span className="font-medium text-white">{currentProperty.parkingSpots || 0}</span>
-                          <span className="text-white/70 text-sm ml-1">Vagas</span>
+                          <span className="font-medium" style={{ color: detailsTextColor }}>{currentProperty.parkingSpots || 0}</span>
+                          <span className="text-sm ml-1" style={{ color: `${detailsTextColor}BB` }}>Vagas</span>
                         </div>
                       </div>
                       
                       <div className="flex items-center">
-                        <i className="fas fa-ruler-combined text-xl mr-2 text-white"></i>
+                        <i className="fas fa-ruler-combined text-xl mr-2" style={{ color: detailsIconsColor }}></i>
                         <div>
-                          <span className="font-medium text-white">{currentProperty.area}</span>
-                          <span className="text-white/70 text-sm ml-1">m²</span>
+                          <span className="font-medium" style={{ color: detailsTextColor }}>{currentProperty.area}</span>
+                          <span className="text-sm ml-1" style={{ color: `${detailsTextColor}BB` }}>m²</span>
                         </div>
                       </div>
                     </div>
@@ -329,23 +334,25 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
                 
                 {/* Description */}
                 <div className="mb-8">
-                  <h2 className="text-xl font-bold mb-3 text-white">Descrição</h2>
-                  <p className="text-white/90 whitespace-pre-line">{currentProperty.description}</p>
+                  <h2 className="text-xl font-bold mb-3" style={{ color: detailsTextColor }}>Descrição</h2>
+                  <p className="whitespace-pre-line" style={{ color: `${detailsTextColor}EE` }}>{currentProperty.description}</p>
                 </div>
                 
                 {/* Características */}
                 {currentProperty.features && Array.isArray(currentProperty.features) && currentProperty.features.length > 0 && (
                   <div className="mb-8">
-                    <h2 className="text-xl font-bold mb-3 text-white">Características</h2>
+                    <h2 className="text-xl font-bold mb-3" style={{ color: detailsTextColor }}>Características</h2>
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-y-4">
                       {currentProperty.features.map((feature, index) => (
                         <div key={index} className="flex items-center">
-                          <div className="w-8 h-8 rounded-full flex items-center justify-center mr-3 bg-white/20">
+                          <div className="w-8 h-8 rounded-full flex items-center justify-center mr-3" 
+                               style={{ backgroundColor: `${detailsIconsColor}20` }}>
                             <i 
-                              className="fas fa-check text-sm text-white"
+                              className="fas fa-check text-sm"
+                              style={{ color: detailsIconsColor }}
                             ></i>
                           </div>
-                          <span className="text-white">{feature}</span>
+                          <span style={{ color: detailsTextColor }}>{feature}</span>
                         </div>
                       ))}
                     </div>
@@ -354,8 +361,8 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
                 
                 {/* Localização */}
                 <div className="mb-8">
-                  <h2 className="text-xl font-bold mb-3 text-white">Localização</h2>
-                  <div className="border border-white/20 rounded-lg h-64 overflow-hidden">
+                  <h2 className="text-xl font-bold mb-3" style={{ color: detailsTextColor }}>Localização</h2>
+                  <div className="border rounded-lg h-64 overflow-hidden" style={{ borderColor: `${detailsTextColor}22` }}>
                     {currentProperty.address ? (
                       <iframe 
                         width="100%" 
@@ -369,10 +376,10 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
                         title="Localização do imóvel"
                       ></iframe>
                     ) : (
-                      <div className="h-full flex items-center justify-center bg-white/10">
+                      <div className="h-full flex items-center justify-center" style={{ backgroundColor: `${detailsIconsColor}15` }}>
                         <div className="text-center">
-                          <i className="ri-map-pin-line text-4xl mb-2 text-white/40"></i>
-                          <p className="text-white/60">Mapa indisponível</p>
+                          <i className="ri-map-pin-line text-4xl mb-2" style={{ color: `${detailsIconsColor}66` }}></i>
+                          <p style={{ color: `${detailsTextColor}99` }}>Mapa indisponível</p>
                         </div>
                       </div>
                     )}
