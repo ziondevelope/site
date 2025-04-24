@@ -83,8 +83,8 @@ export default function Header({ config, isLoadingConfig }: HeaderProps) {
           </nav>
         </div>
         
-        {/* Botão WhatsApp apenas desktop e Menu hamburger para mobile */}
-        <div className="flex items-center">
+        {/* Botão WhatsApp e menus hamburger */}
+        <div className="flex items-center space-x-3">
           {/* Botão WhatsApp - visível apenas em desktop */}
           <a 
             href={config?.phone ? `https://wa.me/${config.phone.replace(/\D/g, '')}` : "#"} 
@@ -122,6 +122,134 @@ export default function Header({ config, isLoadingConfig }: HeaderProps) {
               }}
             ></i>
           </a>
+          
+          {/* Menu hamburger para desktop */}
+          <Sheet>
+            <SheetTrigger asChild>
+              <button 
+                className="hidden md:flex items-center justify-center w-10 h-10 rounded-md border relative overflow-hidden group"
+                style={{ 
+                  backgroundColor: isPropertiesPage || scrolled ? 'white' : 'rgba(255, 255, 255, 0.1)',
+                  borderColor: isPropertiesPage || scrolled 
+                    ? (config?.primaryColor ? `${config.primaryColor}33` : 'var(--primary-33)') 
+                    : 'rgba(255, 255, 255, 0.2)'
+                }}
+              >
+                <div className="relative z-10 flex flex-col items-center justify-center gap-1.5 w-6 h-6">
+                  <span 
+                    className="h-0.5 rounded-full transform transition-all duration-300"
+                    style={{ 
+                      width: '16px',
+                      backgroundColor: isPropertiesPage || scrolled 
+                        ? (config?.primaryColor || 'var(--primary)') 
+                        : 'white'
+                    }}
+                  ></span>
+                  <span 
+                    className="h-0.5 rounded-full transform transition-all duration-300"
+                    style={{ 
+                      width: '22px',
+                      backgroundColor: isPropertiesPage || scrolled 
+                        ? (config?.primaryColor || 'var(--primary)') 
+                        : 'white'
+                    }}
+                  ></span>
+                  <span 
+                    className="h-0.5 rounded-full transform transition-all duration-300"
+                    style={{ 
+                      width: '18px',
+                      backgroundColor: isPropertiesPage || scrolled 
+                        ? (config?.primaryColor || 'var(--primary)') 
+                        : 'white'
+                    }}
+                  ></span>
+                </div>
+                <div 
+                  className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-10"
+                  style={{ 
+                    backgroundColor: config?.primaryColor || 'var(--primary)'
+                  }}
+                ></div>
+              </button>
+            </SheetTrigger>
+            <SheetContent side="right" className="w-[300px] sm:w-[320px] p-0 border-0">
+              <SheetTitle className="sr-only">Menu de navegação</SheetTitle>
+              <div className="flex flex-col h-full">
+                {/* Área do logo no topo do menu */}
+                <div 
+                  className="p-6 border-b"
+                  style={{ borderColor: 'rgba(0, 0, 0, 0.06)' }}
+                >
+                  {config?.logo ? (
+                    <NavigationLink href="/">
+                      <img src={config.logo} alt="Logo" className="h-10 object-contain cursor-pointer" />
+                    </NavigationLink>
+                  ) : (
+                    <NavigationLink href="/" className="flex items-center cursor-pointer">
+                      <div className="h-8 w-8 rounded bg-primary flex items-center justify-center text-white">
+                        <i className="fas fa-home text-sm"></i>
+                      </div>
+                      <span className="text-xl font-bold ml-2" style={{ fontFamily: 'Poppins, sans-serif' }}>Imobiliária</span>
+                    </NavigationLink>
+                  )}
+                </div>
+                
+                {/* Links do menu desktop */}
+                <div className="px-6 py-5 flex flex-col space-y-1" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                  <a 
+                    href="/#home" 
+                    className="flex items-center py-3 px-6 relative overflow-hidden"
+                  >
+                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary opacity-0" style={{ backgroundColor: config?.primaryColor || 'var(--primary)' }}></div>
+                    <span className="text-gray-700 font-medium text-[19px]">Início</span>
+                  </a>
+                  
+                  <NavigationLink 
+                    href="/properties" 
+                    className="flex items-center py-3 px-6 relative overflow-hidden"
+                  >
+                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary opacity-0" style={{ backgroundColor: config?.primaryColor || 'var(--primary)' }}></div>
+                    <span className="text-gray-700 font-medium text-[19px]">Imóveis</span>
+                  </NavigationLink>
+                  
+                  <a 
+                    href="/#about" 
+                    className="flex items-center py-3 px-6 relative overflow-hidden"
+                  >
+                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary opacity-0" style={{ backgroundColor: config?.primaryColor || 'var(--primary)' }}></div>
+                    <span className="text-gray-700 font-medium text-[19px]">Sobre</span>
+                  </a>
+                  
+                  <a 
+                    href="/#contact" 
+                    className="flex items-center py-3 px-6 relative overflow-hidden"
+                  >
+                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary opacity-0" style={{ backgroundColor: config?.primaryColor || 'var(--primary)' }}></div>
+                    <span className="text-gray-700 font-medium text-[19px]">Contato</span>
+                  </a>
+                </div>
+                
+                {/* Botão de contato na parte inferior */}
+                {config?.phone && (
+                  <div className="mt-auto border-t p-6" style={{ borderColor: 'rgba(0, 0, 0, 0.06)' }}>
+                    <a 
+                      href={`https://wa.me/${config.phone.replace(/\D/g, '')}`} 
+                      className="flex items-center justify-center py-3 px-5 rounded-full bg-primary text-white border-0 transition-all"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        backgroundColor: config?.primaryColor || 'var(--primary)',
+                        fontFamily: 'Poppins, sans-serif'
+                      }}
+                    >
+                      {config?.phone && <span className="mr-2 text-[18px]" style={{ fontFamily: 'Poppins, sans-serif' }}>{config.phone}</span>}
+                      <i className="fab fa-whatsapp text-xl text-white"></i>
+                    </a>
+                  </div>
+                )}
+              </div>
+            </SheetContent>
+          </Sheet>
           
           {/* Menu hamburger - apenas mobile */}
           <Sheet>
