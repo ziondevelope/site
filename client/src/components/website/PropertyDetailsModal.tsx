@@ -1,556 +1,457 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { Property, WebsiteConfig } from '@shared/schema';
-import { useQuery } from '@tanstack/react-query';
-import { Button } from '@/components/ui/button';
-import { X } from 'lucide-react';
-import './scrollbar.css';
-import { useUI } from '@/contexts/UIContext';
-import { motion, useAnimation } from 'framer-motion';
+import { useEffect, useRef, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { WebsiteConfig } from "shared/schema";
+import LazyImage from "../ui/lazy-image";
+import { PropertyDetailsModalProps } from "../../types";
 
-interface PropertyDetailsModalProps {
+interface MyPropertyDetailsModalProps {
   propertyId: number;
   isOpen: boolean;
   onClose: () => void;
   config?: WebsiteConfig;
 }
 
-export default function PropertyDetailsModal({ propertyId, isOpen, onClose, config: propConfig }: PropertyDetailsModalProps) {
-  // Usando uma chave única para forçar a remontagem completa do componente quando o modal fecha
-  // Isso garante que todos os estados sejam resetados
-  const [key, setKey] = useState(0);
-
-  // Quando o modal é fechado e depois reaberto, forçamos a remontagem do componente
-  useEffect(() => {
-    if (!isOpen) {
-      // Espera o modal fechar completamente para evitar flicker visual
-      const timeout = setTimeout(() => {
-        setKey(prevKey => prevKey + 1);
-      }, 300);
-      return () => clearTimeout(timeout);
-    }
-  }, [isOpen]);
-
-  // Retorno antecipado para forçar a remontagem quando o modal fecha
-  if (!isOpen) return null;
-
-  return (
-    <PropertyDetailsContent 
-      key={`property-modal-${key}-${propertyId}`}
-      propertyId={propertyId}
-      isOpen={isOpen}
-      onClose={onClose}
-      propConfig={propConfig}
-    />
-  );
-}
-
-// Componente interno que contém todo o conteúdo e lógica
-function PropertyDetailsContent({ propertyId, isOpen, onClose, propConfig }: { 
-  propertyId: number;
-  isOpen: boolean;
-  onClose: () => void;
-  propConfig?: WebsiteConfig;
-}) {
-  const [activeImage, setActiveImage] = useState<string | null>(null);
+export default function PropertyDetailsModal({ propertyId, isOpen, onClose, config: propConfig }: MyPropertyDetailsModalProps) {
+  const [showContactButton, setShowContactButton] = useState(false);
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [remountKey, setRemountKey] = useState(0);
   const modalRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
-  const { setPropertyModalOpen } = useUI();
   
-  // Estados para controle de rolagem e animação do botão "Falar com corretor"
-  const [showContactButton, setShowContactButton] = useState(false);
-  const controls = useAnimation();
-  
-  // Limpa a imagem ativa quando muda de imóvel ou quando abre/fecha o modal
-  useEffect(() => {
-    // Limpa a imagem ativa ao abrir o modal com um novo propertyId ou ao fechar o modal
-    setActiveImage(null);
-  }, [propertyId, isOpen]);
-  
-  // Fetch property details
-  const { data: property, isLoading: isLoadingProperty, refetch } = useQuery<Property>({
-    queryKey: [`/api/properties/${propertyId}`],
-    enabled: !!propertyId && isOpen,
-    refetchOnWindowFocus: false,
-    staleTime: 0  // Força sempre buscar dados novos
-  });
-  
-  // Quando o modal é aberto, forçar o refetch dos dados
-  useEffect(() => {
-    if (isOpen && propertyId) {
-      refetch();
-    }
-  }, [isOpen, propertyId, refetch]);
-  
-  // Fetch website config (for colors) se não tiver sido passado como prop
-  const { data: configData } = useQuery<WebsiteConfig>({
-    queryKey: ['/api/website/config'],
-    enabled: isOpen && !propConfig
-  });
-  
-  // Use a configuração passada como prop ou a obtida pela consulta
-  const config = propConfig || configData;
-  
-  // Fetch agent data
-  const { data: agent } = useQuery<any>({
-    queryKey: [`/api/agents/${property?.agentId}`],
-    enabled: !!property?.agentId && isOpen,
-  });
-
-  // Set the first image as active when property data is loaded or reloaded
-  useEffect(() => {
-    // Primeiro limpamos a imagem ativa para garantir que o estado está fresco
-    setActiveImage(null);
-    
-    // Se ainda estiver carregando ou não tiver property, não faz nada
-    if (isLoadingProperty || !property) return;
-    
-    console.log("Definindo imagem ativa para o imóvel:", property.id);
-    
-    // Pequeno atraso para garantir que o DOM foi atualizado
-    const timer = setTimeout(() => {
-      if (property?.images && property.images.length > 0) {
-        // Check if property has images and if they are objects with url
-        if (typeof property.images[0] === 'object' && property.images[0].url) {
-          const featuredImage = property.images.find(img => 
-            typeof img === 'object' && 'isFeatured' in img && img.isFeatured
-          );
-          
-          setActiveImage(
-            featuredImage && 'url' in featuredImage 
-              ? featuredImage.url 
-              : property.images[0].url
-          );
-        } 
-        // If array of strings
-        else if (typeof property.images[0] === 'string') {
-          setActiveImage(property.images[0]);
-        }
-      } else if (property?.featuredImage) {
-        // Compatibility with older versions
-        setActiveImage(property.featuredImage);
-      }
-    }, 50);
-    
-    return () => clearTimeout(timer);
-  }, [property, isLoadingProperty]);
-
-  // Close on ESC key press
-  useEffect(() => {
-    const handleEscKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape' && isOpen) {
-        onClose();
-      }
-    };
-
-    document.addEventListener('keydown', handleEscKey);
-    return () => {
-      document.removeEventListener('keydown', handleEscKey);
-    };
-  }, [isOpen, onClose]);
-
-  // Close when clicking outside
-  useEffect(() => {
-    const handleOutsideClick = (event: MouseEvent) => {
-      if (modalRef.current && !modalRef.current.contains(event.target as Node) && isOpen) {
-        onClose();
-      }
-    };
-
-    document.addEventListener('mousedown', handleOutsideClick);
-    return () => {
-      document.removeEventListener('mousedown', handleOutsideClick);
-    };
-  }, [isOpen, onClose]);
-
-  // Add/remove overflow:hidden to body when modal opens/closes
-  // and update global state for WhatsApp button visibility
+  // Quando o modal é aberto, force um remount dos componentes para resolver
+  // o problema da imagem principal não aparecer
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = 'hidden';
-      setPropertyModalOpen(true);
-      
-      // Resetar estado do botão quando o modal abre
-      setShowContactButton(false);
-    } else {
-      document.body.style.overflow = '';
-      setPropertyModalOpen(false);
+      setRemountKey(prevKey => prevKey + 1);
     }
-    return () => {
-      document.body.style.overflow = '';
-      setPropertyModalOpen(false);
-    };
-  }, [isOpen, setPropertyModalOpen]);
+  }, [isOpen, propertyId]);
   
-  // Detectar scroll do modal para mostrar/esconder o botão "Falar com corretor"
+  // Configuração do site
+  const config = propConfig;
+  
+  // Buscar detalhes da propriedade
+  const { data: currentProperty } = useQuery({
+    queryKey: ['/api/properties', propertyId],
+    enabled: isOpen && !!propertyId,
+  });
+
+  // Buscar agente responsável por esta propriedade
+  const { data: agent } = useQuery({
+    queryKey: ['/api/users', currentProperty?.userId],
+    enabled: isOpen && !!currentProperty?.userId,
+  });
+  
+  // Verificar se há imagens disponíveis
+  const hasImages = currentProperty?.images && currentProperty.images.length > 0;
+  
+  // Monitor para mostrar o botão de contato fixo após rolagem
   useEffect(() => {
-    if (!modalRef.current || !isOpen) return;
-    
-    // Sempre iniciar com o botão oculto quando abre o modal
-    setShowContactButton(false);
+    if (!isOpen || !contentRef.current) return;
     
     const handleScroll = () => {
-      if (!modalRef.current) return;
+      if (!contentRef.current) return;
       
-      const scrollHeight = modalRef.current.scrollHeight;
-      const scrollTop = modalRef.current.scrollTop;
-      const clientHeight = modalRef.current.clientHeight;
+      const { scrollTop, scrollHeight, clientHeight } = contentRef.current;
+      const scrollPercentage = (scrollTop / (scrollHeight - clientHeight)) * 100;
       
-      // Calcular a porcentagem de rolagem (75% = 0.75)
-      const scrollPercentage = (scrollTop + clientHeight) / scrollHeight;
-      
-      if (scrollPercentage >= 0.75 && !showContactButton) {
+      if (scrollPercentage > 75) {
         setShowContactButton(true);
-      } else if (scrollPercentage < 0.75 && showContactButton) {
+      } else {
         setShowContactButton(false);
       }
     };
     
-    const modalElement = modalRef.current;
-    modalElement.addEventListener('scroll', handleScroll);
-    
-    // Pequeno atraso antes de verificar a posição inicial para garantir que o conteúdo tenha sido renderizado
-    const initialCheckTimeout = setTimeout(() => {
-      handleScroll();
-    }, 300); // 300ms de atraso
+    const currentContentRef = contentRef.current;
+    currentContentRef.addEventListener('scroll', handleScroll);
     
     return () => {
-      if (modalElement) {
-        modalElement.removeEventListener('scroll', handleScroll);
+      if (currentContentRef) {
+        currentContentRef.removeEventListener('scroll', handleScroll);
       }
-      clearTimeout(initialCheckTimeout);
     };
-  }, [showContactButton, isOpen]);
-
-  // Format currency
-  const formatCurrency = (value: number) => {
-    return value.toLocaleString('pt-BR', {
-      style: 'currency',
-      currency: 'BRL',
-    });
+  }, [isOpen]);
+  
+  // Fechar o modal ao pressionar ESC
+  useEffect(() => {
+    const handleEscKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        onClose();
+      }
+    };
+    
+    if (isOpen) {
+      document.addEventListener('keydown', handleEscKey);
+    }
+    
+    return () => {
+      document.removeEventListener('keydown', handleEscKey);
+    };
+  }, [isOpen, onClose]);
+  
+  // Fechar o modal ao clicar fora do conteúdo
+  useEffect(() => {
+    const handleOutsideClick = (event: MouseEvent) => {
+      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+        onClose();
+      }
+    };
+    
+    if (isOpen) {
+      document.addEventListener('mousedown', handleOutsideClick);
+    }
+    
+    return () => {
+      document.removeEventListener('mousedown', handleOutsideClick);
+    };
+  }, [isOpen, onClose]);
+  
+  // Prevenir rolagem do body quando o modal estiver aberto
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
+  
+  // Cores para o tema de detalhes do imóvel
+  const detailsBackgroundColor = config?.detailsBackgroundColor || '#ffffff';
+  const detailsTextColor = config?.detailsTextColor || '#333333';
+  const detailsIconsColor = config?.detailsIconsColor || '#7f651e';
+  
+  if (!isOpen || !currentProperty) return null;
+  
+  // Função para avançar para o próximo slide
+  const nextSlide = () => {
+    if (!currentProperty?.images) return;
+    setCurrentSlide((prev) => (prev + 1) % currentProperty.images.length);
+  };
+  
+  // Função para voltar ao slide anterior
+  const prevSlide = () => {
+    if (!currentProperty?.images) return;
+    setCurrentSlide((prev) => (prev - 1 + currentProperty.images.length) % currentProperty.images.length);
+  };
+  
+  // Função para compartilhar imóvel nas redes sociais
+  const shareProperty = (platform: string) => {
+    const url = window.location.href;
+    const title = currentProperty.title;
+    const description = currentProperty.description?.slice(0, 100) + '...';
+    
+    switch (platform) {
+      case 'whatsapp':
+        window.open(`https://wa.me/?text=${encodeURIComponent(`${title} - ${url}`)}`, '_blank');
+        break;
+      case 'facebook':
+        window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank');
+        break;
+      case 'twitter':
+        window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}`, '_blank');
+        break;
+      case 'linkedin':
+        window.open(`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}&summary=${encodeURIComponent(description)}`, '_blank');
+        break;
+      case 'email':
+        window.open(`mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(`Confira este imóvel: ${url}`)}`, '_blank');
+        break;
+      default:
+        break;
+    }
   };
 
-  // Property current visual
-  const currentProperty = property;
-  const primaryColor = config?.primaryColor || 'var(--primary)';
-  
-  // Cores personalizadas para o modal de detalhes
-  const detailsBackgroundColor = config?.propertyDetailsBackgroundColor || primaryColor;
-  const detailsTextColor = config?.propertyDetailsTextColor || '#ffffff';
-  const detailsIconsColor = config?.propertyDetailsIconsColor || '#f0f0f0';
-
-  if (!isOpen) return null;
-
   return (
-    <div className="fixed inset-0 z-50 bg-black">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-8 overflow-hidden"
+      style={{ 
+        backgroundColor: 'rgba(0, 0, 0, 0.75)',
+        backdropFilter: 'blur(8px)'
+      }}
+    >
       <div 
         ref={modalRef}
-        className="bg-white w-full md:w-[70%] lg:w-[60%] xl:w-[50%] 2xl:w-[45%] h-full overflow-y-auto mx-auto modal-custom-scrollbar"
-        style={{ 
-          scrollbarColor: '#9e9e9e #f1f1f1',
-          scrollbarWidth: 'thin',
-          '--primary': primaryColor
-        } as React.CSSProperties}
+        className="bg-white rounded-lg w-full max-w-5xl max-h-[90vh] flex flex-col"
+        style={{ backgroundColor: detailsBackgroundColor }}
       >
-        {/* Imagem principal do imóvel - Estendida até as bordas */}
-        <div className="relative w-full" style={{ aspectRatio: '16/9', maxHeight: '500px' }}>
-          {activeImage ? (
-            <img 
-              src={activeImage} 
-              alt={currentProperty?.title || "Imagem do imóvel"} 
-              className="w-full h-full object-cover"
-              style={{ objectPosition: 'center center' }}
-            />
-          ) : (
-            <div className="flex items-center justify-center bg-gray-200 w-full h-full">
-              <i className="ri-image-line text-4xl text-gray-400"></i>
-            </div>
-          )}
-          
-          {/* Botão de fechar sobre a imagem */}
-          <button 
+        {/* Modal Header com botão de fechar */}
+        <div className="flex justify-end p-2 absolute top-0 right-0 z-10">
+          <button
             onClick={onClose}
-            className="absolute top-4 right-4 z-50 w-10 h-10 rounded-full bg-white bg-opacity-75 hover:bg-opacity-100 shadow-lg flex items-center justify-center transition-all"
+            className="text-white bg-black bg-opacity-50 hover:bg-opacity-70 rounded-full p-2 transition-all"
+            aria-label="Fechar"
           >
-            <X className="w-5 h-5 text-gray-800" />
+            <i className="ri-close-line text-xl"></i>
           </button>
-          
-          {/* Controles de navegação das imagens */}
-          {currentProperty?.images && currentProperty.images.length > 1 && (
-            <>
-              <button 
-                className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white bg-opacity-70 hover:bg-opacity-100 shadow-md flex items-center justify-center transition-all opacity-80 hover:opacity-100"
-                onClick={() => {
-                  if (currentProperty.images && activeImage) {
-                    const index = currentProperty.images.findIndex(img => {
-                      if (typeof img === 'object' && 'url' in img) return img.url === activeImage;
-                      if (typeof img === 'string') return img === activeImage;
-                      return false;
-                    });
-                    if (index > 0) {
-                      const prevImg = currentProperty.images[index - 1];
-                      let imgUrl = '';
-                      
-                      if (typeof prevImg === 'object' && 'url' in prevImg) {
-                        imgUrl = prevImg.url;
-                      } else if (typeof prevImg === 'string') {
-                        imgUrl = prevImg;
-                      }
-                      
-                      if (imgUrl) setActiveImage(imgUrl);
-                    }
-                  }
-                }}
-              >
-                <i className="ri-arrow-left-s-line text-2xl text-gray-800"></i>
-              </button>
-              <button 
-                className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white bg-opacity-70 hover:bg-opacity-100 shadow-md flex items-center justify-center transition-all opacity-80 hover:opacity-100"
-                onClick={() => {
-                  if (currentProperty?.images && activeImage) {
-                    const index = currentProperty.images.findIndex(img => {
-                      if (typeof img === 'object' && 'url' in img) return img.url === activeImage;
-                      if (typeof img === 'string') return img === activeImage;
-                      return false;
-                    });
-                    if (index < currentProperty.images.length - 1) {
-                      const nextImg = currentProperty.images[index + 1];
-                      let imgUrl = '';
-                      
-                      if (typeof nextImg === 'object' && 'url' in nextImg) {
-                        imgUrl = nextImg.url;
-                      } else if (typeof nextImg === 'string') {
-                        imgUrl = nextImg;
-                      }
-                      
-                      if (imgUrl) setActiveImage(imgUrl);
-                    }
-                  }
-                }}
-              >
-                <i className="ri-arrow-right-s-line text-2xl text-gray-800"></i>
-              </button>
-            </>
-          )}
         </div>
-
-        <div className="p-6" style={{ backgroundColor: detailsBackgroundColor, color: detailsTextColor }}>
-          {isLoadingProperty ? (
-            <div className="animate-pulse">
-              <div className="h-10 bg-white/20 rounded w-3/4 mb-4"></div>
-              <div className="h-6 bg-white/20 rounded w-1/2 mb-8"></div>
-              <div className="h-[400px] bg-white/20 rounded-xl mb-6"></div>
-            </div>
-          ) : currentProperty ? (
-            <div className="grid grid-cols-1 gap-8">
-              {/* Detalhes do imóvel */}
-              <div className="col-span-1">
-                {/* Thumbnails */}
-                {currentProperty.images && currentProperty.images.length > 1 && (
-                  <div className="flex overflow-x-auto space-x-2 mb-6 pb-2 scrollbar-hide">
-                    {currentProperty.images.map((image, index) => {
-                      const imageUrl = typeof image === 'object' && 'url' in image 
-                        ? image.url 
-                        : typeof image === 'string' 
-                          ? image 
-                          : '';
-                          
-                      if (!imageUrl) return null;
-                          
-                      return (
-                        <div 
-                          key={index}
-                          className={`flex-shrink-0 w-20 h-14 rounded overflow-hidden cursor-pointer ${
-                            activeImage === imageUrl ? 'ring-2 ring-offset-1 border-2 border-white' : ''
-                          }`}
-                          style={activeImage === imageUrl ? { borderColor: 'white' } : {}}
-                          onClick={() => setActiveImage(imageUrl)}
-                        >
-                          <div className="w-full h-full relative">
-                            <img 
-                              src={imageUrl} 
-                              alt={`Imagem ${index + 1} do imóvel`}
-                              className="w-full h-full object-cover hover:opacity-90 transition-opacity"
-                            />
-                          </div>
-                        </div>
-                      );
-                    })}
+        
+        {/* Conteúdo do modal com scroll */}
+        <div 
+          ref={contentRef}
+          className="flex-1 overflow-y-auto"
+          style={{ scrollbarWidth: 'thin', scrollbarColor: `${detailsIconsColor} transparent` }}
+        >
+          <div>
+            {/* Galeria de imagens */}
+            <div className="relative h-[300px] md:h-[400px] overflow-hidden bg-gray-200">
+              {hasImages ? (
+                <>
+                  <div className="h-full w-full" key={`${remountKey}-${propertyId}`}>
+                    <LazyImage
+                      src={currentProperty.images[currentSlide]}
+                      alt={currentProperty.title}
+                      className="w-full h-full object-cover"
+                    />
                   </div>
-                )}
-                
-                {/* Title and price */}
-                <div className="mb-6">
-                  <div className="mb-2">
-                    <h1 className="text-2xl md:text-3xl font-bold mb-2" style={{ lineHeight: '2rem', color: detailsTextColor }}>
-                      {currentProperty.title}
-                    </h1>
-                    <div 
-                      className="font-medium"
-                      style={{ color: detailsTextColor, fontSize: '22px', fontWeight: 500 }}
-                    >
-                      {formatCurrency(currentProperty.price)}
-                      {currentProperty.purpose === 'rent' && 
-                        <span className="text-base font-normal" style={{ color: `${detailsTextColor}BB` }}>/mês</span>
+                  
+                  {/* Controles do slider */}
+                  {currentProperty.images.length > 1 && (
+                    <>
+                      <button
+                        onClick={prevSlide}
+                        className="absolute left-2 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black bg-opacity-50 text-white hover:bg-opacity-70 transition-opacity"
+                        aria-label="Imagem anterior"
+                      >
+                        <i className="ri-arrow-left-s-line text-2xl"></i>
+                      </button>
+                      <button
+                        onClick={nextSlide}
+                        className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black bg-opacity-50 text-white hover:bg-opacity-70 transition-opacity"
+                        aria-label="Próxima imagem"
+                      >
+                        <i className="ri-arrow-right-s-line text-2xl"></i>
+                      </button>
+                      
+                      {/* Indicador de slides */}
+                      <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-1">
+                        {currentProperty.images.map((_, index) => (
+                          <button
+                            key={index}
+                            onClick={() => setCurrentSlide(index)}
+                            className={`w-2 h-2 rounded-full transition-all ${
+                              index === currentSlide
+                                ? 'bg-white w-4'
+                                : 'bg-white bg-opacity-50'
+                            }`}
+                            aria-label={`Ir para imagem ${index + 1}`}
+                          ></button>
+                        ))}
+                      </div>
+                    </>
+                  )}
+                </>
+              ) : (
+                <div className="h-full w-full flex items-center justify-center">
+                  <div className="text-center">
+                    <i className="ri-image-line text-5xl mb-3" style={{ color: `${detailsIconsColor}66` }}></i>
+                    <p style={{ color: `${detailsTextColor}99` }}>Sem imagens disponíveis</p>
+                  </div>
+                </div>
+              )}
+            </div>
+            
+            {/* Compartilhar nas redes sociais */}
+            <div className="p-2 flex justify-end gap-2 border-b" style={{ borderColor: `${detailsTextColor}22` }}>
+              <button
+                onClick={() => shareProperty('whatsapp')}
+                className="w-8 h-8 rounded-full flex items-center justify-center transition-colors"
+                style={{ backgroundColor: `${detailsIconsColor}20` }}
+                aria-label="Compartilhar no WhatsApp"
+              >
+                <i className="fab fa-whatsapp text-[#25D366]"></i>
+              </button>
+              <button
+                onClick={() => shareProperty('facebook')}
+                className="w-8 h-8 rounded-full flex items-center justify-center transition-colors"
+                style={{ backgroundColor: `${detailsIconsColor}20` }}
+                aria-label="Compartilhar no Facebook"
+              >
+                <i className="fab fa-facebook-f text-[#1877F2]"></i>
+              </button>
+              <button
+                onClick={() => shareProperty('twitter')}
+                className="w-8 h-8 rounded-full flex items-center justify-center transition-colors"
+                style={{ backgroundColor: `${detailsIconsColor}20` }}
+                aria-label="Compartilhar no Twitter"
+              >
+                <i className="fab fa-twitter text-[#1DA1F2]"></i>
+              </button>
+              <button
+                onClick={() => shareProperty('linkedin')}
+                className="w-8 h-8 rounded-full flex items-center justify-center transition-colors"
+                style={{ backgroundColor: `${detailsIconsColor}20` }}
+                aria-label="Compartilhar no LinkedIn"
+              >
+                <i className="fab fa-linkedin-in text-[#0A66C2]"></i>
+              </button>
+              <button
+                onClick={() => shareProperty('email')}
+                className="w-8 h-8 rounded-full flex items-center justify-center transition-colors"
+                style={{ backgroundColor: `${detailsIconsColor}20` }}
+                aria-label="Compartilhar por E-mail"
+              >
+                <i className="fas fa-envelope text-[#EA4335]"></i>
+              </button>
+            </div>
+            
+            {/* Detalhes do imóvel */}
+            <div className="p-6">
+              {/* Header - Preço, Categoria e Título */}
+              <div className="mb-4">
+                <div className="flex flex-wrap justify-between items-start gap-2 mb-2">
+                  <div>
+                    <div className="inline-block px-3 py-1 rounded-full text-sm font-medium mb-2" style={{ backgroundColor: `${detailsIconsColor}20`, color: detailsIconsColor }}>
+                      {currentProperty.category === 'rent' ? 'Aluguel' : 'Venda'}
+                    </div>
+                    <h1 className="text-2xl md:text-3xl font-bold" style={{ color: detailsTextColor }}>{currentProperty.title}</h1>
+                  </div>
+                  
+                  <div className="text-right">
+                    <div className="text-sm" style={{ color: `${detailsTextColor}99` }}>
+                      {currentProperty.category === 'rent' ? 'Aluguel' : 'Valor'}
+                    </div>
+                    <div className="text-2xl md:text-3xl font-bold" style={{ color: detailsIconsColor }}>
+                      {currentProperty.price 
+                        ? `R$ ${currentProperty.price.toLocaleString('pt-BR')}`
+                        : 'Sob consulta'
                       }
                     </div>
                   </div>
-                  
-                  <div className="flex items-center mb-4" style={{ color: `${detailsTextColor}DD` }}>
-                    <i className="ri-map-pin-line mr-2" style={{ color: detailsIconsColor }}></i>
-                    <span>{currentProperty.address}</span>
-                    <div className="ml-auto text-sm flex items-center" style={{ color: `${detailsTextColor}DD` }}>
-                      <i className="ri-code-line mr-1" style={{ color: detailsIconsColor }}></i>
-                      <span>Cód. LL{currentProperty.id}</span>
-                    </div>
+                </div>
+                
+                <div className="flex items-center mb-4" style={{ color: `${detailsTextColor}DD` }}>
+                  <i className="ri-map-pin-line mr-2" style={{ color: detailsIconsColor }}></i>
+                  <span>{currentProperty.address}</span>
+                  <div className="ml-auto text-sm flex items-center" style={{ color: `${detailsTextColor}DD` }}>
+                    <i className="ri-code-line mr-1" style={{ color: detailsIconsColor }}></i>
+                    <span>Cód. LL{currentProperty.id}</span>
                   </div>
-                  
-                  <div className="border-t border-b py-4 my-4" style={{ borderColor: `${detailsTextColor}22` }}>
-                    <div className="flex flex-wrap gap-4 justify-between">
-                      <div className="flex items-center">
-                        <i className="fas fa-bed text-xl mr-2" style={{ color: detailsIconsColor }}></i>
-                        <div>
-                          <span className="font-medium" style={{ color: detailsTextColor }}>{currentProperty.bedrooms || 0}</span>
-                          <span className="text-sm ml-1" style={{ color: `${detailsTextColor}BB` }}>Quartos</span>
-                        </div>
+                </div>
+                
+                <div className="border-t border-b py-4 my-4" style={{ borderColor: `${detailsTextColor}22` }}>
+                  <div className="flex flex-wrap gap-4 justify-between">
+                    <div className="flex items-center">
+                      <i className="fas fa-bed text-xl mr-2" style={{ color: detailsIconsColor }}></i>
+                      <div>
+                        <span className="font-medium" style={{ color: detailsTextColor }}>{currentProperty.bedrooms || 0}</span>
+                        <span className="text-sm ml-1" style={{ color: `${detailsTextColor}BB` }}>Quartos</span>
                       </div>
-                      
-                      <div className="flex items-center">
-                        <i className="fas fa-shower text-xl mr-2" style={{ color: detailsIconsColor }}></i>
-                        <div>
-                          <span className="font-medium" style={{ color: detailsTextColor }}>{currentProperty.bathrooms || 0}</span>
-                          <span className="text-sm ml-1" style={{ color: `${detailsTextColor}BB` }}>Banheiros</span>
-                        </div>
+                    </div>
+                    
+                    <div className="flex items-center">
+                      <i className="fas fa-shower text-xl mr-2" style={{ color: detailsIconsColor }}></i>
+                      <div>
+                        <span className="font-medium" style={{ color: detailsTextColor }}>{currentProperty.bathrooms || 0}</span>
+                        <span className="text-sm ml-1" style={{ color: `${detailsTextColor}BB` }}>Banheiros</span>
                       </div>
-                      
-                      <div className="flex items-center">
-                        <i className="fas fa-bath text-xl mr-2" style={{ color: detailsIconsColor }}></i>
-                        <div>
-                          <span className="font-medium" style={{ color: detailsTextColor }}>{currentProperty.suites || 0}</span>
-                          <span className="text-sm ml-1" style={{ color: `${detailsTextColor}BB` }}>Suítes</span>
-                        </div>
+                    </div>
+                    
+                    <div className="flex items-center">
+                      <i className="fas fa-bath text-xl mr-2" style={{ color: detailsIconsColor }}></i>
+                      <div>
+                        <span className="font-medium" style={{ color: detailsTextColor }}>{currentProperty.suites || 0}</span>
+                        <span className="text-sm ml-1" style={{ color: `${detailsTextColor}BB` }}>Suítes</span>
                       </div>
-                      
-                      <div className="flex items-center">
-                        <i className="fas fa-car text-xl mr-2" style={{ color: detailsIconsColor }}></i>
-                        <div>
-                          <span className="font-medium" style={{ color: detailsTextColor }}>{currentProperty.parkingSpots || 0}</span>
-                          <span className="text-sm ml-1" style={{ color: `${detailsTextColor}BB` }}>Vagas</span>
-                        </div>
+                    </div>
+                    
+                    <div className="flex items-center">
+                      <i className="fas fa-car text-xl mr-2" style={{ color: detailsIconsColor }}></i>
+                      <div>
+                        <span className="font-medium" style={{ color: detailsTextColor }}>{currentProperty.parkingSpots || 0}</span>
+                        <span className="text-sm ml-1" style={{ color: `${detailsTextColor}BB` }}>Vagas</span>
                       </div>
-                      
-                      <div className="flex items-center">
-                        <i className="fas fa-ruler-combined text-xl mr-2" style={{ color: detailsIconsColor }}></i>
-                        <div>
-                          <span className="font-medium" style={{ color: detailsTextColor }}>{currentProperty.area}</span>
-                          <span className="text-sm ml-1" style={{ color: `${detailsTextColor}BB` }}>m²</span>
-                        </div>
+                    </div>
+                    
+                    <div className="flex items-center">
+                      <i className="fas fa-ruler-combined text-xl mr-2" style={{ color: detailsIconsColor }}></i>
+                      <div>
+                        <span className="font-medium" style={{ color: detailsTextColor }}>{currentProperty.area}</span>
+                        <span className="text-sm ml-1" style={{ color: `${detailsTextColor}BB` }}>m²</span>
                       </div>
                     </div>
                   </div>
                 </div>
-                
-                {/* Description */}
+              </div>
+              
+              {/* Description */}
+              <div className="mb-8">
+                <h2 className="text-xl font-bold mb-3" style={{ color: detailsTextColor }}>Descrição</h2>
+                <p className="whitespace-pre-line" style={{ color: `${detailsTextColor}EE` }}>{currentProperty.description}</p>
+              </div>
+              
+              {/* Features */}
+              {currentProperty.features && currentProperty.features.length > 0 && (
                 <div className="mb-8">
-                  <h2 className="text-xl font-bold mb-3" style={{ color: detailsTextColor }}>Descrição</h2>
-                  <p className="whitespace-pre-line" style={{ color: `${detailsTextColor}EE` }}>{currentProperty.description}</p>
+                  <h2 className="text-xl font-bold mb-3" style={{ color: detailsTextColor }}>Características</h2>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                    {currentProperty.features.map((feature, index) => (
+                      <div key={index} className="flex items-center" style={{ color: `${detailsTextColor}EE` }}>
+                        <div className="w-6 h-6 mr-2 rounded-full flex items-center justify-center" style={{ backgroundColor: `${detailsIconsColor}20` }}>
+                          <i className="fas fa-check text-xs" style={{ color: detailsIconsColor }}></i>
+                        </div>
+                        <span style={{ color: detailsTextColor }}>{feature}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+              
+              {/* Localização */}
+              <div className="mb-8">
+                <h2 className="text-xl font-bold mb-3" style={{ color: detailsTextColor }}>Localização</h2>
+                <div className="border rounded-lg h-64 overflow-hidden" style={{ borderColor: `${detailsTextColor}22` }}>
+                  {currentProperty.address ? (
+                    <iframe 
+                      width="100%" 
+                      height="100%" 
+                      frameBorder="0" 
+                      style={{ border: 0 }} 
+                      src={`https://maps.google.com/maps?q=${encodeURIComponent(
+                        `${currentProperty.address}, ${currentProperty.neighborhood || ''}, ${currentProperty.city || ''}, ${currentProperty.zipCode || ''}`
+                      )}&z=15&output=embed`}
+                      allowFullScreen
+                      title="Localização do imóvel"
+                    ></iframe>
+                  ) : (
+                    <div className="h-full flex items-center justify-center" style={{ backgroundColor: `${detailsIconsColor}15` }}>
+                      <div className="text-center">
+                        <i className="ri-map-pin-line text-4xl mb-2" style={{ color: `${detailsIconsColor}66` }}></i>
+                        <p style={{ color: `${detailsTextColor}99` }}>Mapa indisponível</p>
+                      </div>
+                    </div>
+                  )}
                 </div>
                 
-                {/* Características */}
-                {currentProperty.features && Array.isArray(currentProperty.features) && currentProperty.features.length > 0 && (
-                  <div className="mb-8">
-                    <h2 className="text-xl font-bold mb-3" style={{ color: detailsTextColor }}>Características</h2>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-y-4">
-                      {currentProperty.features.map((feature, index) => (
-                        <div key={index} className="flex items-center">
-                          <div className="w-8 h-8 rounded-full flex items-center justify-center mr-3" 
-                               style={{ backgroundColor: `${detailsIconsColor}20` }}>
-                            <i 
-                              className="fas fa-check text-sm"
-                              style={{ color: detailsIconsColor }}
-                            ></i>
-                          </div>
-                          <span style={{ color: detailsTextColor }}>{feature}</span>
-                        </div>
-                      ))}
+                {/* Botão Falar com corretor abaixo do mapa */}
+                <div className="mt-4">
+                  <button
+                    onClick={() => {
+                      // Abrir WhatsApp com mensagem personalizada
+                      if (agent) {
+                        const phone = agent.phone?.replace(/\D/g, '') || '';
+                        const message = `Olá, tenho interesse no imóvel "${currentProperty.title}" (Ref: ${currentProperty.id})`;
+                        window.open(`https://wa.me/55${phone}?text=${encodeURIComponent(message)}`, '_blank');
+                      } else if (config?.whatsappNumber) {
+                        const phone = config.whatsappNumber.replace(/\D/g, '');
+                        const message = `Olá! Estou interessado no imóvel ${currentProperty.title} (Cód. LL${currentProperty.id})`;
+                        window.open(`https://wa.me/55${phone}?text=${encodeURIComponent(message)}`, '_blank');
+                      }
+                    }}
+                    className="w-full py-3 px-4 bg-[#25D366] text-white rounded-lg font-medium flex items-center justify-center hover:bg-[#22c55e] transition-colors shadow-lg group relative overflow-hidden"
+                  >
+                    <div className="absolute left-0 top-0 h-full w-14 flex items-center justify-center bg-[#22c55e]">
+                      <i className="fab fa-whatsapp text-xl"></i>
                     </div>
-                  </div>
-                )}
-                
-                {/* Localização */}
-                <div className="mb-8">
-                  <h2 className="text-xl font-bold mb-3" style={{ color: detailsTextColor }}>Localização</h2>
-                  <div className="border rounded-lg h-64 overflow-hidden" style={{ borderColor: `${detailsTextColor}22` }}>
-                    {currentProperty.address ? (
-                      <iframe 
-                        width="100%" 
-                        height="100%" 
-                        frameBorder="0" 
-                        style={{ border: 0 }} 
-                        src={`https://maps.google.com/maps?q=${encodeURIComponent(
-                          `${currentProperty.address}, ${currentProperty.neighborhood || ''}, ${currentProperty.city || ''}, ${currentProperty.zipCode || ''}`
-                        )}&z=15&output=embed`}
-                        allowFullScreen
-                        title="Localização do imóvel"
-                      ></iframe>
-                    ) : (
-                      <div className="h-full flex items-center justify-center" style={{ backgroundColor: `${detailsIconsColor}15` }}>
-                        <div className="text-center">
-                          <i className="ri-map-pin-line text-4xl mb-2" style={{ color: `${detailsIconsColor}66` }}></i>
-                          <p style={{ color: `${detailsTextColor}99` }}>Mapa indisponível</p>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                  
-                  {/* Botão Falar com corretor abaixo do mapa */}
-                  <div className="mt-4">
-                    <button
-                      onClick={() => {
-                        // Abrir WhatsApp com mensagem personalizada
-                        if (agent) {
-                          const phone = agent.phone?.replace(/\D/g, '') || '';
-                          const message = `Olá, tenho interesse no imóvel "${currentProperty.title}" (Ref: ${currentProperty.id})`;
-                          window.open(`https://wa.me/55${phone}?text=${encodeURIComponent(message)}`, '_blank');
-                        } else if (config?.whatsappNumber) {
-                          const phone = config.whatsappNumber.replace(/\D/g, '');
-                          const message = `Olá! Estou interessado no imóvel ${currentProperty.title} (Cód. LL${currentProperty.id})`;
-                          window.open(`https://wa.me/55${phone}?text=${encodeURIComponent(message)}`, '_blank');
-                        }
-                      }}
-                      className="w-full py-3 px-4 bg-[#25D366] text-white rounded-lg font-medium flex items-center justify-center hover:bg-[#22c55e] transition-colors shadow-lg group relative overflow-hidden"
-                      style={{ minHeight: "64px" }}
-                    >
-                      {agent && (
-                        <div className="absolute left-0 top-0 bottom-0 flex items-center pl-2 transition-transform group-hover:scale-110">
-                          <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-white shadow-sm">
-                            {agent.avatar ? (
-                              <img
-                                src={agent.avatar}
-                                alt={agent.name || "Corretor"}
-                                className="w-full h-full object-cover"
-                              />
-                            ) : (
-                              <div className="w-full h-full bg-[#1da851] flex items-center justify-center">
-                                <i className="ri-user-line text-white text-xl"></i>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      )}
-                      <div className="flex flex-col items-start justify-center absolute left-16">
-                        <span className="text-white font-bold text-base mb-0.5">Falar com {agent?.name ? `${agent.name.split(' ')[0]}` : 'Corretor'}</span>
-                        <span className="text-white/90 text-xs font-normal">Resposta rápida via WhatsApp</span>
-                      </div>
-                      <div className="absolute right-4 w-8 h-8 flex items-center justify-center bg-white/20 rounded-full">
-                        <i className="fab fa-whatsapp text-white text-xl"></i>
-                      </div>
-                    </button>
-                  </div>
+                    <span className="ml-10">Falar com um corretor</span>
+                  </button>
                 </div>
                 
                 {/* Formulário de contato */}
-                <div className="mb-8">
-                  <h2 className="text-xl font-bold mb-3" style={{ color: detailsTextColor }}>Fale com um Corretor</h2>
+                <div className="mt-6 mb-4">
+                  <h2 className="text-xl font-bold mb-3" style={{ color: detailsTextColor }}>Envie uma mensagem</h2>
                   <div className="p-4 rounded-lg" style={{ backgroundColor: `${detailsIconsColor}10`, borderColor: `${detailsTextColor}22` }}>
                     <form 
                       onSubmit={(e) => {
@@ -696,102 +597,68 @@ function PropertyDetailsContent({ propertyId, isOpen, onClose, propConfig }: {
                     </form>
                   </div>
                 </div>
-                
-                {/* Botões de compartilhamento */}
-                <div className="mb-8">
-                  <h2 className="text-xl font-bold mb-3" style={{ color: detailsTextColor }}>Compartilhar</h2>
-                  <div className="flex gap-3">
-                    <button
-                      onClick={() => {
-                        const url = window.location.href;
-                        window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank');
-                      }}
-                      className="w-12 h-12 rounded-full flex items-center justify-center transition-colors"
-                      style={{ backgroundColor: `${detailsIconsColor}20`, color: detailsIconsColor }}
-                      aria-label="Compartilhar no Facebook"
-                    >
-                      <i className="fab fa-facebook-f"></i>
-                    </button>
-                    
-                    <button
-                      onClick={() => {
-                        const url = window.location.href;
-                        const text = `Confira este imóvel: ${currentProperty.title}`;
-                        window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`, '_blank');
-                      }}
-                      className="w-12 h-12 rounded-full flex items-center justify-center transition-colors"
-                      style={{ backgroundColor: `${detailsIconsColor}20`, color: detailsIconsColor }}
-                      aria-label="Compartilhar no Twitter"
-                    >
-                      <i className="fab fa-twitter"></i>
-                    </button>
-                    
-                    <button
-                      onClick={() => {
-                        const url = window.location.href;
-                        window.open(`https://wa.me/?text=${encodeURIComponent(`Confira este imóvel: ${currentProperty.title} ${url}`)}`, '_blank');
-                      }}
-                      className="w-12 h-12 rounded-full flex items-center justify-center transition-colors"
-                      style={{ backgroundColor: `${detailsIconsColor}20`, color: detailsIconsColor }}
-                      aria-label="Compartilhar no WhatsApp"
-                    >
-                      <i className="fab fa-whatsapp"></i>
-                    </button>
-                    
-                    <button
-                      onClick={() => {
-                        // Copiar link para o clipboard
-                        const url = window.location.href;
-                        navigator.clipboard.writeText(url).then(() => {
-                          alert('Link copiado!');
-                        });
-                      }}
-                      className="w-12 h-12 rounded-full flex items-center justify-center transition-colors"
-                      style={{ backgroundColor: `${detailsIconsColor}20`, color: detailsIconsColor }}
-                      aria-label="Copiar link"
-                    >
-                      <i className="fas fa-link"></i>
-                    </button>
+              </div>
+              
+              {/* Informações do corretor */}
+              {agent && (
+                <div className="border-t pt-6 mt-2" style={{ borderColor: `${detailsTextColor}22` }}>
+                  <h2 className="text-xl font-bold mb-4" style={{ color: detailsTextColor }}>Corretor Responsável</h2>
+                  <div className="flex items-center">
+                    <div className="w-16 h-16 rounded-full overflow-hidden border-2 mr-4" style={{ borderColor: detailsIconsColor }}>
+                      {agent.photoURL ? (
+                        <img src={agent.photoURL} alt={agent.name} className="w-full h-full object-cover" />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center bg-gray-200" style={{ backgroundColor: `${detailsIconsColor}20` }}>
+                          <i className="ri-user-line text-2xl" style={{ color: detailsIconsColor }}></i>
+                        </div>
+                      )}
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-lg" style={{ color: detailsTextColor }}>{agent.name}</h3>
+                      {agent.creci && (
+                        <p className="text-sm" style={{ color: `${detailsTextColor}BB` }}>CRECI: {agent.creci}</p>
+                      )}
+                      {agent.phone && (
+                        <p className="text-sm mt-1" style={{ color: `${detailsTextColor}CC` }}>
+                          <i className="ri-phone-line mr-1" style={{ color: detailsIconsColor }}></i>
+                          {agent.phone}
+                        </p>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
             </div>
-          ) : (
-            <div className="py-12 text-center">
-              <p className="text-white/70">Imóvel não encontrado</p>
-            </div>
-          )}
+          </div>
         </div>
-
-        {/* Botão WhatsApp que aparece após 75% de rolagem */}
+        
+        {/* Botão de contato fixo que aparece após rolagem */}
         {showContactButton && agent && (
-          <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-[9999]">
-            <button 
-              className="flex items-center shadow-lg rounded-full cursor-pointer px-8 py-3 whitespace-nowrap animate-fadeIn"
-              style={{ backgroundColor: '#25D366', minWidth: '260px' }}
+          <div className="fixed bottom-4 left-4 right-4 z-50 transition-opacity duration-300 opacity-100 flex justify-center">
+            <button
               onClick={() => {
-                if (!agent || !currentProperty) return;
+                // Abrir WhatsApp
                 const phone = agent.phone?.replace(/\D/g, '') || '';
-                const message = `Olá, tenho interesse no imóvel "${currentProperty.title}" (Ref: ${currentProperty.id})`;
-                const whatsappUrl = `https://wa.me/55${phone}?text=${encodeURIComponent(message)}`;
-                window.open(whatsappUrl, '_blank');
+                const message = `Olá! Estou interessado no imóvel ${currentProperty.title} (Cód. LL${currentProperty.id})`;
+                window.open(`https://wa.me/55${phone}?text=${encodeURIComponent(message)}`, '_blank');
+              }}
+              className="bg-[#25D366] text-white py-3 px-6 rounded-full flex items-center shadow-lg hover:bg-[#22c55e] transition-colors"
+              style={{
+                backgroundColor: config?.contactButtonBackground || '#25D366',
+                color: config?.contactButtonText || '#FFFFFF',
               }}
             >
-              <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-white mr-4 flex-shrink-0">
-                {agent.avatar ? (
-                  <img
-                    src={agent.avatar}
-                    alt={agent.displayName}
-                    className="w-full h-full object-cover"
-                  />
+              <div className="w-10 h-10 rounded-full overflow-hidden mr-3 flex-shrink-0">
+                {agent.photoURL ? (
+                  <img src={agent.photoURL} alt={agent.name} className="w-full h-full object-cover" />
                 ) : (
-                  <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                    <i className="ri-user-line text-gray-400 text-xl"></i>
+                  <div className="w-full h-full flex items-center justify-center bg-white bg-opacity-20">
+                    <i className="ri-user-line text-xl"></i>
                   </div>
                 )}
               </div>
-              <span className="text-white font-medium flex-grow text-center">FALAR COM CORRETOR</span>
-              <i className="fab fa-whatsapp text-white text-xl ml-4 flex-shrink-0"></i>
+              <span className="font-medium">Falar com corretor</span>
+              <i className="fab fa-whatsapp text-xl ml-3"></i>
             </button>
           </div>
         )}
