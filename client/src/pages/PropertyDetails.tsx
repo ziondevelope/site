@@ -239,6 +239,23 @@ export default function PropertyDetails() {
 
       {/* Conteúdo principal */}
       <main className="flex-grow pt-24" style={{ backgroundColor: detailsBackgroundColor }}>
+        {/* Botão flutuante de "Falar com Corretor" que aparece após rolar 75% da página */}
+        {showContactButton && agent?.phone && (
+          <motion.a
+            href={`https://wa.me/55${agent.phone.replace(/\D/g, '')}?text=Olá, tenho interesse no imóvel ${currentProperty?.title} (Ref: #${currentProperty?.id}).`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="fixed bottom-6 right-6 z-50 rounded-full bg-[#25D366] text-white font-medium px-5 py-3 shadow-lg flex items-center justify-center hover:bg-[#1fb655] transition-colors duration-300"
+            initial={{ opacity: 0, y: 20 }}
+            animate={controls}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <i className="ri-whatsapp-line mr-2 text-xl"></i>
+            FALAR COM CORRETOR
+          </motion.a>
+        )}
+        
         {isLoadingProperty ? (
           <div className="container mx-auto px-4 py-8">
             <div className="max-w-6xl mx-auto">
