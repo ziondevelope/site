@@ -117,6 +117,10 @@ export const websiteConfig = pgTable("website_config", {
   footerIconsColor: text("footer_icons_color"),
   footerInfo: text("footer_info"),
   footerStyle: text("footer_style").default("default"), // "default" ou "minimal"
+  // Cores para a página de detalhes do imóvel
+  propertyDetailsBackgroundColor: text("property_details_background_color").default("#ffffff"),
+  propertyDetailsTextColor: text("property_details_text_color").default("#333333"),
+  propertyDetailsIconsColor: text("property_details_icons_color").default("#3B82F6"),
   bannerTitle: text("banner_title").default("Encontre o imóvel dos seus sonhos"),
   bannerSubtitle: text("banner_subtitle").default("Oferecemos as melhores opções de imóveis para compra e aluguel com atendimento personalizado"),
   showBannerText: boolean("show_banner_text").default(true),
