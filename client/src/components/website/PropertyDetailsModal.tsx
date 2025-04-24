@@ -101,13 +101,8 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
       document.body.style.overflow = 'hidden';
       setPropertyModalOpen(true);
       
-      // Forçar exibição do botão para debugging
+      // Botão sempre visível para simplificar
       setShowContactButton(true);
-      controls.start({
-        opacity: 1,
-        y: 0,
-        transition: { duration: 0.5, ease: "easeOut" }
-      });
       
       console.log("Modal aberto, botão deve estar visível");
     } else {
@@ -118,54 +113,7 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
       document.body.style.overflow = '';
       setPropertyModalOpen(false);
     };
-  }, [isOpen, setPropertyModalOpen, controls]);
-  
-  // Detectar scroll do modal para mostrar/esconder o botão "Falar com corretor"
-  useEffect(() => {
-    if (!modalRef.current || !isOpen) return;
-    
-    const handleScroll = () => {
-      if (!modalRef.current) return;
-      
-      const scrollHeight = modalRef.current.scrollHeight;
-      const scrollTop = modalRef.current.scrollTop;
-      const clientHeight = modalRef.current.clientHeight;
-      
-      // Calcular a porcentagem de rolagem (75% = 0.75)
-      const scrollPercentage = (scrollTop + clientHeight) / scrollHeight;
-      
-      if (scrollPercentage >= 0.75 && !showContactButton) {
-        setShowContactButton(true);
-        // Animar o botão quando aparecer
-        controls.start({
-          opacity: 1,
-          y: 0,
-          transition: { duration: 0.5, ease: "easeOut" }
-        });
-      } else if (scrollPercentage < 0.75 && showContactButton) {
-        // Animar a saída do botão
-        controls.start({
-          opacity: 0,
-          y: 20,
-          transition: { duration: 0.3, ease: "easeIn" }
-        }).then(() => {
-          setShowContactButton(false);
-        });
-      }
-    };
-    
-    const modalElement = modalRef.current;
-    modalElement.addEventListener('scroll', handleScroll);
-    
-    // Verificar inicialmente (caso a página já carregue em uma posição abaixo de 75%)
-    handleScroll();
-    
-    return () => {
-      if (modalElement) {
-        modalElement.removeEventListener('scroll', handleScroll);
-      }
-    };
-  }, [showContactButton, controls, isOpen]);
+  }, [isOpen, setPropertyModalOpen]);
 
   // Format currency
   const formatCurrency = (value: number) => {
@@ -457,18 +405,12 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
           )}
         </div>
 
-        {/* Botão central "Falar com Corretor" que aparece após rolar 75% do modal */}
-        {showContactButton && agent && (
-          <motion.div 
-            className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50"
-            initial={{ opacity: 0, y: 20 }}
-            animate={controls}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <div 
+        {/* Botão WhatsApp fixo */}
+        {agent && (
+          <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-[9999]">
+            <button 
               className="flex items-center shadow-lg rounded-full cursor-pointer px-8 py-3 whitespace-nowrap"
-              style={{ backgroundColor: '#25D366', minWidth: '260px', zIndex: 9999 }}
+              style={{ backgroundColor: '#25D366', minWidth: '260px' }}
               onClick={() => {
                 if (!agent || !currentProperty) return;
                 const phone = agent.phone?.replace(/\D/g, '') || '';
@@ -492,8 +434,8 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
               </div>
               <span className="text-white font-medium flex-grow text-center">FALAR COM CORRETOR</span>
               <i className="fab fa-whatsapp text-white text-xl ml-4 flex-shrink-0"></i>
-            </div>
-          </motion.div>
+            </button>
+          </div>
         )}
       </div>
     </div>
