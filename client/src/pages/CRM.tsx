@@ -49,6 +49,7 @@ const leadFormSchema = insertLeadSchema.extend({
   email: z.string().email("Email inválido").optional().nullable(),
   interestType: z.enum(["purchase", "rent", "sale"]).optional().nullable(),
   propertyType: z.enum(["apartment", "house", "commercial"]).optional().nullable(),
+  propertyId: z.number().optional().nullable(),
   region: z.string().optional().nullable(),
   priceRange: z.object({
     min: z.number().optional().nullable(),
@@ -662,6 +663,25 @@ export default function CRM() {
     queryFn: () => apiRequest('/api/tasks')
   });
   
+  // Buscar a lista de imóveis para o campo de pesquisa
+  const { data: properties = [], isLoading: propertiesLoading } = useQuery({
+    queryKey: ['/api/properties'],
+    queryFn: async () => {
+      return await apiRequest('/api/properties');
+    },
+    retry: 1,
+  });
+  
+  // Filtra os imóveis para pesquisa
+  const filteredProperties = useMemo(() => {
+    if (!propertySearchTerm) return properties;
+    return properties.filter((property: any) => 
+      property.title.toLowerCase().includes(propertySearchTerm.toLowerCase()) || 
+      (property.neighborhood && property.neighborhood.toLowerCase().includes(propertySearchTerm.toLowerCase())) ||
+      (property.city && property.city.toLowerCase().includes(propertySearchTerm.toLowerCase()))
+    );
+  }, [properties, propertySearchTerm]);
+  
 
   
   // Atualizar o estado com os leads que têm tarefas pendentes quando as tarefas são carregadas
@@ -948,7 +968,7 @@ export default function CRM() {
       budget: undefined,
       notes: "",
       status: "new",
-      businessType: undefined,
+      propertyId: undefined,
       propertyType: undefined,
       region: "",
       priceRange: {
@@ -1307,6 +1327,81 @@ export default function CRM() {
                             <FormControl>
                               <Input placeholder="Ex: Centro, Zona Sul..." {...field} />
                             </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    
+                    {/* Campo de Imóvel específico */}
+                    <div className="grid grid-cols-1 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="propertyId"
+                        render={({ field }) => (
+                          <FormItem className="flex flex-col">
+                            <FormLabel>Imóvel de interesse</FormLabel>
+                            <Popover open={isPropertyPopoverOpen} onOpenChange={setIsPropertyPopoverOpen}>
+                              <PopoverTrigger asChild>
+                                <FormControl>
+                                  <Button
+                                    variant="outline"
+                                    role="combobox"
+                                    className={`w-full justify-between h-10 ${!field.value ? "text-muted-foreground" : ""}`}
+                                  >
+                                    {field.value 
+                                      ? properties.find((property) => property.id === field.value)?.title || "Selecione um imóvel"
+                                      : "Selecione um imóvel (opcional)"}
+                                    <Home className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                  </Button>
+                                </FormControl>
+                              </PopoverTrigger>
+                              <PopoverContent className="w-[300px] p-0" align="start">
+                                <Command>
+                                  <CommandInput 
+                                    placeholder="Buscar imóvel..." 
+                                    className="h-9" 
+                                    value={propertySearchTerm}
+                                    onValueChange={setPropertySearchTerm}
+                                  />
+                                  <CommandList>
+                                    <CommandEmpty>Nenhum imóvel encontrado.</CommandEmpty>
+                                    <CommandGroup>
+                                      <CommandItem
+                                        onSelect={() => {
+                                          field.onChange(null);
+                                          setIsPropertyPopoverOpen(false);
+                                          setPropertySearchTerm('');
+                                        }}
+                                        className="cursor-pointer"
+                                      >
+                                        <Check
+                                          className={`mr-2 h-4 w-4 ${!field.value ? "opacity-100" : "opacity-0"}`}
+                                        />
+                                        Nenhum imóvel selecionado
+                                      </CommandItem>
+                                      
+                                      {filteredProperties.map((property) => (
+                                        <CommandItem
+                                          key={property.id}
+                                          onSelect={() => {
+                                            field.onChange(property.id);
+                                            setIsPropertyPopoverOpen(false);
+                                            setPropertySearchTerm('');
+                                          }}
+                                          className="cursor-pointer"
+                                        >
+                                          <Check
+                                            className={`mr-2 h-4 w-4 ${property.id === field.value ? "opacity-100" : "opacity-0"}`}
+                                          />
+                                          {property.title} - {property.neighborhood || property.city}
+                                        </CommandItem>
+                                      ))}
+                                    </CommandGroup>
+                                  </CommandList>
+                                </Command>
+                              </PopoverContent>
+                            </Popover>
                             <FormMessage />
                           </FormItem>
                         )}
