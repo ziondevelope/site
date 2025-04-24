@@ -104,7 +104,11 @@ export default function ClientDetails({ client, onDelete }: ClientDetailsProps) 
 
   // Handler para campos de seleção
   const handleSelectChange = (name: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    if (name === 'interestType' && value === 'none') {
+      setFormData((prev) => ({ ...prev, [name]: null }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   // Handler para número (budget)
@@ -114,7 +118,7 @@ export default function ClientDetails({ client, onDelete }: ClientDetailsProps) 
 
   // Handler para agente (ID)
   const handleAgentChange = (value: string) => {
-    setFormData((prev) => ({ ...prev, agentId: value ? parseInt(value, 10) : null }));
+    setFormData((prev) => ({ ...prev, agentId: value && value !== 'none' ? parseInt(value, 10) : null }));
   };
 
   // Enviar o formulário
@@ -229,7 +233,7 @@ export default function ClientDetails({ client, onDelete }: ClientDetailsProps) 
                     <SelectValue placeholder="Selecione o interesse" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Nenhum</SelectItem>
+                    <SelectItem value="none">Nenhum</SelectItem>
                     <SelectItem value="purchase">Compra</SelectItem>
                     <SelectItem value="rent">Aluguel</SelectItem>
                     <SelectItem value="sell">Venda</SelectItem>
@@ -296,7 +300,7 @@ export default function ClientDetails({ client, onDelete }: ClientDetailsProps) 
                     <SelectValue placeholder="Selecione um corretor" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Nenhum</SelectItem>
+                    <SelectItem value="none">Nenhum</SelectItem>
                     {agents?.map((agent: any) => (
                       <SelectItem key={agent.id} value={agent.id.toString()}>
                         {agent.name}

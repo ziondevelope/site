@@ -368,13 +368,16 @@ export default function Clients() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Tipo de Interesse</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value || ''}>
+                        <Select 
+                          onValueChange={(value) => field.onChange(value === 'none' ? null : value)} 
+                          defaultValue={field.value || 'none'}>
                           <FormControl>
                             <SelectTrigger>
                               <SelectValue placeholder="Selecione o interesse" />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
+                            <SelectItem value="none">Nenhum</SelectItem>
                             <SelectItem value="purchase">Compra</SelectItem>
                             <SelectItem value="rent">Aluguel</SelectItem>
                             <SelectItem value="sell">Venda</SelectItem>
@@ -415,8 +418,8 @@ export default function Clients() {
                       <FormItem>
                         <FormLabel>Responsável</FormLabel>
                         <Select 
-                          onValueChange={(value) => field.onChange(value ? parseInt(value, 10) : null)} 
-                          defaultValue={field.value ? field.value.toString() : ''}
+                          onValueChange={(value) => field.onChange(value && value !== 'none' ? parseInt(value, 10) : null)} 
+                          defaultValue={field.value ? field.value.toString() : 'none'}
                         >
                           <FormControl>
                             <SelectTrigger>
@@ -424,7 +427,7 @@ export default function Clients() {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            <SelectItem value="">Nenhum</SelectItem>
+                            <SelectItem value="none">Nenhum</SelectItem>
                             {agents?.map((agent: any) => (
                               <SelectItem key={agent.id} value={agent.id.toString()}>
                                 {agent.name}
