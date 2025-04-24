@@ -382,7 +382,7 @@ export default function Home() {
       {config?.showFeaturedProperties !== false && (
         <section id="properties" className="py-16 bg-gray-50">
           <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold text-center mb-12">Imóveis em Destaque</h2>
+            <h2 className="text-3xl font-bold text-left mb-12" style={{ color: config?.primaryColor || 'var(--primary)' }}>Imóveis Exclusivos</h2>
             
             {isLoadingProperties ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -587,7 +587,7 @@ export default function Home() {
       {config?.showSaleProperties !== false && (
         <section id="sale-properties" className="py-16 bg-white">
           <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold text-center mb-12">Imóveis para Venda</h2>
+            <h2 className="text-3xl font-bold text-left mb-12" style={{ color: config?.primaryColor || 'var(--primary)' }}>Imóveis para Venda</h2>
             
             {isLoadingProperties ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -701,7 +701,7 @@ export default function Home() {
       {config?.showRentProperties !== false && (
         <section id="rent-properties" className="py-16 bg-gray-50">
           <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold text-center mb-12">Imóveis para Aluguel</h2>
+            <h2 className="text-3xl font-bold text-left mb-12" style={{ color: config?.primaryColor || 'var(--primary)' }}>Imóveis para Aluguel</h2>
             
             {isLoadingProperties ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
