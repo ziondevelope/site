@@ -84,37 +84,29 @@ export default function Header({ config, isLoadingConfig }: HeaderProps) {
             href="/administrado" 
             target="_blank" 
             rel="noopener noreferrer"
-            className={`hidden md:inline-flex items-center px-4 py-1 rounded-full border border-solid transition-all hover:bg-white ${
-              isPropertiesPage || scrolled ? 'text-primary' : 'text-white'
-            }`}
+            className="hidden md:flex items-center justify-center h-11 px-6 rounded-full shadow-sm relative overflow-hidden group"
             style={{ 
-              borderColor: isPropertiesPage || scrolled 
-                ? 'rgb(229, 229, 229)' 
-                : 'rgba(255, 255, 255, 0.3)',
-              color: isPropertiesPage || scrolled ? '#000000' : 'white'
-            }}
-            onMouseOver={(e) => {
-              e.currentTarget.style.color = '#000000';
-            }}
-            onMouseOut={(e) => {
-              e.currentTarget.style.color = isPropertiesPage || scrolled ? '#000000' : 'white';
+              backgroundColor: isPropertiesPage || scrolled 
+                ? (config?.primaryColor ? `${config.primaryColor}15` : 'rgba(21, 97, 109, 0.08)') 
+                : 'rgba(255, 255, 255, 0.15)'
             }}
           >
-            <span className="mr-2">Área do Corretor</span>
-            <i 
-              className="fas fa-user-tie text-lg transition-colors" 
-              style={{ color: isPropertiesPage || scrolled ? (config?.primaryColor || 'var(--primary)') : "white" }}
-              ref={(el) => {
-                if (el) {
-                  el.parentElement?.addEventListener('mouseover', () => {
-                    el.style.color = config?.primaryColor || 'var(--primary)';
-                  });
-                  el.parentElement?.addEventListener('mouseout', () => {
-                    el.style.color = isPropertiesPage || scrolled ? (config?.primaryColor || 'var(--primary)') : "white";
-                  });
-                }
+            <span 
+              className="relative z-10 text-sm font-medium"
+              style={{ 
+                color: isPropertiesPage || scrolled 
+                  ? (config?.primaryColor || 'var(--primary)') 
+                  : 'white'
               }}
-            ></i>
+            >
+              Área do Corretor
+            </span>
+            <div 
+              className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-15"
+              style={{ 
+                backgroundColor: config?.primaryColor || 'var(--primary)'
+              }}
+            ></div>
           </a>
           
           {/* Menu hamburger para desktop */}
