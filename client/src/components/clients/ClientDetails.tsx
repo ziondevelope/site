@@ -163,15 +163,7 @@ export default function ClientDetails({ client, onDelete }: ClientDetailsProps) 
     });
   };
 
-  // Obter iniciais para o avatar
-  const getInitials = (name: string) => {
-    return name
-      .split(' ')
-      .map(part => part[0])
-      .slice(0, 2)
-      .join('')
-      .toUpperCase();
-  };
+  // Função removida - getInitials
 
   return (
     <div className="space-y-6">
@@ -179,11 +171,7 @@ export default function ClientDetails({ client, onDelete }: ClientDetailsProps) 
       <Card className="border-none shadow-none bg-gradient-to-r from-slate-50 to-white">
         <CardContent className="p-4 sm:p-6">
           <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
-            <div className="flex-shrink-0">
-              <div className="h-16 w-16 md:h-20 md:w-20 rounded-md bg-gradient-to-br from-[#12636C] to-[#0a4147] flex items-center justify-center text-white font-bold text-xl">
-                {getInitials(client.name)}
-              </div>
-            </div>
+
             
             <div className="flex-grow">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-2">
