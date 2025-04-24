@@ -7,6 +7,7 @@ import {
   insertUserSchema,
   insertPropertySchema,
   insertLeadSchema,
+  insertClientSchema,
   insertTaskSchema,
   updateWebsiteConfigSchema,
   insertSalesFunnelSchema,
@@ -562,6 +563,111 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(contacts);
     } catch (error) {
       res.status(500).json({ message: "Error fetching recent contacts" });
+    }
+  });
+
+  // Client endpoints
+  apiRouter.get("/clients", async (req, res) => {
+    try {
+      const clients = await storageInstance.getAllClients();
+      res.json(clients);
+    } catch (error) {
+      console.error("Error fetching clients:", error);
+      res.status(500).json({ message: "Error fetching clients" });
+    }
+  });
+
+  apiRouter.get("/clients/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid ID" });
+      }
+      
+      const client = await storageInstance.getClient(id);
+      if (!client) {
+        return res.status(404).json({ message: "Client not found" });
+      }
+      
+      res.json(client);
+    } catch (error) {
+      console.error("Error fetching client:", error);
+      res.status(500).json({ message: "Error fetching client" });
+    }
+  });
+
+  apiRouter.post("/clients", async (req, res) => {
+    try {
+      const validatedData = insertClientSchema.parse(req.body);
+      const client = await storageInstance.createClient(validatedData);
+      res.status(201).json(client);
+    } catch (error) {
+      console.error("Error creating client:", error);
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Invalid client data", errors: error.errors });
+      }
+      res.status(500).json({ message: "Error creating client" });
+    }
+  });
+
+  apiRouter.patch("/clients/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid ID" });
+      }
+      
+      const validatedData = insertClientSchema.partial().parse(req.body);
+      const client = await storageInstance.updateClient(id, validatedData);
+      
+      if (!client) {
+        return res.status(404).json({ message: "Client not found" });
+      }
+      
+      res.json(client);
+    } catch (error) {
+      console.error("Error updating client:", error);
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Invalid client data", errors: error.errors });
+      }
+      res.status(500).json({ message: "Error updating client" });
+    }
+  });
+
+  apiRouter.delete("/clients/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid ID" });
+      }
+      
+      const success = await storageInstance.deleteClient(id);
+      
+      if (!success) {
+        return res.status(404).json({ message: "Client not found" });
+      }
+      
+      res.status(204).send();
+    } catch (error) {
+      console.error("Error deleting client:", error);
+      res.status(500).json({ message: "Error deleting client" });
+    }
+  });
+
+  apiRouter.post("/leads/:id/convert-to-client", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid ID" });
+      }
+      
+      const additionalData = req.body;
+      const client = await storageInstance.convertLeadToClient(id, additionalData);
+      
+      res.status(201).json(client);
+    } catch (error) {
+      console.error("Error converting lead to client:", error);
+      res.status(500).json({ message: "Error converting lead to client" });
     }
   });
   

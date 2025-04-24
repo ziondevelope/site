@@ -1997,6 +1997,149 @@ export class MemStorage implements IStorage {
       
     return recent;
   }
+
+  // Client methods
+  async getClient(id: number): Promise<Client | undefined> {
+    try {
+      const clientsRef = collection(db, 'clients');
+      const q = query(clientsRef, where('id', '==', id), limit(1));
+      const clientSnapshot = await getDocs(q);
+      
+      if (clientSnapshot.empty) {
+        return undefined;
+      }
+      
+      return clientSnapshot.docs[0].data() as Client;
+    } catch (error) {
+      console.error('Error fetching client:', error);
+      return undefined;
+    }
+  }
+
+  async getAllClients(): Promise<Client[]> {
+    try {
+      const clientsRef = collection(db, 'clients');
+      const q = query(clientsRef, orderBy('createdAt', 'desc'));
+      const clientsSnapshot = await getDocs(q);
+      return clientsSnapshot.docs.map(doc => doc.data() as Client);
+    } catch (error) {
+      console.error('Error fetching all clients:', error);
+      return [];
+    }
+  }
+
+  async createClient(client: InsertClient): Promise<Client> {
+    try {
+      // Find the highest ID to increment
+      const clientsRef = collection(db, 'clients');
+      const q = query(clientsRef, orderBy('id', 'desc'), limit(1));
+      const clientsSnapshot = await getDocs(q);
+      const highestId = clientsSnapshot.empty ? 0 : clientsSnapshot.docs[0].data().id;
+      
+      const now = new Date().toISOString();
+      const newClient: Client = {
+        ...client,
+        id: highestId + 1,
+        createdAt: now,
+        updatedAt: now,
+      };
+      
+      await setDoc(doc(db, 'clients', newClient.id.toString()), newClient);
+      return newClient;
+    } catch (error) {
+      console.error('Error creating client:', error);
+      throw new Error('Failed to create client');
+    }
+  }
+
+  async updateClient(id: number, clientData: Partial<InsertClient>): Promise<Client | undefined> {
+    try {
+      const clientRef = doc(db, 'clients', id.toString());
+      const clientDoc = await getDoc(clientRef);
+      
+      if (!clientDoc.exists()) {
+        return undefined;
+      }
+      
+      const updatedClient = {
+        ...clientDoc.data(),
+        ...clientData,
+        updatedAt: new Date().toISOString(),
+      };
+      
+      await updateDoc(clientRef, updatedClient);
+      return updatedClient as Client;
+    } catch (error) {
+      console.error('Error updating client:', error);
+      return undefined;
+    }
+  }
+
+  async deleteClient(id: number): Promise<boolean> {
+    try {
+      const clientRef = doc(db, 'clients', id.toString());
+      const clientDoc = await getDoc(clientRef);
+      
+      if (!clientDoc.exists()) {
+        return false;
+      }
+      
+      await deleteDoc(clientRef);
+      console.log(`Client with ID ${id} deleted successfully`);
+      return true;
+    } catch (error) {
+      console.error('Error deleting client:', error);
+      return false;
+    }
+  }
+
+  async convertLeadToClient(leadId: number, additionalData?: Partial<InsertClient>): Promise<Client> {
+    try {
+      // 1. Obter dados do lead
+      const lead = await this.getLead(leadId);
+      if (!lead) {
+        throw new Error(`Lead with ID ${leadId} not found`);
+      }
+      
+      // 2. Verificar se já existe um cliente convertido deste lead
+      const clientsRef = collection(db, 'clients');
+      const q = query(clientsRef, where('convertedFromLeadId', '==', leadId), limit(1));
+      const existingClientSnapshot = await getDocs(q);
+      
+      if (!existingClientSnapshot.empty) {
+        console.log(`Lead ${leadId} already converted to client ${existingClientSnapshot.docs[0].data().id}`);
+        return existingClientSnapshot.docs[0].data() as Client;
+      }
+      
+      // 3. Criar cliente com dados do lead
+      const clientData: InsertClient = {
+        name: lead.name,
+        email: lead.email || null,
+        phone: lead.phone || null,
+        whatsapp: (lead as any).whatsapp || null,
+        interestType: lead.interestType || null,
+        budget: lead.budget || null,
+        notes: lead.notes || null,
+        agentId: lead.agentId || null,
+        convertedFromLeadId: leadId,
+        status: 'active',
+        ...additionalData
+      };
+      
+      // 4. Criar o cliente
+      const newClient = await this.createClient(clientData);
+      
+      // 5. Atualizar o status do lead, se necessário
+      if (lead.status !== 'closed') {
+        await this.updateLeadStatus(leadId, 'closed');
+      }
+      
+      return newClient;
+    } catch (error) {
+      console.error('Error converting lead to client:', error);
+      throw new Error('Failed to convert lead to client');
+    }
+  }
 }
 
 // Always use Firebase storage for persistence
