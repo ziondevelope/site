@@ -21,7 +21,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+// Removida importação de Avatar
 
 interface Client {
   id: number;
@@ -180,11 +180,9 @@ export default function ClientDetails({ client, onDelete }: ClientDetailsProps) 
         <CardContent className="p-4 sm:p-6">
           <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
             <div className="flex-shrink-0">
-              <Avatar className="h-16 w-16 md:h-20 md:w-20 rounded-md border border-primary/10 bg-primary/5">
-                <AvatarFallback className="rounded-md font-semibold text-xl text-primary">
-                  {getInitials(client.name)}
-                </AvatarFallback>
-              </Avatar>
+              <div className="h-16 w-16 md:h-20 md:w-20 rounded-md bg-gradient-to-br from-[#12636C] to-[#0a4147] flex items-center justify-center text-white font-bold text-xl">
+                {getInitials(client.name)}
+              </div>
             </div>
             
             <div className="flex-grow">
