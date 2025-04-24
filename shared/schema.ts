@@ -185,6 +185,8 @@ export const websiteConfig = pgTable("website_config", {
   whatsappFormTitle: text("whatsapp_form_title").default("Entre em contato com um corretor"),
   whatsappFormMessage: text("whatsapp_form_message").default("Preencha seus dados para que um de nossos corretores possa lhe atender da melhor forma."),
   whatsappInitialMessage: text("whatsapp_initial_message").default("Está com dificuldades para achar o imóvel dos seus sonhos? De Imóveis Populares a de Alto Padrão, CHAME O CAPITÃO!!"),
+  whatsappChatBackgroundColor: text("whatsapp_chat_background_color").default("#ffffff"),
+  whatsappChatTextColor: text("whatsapp_chat_text_color").default("#333333"),
   
   updatedAt: timestamp("updated_at").defaultNow(),
 });

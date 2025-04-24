@@ -197,8 +197,16 @@ export default function WhatsAppChat() {
             </button>
             
             {/* Mensagem */}
-            <div className="mt-6 text-center px-4">
-              <p className="text-sm text-gray-700 dark:text-gray-200 font-medium">
+            <div 
+              className="mt-6 text-center px-4"
+              style={{
+                backgroundColor: config.whatsappChatBackgroundColor || "#ffffff",
+                color: config.whatsappChatTextColor || "#333333",
+                borderRadius: "8px",
+                padding: "12px",
+              }}
+            >
+              <p className="text-sm font-medium" style={{ color: config.whatsappChatTextColor || "#333333" }}>
                 {config.whatsappInitialMessage || "Está com dificuldades para achar o imóvel dos seus sonhos? De Imóveis Populares a de Alto Padrão, CHAME O CAPITÃO!!"}
               </p>
               

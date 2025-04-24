@@ -178,6 +178,53 @@ export default function ChatSettings({
                 </p>
               </div>
               
+              <div className="grid grid-cols-2 gap-4 mt-4">
+                <div className="space-y-2">
+                  <Label htmlFor="chatBackgroundColor">Cor de fundo da caixa</Label>
+                  <div className="flex">
+                    <input
+                      type="color"
+                      id="chatBackgroundColor"
+                      value={configData.whatsappChatBackgroundColor ?? config?.whatsappChatBackgroundColor ?? "#ffffff"}
+                      onChange={(e) => handleTextChange(e, "whatsappChatBackgroundColor")}
+                      className="w-10 h-10 rounded-l-md cursor-pointer border border-r-0 border-gray-300"
+                    />
+                    <Input
+                      value={configData.whatsappChatBackgroundColor ?? config?.whatsappChatBackgroundColor ?? "#ffffff"}
+                      onChange={(e) => handleTextChange(e, "whatsappChatBackgroundColor")}
+                      className="rounded-l-none"
+                    />
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="chatTextColor">Cor do texto</Label>
+                  <div className="flex">
+                    <input
+                      type="color"
+                      id="chatTextColor"
+                      value={configData.whatsappChatTextColor ?? config?.whatsappChatTextColor ?? "#333333"}
+                      onChange={(e) => handleTextChange(e, "whatsappChatTextColor")}
+                      className="w-10 h-10 rounded-l-md cursor-pointer border border-r-0 border-gray-300"
+                    />
+                    <Input
+                      value={configData.whatsappChatTextColor ?? config?.whatsappChatTextColor ?? "#333333"}
+                      onChange={(e) => handleTextChange(e, "whatsappChatTextColor")}
+                      className="rounded-l-none"
+                    />
+                  </div>
+                </div>
+              </div>
+              
+              <div className="mt-4 p-4 rounded-md border" style={{
+                backgroundColor: configData.whatsappChatBackgroundColor ?? config?.whatsappChatBackgroundColor ?? "#ffffff",
+                color: configData.whatsappChatTextColor ?? config?.whatsappChatTextColor ?? "#333333",
+              }}>
+                <p className="text-sm" style={{ color: configData.whatsappChatTextColor ?? config?.whatsappChatTextColor ?? "#333333" }}>
+                  {configData.whatsappInitialMessage ?? config?.whatsappInitialMessage ?? "Está com dificuldades para achar o imóvel dos seus sonhos? De Imóveis Populares a de Alto Padrão, CHAME O CAPITÃO!!"}
+                </p>
+              </div>
+              
               <div className="space-y-2">
                 <Label>Posição do botão</Label>
                 <RadioGroup 
