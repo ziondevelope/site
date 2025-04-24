@@ -1,0 +1,6 @@
+                            <img 
+                              src={getFeaturedImage(property)} 
+                              alt={property.title} 
+                              className="property-image w-full h-full object-cover transition-transform duration-500"
+                              loading="lazy"
+                            />
