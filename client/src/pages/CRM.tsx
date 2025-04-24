@@ -21,6 +21,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 // Estilos personalizados para campos de edição com bordas mais sutis
 const subtleEditingStyles = {
@@ -74,6 +76,10 @@ export default function CRM() {
   const [searchTerm, setSearchTerm] = useState('');
   const [sourceFilter, setSourceFilter] = useState('');
   const [interestTypeFilter, setInterestTypeFilter] = useState('');
+  
+  // Estados para pesquisa de imóveis
+  const [propertySearchTerm, setPropertySearchTerm] = useState('');
+  const [isPropertyPopoverOpen, setIsPropertyPopoverOpen] = useState(false);
   
   // Estados para gerenciamento de tarefas
   const [taskForm, setTaskForm] = useState<{
