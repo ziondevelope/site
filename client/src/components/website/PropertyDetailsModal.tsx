@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { X } from 'lucide-react';
 import './scrollbar.css';
 import { useUI } from '@/contexts/UIContext';
+import { motion, useAnimation } from 'framer-motion';
 
 interface PropertyDetailsModalProps {
   propertyId: number;
@@ -15,7 +16,12 @@ interface PropertyDetailsModalProps {
 export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: PropertyDetailsModalProps) {
   const [activeImage, setActiveImage] = useState<string | null>(null);
   const modalRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
   const { setPropertyModalOpen } = useUI();
+  
+  // Estados para controle de rolagem e animação do botão "Falar com corretor"
+  const [showContactButton, setShowContactButton] = useState(false);
+  const controls = useAnimation();
   
   // Fetch property details
   const { data: property, isLoading: isLoadingProperty } = useQuery<Property>({
@@ -94,6 +100,10 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
     if (isOpen) {
       document.body.style.overflow = 'hidden';
       setPropertyModalOpen(true);
+      
+      // Resetar estado do botão quando o modal abre
+      setShowContactButton(false);
+      controls.start({ opacity: 0, y: 20 });
     } else {
       document.body.style.overflow = '';
       setPropertyModalOpen(false);
@@ -102,7 +112,54 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
       document.body.style.overflow = '';
       setPropertyModalOpen(false);
     };
-  }, [isOpen, setPropertyModalOpen]);
+  }, [isOpen, setPropertyModalOpen, controls]);
+  
+  // Detectar scroll do modal para mostrar/esconder o botão "Falar com corretor"
+  useEffect(() => {
+    if (!modalRef.current || !isOpen) return;
+    
+    const handleScroll = () => {
+      if (!modalRef.current) return;
+      
+      const scrollHeight = modalRef.current.scrollHeight;
+      const scrollTop = modalRef.current.scrollTop;
+      const clientHeight = modalRef.current.clientHeight;
+      
+      // Calcular a porcentagem de rolagem (75% = 0.75)
+      const scrollPercentage = (scrollTop + clientHeight) / scrollHeight;
+      
+      if (scrollPercentage >= 0.75 && !showContactButton) {
+        setShowContactButton(true);
+        // Animar o botão quando aparecer
+        controls.start({
+          opacity: 1,
+          y: 0,
+          transition: { duration: 0.5, ease: "easeOut" }
+        });
+      } else if (scrollPercentage < 0.75 && showContactButton) {
+        // Animar a saída do botão
+        controls.start({
+          opacity: 0,
+          y: 20,
+          transition: { duration: 0.3, ease: "easeIn" }
+        }).then(() => {
+          setShowContactButton(false);
+        });
+      }
+    };
+    
+    const modalElement = modalRef.current;
+    modalElement.addEventListener('scroll', handleScroll);
+    
+    // Verificar inicialmente (caso a página já carregue em uma posição abaixo de 75%)
+    handleScroll();
+    
+    return () => {
+      if (modalElement) {
+        modalElement.removeEventListener('scroll', handleScroll);
+      }
+    };
+  }, [showContactButton, controls, isOpen]);
 
   // Format currency
   const formatCurrency = (value: number) => {
@@ -394,9 +451,15 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
           )}
         </div>
 
-        {/* Chat button fixo */}
-        {agent && (
-          <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50">
+        {/* Botão flutuante "Falar com Corretor" que aparece após rolar 75% do modal */}
+        {showContactButton && agent && (
+          <motion.div 
+            className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50"
+            initial={{ opacity: 0, y: 20 }}
+            animate={controls}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
             <div 
               className="flex items-center shadow-lg rounded-full cursor-pointer px-8 py-3 whitespace-nowrap"
               style={{ backgroundColor: '#25D366', minWidth: '260px' }}
@@ -424,7 +487,7 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
               <span className="text-white font-medium flex-grow text-center">FALAR COM CORRETOR</span>
               <i className="fab fa-whatsapp text-white text-xl ml-4 flex-shrink-0"></i>
             </div>
-          </div>
+          </motion.div>
         )}
       </div>
     </div>
