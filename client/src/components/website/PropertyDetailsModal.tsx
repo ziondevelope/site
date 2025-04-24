@@ -11,9 +11,10 @@ interface PropertyDetailsModalProps {
   propertyId: number;
   isOpen: boolean;
   onClose: () => void;
+  config?: WebsiteConfig;
 }
 
-export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: PropertyDetailsModalProps) {
+export default function PropertyDetailsModal({ propertyId, isOpen, onClose, config: propConfig }: PropertyDetailsModalProps) {
   const [activeImage, setActiveImage] = useState<string | null>(null);
   const modalRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -23,17 +24,28 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
   const [showContactButton, setShowContactButton] = useState(false);
   const controls = useAnimation();
   
+  // Limpa a imagem ativa quando muda de imóvel (evita exibir imagem do imóvel anterior)
+  useEffect(() => {
+    if (isOpen) {
+      // Limpa a imagem ativa ao abrir o modal com um novo propertyId
+      setActiveImage(null);
+    }
+  }, [propertyId, isOpen]);
+  
   // Fetch property details
   const { data: property, isLoading: isLoadingProperty } = useQuery<Property>({
     queryKey: [`/api/properties/${propertyId}`],
     enabled: !!propertyId && isOpen
   });
   
-  // Fetch website config (for colors)
-  const { data: config } = useQuery<WebsiteConfig>({
+  // Fetch website config (for colors) se não tiver sido passado como prop
+  const { data: configData } = useQuery<WebsiteConfig>({
     queryKey: ['/api/website/config'],
-    enabled: isOpen
+    enabled: isOpen && !propConfig
   });
+  
+  // Use a configuração passada como prop ou a obtida pela consulta
+  const config = propConfig || configData;
   
   // Fetch agent data
   const { data: agent } = useQuery<any>({
@@ -43,6 +55,9 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
 
   // Set the first image as active when property data is loaded
   useEffect(() => {
+    // Se ainda estiver carregando ou não tiver property, não faz nada
+    if (isLoadingProperty || !property) return;
+    
     if (property?.images && property.images.length > 0) {
       // Check if property has images and if they are objects with url
       if (typeof property.images[0] === 'object' && property.images[0].url) {
@@ -64,7 +79,7 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
       // Compatibility with older versions
       setActiveImage(property.featuredImage);
     }
-  }, [property]);
+  }, [property, isLoadingProperty]);
 
   // Close on ESC key press
   useEffect(() => {
