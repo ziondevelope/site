@@ -569,11 +569,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Client endpoints
   apiRouter.get("/clients", async (req, res) => {
     try {
+      console.log("Fetching all clients...");
+      if (typeof storageInstance.getAllClients !== 'function') {
+        console.error("getAllClients is not a function!");
+        return res.status(500).json({ message: "Implementation error: getAllClients is not a function" });
+      }
+      
       const clients = await storageInstance.getAllClients();
-      res.json(clients);
+      console.log("Clients fetched successfully:", clients ? clients.length : 0);
+      res.json(clients || []);
     } catch (error) {
       console.error("Error fetching clients:", error);
-      res.status(500).json({ message: "Error fetching clients" });
+      res.status(500).json({ message: `Error fetching clients: ${error instanceof Error ? error.message : 'Unknown error'}` });
     }
   });
 
