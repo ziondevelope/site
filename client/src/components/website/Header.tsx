@@ -57,7 +57,7 @@ export default function Header({ config, isLoadingConfig }: HeaderProps) {
                   alt="Logo da Imobiliária" 
                   className="h-full object-contain"
                   loading="eager" 
-                  fetchPriority="high"
+                  fetchpriority="high"
                   decoding="async"
                   onLoad={(e) => {
                     // Torna a imagem visível quando carregada

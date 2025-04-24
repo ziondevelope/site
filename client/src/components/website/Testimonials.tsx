@@ -3,7 +3,6 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useCallback, useEffect, useState } from "react";
 import useEmblaCarousel from 'embla-carousel-react';
-import { WebsiteConfig } from "@shared/schema";
 
 interface Testimonial {
   id: number;
@@ -15,11 +14,7 @@ interface Testimonial {
   createdAt: string;
 }
 
-interface TestimonialsProps {
-  config?: WebsiteConfig;
-}
-
-export function Testimonials({ config }: TestimonialsProps) {
+export function Testimonials() {
   
   // Embla carousel setup
   // Configuração do carrossel com 3 slides visíveis em telas grandes
@@ -48,22 +43,15 @@ export function Testimonials({ config }: TestimonialsProps) {
     const cleanupAutoplay = autoplay();
     
     // Atualizar o índice atual quando o slide mudar
-    const handleSelect = () => {
-      if (emblaApi) {
-        setCurrentIndex(emblaApi.selectedScrollSnap());
-      }
-    };
-    
     if (emblaApi) {
-      emblaApi.on('select', handleSelect);
+      emblaApi.on('select', () => {
+        setCurrentIndex(emblaApi.selectedScrollSnap());
+      });
     }
     
     return () => {
       if (cleanupAutoplay) cleanupAutoplay();
-      if (emblaApi) {
-        // Remover o event listener ao desmontar o componente
-        emblaApi.off('select', handleSelect);
-      }
+      if (emblaApi) emblaApi.off('select');
     };
   }, [emblaApi, autoplay]);
   
