@@ -5,6 +5,20 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Breakpoint para dispositivos extra pequenos */
+@layer utilities {
+  .xs\:inline-block {
+    display: inline-block;
+  }
+  .xs\:text-base {
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
+  .xs\:whitespace-nowrap {
+    white-space: nowrap;
+  }
+}
+
 /* Estilos para rolagem suave */
 * {
   scroll-behavior: smooth;

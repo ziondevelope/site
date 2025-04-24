@@ -779,10 +779,12 @@ function PropertyDetailsContent({ propertyId, isOpen, onClose, propConfig }: {
                       <div className="pt-2">
                         <button
                           type="submit"
-                          className="w-full py-3.5 bg-[#25D366] text-white font-medium rounded-md hover:bg-[#22c55e] transition-colors shadow-md flex items-center justify-center"
+                          className="w-full py-3 md:py-3.5 bg-[#25D366] text-white font-medium rounded-md hover:bg-[#22c55e] transition-colors shadow-md flex items-center justify-center"
                         >
-                          <i className="fab fa-whatsapp mr-2 text-xl"></i>
-                          Falar com um corretor especialista
+                          <i className="fab fa-whatsapp mr-2 text-xl hidden xs:inline-block"></i>
+                          <span className="text-sm xs:text-base sm:text-base md:text-base lg:text-base whitespace-normal xs:whitespace-nowrap text-center">
+                            Falar com corretor
+                          </span>
                         </button>
                         <p className="text-xs mt-3 text-center" style={{ color: `${detailsTextColor}99` }}>
                           Ao enviar, você concorda em receber contato de nossos corretores. Seus dados estão seguros conosco.
