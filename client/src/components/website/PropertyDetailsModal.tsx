@@ -616,19 +616,62 @@ function PropertyDetailsContent({ propertyId, isOpen, onClose, propConfig }: {
                               // Limpar formulário
                               form.reset();
                               
-                              // Mostrar mensagem de sucesso
-                              alert('Mensagem enviada com sucesso! Um de nossos corretores entrará em contato em breve.');
+                              // Mostrar modal de sucesso personalizado
+                              const successModal = document.createElement('div');
+                              successModal.className = 'fixed inset-0 flex items-center justify-center z-[9999]';
+                              successModal.innerHTML = `
+                                <div class="fixed inset-0 bg-black bg-opacity-50 transition-opacity"></div>
+                                <div class="relative rounded-lg bg-white dark:bg-gray-800 max-w-md w-full mx-auto shadow-xl overflow-hidden transform transition-all sm:p-6 text-center">
+                                  <div class="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-4">
+                                    <svg class="w-10 h-10 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                  </div>
+                                  <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100 mb-2">Mensagem enviada com sucesso!</h3>
+                                  <p class="text-sm text-gray-500 dark:text-gray-400 mb-5">
+                                    Um de nossos corretores entrará em contato em breve. Podemos continuar a conversa pelo WhatsApp agora se preferir.
+                                  </p>
+                                  <div class="flex flex-col sm:flex-row gap-2 justify-center">
+                                    <button class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-[#25D366] rounded-md hover:bg-[#22c55e] focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#25D366]" id="whatsapp-redirect">
+                                      <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M17.4 14.2l-2.1-.9c-.3-.1-.6 0-.9.2l-1 1.1c-.1.2-.4.2-.6.1l-.7-.3C11 13.7 10 12.8 9.3 11.9l-.3-.7c-.1-.2 0-.4.1-.6l1-1c.2-.2.3-.6.2-.9l-.9-2.1c-.2-.4-.6-.6-1-.6-.3 0-.6.1-.9.3l-1.1 1.1c-.3.3-.5.7-.5 1.1.3 2.4 1.3 4.7 2.9 6.5s4 2.9 6.5 3.2c.4 0 .8-.2 1.1-.5l1.1-1.1c.2-.2.3-.5.3-.9 0-.4-.2-.8-.6-1"></path>
+                                      </svg>
+                                      Conversar agora
+                                    </button>
+                                    <button class="inline-flex justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-gray-500" id="close-success-modal">
+                                      Fechar
+                                    </button>
+                                  </div>
+                                </div>
+                              `;
                               
-                              // Opcionalmente, direcionar para WhatsApp
-                              if (agent?.phone) {
-                                const phone = agent.phone.replace(/\D/g, '');
-                                const whatsMessage = `Olá, meu nome é ${name}. Tenho interesse no imóvel "${currentProperty?.title}" (Ref: ${currentProperty?.id})`;
-                                window.open(`https://wa.me/55${phone}?text=${encodeURIComponent(whatsMessage)}`, '_blank');
-                              } else if (config?.whatsappNumber) {
-                                const phone = config.whatsappNumber.replace(/\D/g, '');
-                                const whatsMessage = `Olá, meu nome é ${name}. Tenho interesse no imóvel "${currentProperty?.title}" (Ref: ${currentProperty?.id})`;
-                                window.open(`https://wa.me/55${phone}?text=${encodeURIComponent(whatsMessage)}`, '_blank');
-                              }
+                              document.body.appendChild(successModal);
+                              
+                              // Preparar mensagem do WhatsApp
+                              const phone = agent?.phone?.replace(/\D/g, '') || config?.whatsappNumber?.replace(/\D/g, '') || '';
+                              const whatsMessage = `Olá, meu nome é ${name}. Tenho interesse no imóvel "${currentProperty?.title}" (Ref: ${currentProperty?.id})`;
+                              const whatsappUrl = `https://wa.me/55${phone}?text=${encodeURIComponent(whatsMessage)}`;
+                              
+                              // Adicionar event listeners
+                              document.getElementById('whatsapp-redirect')?.addEventListener('click', () => {
+                                document.body.removeChild(successModal);
+                                window.open(whatsappUrl, '_blank');
+                              });
+                              
+                              document.getElementById('close-success-modal')?.addEventListener('click', () => {
+                                document.body.removeChild(successModal);
+                              });
+                              
+                              // Fechar ao clicar fora ou pressionar ESC
+                              successModal.querySelector('.fixed.inset-0')?.addEventListener('click', () => {
+                                document.body.removeChild(successModal);
+                              });
+                              
+                              document.addEventListener('keydown', function(e) {
+                                if (e.key === 'Escape' && document.body.contains(successModal)) {
+                                  document.body.removeChild(successModal);
+                                }
+                              });
                             });
                           } else {
                             throw new Error('Falha ao criar o lead');
