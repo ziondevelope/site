@@ -329,6 +329,72 @@ export default function GeneralSettings({ config, configData, onConfigChange }: 
         </div>
       </div>
       
+      {/* Seção de cores para página de detalhes do imóvel */}
+      <div className="mt-6">
+        <h3 className="text-lg font-medium text-gray-800 mb-4">Cores da Página de Detalhes do Imóvel</h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div>
+            <Label className="block text-sm font-medium text-gray-700 mb-2">
+              Cor de Fundo
+            </Label>
+            <div className="flex">
+              <Input 
+                type="color" 
+                value={configData.propertyDetailsBackgroundColor || config?.propertyDetailsBackgroundColor || primaryColor}
+                onChange={(e) => onConfigChange({ ...configData, propertyDetailsBackgroundColor: e.target.value })}
+                className="h-10 w-10 border-0 rounded-l-lg p-0"
+              />
+              <Input 
+                type="text" 
+                value={configData.propertyDetailsBackgroundColor || config?.propertyDetailsBackgroundColor || primaryColor}
+                onChange={(e) => onConfigChange({ ...configData, propertyDetailsBackgroundColor: e.target.value })}
+                className="border border-l-0 border-gray-200 rounded-r-full px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-transparent"
+              />
+            </div>
+          </div>
+          
+          <div>
+            <Label className="block text-sm font-medium text-gray-700 mb-2">
+              Cor do Texto
+            </Label>
+            <div className="flex">
+              <Input 
+                type="color" 
+                value={configData.propertyDetailsTextColor || config?.propertyDetailsTextColor || '#ffffff'}
+                onChange={(e) => onConfigChange({ ...configData, propertyDetailsTextColor: e.target.value })}
+                className="h-10 w-10 border-0 rounded-l-lg p-0"
+              />
+              <Input 
+                type="text" 
+                value={configData.propertyDetailsTextColor || config?.propertyDetailsTextColor || '#ffffff'}
+                onChange={(e) => onConfigChange({ ...configData, propertyDetailsTextColor: e.target.value })}
+                className="border border-l-0 border-gray-200 rounded-r-full px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-transparent"
+              />
+            </div>
+          </div>
+          
+          <div>
+            <Label className="block text-sm font-medium text-gray-700 mb-2">
+              Cor dos Ícones
+            </Label>
+            <div className="flex">
+              <Input 
+                type="color" 
+                value={configData.propertyDetailsIconsColor || config?.propertyDetailsIconsColor || '#f0f0f0'}
+                onChange={(e) => onConfigChange({ ...configData, propertyDetailsIconsColor: e.target.value })}
+                className="h-10 w-10 border-0 rounded-l-lg p-0"
+              />
+              <Input 
+                type="text" 
+                value={configData.propertyDetailsIconsColor || config?.propertyDetailsIconsColor || '#f0f0f0'}
+                onChange={(e) => onConfigChange({ ...configData, propertyDetailsIconsColor: e.target.value })}
+                className="border border-l-0 border-gray-200 rounded-r-full px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-transparent"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      
       {/* Seção de Redes Sociais */}
       <div className="mt-6">
         <h3 className="text-lg font-medium text-gray-800 mb-4">Redes Sociais</h3>
