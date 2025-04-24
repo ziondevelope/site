@@ -31,10 +31,19 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose, conf
   }, [propertyId, isOpen]);
   
   // Fetch property details
-  const { data: property, isLoading: isLoadingProperty } = useQuery<Property>({
+  const { data: property, isLoading: isLoadingProperty, refetch } = useQuery<Property>({
     queryKey: [`/api/properties/${propertyId}`],
-    enabled: !!propertyId && isOpen
+    enabled: !!propertyId && isOpen,
+    refetchOnWindowFocus: false,
+    staleTime: 0  // Força sempre buscar dados novos
   });
+  
+  // Quando o modal é aberto, forçar o refetch dos dados
+  useEffect(() => {
+    if (isOpen && propertyId) {
+      refetch();
+    }
+  }, [isOpen, propertyId, refetch]);
   
   // Fetch website config (for colors) se não tiver sido passado como prop
   const { data: configData } = useQuery<WebsiteConfig>({
@@ -51,32 +60,42 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose, conf
     enabled: !!property?.agentId && isOpen,
   });
 
-  // Set the first image as active when property data is loaded
+  // Set the first image as active when property data is loaded or reloaded
   useEffect(() => {
+    // Primeiro limpamos a imagem ativa para garantir que o estado está fresco
+    setActiveImage(null);
+    
     // Se ainda estiver carregando ou não tiver property, não faz nada
     if (isLoadingProperty || !property) return;
     
-    if (property?.images && property.images.length > 0) {
-      // Check if property has images and if they are objects with url
-      if (typeof property.images[0] === 'object' && property.images[0].url) {
-        const featuredImage = property.images.find(img => 
-          typeof img === 'object' && 'isFeatured' in img && img.isFeatured
-        );
-        
-        setActiveImage(
-          featuredImage && 'url' in featuredImage 
-            ? featuredImage.url 
-            : property.images[0].url
-        );
-      } 
-      // If array of strings
-      else if (typeof property.images[0] === 'string') {
-        setActiveImage(property.images[0]);
+    console.log("Definindo imagem ativa para o imóvel:", property.id);
+    
+    // Pequeno atraso para garantir que o DOM foi atualizado
+    const timer = setTimeout(() => {
+      if (property?.images && property.images.length > 0) {
+        // Check if property has images and if they are objects with url
+        if (typeof property.images[0] === 'object' && property.images[0].url) {
+          const featuredImage = property.images.find(img => 
+            typeof img === 'object' && 'isFeatured' in img && img.isFeatured
+          );
+          
+          setActiveImage(
+            featuredImage && 'url' in featuredImage 
+              ? featuredImage.url 
+              : property.images[0].url
+          );
+        } 
+        // If array of strings
+        else if (typeof property.images[0] === 'string') {
+          setActiveImage(property.images[0]);
+        }
+      } else if (property?.featuredImage) {
+        // Compatibility with older versions
+        setActiveImage(property.featuredImage);
       }
-    } else if (property?.featuredImage) {
-      // Compatibility with older versions
-      setActiveImage(property.featuredImage);
-    }
+    }, 50);
+    
+    return () => clearTimeout(timer);
   }, [property, isLoadingProperty]);
 
   // Close on ESC key press
