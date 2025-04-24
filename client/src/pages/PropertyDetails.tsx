@@ -126,6 +126,11 @@ export default function PropertyDetails() {
   // Propriedade atual visual
   const currentProperty = property;
   const primaryColor = config?.primaryColor || 'var(--primary)';
+  
+  // Cores personalizadas para a página de detalhes
+  const detailsBackgroundColor = config?.propertyDetailsBackgroundColor || '#ffffff';
+  const detailsTextColor = config?.propertyDetailsTextColor || '#333333';
+  const detailsIconsColor = config?.propertyDetailsIconsColor || primaryColor;
 
   // Estado para controlar o carregamento do logo
   const [logoLoaded, setLogoLoaded] = useState(false);
@@ -190,7 +195,7 @@ export default function PropertyDetails() {
       <Header config={config} isLoadingConfig={isLoadingConfig} />
 
       {/* Conteúdo principal */}
-      <main className="flex-grow bg-white pt-24">
+      <main className="flex-grow pt-24" style={{ backgroundColor: detailsBackgroundColor }}>
         {isLoadingProperty ? (
           <div className="container mx-auto px-4 py-8">
             <div className="max-w-6xl mx-auto">
@@ -227,7 +232,7 @@ export default function PropertyDetails() {
           </div>
         ) : currentProperty ? (
           <div className="container mx-auto px-4 py-8">
-            <div className="max-w-6xl mx-auto">
+            <div className="max-w-6xl mx-auto" style={{ color: detailsTextColor }}>
               {/* Navegação e código */}
               <div className="flex flex-wrap justify-between items-center mb-2">
                 <div className="flex items-center text-sm text-gray-500 mb-2">
@@ -419,42 +424,42 @@ export default function PropertyDetails() {
                     <div className="border-t border-b border-gray-200 py-4 my-4">
                       <div className="grid grid-cols-5 gap-4">
                         <div className="flex items-center">
-                          <i className="fas fa-bed text-xl mr-2" style={{ color: primaryColor }}></i>
+                          <i className="fas fa-bed text-xl mr-2" style={{ color: detailsIconsColor }}></i>
                           <div>
-                            <span className="font-medium">{currentProperty.bedrooms || 0}</span>
-                            <span className="text-gray-500 text-sm ml-1">Quartos</span>
+                            <span className="font-medium" style={{ color: detailsTextColor }}>{currentProperty.bedrooms || 0}</span>
+                            <span className="text-sm ml-1 opacity-75" style={{ color: detailsTextColor }}>Quartos</span>
                           </div>
                         </div>
                         
                         <div className="flex items-center">
-                          <i className="fas fa-shower text-xl mr-2" style={{ color: '#4B5563' }}></i>
+                          <i className="fas fa-shower text-xl mr-2" style={{ color: detailsIconsColor }}></i>
                           <div>
-                            <span className="font-medium">{currentProperty.bathrooms || 0}</span>
-                            <span className="text-gray-500 text-sm ml-1">Banheiros</span>
+                            <span className="font-medium" style={{ color: detailsTextColor }}>{currentProperty.bathrooms || 0}</span>
+                            <span className="text-sm ml-1 opacity-75" style={{ color: detailsTextColor }}>Banheiros</span>
                           </div>
                         </div>
                         
                         <div className="flex items-center">
-                          <i className="fas fa-bath text-xl mr-2" style={{ color: '#4B5563' }}></i>
+                          <i className="fas fa-bath text-xl mr-2" style={{ color: detailsIconsColor }}></i>
                           <div>
-                            <span className="font-medium">{currentProperty.suites || 0}</span>
-                            <span className="text-gray-500 text-sm ml-1">Suítes</span>
+                            <span className="font-medium" style={{ color: detailsTextColor }}>{currentProperty.suites || 0}</span>
+                            <span className="text-sm ml-1 opacity-75" style={{ color: detailsTextColor }}>Suítes</span>
                           </div>
                         </div>
                         
                         <div className="flex items-center">
-                          <i className="fas fa-car text-xl mr-2" style={{ color: primaryColor }}></i>
+                          <i className="fas fa-car text-xl mr-2" style={{ color: detailsIconsColor }}></i>
                           <div>
-                            <span className="font-medium">{currentProperty.parkingSpots || 0}</span>
-                            <span className="text-gray-500 text-sm ml-1">Vagas</span>
+                            <span className="font-medium" style={{ color: detailsTextColor }}>{currentProperty.parkingSpots || 0}</span>
+                            <span className="text-sm ml-1 opacity-75" style={{ color: detailsTextColor }}>Vagas</span>
                           </div>
                         </div>
                         
                         <div className="flex items-center">
-                          <i className="fas fa-ruler-combined text-xl mr-2" style={{ color: primaryColor }}></i>
+                          <i className="fas fa-ruler-combined text-xl mr-2" style={{ color: detailsIconsColor }}></i>
                           <div>
-                            <span className="font-medium">{currentProperty.area}</span>
-                            <span className="text-gray-500 text-sm ml-1">m²</span>
+                            <span className="font-medium" style={{ color: detailsTextColor }}>{currentProperty.area}</span>
+                            <span className="text-sm ml-1 opacity-75" style={{ color: detailsTextColor }}>m²</span>
                           </div>
                         </div>
                       </div>
@@ -463,25 +468,25 @@ export default function PropertyDetails() {
                   
                   {/* Descrição */}
                   <div className="mb-8">
-                    <h2 className="text-2xl font-bold mb-4">Descrição</h2>
-                    <p className="text-gray-600 whitespace-pre-line">{currentProperty.description}</p>
+                    <h2 className="text-2xl font-bold mb-4" style={{ color: detailsTextColor }}>Descrição</h2>
+                    <p className="whitespace-pre-line" style={{ color: detailsTextColor }}>{currentProperty.description}</p>
                   </div>
                   
                   {/* Características */}
                   {currentProperty.features && currentProperty.features.length > 0 && (
                     <div className="mb-8">
-                      <h2 className="text-2xl font-bold mb-4">Características</h2>
+                      <h2 className="text-2xl font-bold mb-4" style={{ color: detailsTextColor }}>Características</h2>
                       <div className="grid grid-cols-2 md:grid-cols-3 gap-y-4">
                         {currentProperty.features.map((feature, index) => (
                           <div key={index} className="flex items-center">
                             <div className="w-8 h-8 rounded-full flex items-center justify-center mr-3"
-                              style={{ backgroundColor: `${primaryColor}15` }}>
+                              style={{ backgroundColor: `${detailsIconsColor}15` }}>
                               <i 
                                 className={`${getFeatureIcon(feature)} text-lg`}
-                                style={{ color: primaryColor }}
+                                style={{ color: detailsIconsColor }}
                               ></i>
                             </div>
-                            <span className="text-gray-700">{feature}</span>
+                            <span style={{ color: detailsTextColor }}>{feature}</span>
                           </div>
                         ))}
                       </div>
@@ -490,7 +495,7 @@ export default function PropertyDetails() {
                   
                   {/* Localização */}
                   <div className="mb-8">
-                    <h2 className="text-2xl font-bold mb-4">Localização</h2>
+                    <h2 className="text-2xl font-bold mb-4" style={{ color: detailsTextColor }}>Localização</h2>
                     <div className="border border-gray-200 rounded-lg h-64 overflow-hidden">
                       {currentProperty.address ? (
                         <iframe 
