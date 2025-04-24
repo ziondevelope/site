@@ -15,7 +15,11 @@ interface Testimonial {
   createdAt: string;
 }
 
-export function Testimonials() {
+interface TestimonialsProps {
+  config?: WebsiteConfig;
+}
+
+export function Testimonials({ config }: TestimonialsProps) {
   
   // Embla carousel setup
   // Configuração do carrossel com 3 slides visíveis em telas grandes
@@ -44,15 +48,22 @@ export function Testimonials() {
     const cleanupAutoplay = autoplay();
     
     // Atualizar o índice atual quando o slide mudar
-    if (emblaApi) {
-      emblaApi.on('select', () => {
+    const handleSelect = () => {
+      if (emblaApi) {
         setCurrentIndex(emblaApi.selectedScrollSnap());
-      });
+      }
+    };
+    
+    if (emblaApi) {
+      emblaApi.on('select', handleSelect);
     }
     
     return () => {
       if (cleanupAutoplay) cleanupAutoplay();
-      if (emblaApi) emblaApi.off('select');
+      if (emblaApi) {
+        // Remover o event listener ao desmontar o componente
+        emblaApi.off('select', handleSelect);
+      }
     };
   }, [emblaApi, autoplay]);
   
