@@ -451,10 +451,10 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
           )}
         </div>
 
-        {/* Botão flutuante "Falar com Corretor" que aparece após rolar 75% do modal */}
+        {/* Botão central "Falar com Corretor" que aparece após rolar 75% do modal */}
         {showContactButton && agent && (
           <motion.div 
-            className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50"
+            className="absolute bottom-0 left-0 right-0 mb-6 z-50 flex justify-center"
             initial={{ opacity: 0, y: 20 }}
             animate={controls}
             whileHover={{ scale: 1.05 }}
