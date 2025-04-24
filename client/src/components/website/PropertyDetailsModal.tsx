@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { X } from 'lucide-react';
 import './scrollbar.css';
 import { useUI } from '@/contexts/UIContext';
+import { motion, useAnimation } from 'framer-motion';
 
 interface PropertyDetailsModalProps {
   propertyId: number;
@@ -16,6 +17,10 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
   const [activeImage, setActiveImage] = useState<string | null>(null);
   const modalRef = useRef<HTMLDivElement>(null);
   const { setPropertyModalOpen } = useUI();
+  
+  // Estados para controle de rolagem e animação do botão "Falar com corretor"
+  const [showContactButton, setShowContactButton] = useState(false);
+  const controls = useAnimation();
   
   // Fetch property details
   const { data: property, isLoading: isLoadingProperty } = useQuery<Property>({
@@ -103,6 +108,41 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
       setPropertyModalOpen(false);
     };
   }, [isOpen, setPropertyModalOpen]);
+  
+  // Monitor scroll position and show/hide "Falar com Corretor" button
+  useEffect(() => {
+    if (!isOpen || !modalRef.current) return;
+    
+    const handleScroll = () => {
+      if (!modalRef.current) return;
+      
+      const scrollPosition = modalRef.current.scrollTop;
+      const scrollHeight = modalRef.current.scrollHeight;
+      const clientHeight = modalRef.current.clientHeight;
+      
+      // Calcular a porcentagem da página que foi rolada
+      const scrollPercentage = (scrollPosition / (scrollHeight - clientHeight)) * 100;
+      
+      // Mostrar o botão quando rolou 75% da página
+      if (scrollPercentage >= 75 && !showContactButton) {
+        setShowContactButton(true);
+        controls.start({ opacity: 1, y: 0 });
+      } else if (scrollPercentage < 75 && showContactButton) {
+        setShowContactButton(false);
+        controls.start({ opacity: 0, y: 20 });
+      }
+    };
+    
+    const modalElement = modalRef.current;
+    modalElement.addEventListener('scroll', handleScroll);
+    
+    // Verificar na primeira renderização
+    handleScroll();
+    
+    return () => {
+      modalElement.removeEventListener('scroll', handleScroll);
+    };
+  }, [isOpen, showContactButton, controls, modalRef]);
 
   // Format currency
   const formatCurrency = (value: number) => {
@@ -125,6 +165,23 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
 
   return (
     <div className="fixed inset-0 z-50 bg-black">
+      {/* Botão flutuante de "Falar com Corretor" que aparece após rolar 75% do modal */}
+      {showContactButton && agent?.phone && (
+        <motion.a
+          href={`https://wa.me/55${agent.phone.replace(/\D/g, '')}?text=Olá, tenho interesse no imóvel ${currentProperty?.title} (Ref: #${currentProperty?.id}).`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="fixed bottom-6 right-6 z-[60] rounded-full bg-[#25D366] text-white font-medium px-5 py-3 shadow-lg flex items-center justify-center hover:bg-[#1fb655] transition-colors duration-300"
+          initial={{ opacity: 0, y: 20 }}
+          animate={controls}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <i className="ri-whatsapp-line mr-2 text-xl"></i>
+          FALAR COM CORRETOR
+        </motion.a>
+      )}
+      
       <div 
         ref={modalRef}
         className="bg-white w-full md:w-[70%] lg:w-[60%] xl:w-[50%] 2xl:w-[45%] h-full overflow-y-auto mx-auto modal-custom-scrollbar"
