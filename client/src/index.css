@@ -28,6 +28,22 @@
   background: rgba(155, 155, 155, 0.7);
 }
 
+/* Animação para o botão WhatsApp */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
 /* Remove a borda preta que aparece em alguns elementos quando focados */
 * {
   outline-color: rgba(59, 130, 246, 0.5);

@@ -101,10 +101,8 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
       document.body.style.overflow = 'hidden';
       setPropertyModalOpen(true);
       
-      // Botão sempre visível para simplificar
-      setShowContactButton(true);
-      
-      console.log("Modal aberto, botão deve estar visível");
+      // Resetar estado do botão quando o modal abre
+      setShowContactButton(false);
     } else {
       document.body.style.overflow = '';
       setPropertyModalOpen(false);
@@ -114,6 +112,40 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
       setPropertyModalOpen(false);
     };
   }, [isOpen, setPropertyModalOpen]);
+  
+  // Detectar scroll do modal para mostrar/esconder o botão "Falar com corretor"
+  useEffect(() => {
+    if (!modalRef.current || !isOpen) return;
+    
+    const handleScroll = () => {
+      if (!modalRef.current) return;
+      
+      const scrollHeight = modalRef.current.scrollHeight;
+      const scrollTop = modalRef.current.scrollTop;
+      const clientHeight = modalRef.current.clientHeight;
+      
+      // Calcular a porcentagem de rolagem (75% = 0.75)
+      const scrollPercentage = (scrollTop + clientHeight) / scrollHeight;
+      
+      if (scrollPercentage >= 0.75 && !showContactButton) {
+        setShowContactButton(true);
+      } else if (scrollPercentage < 0.75 && showContactButton) {
+        setShowContactButton(false);
+      }
+    };
+    
+    const modalElement = modalRef.current;
+    modalElement.addEventListener('scroll', handleScroll);
+    
+    // Verificar inicialmente (caso a página já carregue em uma posição abaixo de 75%)
+    handleScroll();
+    
+    return () => {
+      if (modalElement) {
+        modalElement.removeEventListener('scroll', handleScroll);
+      }
+    };
+  }, [showContactButton, isOpen]);
 
   // Format currency
   const formatCurrency = (value: number) => {
@@ -405,11 +437,11 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
           )}
         </div>
 
-        {/* Botão WhatsApp fixo */}
-        {agent && (
+        {/* Botão WhatsApp que aparece após 75% de rolagem */}
+        {showContactButton && agent && (
           <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-[9999]">
             <button 
-              className="flex items-center shadow-lg rounded-full cursor-pointer px-8 py-3 whitespace-nowrap"
+              className="flex items-center shadow-lg rounded-full cursor-pointer px-8 py-3 whitespace-nowrap animate-fadeIn"
               style={{ backgroundColor: '#25D366', minWidth: '260px' }}
               onClick={() => {
                 if (!agent || !currentProperty) return;
