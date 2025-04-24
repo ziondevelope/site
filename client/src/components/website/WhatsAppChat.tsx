@@ -328,8 +328,9 @@ export default function WhatsAppChat() {
                   name="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="E-mail (opcional)"
+                  placeholder="E-mail"
                   className="w-full py-3 px-4 rounded-md border border-gray-300 shadow-sm focus:ring-1 focus:ring-[#25D366] focus:border-[#25D366]"
+                  required
                 />
                 
                 {/* Campo Telefone */}
