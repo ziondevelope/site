@@ -2743,36 +2743,43 @@ export default function CRM() {
                                           >
                                             {selectedPropertyIds[lead.id]
                                               ? properties.find(property => property.id === selectedPropertyIds[lead.id])?.title || "Pesquisar imóvel..."
-                                              : "Pesquisar imóvel..."}
+                                              : "Digite o nome ou selecione um imóvel"}
                                             <Search className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                                           </Button>
                                         </PopoverTrigger>
-                                        <PopoverContent className="w-full p-0" align="start">
+                                        <PopoverContent className="w-[350px] p-0" align="start">
                                           <Command>
                                             <CommandInput 
                                               placeholder="Digite o nome do imóvel..." 
                                               className="h-9"
                                               value={propertySearchTerm}
                                               onValueChange={setPropertySearchTerm}
+                                              autoFocus={true}
                                             />
                                             <CommandList>
-                                              <CommandEmpty>Nenhum imóvel encontrado.</CommandEmpty>
-                                              <CommandGroup>
+                                              <CommandEmpty>
+                                                Nenhum imóvel encontrado. Continue digitando para buscar.
+                                              </CommandEmpty>
+                                              <CommandGroup heading="Imóveis disponíveis">
                                                 {filteredProperties.map((property) => (
                                                   <CommandItem
                                                     key={property.id}
-                                                    value={property.title}
                                                     onSelect={() => {
                                                       handlePropertySelection(lead.id, property.id);
                                                       setIsPropertyPopoverOpen(false);
                                                       setPropertySearchTerm("");
                                                     }}
+                                                    className="cursor-pointer"
                                                   >
-                                                    <Home className="mr-2 h-4 w-4" />
-                                                    <span>{property.title}</span>
-                                                    <span className="ml-2 text-xs text-muted-foreground">
-                                                      {property.address}
-                                                    </span>
+                                                    <div className="flex flex-col w-full">
+                                                      <div className="flex items-center">
+                                                        <Home className="mr-2 h-4 w-4 shrink-0 text-muted-foreground" />
+                                                        <span className="font-medium">{property.title}</span>
+                                                      </div>
+                                                      <span className="text-xs text-muted-foreground pl-6">
+                                                        {property.address || property.neighborhood || property.city || "Endereço não informado"}
+                                                      </span>
+                                                    </div>
                                                   </CommandItem>
                                                 ))}
                                               </CommandGroup>
