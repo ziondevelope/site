@@ -122,6 +122,14 @@ export default function Website() {
         partialConfig.favicon.substring(0, 50));
     }
     
+    // Log para depuração de cores do WhatsApp
+    if (partialConfig.whatsappChatBackgroundColor || partialConfig.whatsappChatTextColor) {
+      console.log("Cores do WhatsApp chat sendo atualizadas:", {
+        background: partialConfig.whatsappChatBackgroundColor,
+        text: partialConfig.whatsappChatTextColor
+      });
+    }
+    
     setConfigData(prev => {
       const newState = {
         ...prev,
@@ -137,8 +145,14 @@ export default function Website() {
   const handleSave = () => {
     if (!config) return;
     
-    // Debug para rodapé
+    // Debug para rodapé e cores do WhatsApp
     console.log("Estado atual configData:", {
+      // WhatsApp Chat cores
+      whatsappChatBackgroundColor: configData.whatsappChatBackgroundColor,
+      whatsappChatTextColor: configData.whatsappChatTextColor,
+      configWhatsappChatBackgroundColor: config.whatsappChatBackgroundColor,
+      configWhatsappChatTextColor: config.whatsappChatTextColor,
+      // Rodapé
       footerTextColor: configData.footerTextColor,
       footerIconsColor: configData.footerIconsColor,
       configFooterTextColor: config.footerTextColor,
