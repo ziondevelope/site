@@ -459,8 +459,14 @@ export default function Clients() {
                   <FormItem>
                     <FormLabel>Imóvel de interesse</FormLabel>
                     <Select 
-                      onValueChange={(value) => field.onChange(value ? parseInt(value) : null)} 
-                      value={field.value?.toString() || ''}
+                      onValueChange={(value) => {
+                        if (value === 'none') {
+                          field.onChange(null);
+                        } else {
+                          field.onChange(parseInt(value));
+                        }
+                      }} 
+                      value={field.value?.toString() || 'none'}
                     >
                       <FormControl>
                         <SelectTrigger>
@@ -468,7 +474,7 @@ export default function Clients() {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="">Nenhum imóvel selecionado</SelectItem>
+                        <SelectItem value="none">Nenhum imóvel selecionado</SelectItem>
                         {properties.map((property) => (
                           <SelectItem key={property.id} value={property.id.toString()}>
                             {property.title} - {property.neighborhood}
