@@ -384,39 +384,6 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
                       </div>
                     )}
                   </div>
-                  
-                  {/* Botão de contato com corretor abaixo do mapa */}
-                  {agent && (
-                    <div className="mt-4">
-                      <div 
-                        className="flex items-center shadow-lg rounded-full cursor-pointer px-8 py-3 w-full"
-                        style={{ backgroundColor: '#25D366', minWidth: '260px' }}
-                        onClick={() => {
-                          if (!agent || !currentProperty) return;
-                          const phone = agent.phone?.replace(/\D/g, '') || '';
-                          const message = `Olá, tenho interesse no imóvel "${currentProperty.title}" (Ref: ${currentProperty.id})`;
-                          const whatsappUrl = `https://wa.me/55${phone}?text=${encodeURIComponent(message)}`;
-                          window.open(whatsappUrl, '_blank');
-                        }}
-                      >
-                        <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-white mr-4 flex-shrink-0">
-                          {agent.avatar ? (
-                            <img
-                              src={agent.avatar}
-                              alt={agent.displayName}
-                              className="w-full h-full object-cover"
-                            />
-                          ) : (
-                            <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                              <i className="ri-user-line text-gray-400 text-xl"></i>
-                            </div>
-                          )}
-                        </div>
-                        <span className="text-white font-medium flex-grow text-center">FALAR COM CORRETOR</span>
-                        <i className="fab fa-whatsapp text-white text-xl ml-4 flex-shrink-0"></i>
-                      </div>
-                    </div>
-                  )}
                 </div>
               </div>
             </div>
@@ -427,7 +394,38 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
           )}
         </div>
 
-        {/* Chat button fixo removido */}
+        {/* Chat button fixo */}
+        {agent && (
+          <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50">
+            <div 
+              className="flex items-center shadow-lg rounded-full cursor-pointer px-8 py-3 whitespace-nowrap"
+              style={{ backgroundColor: '#25D366', minWidth: '260px' }}
+              onClick={() => {
+                if (!agent || !currentProperty) return;
+                const phone = agent.phone?.replace(/\D/g, '') || '';
+                const message = `Olá, tenho interesse no imóvel "${currentProperty.title}" (Ref: ${currentProperty.id})`;
+                const whatsappUrl = `https://wa.me/55${phone}?text=${encodeURIComponent(message)}`;
+                window.open(whatsappUrl, '_blank');
+              }}
+            >
+              <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-white mr-4 flex-shrink-0">
+                {agent.avatar ? (
+                  <img
+                    src={agent.avatar}
+                    alt={agent.displayName}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                    <i className="ri-user-line text-gray-400 text-xl"></i>
+                  </div>
+                )}
+              </div>
+              <span className="text-white font-medium flex-grow text-center">FALAR COM CORRETOR</span>
+              <i className="fab fa-whatsapp text-white text-xl ml-4 flex-shrink-0"></i>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
