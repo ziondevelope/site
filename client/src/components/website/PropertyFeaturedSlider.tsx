@@ -102,9 +102,9 @@ export default function PropertyFeaturedSlider() {
           >
             {properties.map((property, index) => (
               <div key={property.id} className="w-full flex-shrink-0">
-                <div className="grid grid-cols-1 md:grid-cols-2 h-full">
+                <div className="grid grid-cols-1 md:grid-cols-5 h-full">
                   {/* Imagem do imóvel (lado esquerdo) */}
-                  <div className="relative h-64 md:h-[400px] overflow-hidden">
+                  <div className="relative h-64 md:h-[400px] overflow-hidden md:col-span-3">
                     <img 
                       src={property.featuredImage || (property.images && property.images.length > 0 
                         ? typeof property.images[0] === 'string' 
@@ -126,7 +126,7 @@ export default function PropertyFeaturedSlider() {
                   </div>
                   
                   {/* Informações do imóvel (lado direito) */}
-                  <div className="p-6 md:p-8 flex flex-col justify-center text-white h-full" style={{ backgroundColor: primaryColor }}>
+                  <div className="p-6 md:p-8 flex flex-col justify-center text-white h-full md:col-span-2" style={{ backgroundColor: primaryColor }}>
                     <div className="text-left w-full">
                       <h3 className="text-xl md:text-2xl font-bold mb-4 line-clamp-2 text-white">
                         {property.title}
