@@ -6,7 +6,6 @@ import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import SystemSettings from "@/components/settings/SystemSettings";
 import SalesFunnelSettings from "@/components/settings/SalesFunnelSettings";
-import WhatsAppSettings from "@/components/settings/WhatsAppSettings";
 import { WebsiteConfig } from "@shared/schema";
 
 export default function Settings() {
@@ -44,12 +43,6 @@ export default function Settings() {
               >
                 Configuração do Sistema
               </TabsTrigger>
-              <TabsTrigger
-                value="whatsapp"
-                className="data-[state=active]:bg-indigo-50 data-[state=active]:text-indigo-700 data-[state=active]:shadow-none"
-              >
-                WhatsApp
-              </TabsTrigger>
             </TabsList>
           </div>
           
@@ -59,10 +52,6 @@ export default function Settings() {
           
           <TabsContent value="system" className="p-6">
             <SystemSettings config={config} isLoading={isLoading} />
-          </TabsContent>
-          
-          <TabsContent value="whatsapp" className="p-6">
-            <WhatsAppSettings config={config} isLoading={isLoading} />
           </TabsContent>
         </Tabs>
       </Card>
