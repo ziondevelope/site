@@ -3,6 +3,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useCallback, useEffect, useState } from "react";
 import useEmblaCarousel from 'embla-carousel-react';
+import { WebsiteConfig } from "@shared/schema";
 
 interface Testimonial {
   id: number;

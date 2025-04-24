@@ -5,13 +5,13 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Link } from 'wouter';
 
 interface PropertyFeaturedSliderProps {
-  openPropertyModal?: (propertyId: number) => void;
+  onPropertyClick?: (propertyId: number) => void;
   properties?: Property[];
   config?: WebsiteConfig;
 }
 
 export default function PropertyFeaturedSlider({ 
-  openPropertyModal, 
+  onPropertyClick, 
   properties: propProperties,
   config: propConfig 
 }: PropertyFeaturedSliderProps) {
@@ -192,7 +192,7 @@ export default function PropertyFeaturedSlider({
                     
                     <div className="w-full">
                       <button
-                        onClick={() => openPropertyModal && openPropertyModal(property.id)}
+                        onClick={() => onPropertyClick && onPropertyClick(property.id)}
                         className="inline-block px-6 py-3 rounded-lg bg-white font-medium transition-all hover:shadow-lg w-full text-center"
                         style={{ color: primaryColor }}
                       >
