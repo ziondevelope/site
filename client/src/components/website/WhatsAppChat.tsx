@@ -266,27 +266,30 @@ export default function WhatsAppChat() {
       {/* Modal do formulário */}
       {isOpen && config.whatsappFormEnabled && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+          {/* Botão de fechar fora do modal */}
+          <button
+            type="button"
+            onClick={() => setIsOpen(false)}
+            className="absolute top-4 right-4 text-white hover:text-gray-200 transition-colors p-2 z-20 bg-black bg-opacity-25 hover:bg-opacity-40 rounded-full"
+            aria-label="Fechar"
+          >
+            <X className="h-6 w-6" />
+          </button>
+          
           <div
             ref={formRef}
             className="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 relative overflow-hidden animate-fade-in"
           >
             {/* Cabeçalho simplificado */}
-            <div className="text-center p-4 pb-6">
+            <div className="text-center p-4 pb-6 relative">
               <h2 className="text-2xl font-bold" style={{ color: "#333" }}>
                 Fale pelo WhatsApp
               </h2>
-              
-              <button
-                onClick={() => setIsOpen(false)}
-                className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 transition-colors p-1 rounded-full"
-              >
-                <X className="h-5 w-5" />
-              </button>
             </div>
 
             {/* Fundo de padrão de WhatsApp em baixa opacidade */}
             <div 
-              className="absolute inset-0 opacity-[0.03] z-0" 
+              className="absolute inset-0 opacity-[0.03] z-0 pointer-events-none" 
               style={{
                 backgroundImage: `url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M9 0h2v20H9V0zm25.134.84l1.732 1-10 17.32-1.732-1 10-17.32zm-20 20l1.732 1-10 17.32-1.732-1 10-17.32zM58.16 4.134l1 1.732-17.32 10-1-1.732 17.32-10zm-40 40l1 1.732-17.32 10-1-1.732 17.32-10zM80 9v2H60V9h20zM20 69v2H0v-2h20zm79.32-55l-1 1.732-17.32-10L82 4l17.32 10zm-80 80l-1 1.732-17.32-10L2 84l17.32 10zm96.546-75.84l-1.732 1-10-17.32 1.732-1 10 17.32zm-100 100l-1.732 1-10-17.32 1.732-1 10 17.32zM38.16 24.134l1 1.732-17.32 10-1-1.732 17.32-10zM60 29v2H40v-2h20zm19.32 5l-1 1.732-17.32-10L62 24l17.32 10zm16.546 4.16l-1.732 1-10-17.32 1.732-1 10 17.32zM111 40h-2V20h2v20zm3.134.84l1.732 1-10 17.32-1.732-1 10-17.32zM40 49v2H20v-2h20zm19.32 5l-1 1.732-17.32-10L42 44l17.32 10zm-40 40l-1 1.732-17.32-10L2 84l17.32 10zm75.546-75.84l-1.732 1-10-17.32 1.732-1 10 17.32zm-20 20l-1.732 1-10-17.32 1.732-1 10 17.32zM118.16 29.134l1 1.732-17.32 10-1-1.732 17.32-10zm-40 40l1 1.732-17.32 10-1-1.732 17.32-10zM80 49v2H60v-2h20zm-40 40v2H20v-2h20zm39.32-5l-1 1.732-17.32-10L62 64l17.32 10zm-80 80l-1 1.732-17.32-10L2 104l17.32 10zm76.546-75.84l-1.732 1-10-17.32 1.732-1 10 17.32zm56.582 15.84l1 1.732-17.32 10-1-1.732 17.32-10zm-20 20l1 1.732-17.32 10-1-1.732 17.32-10zm-40 40l1 1.732-17.32 10-1-1.732 17.32-10zM60 89v2H40v-2h20zm-20 20v2H0v-2h20zm36.546-15.84l-1.732 1-10-17.32 1.732-1 10 17.32zm-60 60l-1.732 1-10-17.32 1.732-1 10 17.32zM100 89v2H80v-2h20zm19.32 5l-1 1.732-17.32-10L102 84l17.32 10zm16.546 4.16l-1.732 1-10-17.32 1.732-1 10 17.32zM96.66 108.84l-1.732 1-10-17.32 1.732-1 10 17.32zM120 109v2h-20v-2h20z' fill='%23000000' fill-opacity='1' fill-rule='evenodd'/%3E%3C/svg%3E")`,
                 backgroundSize: '150px 150px'
