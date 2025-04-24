@@ -218,30 +218,37 @@ export default function Clients() {
 
   return (
     <div className="container mx-auto py-6">
-      <div className="flex justify-between items-center mb-6">
-        <div>
-          <h1 className="text-2xl font-bold">Clientes</h1>
-          <p className="text-gray-500">Gerenciar clientes e informações de contato</p>
-        </div>
+      <div className="bg-white p-6 rounded-lg shadow-sm" style={{ fontFamily: 'Montserrat, sans-serif' }}>
+        <div className="flex justify-between items-center mb-6">
+          <div>
+            <h2 className="text-lg font-semibold text-gray-800 mb-1">Gerenciamento de Clientes</h2>
+            <p className="text-sm text-gray-500">Cadastre e gerencie seus clientes e informações de contato.</p>
+          </div>
 
-        <Dialog open={openCreateDialog} onOpenChange={setOpenCreateDialog}>
-          <DialogTrigger asChild>
-            <Button variant="default" className="flex items-center gap-2">
-              <UserPlus size={16} />
-              Adicionar Cliente
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[600px]">
-            <DialogHeader>
-              <DialogTitle>Adicionar Novo Cliente</DialogTitle>
-              <DialogDescription>
-                Preencha os dados do cliente para adicioná-lo ao sistema.
-              </DialogDescription>
-            </DialogHeader>
+          <Dialog open={openCreateDialog} onOpenChange={setOpenCreateDialog}>
+            <DialogTrigger asChild>
+              <Button 
+                variant="default" 
+                className="bg-[#12636C] hover:bg-[#12636C]/90 rounded-full px-5"
+              >
+                <UserPlus className="mr-2 h-4 w-4" /> Novo Cliente
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[850px] max-h-[90vh] overflow-y-auto" style={{ 
+              fontFamily: 'Montserrat, sans-serif',
+              scrollbarWidth: 'thin',
+              scrollbarColor: 'rgba(155, 155, 155, 0.5) transparent'
+            }}>
+              <DialogHeader>
+                <DialogTitle>Adicionar Novo Cliente</DialogTitle>
+                <DialogDescription>
+                  Preencha as informações do novo cliente para cadastrá-lo no sistema.
+                </DialogDescription>
+              </DialogHeader>
 
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <FormField
                     control={form.control}
                     name="name"
@@ -476,6 +483,7 @@ export default function Clients() {
             </Form>
           </DialogContent>
         </Dialog>
+      </div>
       </div>
 
       <ClientFilters
