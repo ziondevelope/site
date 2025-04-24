@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
-import { Pencil, Check, X, User, Mail, Phone, Store, Home, MapPin, DollarSign, Tag, Filter, Trophy, MessageSquare, FileText, Bold, Italic, Underline, AlignLeft, AlignCenter, AlignRight, List, CalendarPlus, CheckCircle, FileEdit, ArrowDown, ArrowUp, Plus } from "lucide-react";
+import { Pencil, Check, X, User, Mail, Phone, Store, Home, MapPin, DollarSign, Tag, Filter, Trophy, MessageSquare, FileText, Bold, Italic, Underline, AlignLeft, AlignCenter, AlignRight, List, CalendarPlus, CheckCircle, FileEdit, ArrowDown, ArrowUp, Plus, Search } from "lucide-react";
 import { LeadFilters } from "@/components/crm/LeadFilters";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -2724,21 +2724,53 @@ export default function CRM() {
                                   <div>
                                     <Label htmlFor={`property-search-${lead.id}`} className="text-xs mb-1">Buscar imóvel</Label>
                                     <div className="flex space-x-2">
-                                      <Select onValueChange={(value) => handlePropertySelection(lead.id, parseInt(value))}>
-                                        <SelectTrigger id={`property-search-${lead.id}`} className="h-8 text-sm flex-1">
-                                          <SelectValue placeholder="Selecione um imóvel" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                          {properties.map((property) => (
-                                            <SelectItem key={property.id} value={property.id.toString()}>
-                                              <span className="flex items-center">
-                                                <Home className="h-3.5 w-3.5 mr-2" />
-                                                {property.title} - {property.address}
-                                              </span>
-                                            </SelectItem>
-                                          ))}
-                                        </SelectContent>
-                                      </Select>
+                                      <Popover open={isPropertyPopoverOpen} onOpenChange={setIsPropertyPopoverOpen}>
+                                        <PopoverTrigger asChild>
+                                          <Button
+                                            variant="outline"
+                                            role="combobox"
+                                            aria-expanded={isPropertyPopoverOpen}
+                                            className="h-8 justify-between w-full text-left font-normal"
+                                          >
+                                            {selectedPropertyIds[lead.id]
+                                              ? properties.find(property => property.id === selectedPropertyIds[lead.id])?.title || "Pesquisar imóvel..."
+                                              : "Pesquisar imóvel..."}
+                                            <Search className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                          </Button>
+                                        </PopoverTrigger>
+                                        <PopoverContent className="w-full p-0" align="start">
+                                          <Command>
+                                            <CommandInput 
+                                              placeholder="Digite o nome do imóvel..." 
+                                              className="h-9"
+                                              value={propertySearchTerm}
+                                              onValueChange={setPropertySearchTerm}
+                                            />
+                                            <CommandList>
+                                              <CommandEmpty>Nenhum imóvel encontrado.</CommandEmpty>
+                                              <CommandGroup>
+                                                {filteredProperties.map((property) => (
+                                                  <CommandItem
+                                                    key={property.id}
+                                                    value={property.title}
+                                                    onSelect={() => {
+                                                      handlePropertySelection(lead.id, property.id);
+                                                      setIsPropertyPopoverOpen(false);
+                                                      setPropertySearchTerm("");
+                                                    }}
+                                                  >
+                                                    <Home className="mr-2 h-4 w-4" />
+                                                    <span>{property.title}</span>
+                                                    <span className="ml-2 text-xs text-muted-foreground">
+                                                      {property.address}
+                                                    </span>
+                                                  </CommandItem>
+                                                ))}
+                                              </CommandGroup>
+                                            </CommandList>
+                                          </Command>
+                                        </PopoverContent>
+                                      </Popover>
                                       <Button 
                                         className="bg-[#12636C] hover:bg-[#12636C]/90 text-sm h-8"
                                         onClick={() => handleAddPropertyToLead(lead.id)}
