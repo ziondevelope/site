@@ -550,8 +550,61 @@ function PropertyDetailsContent({ propertyId, isOpen, onClose, propConfig }: {
                 
                 {/* Formulário de contato */}
                 <div className="mb-8">
-                  <h2 className="text-xl font-bold mb-3" style={{ color: detailsTextColor }}>Fale com um Corretor</h2>
-                  <div className="p-4 rounded-lg" style={{ backgroundColor: `${detailsIconsColor}10`, borderColor: `${detailsTextColor}22` }}>
+                  <div className="p-6 rounded-lg shadow-md relative overflow-hidden" 
+                      style={{ 
+                        backgroundColor: `${detailsIconsColor}15`, 
+                        borderColor: `${detailsTextColor}22`,
+                        borderLeft: `4px solid #25D366`
+                      }}>
+                    
+                    {/* Fundo decorativo */}
+                    <div className="absolute top-0 right-0 w-40 h-40 opacity-5" style={{ background: `radial-gradient(circle, ${detailsIconsColor} 0%, transparent 70%)` }}></div>
+                    
+                    {/* Cabeçalho do formulário */}
+                    <div className="mb-5 relative">
+                      <h2 className="text-2xl font-bold mb-2" style={{ color: detailsTextColor }}>
+                        Gostou deste imóvel?
+                      </h2>
+                      <p className="text-base" style={{ color: `${detailsTextColor}CC` }}>
+                        Fale com um de nossos especialistas e agende uma visita hoje mesmo!
+                      </p>
+                      
+                      {/* Indicadores de tempo de resposta e características */}
+                      <div className="flex items-center mt-3 space-x-4">
+                        <div className="flex items-center" style={{ color: `${detailsTextColor}BB` }}>
+                          <i className="fas fa-clock mr-1 text-sm"></i>
+                          <span className="text-xs">Resposta em até 15 min</span>
+                        </div>
+                        <div className="flex items-center" style={{ color: `${detailsTextColor}BB` }}>
+                          <i className="fas fa-calendar-check mr-1 text-sm"></i>
+                          <span className="text-xs">Agende visitas online</span>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Detalhes do corretor */}
+                    {agent && (
+                      <div className="mb-5 flex items-center p-3 rounded-lg" style={{ backgroundColor: `${detailsIconsColor}10` }}>
+                        <div className="w-12 h-12 rounded-full overflow-hidden mr-3 border-2 border-white shadow-sm flex-shrink-0">
+                          {agent.avatar ? (
+                            <img src={agent.avatar} alt={agent.name} className="w-full h-full object-cover" />
+                          ) : (
+                            <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                              <i className="fas fa-user text-gray-400"></i>
+                            </div>
+                          )}
+                        </div>
+                        <div>
+                          <p className="font-medium" style={{ color: detailsTextColor }}>
+                            {agent.name || 'Corretor Especializado'}
+                          </p>
+                          <p className="text-xs" style={{ color: `${detailsTextColor}99` }}>
+                            {agent.role === 'admin' ? 'Corretor(a) Chefe' : 'Corretor(a) Especializado(a)'} • CRECI: {agent.creci || 'Consulte'}
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                    
                     <form 
                       onSubmit={(e) => {
                         e.preventDefault();
@@ -561,6 +614,7 @@ function PropertyDetailsContent({ propertyId, isOpen, onClose, propConfig }: {
                         const name = formData.get('name') as string;
                         const email = formData.get('email') as string;
                         const phone = formData.get('phone') as string;
+                        const message = formData.get('message') as string;
                         
                         // Criar um novo lead
                         fetch('/api/leads', {
@@ -572,6 +626,7 @@ function PropertyDetailsContent({ propertyId, isOpen, onClose, propConfig }: {
                             name,
                             email,
                             phone,
+                            message,
                             source: 'property-contact-form',
                             status: 'new',
                             propertyId: currentProperty?.id,
@@ -594,7 +649,11 @@ function PropertyDetailsContent({ propertyId, isOpen, onClose, propConfig }: {
                               `Banheiros: ${currentProperty?.bathrooms || 'N/A'}`
                             ].join('\n');
                             
-                            const noteContent = `Lead demonstrou interesse neste imóvel:\n\n${propertyDetails}`;
+                            let noteContent = `Lead demonstrou interesse neste imóvel:\n\n${propertyDetails}`;
+                            
+                            if (message) {
+                              noteContent += `\n\nMensagem do cliente:\n${message}`;
+                            }
                             
                             // Criar a nota no CRM
                             return fetch(`/api/leads/${leadData.id}/notes`, {
@@ -618,12 +677,12 @@ function PropertyDetailsContent({ propertyId, isOpen, onClose, propConfig }: {
                               // Opcionalmente, direcionar para WhatsApp
                               if (agent?.phone) {
                                 const phone = agent.phone.replace(/\D/g, '');
-                                const message = `Olá, meu nome é ${name}. Tenho interesse no imóvel "${currentProperty?.title}" (Ref: ${currentProperty?.id})`;
-                                window.open(`https://wa.me/55${phone}?text=${encodeURIComponent(message)}`, '_blank');
+                                const whatsMessage = `Olá, meu nome é ${name}. Tenho interesse no imóvel "${currentProperty?.title}" (Ref: ${currentProperty?.id})`;
+                                window.open(`https://wa.me/55${phone}?text=${encodeURIComponent(whatsMessage)}`, '_blank');
                               } else if (config?.whatsappNumber) {
                                 const phone = config.whatsappNumber.replace(/\D/g, '');
-                                const message = `Olá, meu nome é ${name}. Tenho interesse no imóvel "${currentProperty?.title}" (Ref: ${currentProperty?.id})`;
-                                window.open(`https://wa.me/55${phone}?text=${encodeURIComponent(message)}`, '_blank');
+                                const whatsMessage = `Olá, meu nome é ${name}. Tenho interesse no imóvel "${currentProperty?.title}" (Ref: ${currentProperty?.id})`;
+                                window.open(`https://wa.me/55${phone}?text=${encodeURIComponent(whatsMessage)}`, '_blank');
                               }
                             });
                           } else {
@@ -637,60 +696,151 @@ function PropertyDetailsContent({ propertyId, isOpen, onClose, propConfig }: {
                       }}
                       className="space-y-4"
                     >
-                      <div>
-                        <label htmlFor="name" className="block text-sm font-medium mb-1" style={{ color: detailsTextColor }}>
-                          Nome
-                        </label>
-                        <input
-                          type="text"
-                          id="name"
-                          name="name"
-                          required
-                          className="w-full px-3 py-2 border rounded-md"
-                          style={{ borderColor: `${detailsTextColor}22`, color: detailsTextColor, backgroundColor: `${detailsBackgroundColor}80` }}
-                          placeholder="Seu nome completo"
-                        />
-                      </div>
-                      
-                      <div>
-                        <label htmlFor="email" className="block text-sm font-medium mb-1" style={{ color: detailsTextColor }}>
-                          E-mail
-                        </label>
-                        <input
-                          type="email"
-                          id="email"
-                          name="email"
-                          required
-                          className="w-full px-3 py-2 border rounded-md"
-                          style={{ borderColor: `${detailsTextColor}22`, color: detailsTextColor, backgroundColor: `${detailsBackgroundColor}80` }}
-                          placeholder="Seu e-mail"
-                        />
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label htmlFor="name" className="block text-sm font-medium mb-1" style={{ color: detailsTextColor }}>
+                            Nome completo <span className="text-[#25D366]">*</span>
+                          </label>
+                          <div className="relative">
+                            <span className="absolute inset-y-0 left-0 flex items-center pl-3" style={{ color: `${detailsTextColor}80` }}>
+                              <i className="fas fa-user text-sm"></i>
+                            </span>
+                            <input
+                              type="text"
+                              id="name"
+                              name="name"
+                              required
+                              className="w-full pl-10 pr-3 py-2.5 border rounded-md focus:ring-2 focus:ring-[#25D366] focus:border-transparent transition-all"
+                              style={{ 
+                                borderColor: `${detailsTextColor}22`, 
+                                color: detailsTextColor, 
+                                backgroundColor: `${detailsBackgroundColor}90` 
+                              }}
+                              placeholder="Digite seu nome"
+                            />
+                          </div>
+                        </div>
+                        
+                        <div>
+                          <label htmlFor="email" className="block text-sm font-medium mb-1" style={{ color: detailsTextColor }}>
+                            E-mail <span className="text-[#25D366]">*</span>
+                          </label>
+                          <div className="relative">
+                            <span className="absolute inset-y-0 left-0 flex items-center pl-3" style={{ color: `${detailsTextColor}80` }}>
+                              <i className="fas fa-envelope text-sm"></i>
+                            </span>
+                            <input
+                              type="email"
+                              id="email"
+                              name="email"
+                              required
+                              className="w-full pl-10 pr-3 py-2.5 border rounded-md focus:ring-2 focus:ring-[#25D366] focus:border-transparent transition-all"
+                              style={{ 
+                                borderColor: `${detailsTextColor}22`, 
+                                color: detailsTextColor, 
+                                backgroundColor: `${detailsBackgroundColor}90`
+                              }}
+                              placeholder="Digite seu e-mail"
+                            />
+                          </div>
+                        </div>
                       </div>
                       
                       <div>
                         <label htmlFor="phone" className="block text-sm font-medium mb-1" style={{ color: detailsTextColor }}>
-                          Telefone
+                          Telefone/WhatsApp <span className="text-[#25D366]">*</span>
                         </label>
-                        <input
-                          type="tel"
-                          id="phone"
-                          name="phone"
-                          required
-                          className="w-full px-3 py-2 border rounded-md"
-                          style={{ borderColor: `${detailsTextColor}22`, color: detailsTextColor, backgroundColor: `${detailsBackgroundColor}80` }}
-                          placeholder="Seu telefone com DDD"
-                        />
+                        <div className="relative">
+                          <span className="absolute inset-y-0 left-0 flex items-center pl-3" style={{ color: `${detailsTextColor}80` }}>
+                            <i className="fas fa-phone-alt text-sm"></i>
+                          </span>
+                          <input
+                            type="tel"
+                            id="phone"
+                            name="phone"
+                            required
+                            className="w-full pl-10 pr-3 py-2.5 border rounded-md focus:ring-2 focus:ring-[#25D366] focus:border-transparent transition-all"
+                            style={{ 
+                              borderColor: `${detailsTextColor}22`, 
+                              color: detailsTextColor, 
+                              backgroundColor: `${detailsBackgroundColor}90`
+                            }}
+                            placeholder="(00) 00000-0000"
+                          />
+                        </div>
                       </div>
                       
                       <div>
+                        <label htmlFor="message" className="block text-sm font-medium mb-1" style={{ color: detailsTextColor }}>
+                          Mensagem
+                        </label>
+                        <div className="relative">
+                          <span className="absolute top-3 left-3" style={{ color: `${detailsTextColor}80` }}>
+                            <i className="fas fa-comment-alt text-sm"></i>
+                          </span>
+                          <textarea
+                            id="message"
+                            name="message"
+                            rows={3}
+                            className="w-full pl-10 pr-3 py-2.5 border rounded-md focus:ring-2 focus:ring-[#25D366] focus:border-transparent transition-all"
+                            style={{ 
+                              borderColor: `${detailsTextColor}22`, 
+                              color: detailsTextColor, 
+                              backgroundColor: `${detailsBackgroundColor}90`
+                            }}
+                            placeholder="Tenho interesse neste imóvel. Gostaria de agendar uma visita..."
+                          ></textarea>
+                        </div>
+                      </div>
+                      
+                      {/* Opções de contato preferencial */}
+                      <div className="flex flex-wrap gap-3 mt-2">
+                        <div className="flex items-center">
+                          <input 
+                            type="checkbox" 
+                            id="prefer-whatsapp" 
+                            name="prefer-whatsapp" 
+                            className="w-4 h-4 text-[#25D366] border-gray-300 rounded focus:ring-[#25D366]" 
+                            defaultChecked={true}
+                          />
+                          <label htmlFor="prefer-whatsapp" className="ml-2 text-sm" style={{ color: `${detailsTextColor}CC` }}>
+                            Contato por WhatsApp
+                          </label>
+                        </div>
+                        <div className="flex items-center">
+                          <input 
+                            type="checkbox" 
+                            id="prefer-email" 
+                            name="prefer-email" 
+                            className="w-4 h-4 text-[#25D366] border-gray-300 rounded focus:ring-[#25D366]"
+                          />
+                          <label htmlFor="prefer-email" className="ml-2 text-sm" style={{ color: `${detailsTextColor}CC` }}>
+                            Contato por E-mail
+                          </label>
+                        </div>
+                        <div className="flex items-center">
+                          <input 
+                            type="checkbox" 
+                            id="prefer-call" 
+                            name="prefer-call" 
+                            className="w-4 h-4 text-[#25D366] border-gray-300 rounded focus:ring-[#25D366]"
+                          />
+                          <label htmlFor="prefer-call" className="ml-2 text-sm" style={{ color: `${detailsTextColor}CC` }}>
+                            Prefiro receber ligação
+                          </label>
+                        </div>
+                      </div>
+                      
+                      <div className="pt-2">
                         <button
                           type="submit"
-                          className="w-full py-3 bg-[#25D366] text-white font-medium rounded-md hover:bg-[#22c55e] transition-colors"
+                          className="w-full py-3.5 bg-[#25D366] text-white font-medium rounded-md hover:bg-[#22c55e] transition-colors shadow-md flex items-center justify-center"
                         >
-                          Entrar em contato
+                          <i className="fab fa-whatsapp mr-2 text-xl"></i>
+                          Falar com um corretor especialista
                         </button>
-                        <p className="text-xs mt-2 text-center" style={{ color: `${detailsTextColor}99` }}>
-                          Ao enviar, você concorda em receber contato de nossos corretores
+                        <p className="text-xs mt-3 text-center" style={{ color: `${detailsTextColor}99` }}>
+                          Ao enviar, você concorda em receber contato de nossos corretores. Seus dados estão seguros conosco.
                         </p>
                       </div>
                     </form>
