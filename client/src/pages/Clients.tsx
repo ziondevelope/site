@@ -573,7 +573,7 @@ export default function Clients() {
 
       {selectedClient && (
         <Dialog open={openDetailsDialog} onOpenChange={setOpenDetailsDialog}>
-          <DialogContent className="sm:max-w-[600px]">
+          <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle className="flex items-center">
                 Detalhes do Cliente
@@ -583,14 +583,16 @@ export default function Clients() {
               </DialogTitle>
             </DialogHeader>
             
-            <ClientDetails 
-              client={selectedClient} 
-              onDelete={(id) => {
-                if (window.confirm('Tem certeza que deseja excluir este cliente?')) {
-                  deleteClientMutation.mutate(id);
-                }
-              }} 
-            />
+            <div className="pb-6">
+              <ClientDetails 
+                client={selectedClient} 
+                onDelete={(id) => {
+                  if (window.confirm('Tem certeza que deseja excluir este cliente?')) {
+                    deleteClientMutation.mutate(id);
+                  }
+                }} 
+              />
+            </div>
           </DialogContent>
         </Dialog>
       )}

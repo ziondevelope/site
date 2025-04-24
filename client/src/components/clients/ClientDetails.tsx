@@ -177,10 +177,10 @@ export default function ClientDetails({ client, onDelete }: ClientDetailsProps) 
     <div className="space-y-6">
       {/* Header Card com informações principais */}
       <Card className="border-none shadow-none bg-gradient-to-r from-slate-50 to-white">
-        <CardContent className="p-6">
+        <CardContent className="p-4 sm:p-6">
           <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
             <div className="flex-shrink-0">
-              <Avatar className="h-20 w-20 rounded-md border border-primary/10 bg-primary/5">
+              <Avatar className="h-16 w-16 md:h-20 md:w-20 rounded-md border border-primary/10 bg-primary/5">
                 <AvatarFallback className="rounded-md font-semibold text-xl text-primary">
                   {getInitials(client.name)}
                 </AvatarFallback>
@@ -188,39 +188,39 @@ export default function ClientDetails({ client, onDelete }: ClientDetailsProps) 
             </div>
             
             <div className="flex-grow">
-              <div className="flex flex-col md:flex-row md:items-center justify-between mb-2">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-2">
                 <div>
-                  <h3 className="text-xl font-bold tracking-tight">{client.name}</h3>
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
+                  <h3 className="text-lg md:text-xl font-bold tracking-tight">{client.name}</h3>
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 text-sm text-muted-foreground mt-1">
                     {client.email && (
                       <div className="flex items-center gap-1">
                         <Mail className="h-3.5 w-3.5" />
-                        <span>{client.email}</span>
+                        <span className="text-xs sm:text-sm overflow-hidden text-ellipsis">{client.email}</span>
                       </div>
                     )}
                     {client.phone && (
-                      <div className="flex items-center gap-1 ml-3">
+                      <div className="flex items-center gap-1 sm:ml-3">
                         <Phone className="h-3.5 w-3.5" />
-                        <span>{client.phone}</span>
+                        <span className="text-xs sm:text-sm">{client.phone}</span>
                       </div>
                     )}
                   </div>
                 </div>
                 
-                <div className="flex mt-2 md:mt-0 space-x-2">
-                  <Badge variant={client.status === 'active' ? 'default' : 'secondary'} className="px-3 py-1 rounded-full">
+                <div className="flex mt-2 sm:mt-0 space-x-2">
+                  <Badge variant={client.status === 'active' ? 'default' : 'secondary'} className="px-2 sm:px-3 py-0.5 sm:py-1 rounded-full text-xs">
                     {client.status === 'active' ? 'Ativo' : 'Inativo'}
                   </Badge>
-                  <Badge variant="outline" className="px-3 py-1 rounded-full bg-slate-50">
+                  <Badge variant="outline" className="px-2 sm:px-3 py-0.5 sm:py-1 rounded-full bg-slate-50 text-xs">
                     {client.type === 'physical' ? 'Pessoa Física' : 'Pessoa Jurídica'}
                   </Badge>
                 </div>
               </div>
               
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
-                <div className="flex items-center gap-2 text-sm">
-                  <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
-                    <Calendar className="h-4 w-4 text-primary" />
+              <div className="grid grid-cols-2 gap-2 sm:gap-4 mt-3">
+                <div className="flex items-center gap-2 text-xs sm:text-sm">
+                  <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-full bg-primary/10 flex items-center justify-center">
+                    <Calendar className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary" />
                   </div>
                   <div>
                     <p className="text-xs text-muted-foreground">Cliente desde</p>
@@ -229,9 +229,9 @@ export default function ClientDetails({ client, onDelete }: ClientDetailsProps) 
                 </div>
                 
                 {client.interestType && (
-                  <div className="flex items-center gap-2 text-sm">
-                    <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
-                      <Target className="h-4 w-4 text-primary" />
+                  <div className="flex items-center gap-2 text-xs sm:text-sm">
+                    <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-full bg-primary/10 flex items-center justify-center">
+                      <Target className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary" />
                     </div>
                     <div>
                       <p className="text-xs text-muted-foreground">Interesse</p>
@@ -245,9 +245,9 @@ export default function ClientDetails({ client, onDelete }: ClientDetailsProps) 
                 )}
                 
                 {client.budget && (
-                  <div className="flex items-center gap-2 text-sm">
-                    <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
-                      <CreditCard className="h-4 w-4 text-primary" />
+                  <div className="flex items-center gap-2 text-xs sm:text-sm">
+                    <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-full bg-primary/10 flex items-center justify-center">
+                      <CreditCard className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary" />
                     </div>
                     <div>
                       <p className="text-xs text-muted-foreground">Orçamento</p>
@@ -257,9 +257,9 @@ export default function ClientDetails({ client, onDelete }: ClientDetailsProps) 
                 )}
                 
                 {client.city && (
-                  <div className="flex items-center gap-2 text-sm">
-                    <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
-                      <Home className="h-4 w-4 text-primary" />
+                  <div className="flex items-center gap-2 text-xs sm:text-sm">
+                    <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-full bg-primary/10 flex items-center justify-center">
+                      <Home className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary" />
                     </div>
                     <div>
                       <p className="text-xs text-muted-foreground">Cidade</p>
@@ -274,30 +274,33 @@ export default function ClientDetails({ client, onDelete }: ClientDetailsProps) 
       </Card>
 
       {/* Tabs de conteúdo */}
-      <Tabs defaultValue="info" className="mt-4">
+      <Tabs defaultValue="info" className="mt-2">
         <TabsList className="w-full bg-background border border-slate-200 rounded-lg p-1">
-          <TabsTrigger value="info" className="rounded-md">
-            <UserCheck className="h-4 w-4 mr-2" />
-            Informações Gerais
+          <TabsTrigger value="info" className="rounded-md text-xs sm:text-sm">
+            <UserCheck className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+            <span className="hidden xs:inline">Informações</span>
+            <span className="xs:hidden">Info</span>
           </TabsTrigger>
-          <TabsTrigger value="contact" className="rounded-md">
-            <Mail className="h-4 w-4 mr-2" />
-            Contato e Endereço
+          <TabsTrigger value="contact" className="rounded-md text-xs sm:text-sm">
+            <Mail className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+            <span className="hidden xs:inline">Contato e Endereço</span>
+            <span className="xs:hidden">Contato</span>
           </TabsTrigger>
-          <TabsTrigger value="notes" className="rounded-md">
-            <FilePen className="h-4 w-4 mr-2" />
-            Observações
+          <TabsTrigger value="notes" className="rounded-md text-xs sm:text-sm">
+            <FilePen className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+            <span className="hidden xs:inline">Observações</span>
+            <span className="xs:hidden">Notas</span>
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="info" className="mt-6">
+        <TabsContent value="info" className="mt-4">
           <Card>
-            <CardHeader className="pb-3">
-              <CardTitle>Dados Principais</CardTitle>
-              <CardDescription>Informações pessoais e comerciais</CardDescription>
+            <CardHeader className="pb-2 px-4 pt-4">
+              <CardTitle className="text-base sm:text-lg">Dados Principais</CardTitle>
+              <CardDescription className="text-xs sm:text-sm">Informações pessoais e comerciais</CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <CardContent className="px-4 pb-4 pt-0">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
                 <div className="space-y-1.5">
                   <Label htmlFor="name" className="text-sm font-medium text-muted-foreground">Nome Completo</Label>
                   {isEditing ? (
@@ -467,14 +470,14 @@ export default function ClientDetails({ client, onDelete }: ClientDetailsProps) 
           </Card>
         </TabsContent>
 
-        <TabsContent value="contact" className="mt-6">
+        <TabsContent value="contact" className="mt-4">
           <Card>
-            <CardHeader className="pb-3">
-              <CardTitle>Dados de Contato</CardTitle>
-              <CardDescription>Informações de contato e localização</CardDescription>
+            <CardHeader className="pb-2 px-4 pt-4">
+              <CardTitle className="text-base sm:text-lg">Dados de Contato</CardTitle>
+              <CardDescription className="text-xs sm:text-sm">Informações de contato e localização</CardDescription>
             </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <CardContent className="px-4 pb-4 pt-0">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
                 <div className="space-y-1.5">
                   <Label htmlFor="email" className="text-sm font-medium text-muted-foreground">E-mail</Label>
                   {isEditing ? (
@@ -607,24 +610,24 @@ export default function ClientDetails({ client, onDelete }: ClientDetailsProps) 
           </Card>
         </TabsContent>
 
-        <TabsContent value="notes" className="mt-6">
+        <TabsContent value="notes" className="mt-4">
           <Card>
-            <CardHeader className="pb-3">
-              <CardTitle>Observações</CardTitle>
-              <CardDescription>Anotações e informações adicionais sobre o cliente</CardDescription>
+            <CardHeader className="pb-2 px-4 pt-4">
+              <CardTitle className="text-base sm:text-lg">Observações</CardTitle>
+              <CardDescription className="text-xs sm:text-sm">Anotações e informações adicionais sobre o cliente</CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="px-4 pb-4 pt-0">
               <div className="space-y-1.5">
                 {isEditing ? (
                   <Textarea
                     name="notes"
                     value={formData.notes || ''}
                     onChange={handleChange}
-                    className="min-h-[200px] resize-none"
+                    className="min-h-[150px] sm:min-h-[200px] resize-none text-sm"
                     placeholder="Adicione observações importantes sobre o cliente..."
                   />
                 ) : (
-                  <div className="p-6 bg-slate-50 rounded-lg min-h-[200px] whitespace-pre-wrap text-sm">
+                  <div className="p-4 bg-slate-50 rounded-lg min-h-[150px] sm:min-h-[200px] whitespace-pre-wrap text-xs sm:text-sm">
                     {client.notes || 'Nenhuma observação registrada.'}
                   </div>
                 )}
@@ -634,10 +637,10 @@ export default function ClientDetails({ client, onDelete }: ClientDetailsProps) 
         </TabsContent>
       </Tabs>
 
-      <Separator className="my-8" />
+      <Separator className="my-4 sm:my-6" />
 
       {/* Barra de ações */}
-      <div className="flex flex-col-reverse sm:flex-row justify-between items-center gap-4">
+      <div className="flex flex-col-reverse sm:flex-row justify-between items-center gap-3">
         <Button
           variant="destructive"
           onClick={() => onDelete(client.id)}
