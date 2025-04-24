@@ -561,6 +561,23 @@ function PropertyDetailsContent({ propertyId, isOpen, onClose, propConfig }: {
                         const phone = formData.get('phone') as string;
                         const message = formData.get('message') as string;
                         
+                        // Coletar preferências de contato
+                        const preferWhatsapp = document.getElementById('prefer-whatsapp') as HTMLInputElement;
+                        const preferEmail = document.getElementById('prefer-email') as HTMLInputElement;
+                        const preferCall = document.getElementById('prefer-call') as HTMLInputElement;
+                        
+                        const contactPreferences: string[] = [];
+                        if (preferWhatsapp && preferWhatsapp.checked) contactPreferences.push('WhatsApp');
+                        if (preferEmail && preferEmail.checked) contactPreferences.push('Email');
+                        if (preferCall && preferCall.checked) contactPreferences.push('Ligação');
+                        
+                        // Montar mensagem com preferências para o CRM
+                        let notesMessage = message || '';
+                        if (contactPreferences.length > 0) {
+                          if (notesMessage) notesMessage += '\n\n';
+                          notesMessage += `Preferências de contato: ${contactPreferences.join(', ')}`;
+                        }
+                        
                         // Criar um novo lead
                         fetch('/api/leads', {
                           method: 'POST',
@@ -571,7 +588,7 @@ function PropertyDetailsContent({ propertyId, isOpen, onClose, propConfig }: {
                             name,
                             email,
                             phone,
-                            message,
+                            message: notesMessage, // Mensagem com preferências de contato
                             source: 'property-contact-form',
                             status: 'new',
                             propertyId: currentProperty?.id,
@@ -596,8 +613,13 @@ function PropertyDetailsContent({ propertyId, isOpen, onClose, propConfig }: {
                             
                             let noteContent = `Lead demonstrou interesse neste imóvel:\n\n${propertyDetails}`;
                             
+                            // Adicionar mensagem do cliente e preferências de contato na nota
                             if (message) {
                               noteContent += `\n\nMensagem do cliente:\n${message}`;
+                            }
+                            
+                            if (contactPreferences.length > 0) {
+                              noteContent += `\n\nPreferências de contato: ${contactPreferences.join(', ')}`;
                             }
                             
                             // Criar a nota no CRM
@@ -667,7 +689,7 @@ function PropertyDetailsContent({ propertyId, isOpen, onClose, propConfig }: {
                                 document.body.removeChild(successModal);
                               });
                               
-                              const handleEscKey = function(e) {
+                              const handleEscKey = function(e: KeyboardEvent) {
                                 if (e.key === 'Escape' && document.body.contains(successModal)) {
                                   document.body.removeChild(successModal);
                                   document.removeEventListener('keydown', handleEscKey);
