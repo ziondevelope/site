@@ -333,7 +333,7 @@ function PropertyDetailsContent({ propertyId, isOpen, onClose, propConfig }: {
           )}
         </div>
 
-        <div className="p-0 relative" style={{ backgroundColor: detailsBackgroundColor, color: detailsTextColor }}>
+        <div className="p-6" style={{ backgroundColor: detailsBackgroundColor, color: detailsTextColor }}>
           {isLoadingProperty ? (
             <div className="animate-pulse">
               <div className="h-10 bg-white/20 rounded w-3/4 mb-4"></div>
@@ -341,88 +341,12 @@ function PropertyDetailsContent({ propertyId, isOpen, onClose, propConfig }: {
               <div className="h-[400px] bg-white/20 rounded-xl mb-6"></div>
             </div>
           ) : currentProperty ? (
-            <div className="flex flex-col">
-              {/* Painel superior com imagem principal e destaque do imóvel */}
-              <div className="relative h-[350px] md:h-[450px] w-full overflow-hidden flex">
-                {/* Imagem principal em destaque */}
-                <div className="absolute inset-0 w-full h-full z-0">
-                  <img 
-                    src={activeImage || (currentProperty.images && currentProperty.images[0])} 
-                    alt={currentProperty.title} 
-                    className="w-full h-full object-cover transition-transform duration-700 ease-out" 
-                  />
-                  
-                  {/* Overlay gradiente para melhorar legibilidade */}
-                  <div 
-                    className="absolute inset-0 z-10" 
-                    style={{ 
-                      background: `linear-gradient(to bottom, rgba(0,0,0,0.0) 0%, ${detailsBackgroundColor}ee 100%)` 
-                    }}
-                  ></div>
-                </div>
-                
-                {/* Informações de destaque sobre a imagem */}
-                <div className="absolute left-0 right-0 bottom-0 p-6 z-20 text-white">
-                  {/* Etiqueta de propósito */}
-                  <div className="inline-block mb-3">
-                    <span 
-                      className="px-3 py-1 rounded-md text-xs font-bold uppercase" 
-                      style={{ 
-                        backgroundColor: currentProperty.purpose === 'rent' ? '#25D366' : '#07B6D5',
-                        color: 'white'
-                      }}
-                    >
-                      {currentProperty.purpose === 'rent' ? 'Aluguel' : 'Venda'}
-                    </span>
-                    
-                    {/* Tipo de imóvel */}
-                    <span 
-                      className="ml-2 px-3 py-1 rounded-md text-xs font-bold uppercase" 
-                      style={{ backgroundColor: `${detailsIconsColor}`, color: 'white' }}
-                    >
-                      {currentProperty.type === 'apartment' ? 'Apartamento' : 
-                       currentProperty.type === 'house' ? 'Casa' : 
-                       currentProperty.type === 'land' ? 'Terreno' : 
-                       currentProperty.type === 'commercial' ? 'Comercial' : 
-                       currentProperty.type}
-                    </span>
-                  </div>
-                  
-                  {/* Título do imóvel */}
-                  <h1 className="text-3xl md:text-4xl font-bold mb-2 text-white shadow-text">
-                    {currentProperty.title}
-                  </h1>
-                  
-                  {/* Localização */}
-                  <div className="flex items-center text-white/90 mb-3">
-                    <i className="fas fa-map-marker-alt mr-2"></i>
-                    <span>{currentProperty.address} - {currentProperty.neighborhood}, {currentProperty.city}</span>
-                  </div>
-                  
-                  {/* Preço com etiqueta de destaque */}
-                  <div 
-                    className="inline-block px-4 py-2 rounded-lg text-2xl font-bold shadow-lg" 
-                    style={{ backgroundColor: '#25D366', color: 'white' }}
-                  >
-                    {formatCurrency(currentProperty.price)}
-                    {currentProperty.purpose === 'rent' && 
-                      <span className="text-base font-normal text-white/90 ml-1">/mês</span>
-                    }
-                  </div>
-                </div>
-              </div>
-              
-              {/* Controles das imagens */}
-              <div className="bg-gray-100 dark:bg-gray-800 p-3 flex justify-between items-center">
-                {/* Código do imóvel */}
-                <div className="flex items-center text-sm px-3 py-1 rounded bg-white dark:bg-gray-700 shadow-sm">
-                  <i className="fas fa-hashtag mr-1" style={{ color: detailsIconsColor }}></i>
-                  <span style={{ color: detailsTextColor }}>Ref: LL{currentProperty.id}</span>
-                </div>
-                
+            <div className="grid grid-cols-1 gap-8">
+              {/* Detalhes do imóvel */}
+              <div className="col-span-1">
                 {/* Thumbnails */}
                 {currentProperty.images && currentProperty.images.length > 1 && (
-                  <div className="flex overflow-x-auto space-x-2 px-2 scrollbar-hide">
+                  <div className="flex overflow-x-auto space-x-2 mb-6 pb-2 scrollbar-hide">
                     {currentProperty.images.map((image, index) => {
                       const imageUrl = typeof image === 'object' && 'url' in image 
                         ? image.url 
@@ -435,16 +359,17 @@ function PropertyDetailsContent({ propertyId, isOpen, onClose, propConfig }: {
                       return (
                         <div 
                           key={index}
-                          className={`flex-shrink-0 w-16 h-12 rounded overflow-hidden cursor-pointer transition-all duration-200 ${
-                            activeImage === imageUrl ? 'ring-2 ring-offset-1 ring-[#25D366] scale-105' : 'opacity-70 hover:opacity-100'
+                          className={`flex-shrink-0 w-20 h-14 rounded overflow-hidden cursor-pointer ${
+                            activeImage === imageUrl ? 'ring-2 ring-offset-1 border-2 border-white' : ''
                           }`}
+                          style={activeImage === imageUrl ? { borderColor: 'white' } : {}}
                           onClick={() => setActiveImage(imageUrl)}
                         >
                           <div className="w-full h-full relative">
                             <img 
                               src={imageUrl} 
                               alt={`Imagem ${index + 1} do imóvel`}
-                              className="w-full h-full object-cover"
+                              className="w-full h-full object-cover hover:opacity-90 transition-opacity"
                             />
                           </div>
                         </div>
@@ -453,78 +378,73 @@ function PropertyDetailsContent({ propertyId, isOpen, onClose, propConfig }: {
                   </div>
                 )}
                 
-                {/* Botões de compartilhamento rápido */}
-                <div className="flex space-x-2">
-                  <button
-                    onClick={() => {
-                      const url = window.location.href;
-                      window.open(`https://wa.me/?text=${encodeURIComponent(`Confira este imóvel: ${currentProperty.title} ${url}`)}`, '_blank');
-                    }}
-                    className="w-8 h-8 rounded-full flex items-center justify-center transition-colors"
-                    style={{ backgroundColor: `#25D366`, color: 'white' }}
-                    aria-label="Compartilhar no WhatsApp"
-                  >
-                    <i className="fab fa-whatsapp"></i>
-                  </button>
-                  
-                  <button
-                    onClick={() => {
-                      // Copiar link para o clipboard
-                      const url = window.location.href;
-                      navigator.clipboard.writeText(url).then(() => {
-                        alert('Link copiado!');
-                      });
-                    }}
-                    className="w-8 h-8 rounded-full flex items-center justify-center transition-colors"
-                    style={{ backgroundColor: `${detailsIconsColor}30`, color: detailsIconsColor }}
-                    aria-label="Copiar link"
-                  >
-                    <i className="fas fa-link"></i>
-                  </button>
-                </div>
-              </div>
-              
-              {/* Conteúdo principal */}
-              <div className="p-6">
-                {/* Características em cards */}
-                <div className="grid grid-cols-5 gap-2 mb-8 bg-white dark:bg-gray-800 rounded-xl p-3 shadow-sm">
-                  <div className="text-center py-3 px-1 rounded-lg" style={{ backgroundColor: `${detailsIconsColor}10` }}>
-                    <i className="fas fa-bed text-xl mb-2" style={{ color: detailsIconsColor }}></i>
-                    <div>
-                      <span className="block font-bold text-lg" style={{ color: detailsTextColor }}>{currentProperty.bedrooms || 0}</span>
-                      <span className="block text-xs" style={{ color: `${detailsTextColor}99` }}>Quartos</span>
+                {/* Title and price */}
+                <div className="mb-6">
+                  <div className="mb-2">
+                    <h1 className="text-2xl md:text-3xl font-bold mb-2" style={{ lineHeight: '2rem', color: detailsTextColor }}>
+                      {currentProperty.title}
+                    </h1>
+                    <div 
+                      className="font-medium"
+                      style={{ color: detailsTextColor, fontSize: '22px', fontWeight: 500 }}
+                    >
+                      {formatCurrency(currentProperty.price)}
+                      {currentProperty.purpose === 'rent' && 
+                        <span className="text-base font-normal" style={{ color: `${detailsTextColor}BB` }}>/mês</span>
+                      }
                     </div>
                   </div>
                   
-                  <div className="text-center py-3 px-1 rounded-lg" style={{ backgroundColor: `${detailsIconsColor}10` }}>
-                    <i className="fas fa-shower text-xl mb-2" style={{ color: detailsIconsColor }}></i>
-                    <div>
-                      <span className="block font-bold text-lg" style={{ color: detailsTextColor }}>{currentProperty.bathrooms || 0}</span>
-                      <span className="block text-xs" style={{ color: `${detailsTextColor}99` }}>Banheiros</span>
+                  <div className="flex items-center mb-4" style={{ color: `${detailsTextColor}DD` }}>
+                    <i className="ri-map-pin-line mr-2" style={{ color: detailsIconsColor }}></i>
+                    <span>{currentProperty.address}</span>
+                    <div className="ml-auto text-sm flex items-center" style={{ color: `${detailsTextColor}DD` }}>
+                      <i className="ri-code-line mr-1" style={{ color: detailsIconsColor }}></i>
+                      <span>Cód. LL{currentProperty.id}</span>
                     </div>
                   </div>
                   
-                  <div className="text-center py-3 px-1 rounded-lg" style={{ backgroundColor: `${detailsIconsColor}10` }}>
-                    <i className="fas fa-bath text-xl mb-2" style={{ color: detailsIconsColor }}></i>
-                    <div>
-                      <span className="block font-bold text-lg" style={{ color: detailsTextColor }}>{currentProperty.suites || 0}</span>
-                      <span className="block text-xs" style={{ color: `${detailsTextColor}99` }}>Suítes</span>
-                    </div>
-                  </div>
-                  
-                  <div className="text-center py-3 px-1 rounded-lg" style={{ backgroundColor: `${detailsIconsColor}10` }}>
-                    <i className="fas fa-car text-xl mb-2" style={{ color: detailsIconsColor }}></i>
-                    <div>
-                      <span className="block font-bold text-lg" style={{ color: detailsTextColor }}>{currentProperty.parkingSpots || 0}</span>
-                      <span className="block text-xs" style={{ color: `${detailsTextColor}99` }}>Vagas</span>
-                    </div>
-                  </div>
-                  
-                  <div className="text-center py-3 px-1 rounded-lg" style={{ backgroundColor: `${detailsIconsColor}10` }}>
-                    <i className="fas fa-ruler-combined text-xl mb-2" style={{ color: detailsIconsColor }}></i>
-                    <div>
-                      <span className="block font-bold text-lg" style={{ color: detailsTextColor }}>{currentProperty.area}</span>
-                      <span className="block text-xs" style={{ color: `${detailsTextColor}99` }}>m²</span>
+                  <div className="border-t border-b py-4 my-4" style={{ borderColor: `${detailsTextColor}22` }}>
+                    <div className="flex flex-wrap gap-4 justify-between">
+                      <div className="flex items-center">
+                        <i className="fas fa-bed text-xl mr-2" style={{ color: detailsIconsColor }}></i>
+                        <div>
+                          <span className="font-medium" style={{ color: detailsTextColor }}>{currentProperty.bedrooms || 0}</span>
+                          <span className="text-sm ml-1" style={{ color: `${detailsTextColor}BB` }}>Quartos</span>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center">
+                        <i className="fas fa-shower text-xl mr-2" style={{ color: detailsIconsColor }}></i>
+                        <div>
+                          <span className="font-medium" style={{ color: detailsTextColor }}>{currentProperty.bathrooms || 0}</span>
+                          <span className="text-sm ml-1" style={{ color: `${detailsTextColor}BB` }}>Banheiros</span>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center">
+                        <i className="fas fa-bath text-xl mr-2" style={{ color: detailsIconsColor }}></i>
+                        <div>
+                          <span className="font-medium" style={{ color: detailsTextColor }}>{currentProperty.suites || 0}</span>
+                          <span className="text-sm ml-1" style={{ color: `${detailsTextColor}BB` }}>Suítes</span>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center">
+                        <i className="fas fa-car text-xl mr-2" style={{ color: detailsIconsColor }}></i>
+                        <div>
+                          <span className="font-medium" style={{ color: detailsTextColor }}>{currentProperty.parkingSpots || 0}</span>
+                          <span className="text-sm ml-1" style={{ color: `${detailsTextColor}BB` }}>Vagas</span>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center">
+                        <i className="fas fa-ruler-combined text-xl mr-2" style={{ color: detailsIconsColor }}></i>
+                        <div>
+                          <span className="font-medium" style={{ color: detailsTextColor }}>{currentProperty.area}</span>
+                          <span className="text-sm ml-1" style={{ color: `${detailsTextColor}BB` }}>m²</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
