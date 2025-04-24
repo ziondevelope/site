@@ -132,6 +132,9 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose, conf
   useEffect(() => {
     if (!modalRef.current || !isOpen) return;
     
+    // Sempre iniciar com o botão oculto quando abre o modal
+    setShowContactButton(false);
+    
     const handleScroll = () => {
       if (!modalRef.current) return;
       
@@ -152,13 +155,16 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose, conf
     const modalElement = modalRef.current;
     modalElement.addEventListener('scroll', handleScroll);
     
-    // Verificar inicialmente (caso a página já carregue em uma posição abaixo de 75%)
-    handleScroll();
+    // Pequeno atraso antes de verificar a posição inicial para garantir que o conteúdo tenha sido renderizado
+    const initialCheckTimeout = setTimeout(() => {
+      handleScroll();
+    }, 300); // 300ms de atraso
     
     return () => {
       if (modalElement) {
         modalElement.removeEventListener('scroll', handleScroll);
       }
+      clearTimeout(initialCheckTimeout);
     };
   }, [showContactButton, isOpen]);
 
