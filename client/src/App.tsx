@@ -8,6 +8,7 @@ import Properties from "@/pages/Properties";
 import PropertyDetails from "@/pages/PropertyDetails";
 import AllProperties from "@/pages/AllProperties";
 import CRM from "@/pages/CRM";
+import Clients from "@/pages/Clients";
 import Agents from "@/pages/Agents";
 import Website from "@/pages/Website";
 import Settings from "@/pages/Settings";
@@ -35,6 +36,8 @@ function AdminRouter() {
     CurrentComponent = Properties;
   } else if (location.includes("/admin/crm")) {
     CurrentComponent = CRM;
+  } else if (location.includes("/admin/clientes")) {
+    CurrentComponent = NotFound; // Temporariamente usando NotFound até implementar a página de Clientes
   } else if (location.includes("/admin/corretores")) {
     CurrentComponent = Agents;
   } else if (location.includes("/admin/site")) {

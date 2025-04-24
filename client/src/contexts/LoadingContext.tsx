@@ -4,6 +4,7 @@ interface LoadingContextType {
   isLoading: boolean;
   startLoading: () => void;
   stopLoading: () => void;
+  setIsLoading: (isLoading: boolean) => void;
 }
 
 const LoadingContext = createContext<LoadingContextType | undefined>(undefined);

@@ -13,6 +13,7 @@ type NavItem = {
 const navItems: NavItem[] = [
   { id: "home", href: "/admin", label: "Página Inicial", icon: "ri-home-line" },
   { id: "leads", href: "/admin/crm", label: "Leads", icon: "ri-user-heart-line" },
+  { id: "clients", href: "/admin/clientes", label: "Clientes", icon: "ri-user-star-line" },
   { id: "properties", href: "/admin/imoveis", label: "Imóveis", icon: "ri-building-line" },
   { id: "agents", href: "/admin/corretores", label: "Corretores", icon: "ri-team-line" },
   { id: "settings", href: "/admin/configuracoes", label: "Configurações", icon: "ri-settings-line" },
