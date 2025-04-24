@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { Helmet } from "react-helmet-async";
-import { Pencil, Check, X, User, Mail, Phone, Tag, Filter, MessageSquare, FileText, CalendarPlus, CheckCircle } from "lucide-react";
+import { Pencil, Check, X, User, Mail, Phone, Tag, Filter, MessageSquare, FileText, CalendarPlus, CheckCircle, Search, Home } from "lucide-react";
 import { ClientFilters } from "@/components/clients/ClientFilters";
 import { FaWhatsapp } from "react-icons/fa";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -15,6 +15,8 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Command, CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator } from "@/components/ui/command";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
@@ -82,6 +84,20 @@ export default function Clients() {
     queryKey: ["/api/properties"],
     retry: 1,
   });
+  
+  // Estado para pesquisa de imóveis
+  const [propertySearchTerm, setPropertySearchTerm] = useState('');
+  const [isPropertyPopoverOpen, setIsPropertyPopoverOpen] = useState(false);
+  
+  // Filtra os imóveis para pesquisa
+  const filteredProperties = useMemo(() => {
+    if (!propertySearchTerm) return properties;
+    return properties.filter((property: any) => 
+      property.title.toLowerCase().includes(propertySearchTerm.toLowerCase()) || 
+      (property.neighborhood && property.neighborhood.toLowerCase().includes(propertySearchTerm.toLowerCase())) ||
+      (property.city && property.city.toLowerCase().includes(propertySearchTerm.toLowerCase()))
+    );
+  }, [properties, propertySearchTerm]);
   
   // Atualiza o estado de carregamento baseado na consulta
   useEffect(() => {
@@ -451,37 +467,74 @@ export default function Clients() {
                 />
               </div>
               
-              {/* Campo de Imóvel de interesse */}
+              {/* Campo de Imóvel de interesse com pesquisa */}
               <FormField
                 control={clientForm.control}
                 name="propertyId"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="flex flex-col">
                     <FormLabel>Imóvel de interesse</FormLabel>
-                    <Select 
-                      onValueChange={(value) => {
-                        if (value === 'none') {
-                          field.onChange(null);
-                        } else {
-                          field.onChange(parseInt(value));
-                        }
-                      }} 
-                      value={field.value?.toString() || 'none'}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Selecione um imóvel (opcional)" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="none">Nenhum imóvel selecionado</SelectItem>
-                        {properties.map((property) => (
-                          <SelectItem key={property.id} value={property.id.toString()}>
-                            {property.title} - {property.neighborhood}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <Popover open={isPropertyPopoverOpen} onOpenChange={setIsPropertyPopoverOpen}>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant="outline"
+                            role="combobox"
+                            className={`w-full justify-between h-10 ${!field.value ? "text-muted-foreground" : ""}`}
+                          >
+                            {field.value 
+                              ? properties.find((property) => property.id === field.value)?.title || "Selecione um imóvel"
+                              : "Selecione um imóvel (opcional)"}
+                            <Home className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-[300px] p-0" align="start">
+                        <Command>
+                          <CommandInput 
+                            placeholder="Buscar imóvel..." 
+                            className="h-9" 
+                            value={propertySearchTerm}
+                            onValueChange={setPropertySearchTerm}
+                          />
+                          <CommandList>
+                            <CommandEmpty>Nenhum imóvel encontrado.</CommandEmpty>
+                            <CommandGroup>
+                              <CommandItem
+                                onSelect={() => {
+                                  field.onChange(null);
+                                  setIsPropertyPopoverOpen(false);
+                                  setPropertySearchTerm('');
+                                }}
+                                className="cursor-pointer"
+                              >
+                                <Check
+                                  className={`mr-2 h-4 w-4 ${!field.value ? "opacity-100" : "opacity-0"}`}
+                                />
+                                Nenhum imóvel selecionado
+                              </CommandItem>
+                              
+                              {filteredProperties.map((property) => (
+                                <CommandItem
+                                  key={property.id}
+                                  onSelect={() => {
+                                    field.onChange(property.id);
+                                    setIsPropertyPopoverOpen(false);
+                                    setPropertySearchTerm('');
+                                  }}
+                                  className="cursor-pointer"
+                                >
+                                  <Check
+                                    className={`mr-2 h-4 w-4 ${property.id === field.value ? "opacity-100" : "opacity-0"}`}
+                                  />
+                                  {property.title} - {property.neighborhood || property.city}
+                                </CommandItem>
+                              ))}
+                            </CommandGroup>
+                          </CommandList>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
                     <FormMessage />
                   </FormItem>
                 )}
