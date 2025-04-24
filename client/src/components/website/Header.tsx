@@ -74,13 +74,7 @@ export default function Header({ config, isLoadingConfig }: HeaderProps) {
             )}
           </div>
           
-          {/* Menu ao lado da logo */}
-          <nav className="hidden md:flex space-x-8">
-            <a href="/#home" className={`${isPropertiesPage || scrolled ? 'text-gray-700' : 'text-white'} hover:text-primary font-medium transition-colors duration-300`}>Início</a>
-            <NavigationLink href="/properties" className={`${isPropertiesPage || scrolled ? 'text-gray-700' : 'text-white'} hover:text-primary font-medium transition-colors duration-300`}>Imóveis</NavigationLink>
-            <a href="/#about" className={`${isPropertiesPage || scrolled ? 'text-gray-700' : 'text-white'} hover:text-primary font-medium transition-colors duration-300`}>Sobre</a>
-            <a href="/#contact" className={`${isPropertiesPage || scrolled ? 'text-gray-700' : 'text-white'} hover:text-primary font-medium transition-colors duration-300`}>Contato</a>
-          </nav>
+          {/* Menu ao lado da logo removido - usando apenas o hamburguer */}
         </div>
         
         {/* Botão WhatsApp e menus hamburger */}
