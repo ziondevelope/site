@@ -1,6 +1,7 @@
 import { users, type User, type InsertUser } from "@shared/schema";
 import { properties, type Property, type InsertProperty } from "@shared/schema";
 import { leads, type Lead, type InsertLead } from "@shared/schema";
+import { clients, type Client, type InsertClient } from "@shared/schema";
 import { tasks, type Task, type InsertTask } from "@shared/schema";
 import { websiteConfig, type WebsiteConfig, type UpdateWebsiteConfig } from "@shared/schema";
 import { testimonials, type Testimonial, type InsertTestimonial } from "@shared/schema";
@@ -56,6 +57,14 @@ export interface IStorage {
   updateLeadStatus(id: number, status: string): Promise<Lead | undefined>;
   updateLead(id: number, leadData: any): Promise<Lead | undefined>;
   deleteLead(id: number): Promise<boolean>;
+  
+  // Client methods
+  getClient(id: number): Promise<Client | undefined>;
+  getAllClients(): Promise<Client[]>;
+  createClient(client: InsertClient): Promise<Client>;
+  updateClient(id: number, clientData: Partial<InsertClient>): Promise<Client | undefined>;
+  deleteClient(id: number): Promise<boolean>;
+  convertLeadToClient(leadId: number, additionalData?: Partial<InsertClient>): Promise<Client>;
 
   // Task methods
   getTask(id: number): Promise<Task | undefined>;

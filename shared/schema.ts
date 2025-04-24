@@ -247,6 +247,35 @@ export const insertFunnelStageSchema = createInsertSchema(funnelStages).omit({
   updatedAt: true
 });
 
+// Clients schema - separate from leads
+export const clients = pgTable("clients", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  email: text("email"),
+  phone: text("phone"),
+  whatsapp: text("whatsapp"),
+  address: text("address"),
+  city: text("city"),
+  neighborhood: text("neighborhood"),
+  zipCode: text("zip_code"),
+  document: text("document"), // CPF/CNPJ
+  type: text("type").default("physical"), // physical or legal
+  interestType: text("interest_type"), // purchase, rent, sell
+  budget: integer("budget"),
+  notes: text("notes"),
+  convertedFromLeadId: integer("converted_from_lead_id"), // Reference to the lead this client was converted from
+  agentId: integer("agent_id"),
+  status: text("status").default("active"), // active, inactive
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const insertClientSchema = createInsertSchema(clients).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true
+});
+
 // Define types from schemas
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
@@ -256,6 +285,9 @@ export type Property = typeof properties.$inferSelect;
 
 export type InsertLead = z.infer<typeof insertLeadSchema>;
 export type Lead = typeof leads.$inferSelect;
+
+export type InsertClient = z.infer<typeof insertClientSchema>;
+export type Client = typeof clients.$inferSelect;
 
 export type InsertTask = z.infer<typeof insertTaskSchema>;
 export type Task = typeof tasks.$inferSelect;
