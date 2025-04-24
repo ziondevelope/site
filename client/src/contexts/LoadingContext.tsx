@@ -28,7 +28,7 @@ export function LoadingProvider({ children }: LoadingProviderProps) {
   const stopLoading = () => setIsLoading(false);
 
   return (
-    <LoadingContext.Provider value={{ isLoading, startLoading, stopLoading }}>
+    <LoadingContext.Provider value={{ isLoading, startLoading, stopLoading, setIsLoading }}>
       {children}
     </LoadingContext.Provider>
   );

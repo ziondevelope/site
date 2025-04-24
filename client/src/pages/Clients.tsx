@@ -11,7 +11,7 @@ export default function Clients() {
   const { setIsLoading: setLoading } = useLoading();
   
   // Busca os clientes do sistema
-  const { data: clients = [], isLoading: isLoadingClients, error: clientsError } = useQuery({
+  const { data: clients = [], isLoading: isLoadingClients, error: clientsError } = useQuery<any[]>({
     queryKey: ["/api/leads"],
     retry: 1,
   });

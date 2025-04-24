@@ -37,7 +37,7 @@ function AdminRouter() {
   } else if (location.includes("/admin/crm")) {
     CurrentComponent = CRM;
   } else if (location.includes("/admin/clientes")) {
-    CurrentComponent = NotFound; // Temporariamente usando NotFound até implementar a página de Clientes
+    CurrentComponent = Clients;
   } else if (location.includes("/admin/corretores")) {
     CurrentComponent = Agents;
   } else if (location.includes("/admin/site")) {
