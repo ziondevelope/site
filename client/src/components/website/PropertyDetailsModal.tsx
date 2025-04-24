@@ -548,6 +548,125 @@ function PropertyDetailsContent({ propertyId, isOpen, onClose, propConfig }: {
                   </div>
                 </div>
                 
+                {/* Formulário de contato */}
+                <div className="mb-8">
+                  <h2 className="text-xl font-bold mb-3" style={{ color: detailsTextColor }}>Fale com um Corretor</h2>
+                  <div className="p-4 rounded-lg" style={{ backgroundColor: `${detailsIconsColor}10`, borderColor: `${detailsTextColor}22` }}>
+                    <form 
+                      onSubmit={(e) => {
+                        e.preventDefault();
+                        
+                        const form = e.currentTarget;
+                        const formData = new FormData(form);
+                        const name = formData.get('name') as string;
+                        const email = formData.get('email') as string;
+                        const phone = formData.get('phone') as string;
+                        
+                        // Criar um novo lead
+                        fetch('/api/leads', {
+                          method: 'POST',
+                          headers: {
+                            'Content-Type': 'application/json',
+                          },
+                          body: JSON.stringify({
+                            name,
+                            email,
+                            phone,
+                            source: 'property-contact-form',
+                            status: 'new',
+                            propertyId: currentProperty?.id,
+                            propertyTitle: currentProperty?.title
+                          }),
+                        })
+                        .then(response => {
+                          if (response.ok) {
+                            // Limpar formulário
+                            form.reset();
+                            
+                            // Mostrar mensagem de sucesso
+                            alert('Mensagem enviada com sucesso! Um de nossos corretores entrará em contato em breve.');
+                            
+                            // Opcionalmente, direcionar para WhatsApp
+                            if (agent?.phone) {
+                              const phone = agent.phone.replace(/\D/g, '');
+                              const message = `Olá, meu nome é ${name}. Tenho interesse no imóvel "${currentProperty?.title}" (Ref: ${currentProperty?.id})`;
+                              window.open(`https://wa.me/55${phone}?text=${encodeURIComponent(message)}`, '_blank');
+                            } else if (config?.whatsappNumber) {
+                              const phone = config.whatsappNumber.replace(/\D/g, '');
+                              const message = `Olá, meu nome é ${name}. Tenho interesse no imóvel "${currentProperty?.title}" (Ref: ${currentProperty?.id})`;
+                              window.open(`https://wa.me/55${phone}?text=${encodeURIComponent(message)}`, '_blank');
+                            }
+                          } else {
+                            alert('Ocorreu um erro ao enviar sua mensagem. Por favor, tente novamente.');
+                          }
+                        })
+                        .catch(error => {
+                          console.error('Erro:', error);
+                          alert('Ocorreu um erro ao enviar sua mensagem. Por favor, tente novamente.');
+                        });
+                      }}
+                      className="space-y-4"
+                    >
+                      <div>
+                        <label htmlFor="name" className="block text-sm font-medium mb-1" style={{ color: detailsTextColor }}>
+                          Nome
+                        </label>
+                        <input
+                          type="text"
+                          id="name"
+                          name="name"
+                          required
+                          className="w-full px-3 py-2 border rounded-md"
+                          style={{ borderColor: `${detailsTextColor}22`, color: detailsTextColor, backgroundColor: `${detailsBackgroundColor}80` }}
+                          placeholder="Seu nome completo"
+                        />
+                      </div>
+                      
+                      <div>
+                        <label htmlFor="email" className="block text-sm font-medium mb-1" style={{ color: detailsTextColor }}>
+                          E-mail
+                        </label>
+                        <input
+                          type="email"
+                          id="email"
+                          name="email"
+                          required
+                          className="w-full px-3 py-2 border rounded-md"
+                          style={{ borderColor: `${detailsTextColor}22`, color: detailsTextColor, backgroundColor: `${detailsBackgroundColor}80` }}
+                          placeholder="Seu e-mail"
+                        />
+                      </div>
+                      
+                      <div>
+                        <label htmlFor="phone" className="block text-sm font-medium mb-1" style={{ color: detailsTextColor }}>
+                          Telefone
+                        </label>
+                        <input
+                          type="tel"
+                          id="phone"
+                          name="phone"
+                          required
+                          className="w-full px-3 py-2 border rounded-md"
+                          style={{ borderColor: `${detailsTextColor}22`, color: detailsTextColor, backgroundColor: `${detailsBackgroundColor}80` }}
+                          placeholder="Seu telefone com DDD"
+                        />
+                      </div>
+                      
+                      <div>
+                        <button
+                          type="submit"
+                          className="w-full py-3 bg-[#25D366] text-white font-medium rounded-md hover:bg-[#22c55e] transition-colors"
+                        >
+                          Entrar em contato
+                        </button>
+                        <p className="text-xs mt-2 text-center" style={{ color: `${detailsTextColor}99` }}>
+                          Ao enviar, você concorda em receber contato de nossos corretores
+                        </p>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+                
                 {/* Botões de compartilhamento */}
                 <div className="mb-8">
                   <h2 className="text-xl font-bold mb-3" style={{ color: detailsTextColor }}>Compartilhar</h2>
