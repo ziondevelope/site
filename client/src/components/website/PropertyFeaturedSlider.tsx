@@ -126,14 +126,14 @@ export default function PropertyFeaturedSlider() {
                   </div>
                   
                   {/* Informações do imóvel (lado direito) */}
-                  <div className="p-6 md:p-8 flex flex-col justify-center items-center text-white h-full" style={{ backgroundColor: primaryColor }}>
-                    <div className="text-center max-w-md mx-auto">
+                  <div className="p-6 md:p-8 flex flex-col justify-center text-white h-full" style={{ backgroundColor: primaryColor }}>
+                    <div className="text-left w-full">
                       <h3 className="text-xl md:text-2xl font-bold mb-4 line-clamp-2 text-white">
                         {property.title}
                       </h3>
                       
                       <div className="mb-6">
-                        <p className="text-white/80 mb-2 flex items-center justify-center text-sm">
+                        <p className="text-white/80 mb-2 flex items-center text-sm">
                           <i className="ri-map-pin-line mr-2 text-white"></i>
                           {property.address || `${property.neighborhood}, ${property.city}`}
                         </p>
@@ -143,26 +143,26 @@ export default function PropertyFeaturedSlider() {
                         </p>
                       </div>
                       
-                      <div className="grid grid-cols-3 gap-4 mb-8 justify-center">
-                        <div className="flex flex-col items-center">
-                          <i className="fas fa-bed text-xl mb-1 text-white"></i>
-                          <div className="text-center">
+                      <div className="grid grid-cols-3 gap-4 mb-8">
+                        <div className="flex items-center">
+                          <i className="fas fa-bed text-xl mr-2 text-white"></i>
+                          <div>
                             <span className="font-medium text-white">{property.bedrooms || 0}</span>
                             <span className="text-white/70 text-sm ml-1">Quartos</span>
                           </div>
                         </div>
                         
-                        <div className="flex flex-col items-center">
-                          <i className="fas fa-shower text-xl mb-1 text-white"></i>
-                          <div className="text-center">
+                        <div className="flex items-center">
+                          <i className="fas fa-shower text-xl mr-2 text-white"></i>
+                          <div>
                             <span className="font-medium text-white">{property.bathrooms || 0}</span>
                             <span className="text-white/70 text-sm ml-1">Banhos</span>
                           </div>
                         </div>
                         
-                        <div className="flex flex-col items-center">
-                          <i className="fas fa-ruler-combined text-xl mb-1 text-white"></i>
-                          <div className="text-center">
+                        <div className="flex items-center">
+                          <i className="fas fa-ruler-combined text-xl mr-2 text-white"></i>
+                          <div>
                             <span className="font-medium text-white">{property.area}</span>
                             <span className="text-white/70 text-sm ml-1">m²</span>
                           </div>
@@ -170,7 +170,7 @@ export default function PropertyFeaturedSlider() {
                       </div>
                     </div>
                     
-                    <div className="w-full max-w-xs">
+                    <div className="w-full">
                       <Link to={`/properties/${property.id}`}>
                         <span 
                           className="inline-block px-6 py-3 rounded-lg bg-white font-medium transition-all hover:shadow-lg w-full text-center"
