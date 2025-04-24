@@ -6,15 +6,19 @@ import { Link } from 'wouter';
 
 interface PropertyFeaturedSliderProps {
   openPropertyModal?: (propertyId: number) => void;
+  onPropertyClick?: (propertyId: number) => void;
   properties?: Property[];
   config?: WebsiteConfig;
 }
 
 export default function PropertyFeaturedSlider({ 
   openPropertyModal, 
+  onPropertyClick,
   properties: propProperties,
   config: propConfig 
 }: PropertyFeaturedSliderProps) {
+  // Use onPropertyClick se openPropertyModal não estiver definido
+  const handlePropertyClick = openPropertyModal || onPropertyClick;
   const [currentSlide, setCurrentSlide] = useState(0);
   const [autoplay, setAutoplay] = useState(true);
   
@@ -192,7 +196,7 @@ export default function PropertyFeaturedSlider({
                     
                     <div className="w-full">
                       <button
-                        onClick={() => openPropertyModal && openPropertyModal(property.id)}
+                        onClick={() => handlePropertyClick && handlePropertyClick(property.id)}
                         className="inline-block px-6 py-3 rounded-lg bg-white font-medium transition-all hover:shadow-lg w-full text-center"
                         style={{ color: primaryColor }}
                       >
