@@ -511,8 +511,7 @@ function PropertyDetailsContent({ propertyId, isOpen, onClose, propConfig }: {
                   <div className="p-6 rounded-lg shadow-md relative overflow-hidden" 
                       style={{ 
                         backgroundColor: `${detailsIconsColor}15`, 
-                        borderColor: `${detailsTextColor}22`,
-                        borderLeft: `4px solid #25D366`
+                        borderColor: `${detailsTextColor}22`
                       }}>
                     
                     {/* Fundo decorativo */}
