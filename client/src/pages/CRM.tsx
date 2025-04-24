@@ -829,7 +829,8 @@ export default function CRM() {
     return properties.filter((property: any) => 
       property.title.toLowerCase().includes(propertySearchTerm.toLowerCase()) || 
       (property.neighborhood && property.neighborhood.toLowerCase().includes(propertySearchTerm.toLowerCase())) ||
-      (property.city && property.city.toLowerCase().includes(propertySearchTerm.toLowerCase()))
+      (property.city && property.city.toLowerCase().includes(propertySearchTerm.toLowerCase())) ||
+      (property.address && property.address.toLowerCase().includes(propertySearchTerm.toLowerCase()))
     );
   }, [properties, propertySearchTerm]);
   
@@ -1502,22 +1503,25 @@ export default function CRM() {
                                   >
                                     {field.value 
                                       ? properties.find((property) => property.id === field.value)?.title || "Selecione um imóvel"
-                                      : "Selecione um imóvel (opcional)"}
-                                    <Home className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                      : "Digite o nome ou selecione um imóvel"}
+                                    <Search className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                                   </Button>
                                 </FormControl>
                               </PopoverTrigger>
                               <PopoverContent className="w-[300px] p-0" align="start">
                                 <Command>
                                   <CommandInput 
-                                    placeholder="Buscar imóvel..." 
+                                    placeholder="Digite o nome do imóvel..." 
                                     className="h-9" 
                                     value={propertySearchTerm}
                                     onValueChange={setPropertySearchTerm}
+                                    autoFocus={true}
                                   />
                                   <CommandList>
-                                    <CommandEmpty>Nenhum imóvel encontrado.</CommandEmpty>
-                                    <CommandGroup>
+                                    <CommandEmpty>
+                                      Nenhum imóvel encontrado. Continue digitando para buscar.
+                                    </CommandEmpty>
+                                    <CommandGroup heading="Imóveis">
                                       <CommandItem
                                         onSelect={() => {
                                           field.onChange(null);
@@ -1545,7 +1549,12 @@ export default function CRM() {
                                           <Check
                                             className={`mr-2 h-4 w-4 ${property.id === field.value ? "opacity-100" : "opacity-0"}`}
                                           />
-                                          {property.title} - {property.neighborhood || property.city}
+                                          <div className="flex flex-col">
+                                            <span className="font-medium">{property.title}</span>
+                                            <span className="text-xs text-muted-foreground">
+                                              {property.address || property.neighborhood || property.city || "Endereço não informado"}
+                                            </span>
+                                          </div>
                                         </CommandItem>
                                       ))}
                                     </CommandGroup>
