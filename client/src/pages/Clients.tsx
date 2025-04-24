@@ -507,8 +507,6 @@ export default function Clients() {
                 <TableRow>
                   <TableHead>Nome</TableHead>
                   <TableHead>Contato</TableHead>
-                  <TableHead>Tipo</TableHead>
-                  <TableHead>Cidade</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Origem</TableHead>
                   <TableHead>Data Criação</TableHead>
@@ -529,10 +527,7 @@ export default function Clients() {
                         <span>{client.phone || 'Não informado'}</span>
                       )}
                     </TableCell>
-                    <TableCell>
-                      {client.type === 'physical' ? 'Pessoa Física' : 'Pessoa Jurídica'}
-                    </TableCell>
-                    <TableCell>{client.city || 'Não informado'}</TableCell>
+
                     <TableCell>
                       <Badge variant={client.status === 'active' ? 'default' : 'secondary'}>
                         {client.status === 'active' ? 'Ativo' : 'Inativo'}
