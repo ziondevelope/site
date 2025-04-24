@@ -1,596 +1,588 @@
-import React, { useState, useEffect, useMemo } from "react";
-import { Helmet } from "react-helmet-async";
-import { Pencil, Check, X, User, Mail, Phone, Tag, Filter, MessageSquare, FileText, CalendarPlus, CheckCircle, Search, Home } from "lucide-react";
-import { ClientFilters } from "@/components/clients/ClientFilters";
-import { FaWhatsapp } from "react-icons/fa";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from "@/components/ui/dialog";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Command, CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator } from "@/components/ui/command";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Label } from "@/components/ui/label";
-import { useToast } from "@/hooks/use-toast";
-import { apiRequest } from "@/lib/queryClient";
-import { useLoading } from "@/contexts/LoadingContext";
-import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
+import { toast } from '@/hooks/use-toast';
+import { Loader2, Search, UserPlus, AlertCircle, CheckCircle } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { apiRequest } from '@/lib/queryClient';
+import ClientFilters from '@/components/clients/ClientFilters';
+import ClientDetails from '@/components/clients/ClientDetails';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Badge } from '@/components/ui/badge';
 
-// Constantes de estilo para campos de edição mais sutis
-const subtleEditingStyles = {
-  input: {
-    boxShadow: "none",
-    border: '1px solid #e5e7eb',
-    outline: "none",
-    ringColor: 'transparent',
-    ringOffset: '0'
-  },
-  select: {
-    boxShadow: "none",
-    border: '1px solid #e5e7eb',
-    outline: "none",
-    ringColor: 'transparent',
-    ringOffset: '0'
-  }
-};
-
-// Schema do formulário de cliente
+// Schema para o formulário de cliente
 const clientFormSchema = z.object({
-  name: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
+  name: z.string().min(3, { message: 'O nome deve ter pelo menos 3 caracteres' }),
+  email: z.string().email({ message: 'E-mail inválido' }).optional().nullable(),
   phone: z.string().optional().nullable(),
   whatsapp: z.string().optional().nullable(),
-  email: z.string().email("Email inválido").optional().nullable(),
-  source: z.string().optional().nullable(),
-  status: z.string().optional().default("lead"),
-  propertyId: z.number().optional().nullable(),
+  address: z.string().optional().nullable(),
+  city: z.string().optional().nullable(),
+  neighborhood: z.string().optional().nullable(),
+  zipCode: z.string().optional().nullable(),
+  document: z.string().optional().nullable(),
+  type: z.string().default('physical'),
+  interestType: z.string().optional().nullable(),
+  budget: z.number().optional().nullable(),
   notes: z.string().optional().nullable(),
+  status: z.string().default('active'),
+  agentId: z.number().optional().nullable(),
 });
 
 type ClientFormValues = z.infer<typeof clientFormSchema>;
 
+// Interface para o tipo Client
+interface Client {
+  id: number;
+  name: string;
+  email: string | null;
+  phone: string | null;
+  whatsapp: string | null;
+  address: string | null;
+  city: string | null;
+  neighborhood: string | null;
+  zipCode: string | null;
+  document: string | null;
+  type: string;
+  interestType: string | null;
+  budget: number | null;
+  notes: string | null;
+  convertedFromLeadId: number | null;
+  agentId: number | null;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export default function Clients() {
-  const { setIsLoading: setLoading } = useLoading();
-  const { toast } = useToast();
   const queryClient = useQueryClient();
-  
-  // Estados para gerenciamento de clientes
-  const [isAddClientOpen, setIsAddClientOpen] = useState(false);
-  const [clientToDelete, setClientToDelete] = useState<any | null>(null);
-  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
-  const [openClientId, setOpenClientId] = useState<number | null>(null);
-  const [activeTab, setActiveTab] = useState<{[clientId: number]: string}>({});
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [openCreateDialog, setOpenCreateDialog] = useState<boolean>(false);
+  const [selectedClient, setSelectedClient] = useState<Client | null>(null);
+  const [openDetailsDialog, setOpenDetailsDialog] = useState<boolean>(false);
+  const [activeStatus, setActiveStatus] = useState<string>('all');
+  const [activeOrigin, setActiveOrigin] = useState<string>('all');
 
-  // Estados para filtros de pesquisa
-  const [searchTerm, setSearchTerm] = useState('');
-  const [sourceFilter, setSourceFilter] = useState('all');
-  const [statusFilter, setStatusFilter] = useState('all');
-  
-  // Busca os clientes (leads) do sistema
-  const { data: clients = [], isLoading: isLoadingClients, error: clientsError } = useQuery<any[]>({
-    queryKey: ["/api/leads"],
-    retry: 1,
-  });
-  
-  // Busca os imóveis disponíveis para associar ao cliente
-  const { data: properties = [], isLoading: isLoadingProperties } = useQuery<any[]>({
-    queryKey: ["/api/properties"],
-    retry: 1,
-  });
-  
-  // Estado para pesquisa de imóveis
-  const [propertySearchTerm, setPropertySearchTerm] = useState('');
-  const [isPropertyPopoverOpen, setIsPropertyPopoverOpen] = useState(false);
-  
-  // Filtra os imóveis para pesquisa
-  const filteredProperties = useMemo(() => {
-    if (!propertySearchTerm) return properties;
-    return properties.filter((property: any) => 
-      property.title.toLowerCase().includes(propertySearchTerm.toLowerCase()) || 
-      (property.neighborhood && property.neighborhood.toLowerCase().includes(propertySearchTerm.toLowerCase())) ||
-      (property.city && property.city.toLowerCase().includes(propertySearchTerm.toLowerCase()))
-    );
-  }, [properties, propertySearchTerm]);
-  
-  // Atualiza o estado de carregamento baseado na consulta
-  useEffect(() => {
-    setLoading(isLoadingClients);
-    return () => setLoading(false);
-  }, [isLoadingClients, setLoading]);
-
-  // Configuração do formulário de clientes
-  const clientForm = useForm<ClientFormValues>({
+  // Formulário para criar um novo cliente
+  const form = useForm<ClientFormValues>({
     resolver: zodResolver(clientFormSchema),
     defaultValues: {
-      name: "",
-      email: "",
-      phone: "",
-      whatsapp: "",
-      source: "manual",
-      status: "lead",
-      notes: "",
-    }
+      name: '',
+      email: '',
+      phone: '',
+      whatsapp: '',
+      address: '',
+      city: '',
+      neighborhood: '',
+      zipCode: '',
+      document: '',
+      type: 'physical',
+      interestType: '',
+      budget: null,
+      notes: '',
+      status: 'active',
+      agentId: null,
+    },
   });
-  
-  // Filtra os clientes com base nos filtros selecionados
-  const filteredClients = useMemo(() => {
-    return clients.filter((client: any) => {
-      // Filtro de texto (nome, email, telefone)
-      const matchesSearch = searchTerm === '' || 
-        (client.name && client.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        (client.email && client.email.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        (client.phone && client.phone.toLowerCase().includes(searchTerm.toLowerCase()));
-      
-      // Filtro de fonte
-      const matchesSource = sourceFilter === 'all' || client.source === sourceFilter;
-      
-      // Filtro de status
-      const matchesStatus = statusFilter === 'all' || client.status === statusFilter;
-      
-      return matchesSearch && matchesSource && matchesStatus;
-    });
-  }, [clients, searchTerm, sourceFilter, statusFilter]);
-  
-  // Mutação para adicionar um novo cliente
-  const addClientMutation = useMutation({
-    mutationFn: async (data: ClientFormValues) => {
-      return await apiRequest('/api/leads', {
+
+  // Consulta para buscar todos os clientes
+  const { data: clients, isLoading } = useQuery({
+    queryKey: ['/api/clients'],
+    select: (data: Client[]) => {
+      // Filtrar os clientes baseado nos filtros ativos
+      return data.filter((client) => {
+        const matchesSearch = 
+          searchTerm === '' || 
+          client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          (client.email && client.email.toLowerCase().includes(searchTerm.toLowerCase())) ||
+          (client.phone && client.phone.includes(searchTerm));
+          
+        const matchesStatus = 
+          activeStatus === 'all' || 
+          client.status === activeStatus;
+          
+        const matchesOrigin = 
+          activeOrigin === 'all' || 
+          (activeOrigin === 'leads' && client.convertedFromLeadId !== null) ||
+          (activeOrigin === 'direct' && client.convertedFromLeadId === null);
+          
+        return matchesSearch && matchesStatus && matchesOrigin;
+      });
+    },
+  });
+
+  // Consulta para buscar os agentes (corretores)
+  const { data: agents } = useQuery({
+    queryKey: ['/api/agents'],
+  });
+
+  // Mutação para criar um novo cliente
+  const createClientMutation = useMutation({
+    mutationFn: (data: ClientFormValues) => {
+      return apiRequest('/api/clients', {
         method: 'POST',
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
       });
     },
     onSuccess: () => {
       toast({
-        title: "Cliente adicionado com sucesso",
-        description: "O novo cliente foi cadastrado no sistema.",
+        title: 'Cliente criado com sucesso',
+        variant: 'default',
       });
-      setIsAddClientOpen(false);
-      clientForm.reset();
-      queryClient.invalidateQueries({ queryKey: ["/api/leads"] });
+      queryClient.invalidateQueries({ queryKey: ['/api/clients'] });
+      setOpenCreateDialog(false);
+      form.reset();
     },
     onError: (error) => {
       toast({
-        variant: "destructive",
-        title: "Erro ao adicionar cliente",
-        description: "Ocorreu um erro ao cadastrar o cliente. Tente novamente.",
+        title: 'Erro ao criar cliente',
+        description: error instanceof Error ? error.message : 'Ocorreu um erro desconhecido',
+        variant: 'destructive',
       });
-    }
+    },
   });
-  
-  // Handler para submissão do formulário de novo cliente
-  const handleAddClient = (data: ClientFormValues) => {
-    addClientMutation.mutate(data);
-  };
-  
+
   // Mutação para excluir um cliente
   const deleteClientMutation = useMutation({
-    mutationFn: async (clientId: number) => {
-      return await apiRequest(`/api/leads/${clientId}`, {
-        method: 'DELETE'
+    mutationFn: (id: number) => {
+      return apiRequest(`/api/clients/${id}`, {
+        method: 'DELETE',
       });
     },
     onSuccess: () => {
       toast({
-        title: "Cliente excluído com sucesso",
-        description: "O cliente foi removido do sistema.",
+        title: 'Cliente excluído com sucesso',
+        variant: 'default',
       });
-      setIsDeleteConfirmOpen(false);
-      setClientToDelete(null);
-      queryClient.invalidateQueries({ queryKey: ["/api/leads"] });
+      queryClient.invalidateQueries({ queryKey: ['/api/clients'] });
+      setSelectedClient(null);
+      setOpenDetailsDialog(false);
     },
     onError: (error) => {
       toast({
-        variant: "destructive",
-        title: "Erro ao excluir cliente",
-        description: "Ocorreu um erro ao remover o cliente. Tente novamente.",
+        title: 'Erro ao excluir cliente',
+        description: error instanceof Error ? error.message : 'Ocorreu um erro desconhecido',
+        variant: 'destructive',
       });
-    }
+    },
   });
-  
-  // Handler para excluir um cliente
-  const handleDeleteClient = () => {
-    if (clientToDelete) {
-      deleteClientMutation.mutate(clientToDelete.id);
-    }
+
+  // Função para abrir o dialog de detalhes do cliente
+  const handleViewClient = (client: Client) => {
+    setSelectedClient(client);
+    setOpenDetailsDialog(true);
   };
 
-  // Abre o diálogo de detalhes do cliente
-  const openClientDetails = (client: any) => {
-    setOpenClientId(client.id);
-    setActiveTab({ ...activeTab, [client.id]: "info" });
-  };
-
-  // Fecha o diálogo de detalhes do cliente
-  const closeClientDetails = () => {
-    setOpenClientId(null);
-  };
+  // Função para lidar com a submissão do formulário
+  function onSubmit(values: ClientFormValues) {
+    createClientMutation.mutate(values);
+  }
 
   return (
-    <div className="py-6 px-6 space-y-6">
-      <Helmet>
-        <title>Gestão de Clientes | Zimob</title>
-      </Helmet>
-
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+    <div className="container mx-auto py-6">
+      <div className="flex justify-between items-center mb-6">
         <div>
-          <h1 className="text-2xl font-bold">Gestão de Clientes</h1>
-          <p className="text-muted-foreground mt-1">Gerenciamento de clientes, prospecção e atendimento</p>
+          <h1 className="text-2xl font-bold">Clientes</h1>
+          <p className="text-gray-500">Gerenciar clientes e informações de contato</p>
         </div>
-        
-        <div className="flex gap-2">
-          <Button 
-            onClick={() => setIsAddClientOpen(true)}
-            className="bg-[#15616D] hover:bg-[#124C56]"
-          >
-            <User className="mr-2 h-4 w-4" />
-            Adicionar Cliente
-          </Button>
-        </div>
+
+        <Dialog open={openCreateDialog} onOpenChange={setOpenCreateDialog}>
+          <DialogTrigger asChild>
+            <Button variant="default" className="flex items-center gap-2">
+              <UserPlus size={16} />
+              Adicionar Cliente
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[600px]">
+            <DialogHeader>
+              <DialogTitle>Adicionar Novo Cliente</DialogTitle>
+              <DialogDescription>
+                Preencha os dados do cliente para adicioná-lo ao sistema.
+              </DialogDescription>
+            </DialogHeader>
+
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Nome*</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Nome do cliente" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>E-mail</FormLabel>
+                        <FormControl>
+                          <Input placeholder="email@exemplo.com" {...field} value={field.value || ''} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="phone"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Telefone</FormLabel>
+                        <FormControl>
+                          <Input placeholder="(00) 0000-0000" {...field} value={field.value || ''} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="whatsapp"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>WhatsApp</FormLabel>
+                        <FormControl>
+                          <Input placeholder="(00) 00000-0000" {...field} value={field.value || ''} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="type"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Tipo</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Selecione o tipo" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="physical">Pessoa Física</SelectItem>
+                            <SelectItem value="legal">Pessoa Jurídica</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="document"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>CPF/CNPJ</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Documento" {...field} value={field.value || ''} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="city"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Cidade</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Cidade" {...field} value={field.value || ''} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="neighborhood"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Bairro</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Bairro" {...field} value={field.value || ''} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="interestType"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Tipo de Interesse</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value || ''}>
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Selecione o interesse" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="purchase">Compra</SelectItem>
+                            <SelectItem value="rent">Aluguel</SelectItem>
+                            <SelectItem value="sell">Venda</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="budget"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Orçamento</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            placeholder="Valor em R$"
+                            {...field}
+                            value={field.value || ''}
+                            onChange={(e) => {
+                              const value = e.target.value ? parseInt(e.target.value, 10) : null;
+                              field.onChange(value);
+                            }}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="agentId"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Responsável</FormLabel>
+                        <Select 
+                          onValueChange={(value) => field.onChange(value ? parseInt(value, 10) : null)} 
+                          defaultValue={field.value ? field.value.toString() : ''}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Selecione um corretor" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="">Nenhum</SelectItem>
+                            {agents?.map((agent: any) => (
+                              <SelectItem key={agent.id} value={agent.id.toString()}>
+                                {agent.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <FormField
+                  control={form.control}
+                  name="notes"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Observações</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          placeholder="Informações adicionais sobre o cliente"
+                          className="resize-none"
+                          {...field}
+                          value={field.value || ''}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <DialogFooter>
+                  <Button 
+                    type="submit" 
+                    disabled={createClientMutation.isPending}
+                    className="w-full"
+                  >
+                    {createClientMutation.isPending && (
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    )}
+                    Salvar Cliente
+                  </Button>
+                </DialogFooter>
+              </form>
+            </Form>
+          </DialogContent>
+        </Dialog>
       </div>
 
-      {/* Filtros de clientes */}
       <ClientFilters
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
-        sourceFilter={sourceFilter}
-        setSourceFilter={setSourceFilter}
-        statusFilter={statusFilter}
-        setStatusFilter={setStatusFilter}
-        filteredClientsCount={filteredClients.length}
+        activeStatus={activeStatus}
+        setActiveStatus={setActiveStatus}
+        activeOrigin={activeOrigin}
+        setActiveOrigin={setActiveOrigin}
       />
 
-      {/* Lista de clientes */}
-      {clientsError ? (
-        <Alert variant="destructive" className="mb-4">
-          <AlertTitle>Erro ao carregar clientes</AlertTitle>
-          <AlertDescription>
-            Não foi possível carregar a lista de clientes. Tente novamente mais tarde.
-          </AlertDescription>
-        </Alert>
-      ) : (
-        <Card>
-          <CardContent className="p-0">
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow className="bg-muted/50 hover:bg-muted">
-                    <TableHead className="font-medium">Nome</TableHead>
-                    <TableHead className="font-medium">Email</TableHead>
-                    <TableHead className="font-medium">Telefone</TableHead>
-                    <TableHead className="font-medium">Fonte</TableHead>
-                    <TableHead className="font-medium">Status</TableHead>
-                    <TableHead className="font-medium text-right">Ações</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredClients.length > 0 ? (
-                    filteredClients.map((client: any) => (
-                      <TableRow key={client.id} className="hover:bg-muted/30">
-                        <TableCell className="font-medium">{client.name}</TableCell>
-                        <TableCell>{client.email || "—"}</TableCell>
-                        <TableCell>{client.phone || client.whatsapp || "—"}</TableCell>
-                        <TableCell>
-                          <div className="flex items-center">
-                            {client.source === "whatsapp" && (
-                              <><FaWhatsapp className="text-green-500 mr-1.5" /> WhatsApp</>
-                            )}
-                            {client.source === "contact-form" && (
-                              <><MessageSquare className="text-blue-500 mr-1.5 h-4 w-4" /> Formulário de Contato</>
-                            )}
-                            {client.source === "property-contact-form" && (
-                              <><MessageSquare className="text-blue-500 mr-1.5 h-4 w-4" /> Formulário de Imóvel</>
-                            )}
-                            {!client.source && (
-                              <><User className="text-gray-500 mr-1.5 h-4 w-4" /> Manual</>
-                            )}
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <div className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium 
-                            ${client.status === 'active' 
-                              ? 'bg-green-100 text-green-800' 
-                              : client.status === 'lead' 
-                                ? 'bg-blue-100 text-blue-800' 
-                                : 'bg-gray-100 text-gray-800'
-                            }`}>
-                            {client.status === "active" && "Ativo"}
-                            {client.status === "lead" && "Lead"}
-                            {client.status === "inactive" && "Inativo"}
-                            {!client.status && "Novo"}
-                          </div>
-                        </TableCell>
-                        <TableCell className="text-right">
-                          <div className="flex items-center justify-end space-x-2">
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => openClientDetails(client)}
-                              className="h-8 w-8 p-0 text-blue-600"
-                            >
-                              <span className="sr-only">Ver detalhes</span>
-                              <User className="h-4 w-4" />
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="h-8 w-8 p-0 text-red-600"
-                              onClick={() => {
-                                setClientToDelete(client);
-                                setIsDeleteConfirmOpen(true);
-                              }}
-                            >
-                              <span className="sr-only">Excluir</span>
-                              <X className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  ) : (
-                    <TableRow>
-                      <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
-                        Nenhum cliente encontrado com os filtros selecionados.
-                      </TableCell>
-                    </TableRow>
-                  )}
-                </TableBody>
-              </Table>
+      <Card className="mt-6">
+        <CardContent className="p-0">
+          {isLoading ? (
+            <div className="flex justify-center items-center h-64">
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
             </div>
-          </CardContent>
-        </Card>
+          ) : clients && clients.length > 0 ? (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Nome</TableHead>
+                  <TableHead>Contato</TableHead>
+                  <TableHead>Tipo</TableHead>
+                  <TableHead>Cidade</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Origem</TableHead>
+                  <TableHead>Data Criação</TableHead>
+                  <TableHead className="text-right">Ações</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {clients.map((client) => (
+                  <TableRow key={client.id} className="cursor-pointer hover:bg-muted/50" onClick={() => handleViewClient(client)}>
+                    <TableCell className="font-medium">{client.name}</TableCell>
+                    <TableCell>
+                      {client.email ? (
+                        <div className="flex flex-col">
+                          <span>{client.email}</span>
+                          {client.phone && <span className="text-sm text-gray-500">{client.phone}</span>}
+                        </div>
+                      ) : (
+                        <span>{client.phone || 'Não informado'}</span>
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      {client.type === 'physical' ? 'Pessoa Física' : 'Pessoa Jurídica'}
+                    </TableCell>
+                    <TableCell>{client.city || 'Não informado'}</TableCell>
+                    <TableCell>
+                      <Badge variant={client.status === 'active' ? 'default' : 'secondary'}>
+                        {client.status === 'active' ? 'Ativo' : 'Inativo'}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant={client.convertedFromLeadId ? 'outline' : 'secondary'}>
+                        {client.convertedFromLeadId ? 'Lead Convertido' : 'Cadastro Direto'}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      {new Date(client.createdAt).toLocaleDateString('pt-BR')}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <Button variant="outline" size="sm" onClick={(e) => {
+                        e.stopPropagation();
+                        handleViewClient(client);
+                      }}>
+                        Detalhes
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          ) : (
+            <div className="flex flex-col items-center justify-center h-64 gap-2">
+              <AlertCircle className="h-8 w-8 text-muted-foreground" />
+              <h3 className="font-semibold text-lg">Nenhum cliente encontrado</h3>
+              <p className="text-muted-foreground text-center max-w-md">
+                Não foram encontrados clientes que correspondam aos filtros selecionados. 
+                Tente mudar os critérios de busca ou adicione um novo cliente.
+              </p>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {selectedClient && (
+        <Dialog open={openDetailsDialog} onOpenChange={setOpenDetailsDialog}>
+          <DialogContent className="sm:max-w-[600px]">
+            <DialogHeader>
+              <DialogTitle className="flex items-center">
+                Detalhes do Cliente
+                <Badge variant={selectedClient.status === 'active' ? 'default' : 'secondary'} className="ml-2">
+                  {selectedClient.status === 'active' ? 'Ativo' : 'Inativo'}
+                </Badge>
+              </DialogTitle>
+            </DialogHeader>
+            
+            <ClientDetails 
+              client={selectedClient} 
+              onDelete={(id) => {
+                if (window.confirm('Tem certeza que deseja excluir este cliente?')) {
+                  deleteClientMutation.mutate(id);
+                }
+              }} 
+            />
+          </DialogContent>
+        </Dialog>
       )}
-
-      {/* Diálogo para adicionar novo cliente */}
-      <Dialog open={isAddClientOpen} onOpenChange={setIsAddClientOpen}>
-        <DialogContent className="sm:max-w-[500px]">
-          <DialogHeader>
-            <DialogTitle>Adicionar Novo Cliente</DialogTitle>
-            <DialogDescription>
-              Preencha os dados abaixo para cadastrar um novo cliente no sistema.
-            </DialogDescription>
-          </DialogHeader>
-          
-          <Form {...clientForm}>
-            <form onSubmit={clientForm.handleSubmit(handleAddClient)} className="space-y-4">
-              <FormField
-                control={clientForm.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Nome*</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Nome do cliente" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <FormField
-                control={clientForm.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Email do cliente" {...field} value={field.value || ''} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <div className="grid grid-cols-2 gap-4">
-                <FormField
-                  control={clientForm.control}
-                  name="phone"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Telefone</FormLabel>
-                      <FormControl>
-                        <Input placeholder="(00) 0000-0000" {...field} value={field.value || ''} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={clientForm.control}
-                  name="whatsapp"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>WhatsApp</FormLabel>
-                      <FormControl>
-                        <Input placeholder="(00) 00000-0000" {...field} value={field.value || ''} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-              
-              <div className="grid grid-cols-2 gap-4">
-                <FormField
-                  control={clientForm.control}
-                  name="source"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Fonte</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value || 'manual'}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Selecione" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="manual">Cadastro manual</SelectItem>
-                          <SelectItem value="website">Website</SelectItem>
-                          <SelectItem value="whatsapp">WhatsApp</SelectItem>
-                          <SelectItem value="property-contact-form">Formulário de Imóvel</SelectItem>
-                          <SelectItem value="indicacao">Indicação</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={clientForm.control}
-                  name="status"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Status</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value || 'lead'}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Selecione" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="lead">Lead</SelectItem>
-                          <SelectItem value="active">Ativo</SelectItem>
-                          <SelectItem value="inactive">Inativo</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-              
-              {/* Campo de Imóvel de interesse com pesquisa */}
-              <FormField
-                control={clientForm.control}
-                name="propertyId"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col">
-                    <FormLabel>Imóvel de interesse</FormLabel>
-                    <Popover open={isPropertyPopoverOpen} onOpenChange={setIsPropertyPopoverOpen}>
-                      <PopoverTrigger asChild>
-                        <FormControl>
-                          <Button
-                            variant="outline"
-                            role="combobox"
-                            className={`w-full justify-between h-10 ${!field.value ? "text-muted-foreground" : ""}`}
-                          >
-                            {field.value 
-                              ? properties.find((property) => property.id === field.value)?.title || "Selecione um imóvel"
-                              : "Selecione um imóvel (opcional)"}
-                            <Home className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                          </Button>
-                        </FormControl>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-[300px] p-0" align="start">
-                        <Command>
-                          <CommandInput 
-                            placeholder="Buscar imóvel..." 
-                            className="h-9" 
-                            value={propertySearchTerm}
-                            onValueChange={setPropertySearchTerm}
-                          />
-                          <CommandList>
-                            <CommandEmpty>Nenhum imóvel encontrado.</CommandEmpty>
-                            <CommandGroup>
-                              <CommandItem
-                                onSelect={() => {
-                                  field.onChange(null);
-                                  setIsPropertyPopoverOpen(false);
-                                  setPropertySearchTerm('');
-                                }}
-                                className="cursor-pointer"
-                              >
-                                <Check
-                                  className={`mr-2 h-4 w-4 ${!field.value ? "opacity-100" : "opacity-0"}`}
-                                />
-                                Nenhum imóvel selecionado
-                              </CommandItem>
-                              
-                              {filteredProperties.map((property) => (
-                                <CommandItem
-                                  key={property.id}
-                                  onSelect={() => {
-                                    field.onChange(property.id);
-                                    setIsPropertyPopoverOpen(false);
-                                    setPropertySearchTerm('');
-                                  }}
-                                  className="cursor-pointer"
-                                >
-                                  <Check
-                                    className={`mr-2 h-4 w-4 ${property.id === field.value ? "opacity-100" : "opacity-0"}`}
-                                  />
-                                  {property.title} - {property.neighborhood || property.city}
-                                </CommandItem>
-                              ))}
-                            </CommandGroup>
-                          </CommandList>
-                        </Command>
-                      </PopoverContent>
-                    </Popover>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <FormField
-                control={clientForm.control}
-                name="notes"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Observações</FormLabel>
-                    <FormControl>
-                      <Textarea 
-                        placeholder="Observações sobre o cliente..." 
-                        className="resize-none min-h-[80px]"
-                        {...field}
-                        value={field.value || ''}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <div className="flex justify-end gap-2 pt-4">
-                <Button type="button" variant="outline" onClick={() => setIsAddClientOpen(false)}>
-                  Cancelar
-                </Button>
-                <Button type="submit" className="bg-[#15616D] hover:bg-[#124C56]">
-                  Adicionar Cliente
-                </Button>
-              </div>
-            </form>
-          </Form>
-        </DialogContent>
-      </Dialog>
-
-      {/* Diálogo de confirmação para exclusão */}
-      <Dialog open={isDeleteConfirmOpen} onOpenChange={setIsDeleteConfirmOpen}>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Confirmar Exclusão</DialogTitle>
-            <DialogDescription>
-              Tem certeza que deseja excluir o cliente {clientToDelete?.name}? Esta ação não pode ser desfeita.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="flex justify-end gap-2 pt-4">
-            <Button variant="outline" onClick={() => setIsDeleteConfirmOpen(false)}>
-              Cancelar
-            </Button>
-            <Button variant="destructive" onClick={handleDeleteClient}>
-              Excluir
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }
