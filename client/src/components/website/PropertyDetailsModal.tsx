@@ -101,9 +101,15 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
       document.body.style.overflow = 'hidden';
       setPropertyModalOpen(true);
       
-      // Resetar estado do botão quando o modal abre
-      setShowContactButton(false);
-      controls.start({ opacity: 0, y: 20 });
+      // Forçar exibição do botão para debugging
+      setShowContactButton(true);
+      controls.start({
+        opacity: 1,
+        y: 0,
+        transition: { duration: 0.5, ease: "easeOut" }
+      });
+      
+      console.log("Modal aberto, botão deve estar visível");
     } else {
       document.body.style.overflow = '';
       setPropertyModalOpen(false);
@@ -454,7 +460,7 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
         {/* Botão central "Falar com Corretor" que aparece após rolar 75% do modal */}
         {showContactButton && agent && (
           <motion.div 
-            className="absolute bottom-0 left-0 right-0 mb-6 z-50 flex justify-center"
+            className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50"
             initial={{ opacity: 0, y: 20 }}
             animate={controls}
             whileHover={{ scale: 1.05 }}
@@ -462,7 +468,7 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose }: Pr
           >
             <div 
               className="flex items-center shadow-lg rounded-full cursor-pointer px-8 py-3 whitespace-nowrap"
-              style={{ backgroundColor: '#25D366', minWidth: '260px' }}
+              style={{ backgroundColor: '#25D366', minWidth: '260px', zIndex: 9999 }}
               onClick={() => {
                 if (!agent || !currentProperty) return;
                 const phone = agent.phone?.replace(/\D/g, '') || '';
