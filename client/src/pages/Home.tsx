@@ -203,7 +203,7 @@ export default function Home() {
             ></div>
             {/* Imagem de fundo com lazy loading e fade in */}
             <div 
-              className="absolute inset-0 z-10 bg-black/50"
+              className="absolute inset-0 z-0 bg-black/50"
               style={{
                 backgroundImage: `url(${config.bannerBackground})`,
                 backgroundPosition: 'center',
@@ -215,7 +215,7 @@ export default function Home() {
             ></div>
           </>
         )}
-        <div className="container mx-auto px-4 text-center">
+        <div className="container mx-auto px-4 text-center relative z-20">
           {config?.showBannerText && (
             <div className="mx-auto max-w-4xl mb-6 md:mb-10 pt-8 md:pt-12 px-8">
               <h1 className="text-4xl md:text-5xl font-bold mb-2 md:mb-4">{config?.bannerTitle || "Encontre o imóvel dos seus sonhos"}</h1>
