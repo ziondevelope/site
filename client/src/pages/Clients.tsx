@@ -37,7 +37,7 @@ import {
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from '@/hooks/use-toast';
-import { Loader2, Search, UserPlus, AlertCircle, CheckCircle } from 'lucide-react';
+import { Loader2, Search, UserPlus, AlertCircle, CheckCircle, User } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
