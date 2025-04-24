@@ -164,6 +164,21 @@ export default function ChatSettings({
               </div>
               
               <div className="space-y-2">
+                <Label htmlFor="initialMessage">Mensagem inicial da caixa de chat</Label>
+                <Textarea
+                  id="initialMessage"
+                  value={configData.whatsappInitialMessage ?? config?.whatsappInitialMessage ?? "Está com dificuldades para achar o imóvel dos seus sonhos? De Imóveis Populares a de Alto Padrão, CHAME O CAPITÃO!!"}
+                  onChange={(e) => handleTextChange(e, "whatsappInitialMessage")}
+                  placeholder="Está com dificuldades para achar o imóvel dos seus sonhos? De Imóveis Populares a de Alto Padrão, CHAME O CAPITÃO!!"
+                  className="resize-none"
+                  rows={3}
+                />
+                <p className="text-xs text-gray-500">
+                  Esta mensagem aparecerá na caixa de diálogo que surge ao lado do botão de WhatsApp
+                </p>
+              </div>
+              
+              <div className="space-y-2">
                 <Label>Posição do botão</Label>
                 <RadioGroup 
                   defaultValue={configData.whatsappButtonPosition ?? config?.whatsappButtonPosition ?? "right"} 
