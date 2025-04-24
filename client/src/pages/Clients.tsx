@@ -573,17 +573,44 @@ export default function Clients() {
 
       {selectedClient && (
         <Dialog open={openDetailsDialog} onOpenChange={setOpenDetailsDialog}>
-          <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-y-auto">
-            <DialogHeader>
+          <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-y-auto p-0 bg-gray-50">
+            <DialogHeader className="p-6 bg-[#12636C] text-white rounded-t-lg">
               <DialogTitle className="flex items-center">
-                Detalhes do Cliente
-                <Badge variant={selectedClient.status === 'active' ? 'default' : 'secondary'} className="ml-2">
-                  {selectedClient.status === 'active' ? 'Ativo' : 'Inativo'}
-                </Badge>
+                <div className="flex items-center space-x-3">
+                  <div className="h-10 w-10 rounded-full bg-white/20 flex items-center justify-center">
+                    <User className="h-5 w-5 text-white" />
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-medium">{selectedClient.name}</h2>
+                    <div className="flex items-center mt-1">
+                      <Badge 
+                        variant="outline" 
+                        className={`border border-white/30 ${
+                          selectedClient.status === 'active' 
+                            ? 'bg-emerald-500/20 text-white' 
+                            : 'bg-gray-500/20 text-white'
+                        }`}
+                      >
+                        {selectedClient.status === 'active' ? 'Ativo' : 'Inativo'}
+                      </Badge>
+                      {selectedClient.interestType && (
+                        <Badge 
+                          variant="outline" 
+                          className="ml-2 border border-white/30 bg-blue-500/20 text-white"
+                        >
+                          {selectedClient.interestType === 'purchase' ? 'Compra' : 
+                           selectedClient.interestType === 'rent' ? 'Aluguel' : 
+                           selectedClient.interestType === 'both' ? 'Compra/Aluguel' : 
+                           selectedClient.interestType}
+                        </Badge>
+                      )}
+                    </div>
+                  </div>
+                </div>
               </DialogTitle>
             </DialogHeader>
             
-            <div className="pb-6">
+            <div className="p-6">
               <ClientDetails 
                 client={selectedClient} 
                 onDelete={(id) => {
