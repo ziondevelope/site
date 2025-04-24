@@ -4,7 +4,11 @@ import { useQuery } from '@tanstack/react-query';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Link } from 'wouter';
 
-export default function PropertyFeaturedSlider() {
+interface PropertyFeaturedSliderProps {
+  openPropertyModal?: (propertyId: number) => void;
+}
+
+export default function PropertyFeaturedSlider({ openPropertyModal }: PropertyFeaturedSliderProps) {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [autoplay, setAutoplay] = useState(true);
   
@@ -171,14 +175,13 @@ export default function PropertyFeaturedSlider() {
                     </div>
                     
                     <div className="w-full">
-                      <Link to={`/properties/${property.id}`}>
-                        <span 
-                          className="inline-block px-6 py-3 rounded-lg bg-white font-medium transition-all hover:shadow-lg w-full text-center"
-                          style={{ color: primaryColor }}
-                        >
-                          Ver Detalhes
-                        </span>
-                      </Link>
+                      <button
+                        onClick={() => openPropertyModal && openPropertyModal(property.id)}
+                        className="inline-block px-6 py-3 rounded-lg bg-white font-medium transition-all hover:shadow-lg w-full text-center"
+                        style={{ color: primaryColor }}
+                      >
+                        Ver Detalhes
+                      </button>
                     </div>
                   </div>
                 </div>

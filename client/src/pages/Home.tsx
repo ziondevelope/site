@@ -376,7 +376,7 @@ export default function Home() {
       )}
       
       {/* Slider de Imóveis em Destaque (Horizontal) */}
-      <PropertyFeaturedSlider />
+      <PropertyFeaturedSlider openPropertyModal={openPropertyModal} />
       
       {/* Properties Section - Imóveis em Destaque */}
       {config?.showFeaturedProperties !== false && (
