@@ -116,6 +116,8 @@ export default function PropertyFeaturedSlider({ openPropertyModal }: PropertyFe
                           : property.images[0].url
                         : '')}
                       alt={property.title}
+                      loading="lazy"
+                      decoding="async"
                       className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
                     />
                     <div className="absolute bottom-0 left-0 bg-gradient-to-t from-black/60 to-transparent w-full h-1/3"></div>
