@@ -502,50 +502,8 @@ function PropertyDetailsContent({ propertyId, isOpen, onClose, propConfig }: {
                     )}
                   </div>
                   
-                  {/* Botão Falar com corretor abaixo do mapa */}
-                  <div className="mt-4">
-                    <button
-                      onClick={() => {
-                        // Abrir WhatsApp com mensagem personalizada
-                        if (agent) {
-                          const phone = agent.phone?.replace(/\D/g, '') || '';
-                          const message = `Olá, tenho interesse no imóvel "${currentProperty.title}" (Ref: ${currentProperty.id})`;
-                          window.open(`https://wa.me/55${phone}?text=${encodeURIComponent(message)}`, '_blank');
-                        } else if (config?.whatsappNumber) {
-                          const phone = config.whatsappNumber.replace(/\D/g, '');
-                          const message = `Olá! Estou interessado no imóvel ${currentProperty.title} (Cód. LL${currentProperty.id})`;
-                          window.open(`https://wa.me/55${phone}?text=${encodeURIComponent(message)}`, '_blank');
-                        }
-                      }}
-                      className="w-full py-3 px-4 bg-[#25D366] text-white rounded-lg font-medium flex items-center justify-center hover:bg-[#22c55e] transition-colors shadow-lg group relative overflow-hidden"
-                      style={{ minHeight: "64px" }}
-                    >
-                      {agent && (
-                        <div className="absolute left-0 top-0 bottom-0 flex items-center pl-2 transition-transform group-hover:scale-110">
-                          <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-white shadow-sm">
-                            {agent.avatar ? (
-                              <img
-                                src={agent.avatar}
-                                alt={agent.name || "Corretor"}
-                                className="w-full h-full object-cover"
-                              />
-                            ) : (
-                              <div className="w-full h-full bg-[#1da851] flex items-center justify-center">
-                                <i className="ri-user-line text-white text-xl"></i>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      )}
-                      <div className="flex flex-col items-start justify-center absolute left-16">
-                        <span className="text-white font-bold text-base mb-0.5">Falar com {agent?.name ? `${agent.name.split(' ')[0]}` : 'Corretor'}</span>
-                        <span className="text-white/90 text-xs font-normal">Resposta rápida via WhatsApp</span>
-                      </div>
-                      <div className="absolute right-4 w-8 h-8 flex items-center justify-center bg-white/20 rounded-full">
-                        <i className="fab fa-whatsapp text-white text-xl"></i>
-                      </div>
-                    </button>
-                  </div>
+                  {/* Espaçador para separar o mapa do formulário de contato */}
+                  <div className="mt-4"></div>
                 </div>
                 
                 {/* Formulário de contato */}
