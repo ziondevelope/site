@@ -71,7 +71,7 @@ export default function Sidebar() {
   return (
     <aside 
       className={cn(
-        "bg-[#001524] text-white hidden md:block h-screen overflow-y-auto",
+        "bg-[#001524] text-white hidden md:block h-screen overflow-y-auto fixed top-0 left-0 z-40",
         // Transição muito mais suave com cubic-bezier personalizado
         "transition-all duration-700 ease-in-out",
         hovered ? "w-[260px]" : "w-[70px]"

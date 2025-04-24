@@ -41,12 +41,13 @@ export default function AppLayout({ children }: AppLayoutProps) {
   const breadcrumbs = getBreadcrumbs();
 
   return (
-    <div className="flex h-screen overflow-hidden bg-gray-50 text-dark">
+    <div className="flex h-screen overflow-hidden bg-gray-50 text-dark relative">
       <Sidebar />
       <MobileMenu />
       
       <main className={cn(
         "flex-1 overflow-y-auto transition-all duration-300 ease-in-out",
+        "md:ml-[70px]" // Margem fixa para o sidebar recolhido
       )}>
         {/* Header */}
         <header className="bg-white border-b border-gray-200 py-3 px-6 flex justify-between items-center">
