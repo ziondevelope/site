@@ -48,6 +48,7 @@ const clientFormSchema = z.object({
   email: z.string().email("Email inválido").optional().nullable(),
   source: z.string().optional().nullable(),
   status: z.string().optional().default("lead"),
+  propertyId: z.number().optional().nullable(),
   notes: z.string().optional().nullable(),
 });
 
@@ -73,6 +74,12 @@ export default function Clients() {
   // Busca os clientes (leads) do sistema
   const { data: clients = [], isLoading: isLoadingClients, error: clientsError } = useQuery<any[]>({
     queryKey: ["/api/leads"],
+    retry: 1,
+  });
+  
+  // Busca os imóveis disponíveis para associar ao cliente
+  const { data: properties = [], isLoading: isLoadingProperties } = useQuery<any[]>({
+    queryKey: ["/api/properties"],
     retry: 1,
   });
   
@@ -118,7 +125,10 @@ export default function Clients() {
   // Mutação para adicionar um novo cliente
   const addClientMutation = useMutation({
     mutationFn: async (data: ClientFormValues) => {
-      return await apiRequest('/api/leads', 'POST', data);
+      return await apiRequest('/api/leads', {
+        method: 'POST',
+        body: JSON.stringify(data)
+      });
     },
     onSuccess: () => {
       toast({
@@ -146,7 +156,9 @@ export default function Clients() {
   // Mutação para excluir um cliente
   const deleteClientMutation = useMutation({
     mutationFn: async (clientId: number) => {
-      return await apiRequest(`/api/leads/${clientId}`, 'DELETE');
+      return await apiRequest(`/api/leads/${clientId}`, {
+        method: 'DELETE'
+      });
     },
     onSuccess: () => {
       toast({
@@ -438,6 +450,36 @@ export default function Clients() {
                   )}
                 />
               </div>
+              
+              {/* Campo de Imóvel de interesse */}
+              <FormField
+                control={clientForm.control}
+                name="propertyId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Imóvel de interesse</FormLabel>
+                    <Select 
+                      onValueChange={(value) => field.onChange(value ? parseInt(value) : null)} 
+                      value={field.value?.toString() || ''}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecione um imóvel (opcional)" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="">Nenhum imóvel selecionado</SelectItem>
+                        {properties.map((property) => (
+                          <SelectItem key={property.id} value={property.id.toString()}>
+                            {property.title} - {property.neighborhood}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               
               <FormField
                 control={clientForm.control}
