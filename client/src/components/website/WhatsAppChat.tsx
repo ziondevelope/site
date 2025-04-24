@@ -239,21 +239,19 @@ export default function WhatsAppChat() {
         {/* Botão do WhatsApp */}
         <button
           onClick={handleButtonClick}
-          className="rounded-full p-3 shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 flex items-center justify-center"
+          className="rounded-full p-3 shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 flex items-center justify-center bg-[#25D366] text-white"
           aria-label={config.whatsappButtonText || "Falar com corretor"}
           style={{
-            backgroundColor: config.whatsappButtonBackgroundColor || '#25D366',
-            color: config.whatsappButtonTextColor || '#ffffff',
-            boxShadow: `0 4px 12px ${config.whatsappButtonBackgroundColor || '#25D366'}66`,
+            boxShadow: '0 4px 12px rgba(37, 211, 102, 0.4)',
             animation: showInitialMessage ? '' : 'whatsapp-bounce 2.5s ease-in-out infinite'
           }}
           onMouseEnter={() => !showInitialMessage && setShowButtonTooltip(true)}
           onMouseLeave={() => setShowButtonTooltip(false)}
         >
           {!isOpen ? (
-            <FaWhatsapp className="h-7 w-7 animate-pulse" style={{ color: config.whatsappButtonTextColor || '#ffffff' }} />
+            <FaWhatsapp className="h-7 w-7 animate-pulse text-white" />
           ) : (
-            <X className="h-6 w-6" style={{ color: config.whatsappButtonTextColor || '#ffffff' }} />
+            <X className="h-6 w-6 text-white" />
           )}
         </button>
         
