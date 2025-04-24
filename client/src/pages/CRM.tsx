@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
-import { Pencil, Check, X, User, Mail, Phone, Store, Home, MapPin, DollarSign, Tag, Filter, Trophy, MessageSquare, FileText, Bold, Italic, Underline, AlignLeft, AlignCenter, AlignRight, List, CalendarPlus, CheckCircle, FileEdit, ArrowDown, ArrowUp } from "lucide-react";
+import { Pencil, Check, X, User, Mail, Phone, Store, Home, MapPin, DollarSign, Tag, Filter, Trophy, MessageSquare, FileText, Bold, Italic, Underline, AlignLeft, AlignCenter, AlignRight, List, CalendarPlus, CheckCircle, FileEdit, ArrowDown, ArrowUp, Plus } from "lucide-react";
 import { LeadFilters } from "@/components/crm/LeadFilters";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -81,6 +81,7 @@ export default function CRM() {
   // Estados para pesquisa de imóveis
   const [propertySearchTerm, setPropertySearchTerm] = useState('');
   const [isPropertyPopoverOpen, setIsPropertyPopoverOpen] = useState(false);
+  const [selectedPropertyIds, setSelectedPropertyIds] = useState<{[leadId: number]: number | null}>({});
   
   // Estados para gerenciamento de tarefas
   const [taskForm, setTaskForm] = useState<{
@@ -2489,7 +2490,7 @@ export default function CRM() {
                         <TabsList className="w-full mb-4 bg-transparent border-b border-[#f0f0f0] flex justify-start">
                           <TabsTrigger 
                             value="tarefas"
-                            className="px-6 py-2 rounded-none border-b-2 border-transparent data-[state=active]:border-[#f7f7f700] data-[state=active]:bg-transparent text-sm text-left"
+                            className="px-4 py-2 rounded-none border-b-2 border-transparent data-[state=active]:border-[#f7f7f700] data-[state=active]:bg-transparent text-sm text-left"
                             style={{ 
                               fontFamily: 'Montserrat, sans-serif',
                               fontWeight: 500,
@@ -2501,7 +2502,7 @@ export default function CRM() {
                           </TabsTrigger>
                           <TabsTrigger 
                             value="nota" 
-                            className="px-6 py-2 rounded-none border-b-2 border-transparent data-[state=active]:border-[#f7f7f700] data-[state=active]:bg-transparent text-sm text-left"
+                            className="px-4 py-2 rounded-none border-b-2 border-transparent data-[state=active]:border-[#f7f7f700] data-[state=active]:bg-transparent text-sm text-left"
                             style={{ 
                               fontFamily: 'Montserrat, sans-serif',
                               fontWeight: 500,
@@ -2510,6 +2511,18 @@ export default function CRM() {
                             }}
                           >
                             Anotações
+                          </TabsTrigger>
+                          <TabsTrigger 
+                            value="properties" 
+                            className="px-4 py-2 rounded-none border-b-2 border-transparent data-[state=active]:border-[#f7f7f700] data-[state=active]:bg-transparent text-sm text-left"
+                            style={{ 
+                              fontFamily: 'Montserrat, sans-serif',
+                              fontWeight: 500,
+                              textTransform: 'capitalize',
+                              justifyContent: 'flex-start'
+                            }}
+                          >
+                            Imóveis
                           </TabsTrigger>
                         </TabsList>
                         
@@ -2546,6 +2559,94 @@ export default function CRM() {
                             >
                               Salvar Anotação
                             </Button>
+                          </div>
+                        </TabsContent>
+
+                        <TabsContent value="properties" className="space-y-4">
+                          <div className="bg-white rounded-md" style={{ minHeight: '200px' }}>
+                            <div className="p-4">
+                              <h3 className="text-sm font-medium mb-3">Imóveis de interesse</h3>
+                              
+                              {/* Seção para adicionar novos imóveis */}
+                              <div className="border border-gray-100 rounded-md p-3 mb-4">
+                                <h4 className="text-xs font-medium mb-2">Adicionar novo imóvel</h4>
+                                <div className="space-y-3">
+                                  <div>
+                                    <Label htmlFor={`property-search-${lead.id}`} className="text-xs mb-1">Buscar imóvel</Label>
+                                    <div className="flex space-x-2">
+                                      <Select onValueChange={(value) => handlePropertySelection(lead.id, parseInt(value))}>
+                                        <SelectTrigger id={`property-search-${lead.id}`} className="h-8 text-sm flex-1">
+                                          <SelectValue placeholder="Selecione um imóvel" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                          {properties.map((property) => (
+                                            <SelectItem key={property.id} value={property.id.toString()}>
+                                              <span className="flex items-center">
+                                                <Home className="h-3.5 w-3.5 mr-2" />
+                                                {property.title} - {property.address}
+                                              </span>
+                                            </SelectItem>
+                                          ))}
+                                        </SelectContent>
+                                      </Select>
+                                      <Button 
+                                        className="bg-[#12636C] hover:bg-[#12636C]/90 text-sm h-8"
+                                        onClick={() => handleAddPropertyToLead(lead.id)}
+                                      >
+                                        <Plus className="h-4 w-4" />
+                                      </Button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              
+                              {/* Lista de imóveis associados */}
+                              <div>
+                                <h4 className="text-xs font-medium mb-2">Imóveis associados</h4>
+                                <div className="space-y-2">
+                                  {lead.propertyInterest && lead.propertyInterest.length > 0 ? (
+                                    lead.propertyInterest.map((propertyId, index) => {
+                                      const property = properties.find(p => p.id === propertyId);
+                                      if (!property) return null;
+                                      
+                                      return (
+                                        <div key={index} className="flex items-center justify-between border border-gray-100 rounded-md p-2 bg-gray-50">
+                                          <div className="flex items-center">
+                                            <div className="h-10 w-10 rounded-md overflow-hidden mr-3">
+                                              {property.images && property.images.length > 0 ? (
+                                                <img 
+                                                  src={property.images[0].url} 
+                                                  alt={property.title} 
+                                                  className="h-full w-full object-cover"
+                                                />
+                                              ) : (
+                                                <div className="h-full w-full bg-gray-200 flex items-center justify-center">
+                                                  <Home className="h-5 w-5 text-gray-400" />
+                                                </div>
+                                              )}
+                                            </div>
+                                            <div>
+                                              <p className="text-xs font-medium">{property.title}</p>
+                                              <p className="text-xs text-gray-500">{property.address}</p>
+                                            </div>
+                                          </div>
+                                          <Button 
+                                            variant="ghost"
+                                            size="sm"
+                                            className="h-7 w-7 p-0"
+                                            onClick={() => handleRemovePropertyFromLead(lead.id, propertyId)}
+                                          >
+                                            <X className="h-4 w-4 text-gray-400" />
+                                          </Button>
+                                        </div>
+                                      );
+                                    })
+                                  ) : (
+                                    <p className="text-xs text-gray-500 italic">Nenhum imóvel associado</p>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
                           </div>
                         </TabsContent>
                         
