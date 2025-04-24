@@ -448,6 +448,86 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose, conf
                       </div>
                     )}
                   </div>
+                  
+                  {/* Botão Falar com corretor abaixo do mapa */}
+                  <div className="mt-4">
+                    <button
+                      onClick={() => {
+                        // Abrir WhatsApp com mensagem personalizada
+                        if (agent) {
+                          const phone = agent.phone?.replace(/\D/g, '') || '';
+                          const message = `Olá, tenho interesse no imóvel "${currentProperty.title}" (Ref: ${currentProperty.id})`;
+                          window.open(`https://wa.me/55${phone}?text=${encodeURIComponent(message)}`, '_blank');
+                        } else if (config?.whatsappNumber) {
+                          const phone = config.whatsappNumber.replace(/\D/g, '');
+                          const message = `Olá! Estou interessado no imóvel ${currentProperty.title} (Cód. LL${currentProperty.id})`;
+                          window.open(`https://wa.me/55${phone}?text=${encodeURIComponent(message)}`, '_blank');
+                        }
+                      }}
+                      className="w-full py-3 px-4 bg-[#25D366] text-white rounded-lg font-medium flex items-center justify-center hover:bg-[#22c55e] transition-colors"
+                    >
+                      <i className="fab fa-whatsapp text-white text-xl mr-2"></i>
+                      <span>Falar com Corretor</span>
+                    </button>
+                  </div>
+                </div>
+                
+                {/* Botões de compartilhamento */}
+                <div className="mb-8">
+                  <h2 className="text-xl font-bold mb-3" style={{ color: detailsTextColor }}>Compartilhar</h2>
+                  <div className="flex gap-3">
+                    <button
+                      onClick={() => {
+                        const url = window.location.href;
+                        window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank');
+                      }}
+                      className="w-12 h-12 rounded-full flex items-center justify-center transition-colors"
+                      style={{ backgroundColor: `${detailsIconsColor}20`, color: detailsIconsColor }}
+                      aria-label="Compartilhar no Facebook"
+                    >
+                      <i className="fab fa-facebook-f"></i>
+                    </button>
+                    
+                    <button
+                      onClick={() => {
+                        const url = window.location.href;
+                        const text = `Confira este imóvel: ${currentProperty.title}`;
+                        window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`, '_blank');
+                      }}
+                      className="w-12 h-12 rounded-full flex items-center justify-center transition-colors"
+                      style={{ backgroundColor: `${detailsIconsColor}20`, color: detailsIconsColor }}
+                      aria-label="Compartilhar no Twitter"
+                    >
+                      <i className="fab fa-twitter"></i>
+                    </button>
+                    
+                    <button
+                      onClick={() => {
+                        const url = window.location.href;
+                        window.open(`https://wa.me/?text=${encodeURIComponent(`Confira este imóvel: ${currentProperty.title} ${url}`)}`, '_blank');
+                      }}
+                      className="w-12 h-12 rounded-full flex items-center justify-center transition-colors"
+                      style={{ backgroundColor: `${detailsIconsColor}20`, color: detailsIconsColor }}
+                      aria-label="Compartilhar no WhatsApp"
+                    >
+                      <i className="fab fa-whatsapp"></i>
+                    </button>
+                    
+                    <button
+                      onClick={() => {
+                        // Copiar link para o clipboard
+                        const url = window.location.href;
+                        navigator.clipboard.writeText(url).then(() => {
+                          alert('Link copiado!');
+                        });
+                      }}
+                      className="w-12 h-12 rounded-full flex items-center justify-center transition-colors"
+                      style={{ backgroundColor: `${detailsIconsColor}20`, color: detailsIconsColor }}
+                      aria-label="Copiar link"
+                    >
+                      <i className="fas fa-link"></i>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
