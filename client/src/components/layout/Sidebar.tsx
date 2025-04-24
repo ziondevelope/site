@@ -72,12 +72,11 @@ export default function Sidebar() {
     <aside 
       className={cn(
         "bg-[#001524] text-white hidden md:block h-screen overflow-y-auto fixed top-0 left-0 z-40",
-        // Transição muito mais suave com cubic-bezier personalizado
-        "transition-all duration-700 ease-in-out",
+        "transition-all duration-300",
         hovered ? "w-[260px]" : "w-[70px]"
       )}
       style={{
-        transitionTimingFunction: "cubic-bezier(0.34, 1.25, 0.64, 1)"
+        transitionTimingFunction: "cubic-bezier(0.25, 0.1, 0.25, 1)"
       }}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -85,19 +84,19 @@ export default function Sidebar() {
     >
       <div className={cn(
         "p-4 flex items-center gap-3",
-        "transition-all duration-700 ease-in-out",
+        "transition-all duration-300",
         hovered ? "justify-start" : "justify-center"
       )}>
         <div className={cn(
           "font-extrabold text-white font-asap",
-          "transition-all duration-700",
+          "transition-all duration-300",
           hovered ? "text-2xl" : "text-xl"
         )}
         style={{
           fontFamily: "Asap, sans-serif",
           fontWeight: 800,
           letterSpacing: "0.03em",
-          transitionTimingFunction: "cubic-bezier(0.34, 1.25, 0.64, 1)"
+          transitionTimingFunction: "cubic-bezier(0.25, 0.1, 0.25, 1)"
         }}>
           {hovered ? "zimob" : "z"}
         </div>
@@ -107,48 +106,48 @@ export default function Sidebar() {
         <ul className={cn(
           "space-y-1",
           hovered ? "px-2" : "px-1",
-          "transition-all duration-700 ease-in-out"
+          "transition-all duration-300"
         )}
         style={{
-          transitionTimingFunction: "cubic-bezier(0.34, 1.25, 0.64, 1)"
+          transitionTimingFunction: "cubic-bezier(0.25, 0.1, 0.25, 1)"
         }}>
           {navItems.map((item) => (
             <li key={item.id} className="mb-1">
               <Link href={item.href}>
                 <div className={cn(
                   "flex items-center px-4 py-2 text-sm rounded cursor-pointer",
-                  "transition-all duration-700",
+                  "transition-all duration-300",
                   hovered ? "justify-start gap-3" : "justify-center",
                   location === item.href
                     ? "bg-[#15616D] text-white"
                     : "text-white text-opacity-80 hover:bg-[#15616D] hover:text-white"
                 )}
                 style={{
-                  transitionTimingFunction: "cubic-bezier(0.34, 1.25, 0.64, 1)"
+                  transitionTimingFunction: "cubic-bezier(0.25, 0.1, 0.25, 1)"
                 }}>
                   <i className={cn(
                     item.icon, 
-                    "text-lg transition-all duration-700",
+                    "text-lg transition-all duration-300",
                     hovered ? "" : "transform scale-110"
                   )}
                   style={{
-                    // Adiciona um movimento muito mais suave ao ícone
+                    // Adiciona um movimento suave ao ícone
                     transform: hovered 
                       ? "translateX(0)" 
                       : "translateX(0) scale(1.1)",
-                    transitionTimingFunction: "cubic-bezier(0.34, 1.25, 0.64, 1)"
+                    transitionTimingFunction: "cubic-bezier(0.25, 0.1, 0.25, 1)"
                   }}></i>
                   
-                  {/* Animação de opacidade e largura para labels com movimento muito mais suave */}
+                  {/* Animação de opacidade e largura para labels */}
                   <div 
                     className={cn(
-                      "whitespace-nowrap overflow-hidden transition-all duration-700",
+                      "whitespace-nowrap overflow-hidden transition-all duration-300",
                       hovered ? "max-w-[200px] opacity-100" : "max-w-0 opacity-0"
                     )}
                     style={{
-                      transitionTimingFunction: "cubic-bezier(0.34, 1.25, 0.64, 1)",
-                      transform: hovered ? "translateX(0)" : "translateX(-10px)",
-                      transitionDelay: hovered ? "100ms" : "0ms"
+                      transitionTimingFunction: "cubic-bezier(0.25, 0.1, 0.25, 1)",
+                      transform: hovered ? "translateX(0)" : "translateX(-5px)",
+                      transitionDelay: hovered ? "50ms" : "0ms"
                     }}
                   >
                     <span>{item.label}</span>
@@ -162,22 +161,22 @@ export default function Sidebar() {
               {hovered && item.children && (
                 <ul className={cn(
                   "ml-8 mt-1 space-y-1",
-                  "transition-all duration-700 ease-in-out"
+                  "transition-all duration-300"
                 )}
                 style={{
-                  transitionTimingFunction: "cubic-bezier(0.34, 1.25, 0.64, 1)"
+                  transitionTimingFunction: "cubic-bezier(0.25, 0.1, 0.25, 1)"
                 }}>
                   {item.children.map((child) => (
                     <li key={child.id}>
                       <Link href={child.href}>
                         <div className={cn(
-                          "flex items-center gap-3 px-4 py-2 text-sm rounded transition-all duration-700 cursor-pointer",
+                          "flex items-center gap-3 px-4 py-2 text-sm rounded transition-all duration-300 cursor-pointer",
                           location === child.href
                             ? "bg-[#15616D] text-white"
                             : "text-white text-opacity-70 hover:bg-[#15616D] hover:text-white"
                         )}
                         style={{
-                          transitionTimingFunction: "cubic-bezier(0.34, 1.25, 0.64, 1)"
+                          transitionTimingFunction: "cubic-bezier(0.25, 0.1, 0.25, 1)"
                         }}>
                           <i className={cn(child.icon, "text-lg")}></i>
                           <span>{child.label}</span>
