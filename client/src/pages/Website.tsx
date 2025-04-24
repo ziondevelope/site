@@ -74,6 +74,11 @@ export default function Website() {
         whatsappFormEnabled: config.whatsappFormEnabled,
         whatsappFormTitle: config.whatsappFormTitle,
         whatsappFormMessage: config.whatsappFormMessage,
+        
+        // Cores da página de detalhes
+        propertyDetailsBackgroundColor: config.propertyDetailsBackgroundColor,
+        propertyDetailsTextColor: config.propertyDetailsTextColor,
+        propertyDetailsIconsColor: config.propertyDetailsIconsColor,
       });
     }
   }, [config]);
@@ -235,7 +240,31 @@ export default function Website() {
       whatsappFormEnabled: configData.whatsappFormEnabled ?? config.whatsappFormEnabled ?? true,
       whatsappFormTitle: configData.whatsappFormTitle ?? config.whatsappFormTitle ?? 'Entre em contato com um corretor',
       whatsappFormMessage: configData.whatsappFormMessage ?? config.whatsappFormMessage ?? 'Preencha seus dados para que um de nossos corretores possa lhe atender da melhor forma.',
+      
+      // Cores da página de detalhes do imóvel
+      propertyDetailsBackgroundColor: configData.propertyDetailsBackgroundColor ?? config.propertyDetailsBackgroundColor ?? (configData.primaryColor ?? config.primaryColor ?? '#3B82F6'),
+      propertyDetailsTextColor: configData.propertyDetailsTextColor ?? config.propertyDetailsTextColor ?? '#ffffff',
+      propertyDetailsIconsColor: configData.propertyDetailsIconsColor ?? config.propertyDetailsIconsColor ?? '#f0f0f0',
     };
+    
+    // Log das cores da página de detalhes para depuração
+    console.log("Cores da página de detalhes ao salvar:", {
+      configData: {
+        background: configData.propertyDetailsBackgroundColor,
+        text: configData.propertyDetailsTextColor,
+        icons: configData.propertyDetailsIconsColor
+      },
+      config: {
+        background: config.propertyDetailsBackgroundColor,
+        text: config.propertyDetailsTextColor,
+        icons: config.propertyDetailsIconsColor
+      },
+      fullConfig: {
+        background: fullConfig.propertyDetailsBackgroundColor,
+        text: fullConfig.propertyDetailsTextColor,
+        icons: fullConfig.propertyDetailsIconsColor
+      }
+    });
     
     saveConfigMutation.mutate(fullConfig);
   };

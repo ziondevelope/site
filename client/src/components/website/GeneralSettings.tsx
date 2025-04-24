@@ -340,14 +340,14 @@ export default function GeneralSettings({ config, configData, onConfigChange }: 
             <div className="flex">
               <Input 
                 type="color" 
-                value={configData.propertyDetailsBackgroundColor || config?.propertyDetailsBackgroundColor || primaryColor}
-                onChange={(e) => onConfigChange({ ...configData, propertyDetailsBackgroundColor: e.target.value })}
+                value={configData.propertyDetailsBackgroundColor !== undefined ? configData.propertyDetailsBackgroundColor : config?.propertyDetailsBackgroundColor || primaryColor}
+                onChange={(e) => onConfigChange({ propertyDetailsBackgroundColor: e.target.value })}
                 className="h-10 w-10 border-0 rounded-l-lg p-0"
               />
               <Input 
                 type="text" 
-                value={configData.propertyDetailsBackgroundColor || config?.propertyDetailsBackgroundColor || primaryColor}
-                onChange={(e) => onConfigChange({ ...configData, propertyDetailsBackgroundColor: e.target.value })}
+                value={configData.propertyDetailsBackgroundColor !== undefined ? configData.propertyDetailsBackgroundColor : config?.propertyDetailsBackgroundColor || primaryColor}
+                onChange={(e) => onConfigChange({ propertyDetailsBackgroundColor: e.target.value })}
                 className="border border-l-0 border-gray-200 rounded-r-full px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-transparent"
               />
             </div>
@@ -360,14 +360,14 @@ export default function GeneralSettings({ config, configData, onConfigChange }: 
             <div className="flex">
               <Input 
                 type="color" 
-                value={configData.propertyDetailsTextColor || config?.propertyDetailsTextColor || '#ffffff'}
-                onChange={(e) => onConfigChange({ ...configData, propertyDetailsTextColor: e.target.value })}
+                value={configData.propertyDetailsTextColor !== undefined ? configData.propertyDetailsTextColor : config?.propertyDetailsTextColor || '#ffffff'}
+                onChange={(e) => onConfigChange({ propertyDetailsTextColor: e.target.value })}
                 className="h-10 w-10 border-0 rounded-l-lg p-0"
               />
               <Input 
                 type="text" 
-                value={configData.propertyDetailsTextColor || config?.propertyDetailsTextColor || '#ffffff'}
-                onChange={(e) => onConfigChange({ ...configData, propertyDetailsTextColor: e.target.value })}
+                value={configData.propertyDetailsTextColor !== undefined ? configData.propertyDetailsTextColor : config?.propertyDetailsTextColor || '#ffffff'}
+                onChange={(e) => onConfigChange({ propertyDetailsTextColor: e.target.value })}
                 className="border border-l-0 border-gray-200 rounded-r-full px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-transparent"
               />
             </div>
@@ -380,16 +380,63 @@ export default function GeneralSettings({ config, configData, onConfigChange }: 
             <div className="flex">
               <Input 
                 type="color" 
-                value={configData.propertyDetailsIconsColor || config?.propertyDetailsIconsColor || '#f0f0f0'}
-                onChange={(e) => onConfigChange({ ...configData, propertyDetailsIconsColor: e.target.value })}
+                value={configData.propertyDetailsIconsColor !== undefined ? configData.propertyDetailsIconsColor : config?.propertyDetailsIconsColor || '#f0f0f0'}
+                onChange={(e) => onConfigChange({ propertyDetailsIconsColor: e.target.value })}
                 className="h-10 w-10 border-0 rounded-l-lg p-0"
               />
               <Input 
                 type="text" 
-                value={configData.propertyDetailsIconsColor || config?.propertyDetailsIconsColor || '#f0f0f0'}
-                onChange={(e) => onConfigChange({ ...configData, propertyDetailsIconsColor: e.target.value })}
+                value={configData.propertyDetailsIconsColor !== undefined ? configData.propertyDetailsIconsColor : config?.propertyDetailsIconsColor || '#f0f0f0'}
+                onChange={(e) => onConfigChange({ propertyDetailsIconsColor: e.target.value })}
                 className="border border-l-0 border-gray-200 rounded-r-full px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-transparent"
               />
+            </div>
+          </div>
+        </div>
+        
+        {/* Preview */}
+        <div className="mt-4 p-4 rounded-lg border" 
+             style={{ 
+               backgroundColor: configData.propertyDetailsBackgroundColor !== undefined 
+                 ? configData.propertyDetailsBackgroundColor 
+                 : config?.propertyDetailsBackgroundColor || primaryColor 
+             }}
+        >
+          <h5 className="font-medium mb-2" 
+              style={{ 
+                color: configData.propertyDetailsTextColor !== undefined 
+                  ? configData.propertyDetailsTextColor 
+                  : config?.propertyDetailsTextColor || '#ffffff' 
+              }}
+          >
+            Prévia da Página de Detalhes
+          </h5>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center">
+              <i className="fas fa-bed mr-2" 
+                 style={{ 
+                   color: configData.propertyDetailsIconsColor !== undefined 
+                     ? configData.propertyDetailsIconsColor 
+                     : config?.propertyDetailsIconsColor || '#f0f0f0' 
+                 }}></i>
+              <span style={{ 
+                color: configData.propertyDetailsTextColor !== undefined 
+                  ? configData.propertyDetailsTextColor 
+                  : config?.propertyDetailsTextColor || '#ffffff' 
+              }}>3 Quartos</span>
+            </div>
+            <div className="flex items-center">
+              <i className="fas fa-shower mr-2" 
+                 style={{ 
+                   color: configData.propertyDetailsIconsColor !== undefined 
+                     ? configData.propertyDetailsIconsColor 
+                     : config?.propertyDetailsIconsColor || '#f0f0f0' 
+                 }}></i>
+              <span style={{ 
+                color: configData.propertyDetailsTextColor !== undefined 
+                  ? configData.propertyDetailsTextColor 
+                  : config?.propertyDetailsTextColor || '#ffffff'
+              }}>2 Banheiros</span>
             </div>
           </div>
         </div>
