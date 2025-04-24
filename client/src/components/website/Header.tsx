@@ -81,7 +81,7 @@ export default function Header({ config, isLoadingConfig }: HeaderProps) {
         <div className="flex items-center space-x-3">
           {/* Botão WhatsApp - visível apenas em desktop */}
           <a 
-            href={config?.phone ? `https://wa.me/${config.phone.replace(/\D/g, '')}` : "#"} 
+            href="/administrado" 
             target="_blank" 
             rel="noopener noreferrer"
             className={`hidden md:inline-flex items-center px-4 py-1 rounded-full border border-solid transition-all hover:bg-white ${
@@ -100,17 +100,17 @@ export default function Header({ config, isLoadingConfig }: HeaderProps) {
               e.currentTarget.style.color = isPropertiesPage || scrolled ? '#000000' : 'white';
             }}
           >
-            {config?.phone && <span className="mr-2">{config.phone}</span>}
+            <span className="mr-2">Área do Corretor</span>
             <i 
-              className="fab fa-whatsapp text-lg transition-colors" 
-              style={{ color: isPropertiesPage || scrolled ? "#25D366" : "white" }}
+              className="fas fa-user-tie text-lg transition-colors" 
+              style={{ color: isPropertiesPage || scrolled ? (config?.primaryColor || 'var(--primary)') : "white" }}
               ref={(el) => {
                 if (el) {
                   el.parentElement?.addEventListener('mouseover', () => {
-                    el.style.color = "#25D366";
+                    el.style.color = config?.primaryColor || 'var(--primary)';
                   });
                   el.parentElement?.addEventListener('mouseout', () => {
-                    el.style.color = isPropertiesPage || scrolled ? "#25D366" : "white";
+                    el.style.color = isPropertiesPage || scrolled ? (config?.primaryColor || 'var(--primary)') : "white";
                   });
                 }
               }}
