@@ -81,7 +81,7 @@ export default function Header({ config, isLoadingConfig }: HeaderProps) {
         <div className="flex items-center space-x-3">
           {/* Botão WhatsApp - visível apenas em desktop */}
           <a 
-            href="/administrado" 
+            href="/admin" 
             target="_blank" 
             rel="noopener noreferrer"
             className="hidden md:flex items-center justify-center h-11 px-6 rounded-full shadow-sm relative overflow-hidden group"
