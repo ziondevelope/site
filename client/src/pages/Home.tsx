@@ -151,15 +151,40 @@ export default function Home() {
       {/* Hero Section */}
       <section 
         id="home" 
-        className="pt-36 pb-32 md:pb-48 text-white"
+        className="pt-36 pb-32 md:pb-48 text-white relative overflow-hidden"
         style={{
-          background: config?.bannerBackground 
-            ? `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${config.bannerBackground}) center/cover no-repeat`
-            : config?.primaryColor 
+          background: !config?.bannerBackground 
+            ? (config?.primaryColor 
               ? `linear-gradient(to right, ${config.primaryColor}DD, ${config.primaryColor})` 
-              : 'linear-gradient(to right, #3b82f6, var(--primary))'
+              : 'linear-gradient(to right, #3b82f6, var(--primary))')
+            : 'transparent'
         }}
       >
+        {config?.bannerBackground && (
+          <>
+            {/* Fundo de cor para exibir enquanto carrega a imagem */}
+            <div 
+              className="absolute inset-0 z-0"
+              style={{ 
+                background: config?.primaryColor 
+                  ? `linear-gradient(to right, ${config.primaryColor}DD, ${config.primaryColor})` 
+                  : 'linear-gradient(to right, #3b82f6, var(--primary))'
+              }}
+            ></div>
+            {/* Imagem de fundo com lazy loading e fade in */}
+            <div 
+              className="absolute inset-0 z-10 bg-black/50"
+              style={{
+                backgroundImage: `url(${config.bannerBackground})`,
+                backgroundPosition: 'center',
+                backgroundSize: 'cover',
+                backgroundRepeat: 'no-repeat',
+                opacity: 1,
+                transition: 'opacity 0.5s ease-in'
+              }}
+            ></div>
+          </>
+        )}
         <div className="container mx-auto px-4 text-center">
           {config?.showBannerText && (
             <div className="mx-auto max-w-4xl mb-6 md:mb-10 pt-8 md:pt-12 px-8">
