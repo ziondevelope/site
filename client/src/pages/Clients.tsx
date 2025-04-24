@@ -37,7 +37,7 @@ import {
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from '@/hooks/use-toast';
-import { Loader2, Search, UserPlus, AlertCircle, CheckCircle, User } from 'lucide-react';
+import { Loader2, Search, UserPlus, AlertCircle, CheckCircle, User, Phone, Mail, MapPin, CreditCard, Trash2, X } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -573,52 +573,158 @@ export default function Clients() {
 
       {selectedClient && (
         <Dialog open={openDetailsDialog} onOpenChange={setOpenDetailsDialog}>
-          <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-y-auto p-0 bg-gray-50">
-            <DialogHeader className="p-6 bg-[#12636C] text-white rounded-t-lg">
-              <DialogTitle className="flex items-center">
-                <div className="flex items-center space-x-3">
-                  <div className="h-10 w-10 rounded-full bg-white/20 flex items-center justify-center">
-                    <User className="h-5 w-5 text-white" />
+          <DialogContent className="max-w-6xl w-[95vw] max-h-[90vh] overflow-hidden p-0 rounded-xl border-none shadow-2xl">
+            <div className="flex h-[90vh]">
+              {/* Sidebar - Informações principais do cliente */}
+              <div className="hidden md:flex md:w-[280px] bg-gradient-to-b from-[#12636C] to-[#0a4147] text-white flex-col">
+                <div className="px-6 py-8 flex flex-col items-center text-center border-b border-white/10">
+                  <div className="h-20 w-20 rounded-full bg-white/20 flex items-center justify-center mb-4">
+                    <User className="h-10 w-10 text-white" />
                   </div>
-                  <div>
-                    <h2 className="text-xl font-medium">{selectedClient.name}</h2>
-                    <div className="flex items-center mt-1">
+                  <h2 className="text-xl font-medium mb-1 truncate w-full">{selectedClient.name}</h2>
+                  <div className="flex flex-wrap justify-center gap-2 mt-2">
+                    <Badge 
+                      variant="outline" 
+                      className={`px-3 py-1 ${
+                        selectedClient.status === 'active' 
+                          ? 'bg-emerald-500/30 border-emerald-400 text-white' 
+                          : 'bg-gray-500/30 border-gray-400 text-white'
+                      }`}
+                    >
+                      {selectedClient.status === 'active' ? 'Ativo' : 'Inativo'}
+                    </Badge>
+                    {selectedClient.interestType && (
                       <Badge 
                         variant="outline" 
-                        className={`border border-white/30 ${
-                          selectedClient.status === 'active' 
-                            ? 'bg-emerald-500/20 text-white' 
-                            : 'bg-gray-500/20 text-white'
-                        }`}
+                        className="px-3 py-1 bg-blue-500/30 border-blue-400 text-white"
                       >
-                        {selectedClient.status === 'active' ? 'Ativo' : 'Inativo'}
+                        {selectedClient.interestType === 'purchase' ? 'Compra' : 
+                         selectedClient.interestType === 'rent' ? 'Aluguel' : 
+                         selectedClient.interestType === 'both' ? 'Compra/Aluguel' : 
+                         selectedClient.interestType}
                       </Badge>
-                      {selectedClient.interestType && (
-                        <Badge 
-                          variant="outline" 
-                          className="ml-2 border border-white/30 bg-blue-500/20 text-white"
-                        >
-                          {selectedClient.interestType === 'purchase' ? 'Compra' : 
-                           selectedClient.interestType === 'rent' ? 'Aluguel' : 
-                           selectedClient.interestType === 'both' ? 'Compra/Aluguel' : 
-                           selectedClient.interestType}
-                        </Badge>
-                      )}
-                    </div>
+                    )}
                   </div>
                 </div>
-              </DialogTitle>
-            </DialogHeader>
-            
-            <div className="p-6">
-              <ClientDetails 
-                client={selectedClient} 
-                onDelete={(id) => {
-                  if (window.confirm('Tem certeza que deseja excluir este cliente?')) {
-                    deleteClientMutation.mutate(id);
-                  }
-                }} 
-              />
+                
+                <div className="p-6 flex-1 overflow-y-auto">
+                  <div className="space-y-6">
+                    <div>
+                      <h3 className="text-xs font-semibold uppercase text-white/50 mb-2">Contato</h3>
+                      {selectedClient.phone && (
+                        <div className="flex items-center mb-3">
+                          <Phone className="h-4 w-4 mr-3 text-white/70" />
+                          <span className="text-sm">{selectedClient.phone}</span>
+                        </div>
+                      )}
+                      {selectedClient.whatsapp && (
+                        <div className="flex items-center mb-3">
+                          <div className="h-4 w-4 mr-3 text-white/70 flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                              <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"/>
+                            </svg>
+                          </div>
+                          <span className="text-sm">{selectedClient.whatsapp}</span>
+                        </div>
+                      )}
+                      {selectedClient.email && (
+                        <div className="flex items-center">
+                          <Mail className="h-4 w-4 mr-3 text-white/70" />
+                          <span className="text-sm">{selectedClient.email}</span>
+                        </div>
+                      )}
+                    </div>
+                    
+                    {(selectedClient.address || selectedClient.city || selectedClient.neighborhood) && (
+                      <div>
+                        <h3 className="text-xs font-semibold uppercase text-white/50 mb-2">Localização</h3>
+                        <div className="flex">
+                          <MapPin className="h-4 w-4 mr-3 text-white/70 flex-shrink-0 mt-0.5" />
+                          <div>
+                            {selectedClient.address && <div className="text-sm mb-1">{selectedClient.address}</div>}
+                            <div className="text-sm text-white/80">
+                              {selectedClient.neighborhood && <span>{selectedClient.neighborhood}</span>}
+                              {selectedClient.neighborhood && selectedClient.city && <span> - </span>}
+                              {selectedClient.city && <span>{selectedClient.city}</span>}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    
+                    {selectedClient.budget && (
+                      <div>
+                        <h3 className="text-xs font-semibold uppercase text-white/50 mb-2">Orçamento</h3>
+                        <div className="flex items-center">
+                          <CreditCard className="h-4 w-4 mr-3 text-white/70" />
+                          <span className="text-sm">R$ {selectedClient.budget.toLocaleString('pt-BR')}</span>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                
+                <div className="px-6 py-4 border-t border-white/10">
+                  <Button 
+                    variant="destructive" 
+                    className="w-full flex items-center justify-center bg-red-500/10 hover:bg-red-500/20 text-white border-red-400/30"
+                    onClick={() => {
+                      if (window.confirm('Tem certeza que deseja excluir este cliente?')) {
+                        deleteClientMutation.mutate(selectedClient.id);
+                      }
+                    }}
+                  >
+                    <Trash2 className="h-4 w-4 mr-2" />
+                    Excluir Cliente
+                  </Button>
+                </div>
+              </div>
+              
+              {/* Conteúdo principal */}
+              <div className="flex-1 flex flex-col overflow-hidden bg-white">
+                {/* Mobile header */}
+                <div className="md:hidden bg-[#12636C] text-white p-4 flex justify-between items-center">
+                  <div className="flex items-center">
+                    <div className="h-10 w-10 rounded-full bg-white/20 flex items-center justify-center mr-3">
+                      <User className="h-5 w-5 text-white" />
+                    </div>
+                    <div>
+                      <h2 className="text-lg font-medium">{selectedClient.name}</h2>
+                      <div className="flex items-center gap-2 mt-1">
+                        <Badge 
+                          variant="outline" 
+                          className={`text-xs ${
+                            selectedClient.status === 'active' 
+                              ? 'bg-emerald-500/30 border-emerald-400 text-white' 
+                              : 'bg-gray-500/30 border-gray-400 text-white'
+                          }`}
+                        >
+                          {selectedClient.status === 'active' ? 'Ativo' : 'Inativo'}
+                        </Badge>
+                      </div>
+                    </div>
+                  </div>
+                  <Button 
+                    variant="ghost" 
+                    className="h-8 w-8 p-0 text-white" 
+                    onClick={() => setOpenDetailsDialog(false)}
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
+                
+                {/* Conteúdo das tabs */}
+                <div className="flex-1 overflow-y-auto p-6">
+                  <ClientDetails 
+                    client={selectedClient} 
+                    onDelete={(id) => {
+                      if (window.confirm('Tem certeza que deseja excluir este cliente?')) {
+                        deleteClientMutation.mutate(id);
+                      }
+                    }} 
+                  />
+                </div>
+              </div>
             </div>
           </DialogContent>
         </Dialog>
