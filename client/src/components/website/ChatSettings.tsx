@@ -71,6 +71,7 @@ export default function ChatSettings({
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, 
     field: keyof UpdateWebsiteConfig
   ) => {
+    console.log(`Mudando campo ${field} para o valor ${e.target.value}`);
     onConfigChange({ [field]: e.target.value });
   };
 
@@ -186,12 +187,18 @@ export default function ChatSettings({
                       type="color"
                       id="chatBackgroundColor"
                       value={configData.whatsappChatBackgroundColor ?? config?.whatsappChatBackgroundColor ?? "#ffffff"}
-                      onChange={(e) => handleTextChange(e, "whatsappChatBackgroundColor")}
+                      onChange={(e) => {
+                        console.log("Color picker alterado para:", e.target.value);
+                        handleTextChange(e, "whatsappChatBackgroundColor");
+                      }}
                       className="w-10 h-10 rounded-l-md cursor-pointer border border-r-0 border-gray-300"
                     />
                     <Input
                       value={configData.whatsappChatBackgroundColor ?? config?.whatsappChatBackgroundColor ?? "#ffffff"}
-                      onChange={(e) => handleTextChange(e, "whatsappChatBackgroundColor")}
+                      onChange={(e) => {
+                        console.log("Input text alterado para:", e.target.value);
+                        handleTextChange(e, "whatsappChatBackgroundColor");
+                      }}
                       className="rounded-l-none"
                     />
                   </div>
@@ -204,12 +211,18 @@ export default function ChatSettings({
                       type="color"
                       id="chatTextColor"
                       value={configData.whatsappChatTextColor ?? config?.whatsappChatTextColor ?? "#333333"}
-                      onChange={(e) => handleTextChange(e, "whatsappChatTextColor")}
+                      onChange={(e) => {
+                        console.log("Color picker text alterado para:", e.target.value);
+                        handleTextChange(e, "whatsappChatTextColor");
+                      }}
                       className="w-10 h-10 rounded-l-md cursor-pointer border border-r-0 border-gray-300"
                     />
                     <Input
                       value={configData.whatsappChatTextColor ?? config?.whatsappChatTextColor ?? "#333333"}
-                      onChange={(e) => handleTextChange(e, "whatsappChatTextColor")}
+                      onChange={(e) => {
+                        console.log("Input text color alterado para:", e.target.value);
+                        handleTextChange(e, "whatsappChatTextColor");
+                      }}
                       className="rounded-l-none"
                     />
                   </div>
