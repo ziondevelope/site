@@ -14,6 +14,7 @@ import { Testimonials } from '@/components/website/Testimonials';
 import { useLoading } from "@/contexts/LoadingContext";
 import SEO from '@/components/website/SEO';
 import Footer from '@/components/Footer';
+import LazyImage from '@/components/ui/lazy-image';
 import '../styles/hover-effects.css';
 import imobsiteLogo from '../assets/imobsite-logo.png';
 
@@ -131,8 +132,37 @@ export default function Home() {
   useEffect(() => {
     if (!isLoadingProperties && !isLoadingConfig) {
       stopLoading();
+      
+      // Pré-carregar imagens de destaque para melhorar o desempenho percebido
+      if (properties && properties.length > 0) {
+        // Priorizar o carregamento das primeiras 3 imagens (visíveis imediatamente)
+        const firstImages = properties.slice(0, 3)
+          .map(prop => getFeaturedImage(prop))
+          .filter(Boolean) as string[];
+          
+        if (firstImages.length > 0) {
+          // Criar Image objects para pré-carregar
+          firstImages.forEach(src => {
+            const img = new Image();
+            img.src = src;
+          });
+        }
+        
+        // Carregar o restante das imagens com um atraso
+        setTimeout(() => {
+          const remainingImages = properties.slice(3)
+            .map(prop => getFeaturedImage(prop))
+            .filter(Boolean) as string[];
+            
+          remainingImages.forEach(src => {
+            const img = new Image();
+            img.loading = 'lazy';
+            img.src = src;
+          });
+        }, 3000);
+      }
     }
-  }, [isLoadingProperties, isLoadingConfig, stopLoading]);
+  }, [isLoadingProperties, isLoadingConfig, stopLoading, properties]);
 
   return (
     <div className="min-h-screen flex flex-col">
