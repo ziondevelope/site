@@ -468,7 +468,7 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose, conf
                       style={{ minHeight: "64px" }}
                     >
                       {agent && (
-                        <div className="absolute left-0 top-0 bottom-0 flex items-center pl-4 transition-transform group-hover:scale-110">
+                        <div className="absolute left-0 top-0 bottom-0 flex items-center pl-2 transition-transform group-hover:scale-110">
                           <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-white shadow-sm">
                             {agent.avatar ? (
                               <img
@@ -484,7 +484,7 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose, conf
                           </div>
                         </div>
                       )}
-                      <div className={`flex flex-col items-start justify-center ${agent ? 'ml-14' : ''}`}>
+                      <div className={`flex flex-col items-start justify-center ${agent ? 'ml-10' : ''}`}>
                         <span className="text-white font-bold text-base mb-0.5">Falar com {agent?.name ? `${agent.name.split(' ')[0]}` : 'Corretor'}</span>
                         <span className="text-white/90 text-xs font-normal">Resposta rápida via WhatsApp</span>
                       </div>
