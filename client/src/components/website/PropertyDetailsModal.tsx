@@ -603,7 +603,7 @@ function PropertyDetailsContent({ propertyId, isOpen, onClose, propConfig }: {
                                 'Content-Type': 'application/json',
                               },
                               body: JSON.stringify({
-                                content: noteContent,
+                                text: noteContent,
                                 createdBy: agent?.name || 'Sistema',
                                 type: 'property-interest'
                               }),
