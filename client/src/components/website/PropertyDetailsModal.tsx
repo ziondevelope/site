@@ -484,7 +484,7 @@ export default function PropertyDetailsModal({ propertyId, isOpen, onClose, conf
                           </div>
                         </div>
                       )}
-                      <div className={`flex flex-col items-start justify-center ${agent ? 'ml-10' : ''}`}>
+                      <div className="flex flex-col items-start justify-center absolute left-16">
                         <span className="text-white font-bold text-base mb-0.5">Falar com {agent?.name ? `${agent.name.split(' ')[0]}` : 'Corretor'}</span>
                         <span className="text-white/90 text-xs font-normal">Resposta rápida via WhatsApp</span>
                       </div>
