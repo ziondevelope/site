@@ -270,133 +270,90 @@ export default function WhatsAppChat() {
             ref={formRef}
             className="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 relative overflow-hidden animate-fade-in"
           >
-            <button
-              onClick={() => setIsOpen(false)}
-              className="absolute top-3 right-3 z-10 rounded-full p-1 transition-all duration-200"
-              style={{
-                backgroundColor: `${config.whatsappButtonBackgroundColor || '#25D366'}30`,
-                color: config.whatsappButtonTextColor || '#ffffff',
-              }}
-            >
-              <X className="h-5 w-5" />
-            </button>
-            
-            <div className="text-white p-6 pb-7 relative" style={{
-              backgroundColor: config.whatsappButtonBackgroundColor || '#25D366',
-              color: config.whatsappButtonTextColor || '#ffffff',
-            }}>
-              {/* Ícone decorativo */}
-              <div className="absolute right-4 top-4 opacity-10">
-                <FaWhatsapp 
-                  className="h-20 w-20" 
-                  style={{ color: config.whatsappButtonTextColor || '#ffffff' }}
-                />
-              </div>
-              
-              <h2 className="text-2xl font-bold relative z-[1]" style={{ color: config.whatsappButtonTextColor || '#ffffff' }}>
-                Falar com um corretor
+            {/* Cabeçalho simplificado */}
+            <div className="text-center p-4 pb-6">
+              <h2 className="text-2xl font-bold" style={{ color: "#333" }}>
+                Fale pelo WhatsApp
               </h2>
               
-              {/* Onda decorativa */}
-              <div className="absolute -bottom-5 left-0 right-0 h-10 bg-white" style={{ 
-                borderTopLeftRadius: '50%', 
-                borderTopRightRadius: '50%',
-                transform: 'scaleX(1.5)'
-              }}></div>
+              <button
+                onClick={() => setIsOpen(false)}
+                className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 transition-colors p-1 rounded-full"
+              >
+                <X className="h-5 w-5" />
+              </button>
             </div>
-            
-            <form onSubmit={handleSubmit} className="p-6 pt-4 space-y-4">
+
+            {/* Fundo de padrão de WhatsApp em baixa opacidade */}
+            <div 
+              className="absolute inset-0 opacity-[0.03] z-0" 
+              style={{
+                backgroundImage: `url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M9 0h2v20H9V0zm25.134.84l1.732 1-10 17.32-1.732-1 10-17.32zm-20 20l1.732 1-10 17.32-1.732-1 10-17.32zM58.16 4.134l1 1.732-17.32 10-1-1.732 17.32-10zm-40 40l1 1.732-17.32 10-1-1.732 17.32-10zM80 9v2H60V9h20zM20 69v2H0v-2h20zm79.32-55l-1 1.732-17.32-10L82 4l17.32 10zm-80 80l-1 1.732-17.32-10L2 84l17.32 10zm96.546-75.84l-1.732 1-10-17.32 1.732-1 10 17.32zm-100 100l-1.732 1-10-17.32 1.732-1 10 17.32zM38.16 24.134l1 1.732-17.32 10-1-1.732 17.32-10zM60 29v2H40v-2h20zm19.32 5l-1 1.732-17.32-10L62 24l17.32 10zm16.546 4.16l-1.732 1-10-17.32 1.732-1 10 17.32zM111 40h-2V20h2v20zm3.134.84l1.732 1-10 17.32-1.732-1 10-17.32zM40 49v2H20v-2h20zm19.32 5l-1 1.732-17.32-10L42 44l17.32 10zm-40 40l-1 1.732-17.32-10L2 84l17.32 10zm75.546-75.84l-1.732 1-10-17.32 1.732-1 10 17.32zm-20 20l-1.732 1-10-17.32 1.732-1 10 17.32zM118.16 29.134l1 1.732-17.32 10-1-1.732 17.32-10zm-40 40l1 1.732-17.32 10-1-1.732 17.32-10zM80 49v2H60v-2h20zm-40 40v2H20v-2h20zm39.32-5l-1 1.732-17.32-10L62 64l17.32 10zm-80 80l-1 1.732-17.32-10L2 104l17.32 10zm76.546-75.84l-1.732 1-10-17.32 1.732-1 10 17.32zm56.582 15.84l1 1.732-17.32 10-1-1.732 17.32-10zm-20 20l1 1.732-17.32 10-1-1.732 17.32-10zm-40 40l1 1.732-17.32 10-1-1.732 17.32-10zM60 89v2H40v-2h20zm-20 20v2H0v-2h20zm36.546-15.84l-1.732 1-10-17.32 1.732-1 10 17.32zm-60 60l-1.732 1-10-17.32 1.732-1 10 17.32zM100 89v2H80v-2h20zm19.32 5l-1 1.732-17.32-10L102 84l17.32 10zm16.546 4.16l-1.732 1-10-17.32 1.732-1 10 17.32zM96.66 108.84l-1.732 1-10-17.32 1.732-1 10 17.32zM120 109v2h-20v-2h20z' fill='%23000000' fill-opacity='1' fill-rule='evenodd'/%3E%3C/svg%3E")`,
+                backgroundSize: '150px 150px'
+              }}
+            ></div>
+                        
+            <form onSubmit={handleSubmit} className="px-6 pb-6 pt-0 space-y-3 relative z-10">
               {errorMessage && (
                 <div className="bg-red-50 text-red-700 p-3 rounded-md text-sm border-l-4 border-red-500 shadow-sm mb-3">
                   {errorMessage}
                 </div>
               )}
               
-              {/* Formulário simplificado com ícones */}
-              <div className="grid grid-cols-1 gap-4">
+              {/* Formulário simplificado como na imagem */}
+              <div className="grid grid-cols-1 gap-3">
                 {/* Campo Nome */}
-                <div className="relative transition-all duration-200 transform hover:translate-y-[-2px] group bg-gray-50 rounded-md overflow-hidden">
-                  <div className="absolute left-3 inset-y-0 flex items-center text-gray-400 pointer-events-none group-focus-within:text-[#25D366]">
-                    <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                    </svg>
-                  </div>
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    placeholder="Digite seu nome"
-                    className="block w-full pl-10 pr-3 py-3.5 text-gray-700 bg-transparent border-0 focus:ring-0 focus:outline-none"
-                    required
-                  />
-                </div>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Nome"
+                  className="w-full py-3 px-4 rounded-md border border-gray-300 shadow-sm focus:ring-1 focus:ring-[#25D366] focus:border-[#25D366]"
+                  required
+                />
                 
                 {/* Campo Email */}
-                <div className="relative transition-all duration-200 transform hover:translate-y-[-2px] group bg-gray-50 rounded-md overflow-hidden">
-                  <div className="absolute left-3 inset-y-0 flex items-center text-gray-400 pointer-events-none group-focus-within:text-[#25D366]">
-                    <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                    </svg>
-                  </div>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Digite seu e-mail (opcional)"
-                    className="block w-full pl-10 pr-3 py-3.5 text-gray-700 bg-transparent border-0 focus:ring-0 focus:outline-none"
-                  />
-                </div>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="E-mail (opcional)"
+                  className="w-full py-3 px-4 rounded-md border border-gray-300 shadow-sm focus:ring-1 focus:ring-[#25D366] focus:border-[#25D366]"
+                />
                 
                 {/* Campo Telefone */}
-                <div className="relative transition-all duration-200 transform hover:translate-y-[-2px] group bg-gray-50 rounded-md overflow-hidden">
-                  <div className="absolute left-3 inset-y-0 flex items-center text-gray-400 pointer-events-none group-focus-within:text-[#25D366]">
-                    <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                    </svg>
-                  </div>
-                  <input
-                    type="tel"
-                    id="phone"
-                    name="phone"
-                    value={phone}
-                    onChange={handlePhoneChange}
-                    placeholder="(00) 0 0000-0000"
-                    className="block w-full pl-10 pr-3 py-3.5 text-gray-700 bg-transparent border-0 focus:ring-0 focus:outline-none"
-                    required
-                  />
-                </div>
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  value={phone}
+                  onChange={handlePhoneChange}
+                  placeholder="Telefone"
+                  className="w-full py-3 px-4 rounded-md border border-gray-300 shadow-sm focus:ring-1 focus:ring-[#25D366] focus:border-[#25D366]"
+                  required
+                />
               </div>
               
+              {/* Botão estilo semelhante à imagem de referência */}
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className={`w-full mt-4 py-3.5 px-4 rounded-md transition-all duration-300 flex items-center justify-center shadow-sm
-                  ${isSubmitting ? 'opacity-70 cursor-not-allowed' : 'hover:shadow-md transform hover:translate-y-[-2px]'}`}
-                style={{
-                  backgroundColor: config.whatsappButtonBackgroundColor || '#25D366',
-                  color: config.whatsappButtonTextColor || '#ffffff',
-                }}
+                className={`w-full mt-5 py-3 px-4 rounded-full bg-[#25D366] text-white font-medium flex items-center justify-center transition-all duration-300
+                  ${isSubmitting ? 'opacity-70 cursor-not-allowed' : 'hover:bg-[#20c15c] transform hover:scale-[1.02]'}`}
               >
                 {isSubmitting ? (
                   <>
                     <div className="mr-2 w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                    <span className="font-medium">Enviando...</span>
+                    <span>Enviando...</span>
                   </>
                 ) : (
-                  <>
-                    <FaWhatsapp className="h-5 w-5 mr-2" />
-                    <span className="font-medium">Continuar para WhatsApp</span>
-                  </>
+                  <span>Ir para o WhatsApp</span>
                 )}
               </button>
-              
-              <p className="text-xs text-gray-500 text-center mt-3">
-                Ao prosseguir, você será redirecionado para o WhatsApp para iniciar uma conversa com nossos corretores.
-              </p>
             </form>
           </div>
         </div>
