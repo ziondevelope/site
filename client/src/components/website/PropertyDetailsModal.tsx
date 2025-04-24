@@ -15,6 +15,42 @@ interface PropertyDetailsModalProps {
 }
 
 export default function PropertyDetailsModal({ propertyId, isOpen, onClose, config: propConfig }: PropertyDetailsModalProps) {
+  // Usando uma chave única para forçar a remontagem completa do componente quando o modal fecha
+  // Isso garante que todos os estados sejam resetados
+  const [key, setKey] = useState(0);
+
+  // Quando o modal é fechado e depois reaberto, forçamos a remontagem do componente
+  useEffect(() => {
+    if (!isOpen) {
+      // Espera o modal fechar completamente para evitar flicker visual
+      const timeout = setTimeout(() => {
+        setKey(prevKey => prevKey + 1);
+      }, 300);
+      return () => clearTimeout(timeout);
+    }
+  }, [isOpen]);
+
+  // Retorno antecipado para forçar a remontagem quando o modal fecha
+  if (!isOpen) return null;
+
+  return (
+    <PropertyDetailsContent 
+      key={`property-modal-${key}-${propertyId}`}
+      propertyId={propertyId}
+      isOpen={isOpen}
+      onClose={onClose}
+      propConfig={propConfig}
+    />
+  );
+}
+
+// Componente interno que contém todo o conteúdo e lógica
+function PropertyDetailsContent({ propertyId, isOpen, onClose, propConfig }: { 
+  propertyId: number;
+  isOpen: boolean;
+  onClose: () => void;
+  propConfig?: WebsiteConfig;
+}) {
   const [activeImage, setActiveImage] = useState<string | null>(null);
   const modalRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
