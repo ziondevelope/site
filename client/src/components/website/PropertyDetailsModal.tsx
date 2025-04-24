@@ -578,26 +578,56 @@ function PropertyDetailsContent({ propertyId, isOpen, onClose, propConfig }: {
                             propertyTitle: currentProperty?.title
                           }),
                         })
-                        .then(response => {
-                          if (response.ok) {
-                            // Limpar formulário
-                            form.reset();
+                        .then(response => response.json())
+                        .then(leadData => {
+                          if (leadData && leadData.id) {
+                            // Criar uma nota para este lead com informações do imóvel
+                            const propertyDetails = [
+                              `Título: ${currentProperty?.title || 'N/A'}`,
+                              `Código: ${currentProperty?.id || 'N/A'}`,
+                              `Preço: R$ ${currentProperty?.price?.toLocaleString('pt-BR') || 'N/A'}`,
+                              `Tipo: ${currentProperty?.type || 'N/A'}`,
+                              `Endereço: ${currentProperty?.address || 'N/A'}`,
+                              `Bairro: ${currentProperty?.neighborhood || 'N/A'}`,
+                              `Cidade: ${currentProperty?.city || 'N/A'}`,
+                              `Quartos: ${currentProperty?.bedrooms || 'N/A'}`,
+                              `Banheiros: ${currentProperty?.bathrooms || 'N/A'}`
+                            ].join('\n');
                             
-                            // Mostrar mensagem de sucesso
-                            alert('Mensagem enviada com sucesso! Um de nossos corretores entrará em contato em breve.');
+                            const noteContent = `Lead demonstrou interesse neste imóvel:\n\n${propertyDetails}`;
                             
-                            // Opcionalmente, direcionar para WhatsApp
-                            if (agent?.phone) {
-                              const phone = agent.phone.replace(/\D/g, '');
-                              const message = `Olá, meu nome é ${name}. Tenho interesse no imóvel "${currentProperty?.title}" (Ref: ${currentProperty?.id})`;
-                              window.open(`https://wa.me/55${phone}?text=${encodeURIComponent(message)}`, '_blank');
-                            } else if (config?.whatsappNumber) {
-                              const phone = config.whatsappNumber.replace(/\D/g, '');
-                              const message = `Olá, meu nome é ${name}. Tenho interesse no imóvel "${currentProperty?.title}" (Ref: ${currentProperty?.id})`;
-                              window.open(`https://wa.me/55${phone}?text=${encodeURIComponent(message)}`, '_blank');
-                            }
+                            // Criar a nota no CRM
+                            return fetch(`/api/leads/${leadData.id}/notes`, {
+                              method: 'POST',
+                              headers: {
+                                'Content-Type': 'application/json',
+                              },
+                              body: JSON.stringify({
+                                content: noteContent,
+                                createdBy: agent?.name || 'Sistema',
+                                type: 'property-interest'
+                              }),
+                            })
+                            .then(() => {
+                              // Limpar formulário
+                              form.reset();
+                              
+                              // Mostrar mensagem de sucesso
+                              alert('Mensagem enviada com sucesso! Um de nossos corretores entrará em contato em breve.');
+                              
+                              // Opcionalmente, direcionar para WhatsApp
+                              if (agent?.phone) {
+                                const phone = agent.phone.replace(/\D/g, '');
+                                const message = `Olá, meu nome é ${name}. Tenho interesse no imóvel "${currentProperty?.title}" (Ref: ${currentProperty?.id})`;
+                                window.open(`https://wa.me/55${phone}?text=${encodeURIComponent(message)}`, '_blank');
+                              } else if (config?.whatsappNumber) {
+                                const phone = config.whatsappNumber.replace(/\D/g, '');
+                                const message = `Olá, meu nome é ${name}. Tenho interesse no imóvel "${currentProperty?.title}" (Ref: ${currentProperty?.id})`;
+                                window.open(`https://wa.me/55${phone}?text=${encodeURIComponent(message)}`, '_blank');
+                              }
+                            });
                           } else {
-                            alert('Ocorreu um erro ao enviar sua mensagem. Por favor, tente novamente.');
+                            throw new Error('Falha ao criar o lead');
                           }
                         })
                         .catch(error => {
