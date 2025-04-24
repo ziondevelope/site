@@ -10,7 +10,12 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { InsertLead, Lead, FunnelStage, SalesFunnel, insertLeadSchema } from "@shared/schema";
+import { InsertLead, Lead as BaseLead, FunnelStage, SalesFunnel, insertLeadSchema } from "@shared/schema";
+
+// Estendendo a interface Lead para incluir o campo propertyInterest
+interface Lead extends BaseLead {
+  propertyInterest?: number[];
+}
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -641,6 +646,151 @@ export default function CRM() {
     });
   };
   
+  // Função para lidar com a seleção de imóvel no dropdown
+  const handlePropertySelection = (leadId: number, propertyId: number) => {
+    setSelectedPropertyIds(prev => ({
+      ...prev,
+      [leadId]: propertyId
+    }));
+  };
+
+  // Função para adicionar imóvel ao lead
+  const handleAddPropertyToLead = (leadId: number) => {
+    const propertyId = selectedPropertyIds[leadId];
+    
+    if (!propertyId) {
+      toast({
+        title: "Selecione um imóvel",
+        description: "Por favor, selecione um imóvel para adicionar.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    // Verifica se o lead já tem a propriedade de propertyInterest
+    const lead = allLeads?.find(l => l.id === leadId);
+    if (!lead) return;
+    
+    // Inicializa propertyInterest como array vazio se não existir
+    const currentPropertyInterest = lead.propertyInterest || [];
+    
+    // Verifica se o imóvel já está na lista
+    if (currentPropertyInterest.includes(propertyId)) {
+      toast({
+        title: "Imóvel já associado",
+        description: "Este imóvel já está associado a este lead.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    // Adiciona o novo imóvel à lista
+    const updatedPropertyInterest = [...currentPropertyInterest, propertyId];
+    
+    // Atualiza o lead no servidor
+    apiRequest(`/api/leads/${leadId}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ propertyInterest: updatedPropertyInterest })
+    })
+    .then(() => {
+      // Limpa a seleção atual
+      setSelectedPropertyIds(prev => ({
+        ...prev,
+        [leadId]: null
+      }));
+      
+      // Recarrega os dados de leads
+      queryClient.invalidateQueries({ queryKey: ['/api/leads'] });
+      
+      // Encontra o imóvel para adicionar ao histórico
+      const property = properties.find(p => p.id === propertyId);
+      if (property) {
+        // Adiciona ao histórico de atividades
+        const noteText = `<strong>Imóvel adicionado:</strong> ${property.title} - ${property.address}`;
+        
+        apiRequest(`/api/leads/${leadId}/notes`, {
+          method: 'POST',
+          body: JSON.stringify({ text: noteText })
+        })
+        .then(() => {
+          // Recarregar as notas do lead após registrar uma atividade
+          fetchLeadNotes(leadId);
+        })
+        .catch(error => {
+          console.error("Erro ao salvar nota de adição de imóvel:", error);
+        });
+      }
+      
+      toast({
+        title: "Imóvel adicionado",
+        description: "O imóvel foi associado com sucesso ao lead.",
+      });
+    })
+    .catch(error => {
+      console.error("Erro ao adicionar imóvel ao lead:", error);
+      toast({
+        title: "Erro ao adicionar imóvel",
+        description: "Não foi possível associar o imóvel ao lead.",
+        variant: "destructive"
+      });
+    });
+  };
+  
+  // Função para remover imóvel do lead
+  const handleRemovePropertyFromLead = (leadId: number, propertyId: number) => {
+    // Verifica se o lead existe
+    const lead = allLeads?.find(l => l.id === leadId);
+    if (!lead) return;
+    
+    // Verifica se propertyInterest existe
+    const currentPropertyInterest = lead.propertyInterest || [];
+    
+    // Remove o imóvel da lista
+    const updatedPropertyInterest = currentPropertyInterest.filter(id => id !== propertyId);
+    
+    // Atualiza o lead no servidor
+    apiRequest(`/api/leads/${leadId}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ propertyInterest: updatedPropertyInterest })
+    })
+    .then(() => {
+      // Recarrega os dados de leads
+      queryClient.invalidateQueries({ queryKey: ['/api/leads'] });
+      
+      // Encontra o imóvel para adicionar ao histórico
+      const property = properties.find(p => p.id === propertyId);
+      if (property) {
+        // Adiciona ao histórico de atividades
+        const noteText = `<strong>Imóvel removido:</strong> ${property.title} - ${property.address}`;
+        
+        apiRequest(`/api/leads/${leadId}/notes`, {
+          method: 'POST',
+          body: JSON.stringify({ text: noteText })
+        })
+        .then(() => {
+          // Recarregar as notas do lead após registrar uma atividade
+          fetchLeadNotes(leadId);
+        })
+        .catch(error => {
+          console.error("Erro ao salvar nota de remoção de imóvel:", error);
+        });
+      }
+      
+      toast({
+        title: "Imóvel removido",
+        description: "O imóvel foi removido com sucesso da lista do lead.",
+      });
+    })
+    .catch(error => {
+      console.error("Erro ao remover imóvel do lead:", error);
+      toast({
+        title: "Erro ao remover imóvel",
+        description: "Não foi possível remover o imóvel da lista do lead.",
+        variant: "destructive"
+      });
+    });
+  };
+
   // Função para abrir o modal de adicionar novo lead
   const handleAddClick = () => {
     form.reset();
