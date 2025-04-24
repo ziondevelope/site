@@ -296,11 +296,8 @@ export default function WhatsAppChat() {
               </div>
               
               <h2 className="text-2xl font-bold relative z-[1]" style={{ color: config.whatsappButtonTextColor || '#ffffff' }}>
-                {config.whatsappFormTitle || "Entre em contato com um corretor"}
+                Falar com um corretor
               </h2>
-              <p className="text-sm mt-2 max-w-[80%] relative z-[1]" style={{ color: config.whatsappButtonTextColor || '#ffffff', opacity: 0.9 }}>
-                {config.whatsappFormMessage || "Preencha seus dados para que um de nossos corretores possa lhe atender da melhor forma."}
-              </p>
               
               {/* Onda decorativa */}
               <div className="absolute -bottom-5 left-0 right-0 h-10 bg-white" style={{ 
