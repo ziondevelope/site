@@ -137,6 +137,13 @@ export default function Website() {
       };
       
       console.log("configData atualizado, tem favicon?", !!newState.favicon);
+      // Log específico para cores do WhatsApp após atualização
+      if (partialConfig.whatsappChatBackgroundColor || partialConfig.whatsappChatTextColor) {
+        console.log("Estado do configData após atualização das cores do WhatsApp:", {
+          background: newState.whatsappChatBackgroundColor,
+          text: newState.whatsappChatTextColor
+        });
+      }
       return newState;
     });
   };
@@ -283,6 +290,22 @@ export default function Website() {
         background: fullConfig.propertyDetailsBackgroundColor,
         text: fullConfig.propertyDetailsTextColor,
         icons: fullConfig.propertyDetailsIconsColor
+      }
+    });
+    
+    // Log das cores do WhatsApp específicamente
+    console.log("Cores do WhatsApp ao salvar:", {
+      configData: {
+        background: configData.whatsappChatBackgroundColor,
+        text: configData.whatsappChatTextColor
+      },
+      config: {
+        background: config.whatsappChatBackgroundColor,
+        text: config.whatsappChatTextColor
+      },
+      fullConfig: {
+        background: fullConfig.whatsappChatBackgroundColor,
+        text: fullConfig.whatsappChatTextColor
       }
     });
     

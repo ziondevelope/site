@@ -189,7 +189,9 @@ export default function ChatSettings({
                       value={configData.whatsappChatBackgroundColor ?? config?.whatsappChatBackgroundColor ?? "#ffffff"}
                       onChange={(e) => {
                         console.log("Color picker alterado para:", e.target.value);
-                        handleTextChange(e, "whatsappChatBackgroundColor");
+                        const color = e.target.value;
+                        // Importante: atualização direta com valor do color picker
+                        onConfigChange({ whatsappChatBackgroundColor: color });
                       }}
                       className="w-10 h-10 rounded-l-md cursor-pointer border border-r-0 border-gray-300"
                     />
@@ -197,7 +199,9 @@ export default function ChatSettings({
                       value={configData.whatsappChatBackgroundColor ?? config?.whatsappChatBackgroundColor ?? "#ffffff"}
                       onChange={(e) => {
                         console.log("Input text alterado para:", e.target.value);
-                        handleTextChange(e, "whatsappChatBackgroundColor");
+                        const color = e.target.value;
+                        // Importante: atualização direta com valor do input
+                        onConfigChange({ whatsappChatBackgroundColor: color });
                       }}
                       className="rounded-l-none"
                     />
@@ -213,7 +217,9 @@ export default function ChatSettings({
                       value={configData.whatsappChatTextColor ?? config?.whatsappChatTextColor ?? "#333333"}
                       onChange={(e) => {
                         console.log("Color picker text alterado para:", e.target.value);
-                        handleTextChange(e, "whatsappChatTextColor");
+                        const color = e.target.value;
+                        // Importante: atualização direta com valor do color picker
+                        onConfigChange({ whatsappChatTextColor: color });
                       }}
                       className="w-10 h-10 rounded-l-md cursor-pointer border border-r-0 border-gray-300"
                     />
@@ -221,7 +227,9 @@ export default function ChatSettings({
                       value={configData.whatsappChatTextColor ?? config?.whatsappChatTextColor ?? "#333333"}
                       onChange={(e) => {
                         console.log("Input text color alterado para:", e.target.value);
-                        handleTextChange(e, "whatsappChatTextColor");
+                        const color = e.target.value;
+                        // Importante: atualização direta com valor do input
+                        onConfigChange({ whatsappChatTextColor: color });
                       }}
                       className="rounded-l-none"
                     />
