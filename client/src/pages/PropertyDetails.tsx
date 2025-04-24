@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { useParams, Link } from 'wouter';
-import { Property, WebsiteConfig, User } from '@shared/schema';
+import { Property, WebsiteConfig } from '@shared/schema';
 import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import Header from '@/components/website/Header';
@@ -56,13 +56,6 @@ export default function PropertyDetails() {
     queryKey: [`/api/agents/${property?.agentId}`],
     enabled: !!property?.agentId,
   });
-  
-  // Log para debug
-  useEffect(() => {
-    console.log("PropertyDetails - Dados da propriedade:", property);
-    console.log("PropertyDetails - Dados do agente:", agent);
-    console.log("PropertyDetails - ID do agente:", property?.agentId);
-  }, [property, agent]);
 
   // Set the first image as active when property data is loaded
   useEffect(() => {
@@ -88,14 +81,6 @@ export default function PropertyDetails() {
       setActiveImage(property.featuredImage);
     }
   }, [property]);
-  
-  // Adiciona a classe 'group' à div principal da galeria para os botões aparecerem no hover
-  useEffect(() => {
-    const propertyContainer = document.querySelector('.rounded-xl.overflow-hidden.relative.mb-6');
-    if (propertyContainer) {
-      propertyContainer.classList.add('group');
-    }
-  }, [activeImage]);
 
   // Format currency
   const formatCurrency = (value: number) => {
@@ -137,9 +122,6 @@ export default function PropertyDetails() {
   const detailsTextColor = config?.propertyDetailsTextColor || '#333333';
   const detailsIconsColor = config?.propertyDetailsIconsColor || primaryColor;
 
-  // Estado para controlar o carregamento do logo
-  const [logoLoaded, setLogoLoaded] = useState(false);
-  
   // Função para navegar no carrossel
   const navigateCarousel = (direction: 'prev' | 'next') => {
     if (!carouselTrackRef.current) return;
@@ -234,7 +216,7 @@ export default function PropertyDetails() {
         path={`/properties/${id}`}
       />
       
-      {/* Usar o componente Header */}
+      {/* Header */}
       <Header config={config} isLoadingConfig={isLoadingConfig} />
 
       {/* Conteúdo principal */}
@@ -256,26 +238,24 @@ export default function PropertyDetails() {
           </motion.a>
         )}
         
+        {/* Conteúdo condicional baseado no carregamento e existência da propriedade */}
         {isLoadingProperty ? (
+          // Esqueleto de carregamento
           <div className="container mx-auto px-4 py-8">
             <div className="max-w-6xl mx-auto">
               <div className="animate-pulse">
                 <div className="h-10 bg-gray-200 rounded w-3/4 mb-4"></div>
                 <div className="h-6 bg-gray-200 rounded w-1/2 mb-8"></div>
-                
                 <div className="h-[500px] bg-gray-200 rounded-xl mb-6"></div>
-                
                 <div className="flex space-x-2 mb-8">
                   {[1, 2, 3, 4].map(i => (
                     <div key={i} className="w-24 h-16 bg-gray-200 rounded-md flex-shrink-0"></div>
                   ))}
                 </div>
-                
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                   <div className="md:col-span-2">
                     <div className="h-8 bg-gray-200 rounded w-1/3 mb-4"></div>
                     <div className="h-32 bg-gray-200 rounded mb-8"></div>
-                    
                     <div className="h-8 bg-gray-200 rounded w-1/3 mb-4"></div>
                     <div className="grid grid-cols-2 gap-4 mb-8">
                       {[1, 2, 3, 4, 5, 6].map(i => (
@@ -291,9 +271,10 @@ export default function PropertyDetails() {
             </div>
           </div>
         ) : currentProperty ? (
+          // Detalhes da propriedade
           <div className="container mx-auto px-4 py-8">
             <div className="max-w-6xl mx-auto" style={{ color: detailsTextColor }}>
-              {/* Navegação e código */}
+              {/* Navegação */}
               <div className="flex flex-wrap justify-between items-center mb-2">
                 <div className="flex items-center text-sm text-gray-500 mb-2">
                   <Link href="/">
@@ -308,385 +289,244 @@ export default function PropertyDetails() {
                 </div>
               </div>
               
-              {/* Layout de duas colunas principal */}
+              {/* Conteúdo principal */}
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                {/* Coluna da esquerda - Conteúdo principal */}
                 <div className="lg:col-span-2">
-                  {/* Galeria de imóveis no estilo da referência */}
-                  <div className="rounded-xl overflow-hidden relative mb-6">
-                    {/* Grid de galeria */}
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-2 h-[500px]">
-                      {/* Imagem principal (ocupa 3 colunas na versão desktop) */}
-                      <div 
-                        className="md:col-span-3 h-full relative rounded overflow-hidden"
-                        style={{
-                          backgroundImage: activeImage ? `url(${activeImage})` : 'none',
-                          backgroundSize: 'cover',
-                          backgroundPosition: 'center'
-                        }}
-                      >
-                        {!activeImage && (
-                          <div className="absolute inset-0 flex items-center justify-center bg-gray-200">
-                            <i className="ri-image-line text-4xl text-gray-400"></i>
-                          </div>
-                        )}
-                        
-                        {/* Contador de fotos */}
-                        {currentProperty.images && currentProperty.images.length > 0 && (
-                          <div className="absolute bottom-4 left-4 bg-black bg-opacity-70 text-white px-3 py-1 rounded-full text-sm">
-                            <i className="ri-camera-line mr-1"></i>
-                            <span>{currentProperty.images.length} fotos</span>
-                          </div>
-                        )}
-                        
-                        {/* Botões de navegação na imagem principal (visíveis em hover) */}
-                        {currentProperty.images && currentProperty.images.length > 1 && (
-                          <>
-                            <button 
-                              className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white bg-opacity-70 hover:bg-opacity-100 shadow-md flex items-center justify-center transition-all opacity-0 group-hover:opacity-100"
-                              onClick={() => {
-                                if (currentProperty.images && activeImage) {
-                                  const index = currentProperty.images.findIndex(img => {
-                                    if (typeof img === 'object' && img.url) return img.url === activeImage;
-                                    if (typeof img === 'string') return img === activeImage;
-                                    return false;
-                                  });
-                                  if (index > 0) {
-                                    const prevImg = currentProperty.images[index - 1];
-                                    const prevUrl = typeof prevImg === 'object' && prevImg.url 
-                                      ? prevImg.url 
-                                      : typeof prevImg === 'string' 
-                                        ? prevImg 
-                                        : '';
-                                    if (prevUrl) setActiveImage(prevUrl);
-                                  }
-                                }
-                              }}
-                            >
-                              <i className="ri-arrow-left-s-line text-2xl text-gray-800"></i>
-                            </button>
-                            <button 
-                              className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white bg-opacity-70 hover:bg-opacity-100 shadow-md flex items-center justify-center transition-all opacity-0 group-hover:opacity-100"
-                              onClick={() => {
-                                if (currentProperty.images && activeImage) {
-                                  const index = currentProperty.images.findIndex(img => {
-                                    if (typeof img === 'object' && img.url) return img.url === activeImage;
-                                    if (typeof img === 'string') return img === activeImage;
-                                    return false;
-                                  });
-                                  if (index < currentProperty.images.length - 1) {
-                                    const nextImg = currentProperty.images[index + 1];
-                                    const nextUrl = typeof nextImg === 'object' && nextImg.url 
-                                      ? nextImg.url 
-                                      : typeof nextImg === 'string' 
-                                        ? nextImg 
-                                        : '';
-                                    if (nextUrl) setActiveImage(nextUrl);
-                                  }
-                                }
-                              }}
-                            >
-                              <i className="ri-arrow-right-s-line text-2xl text-gray-800"></i>
-                            </button>
-                          </>
-                        )}
+                  {/* Detalhes do imóvel */}
+                  <h1 className="text-3xl font-bold mb-4">{currentProperty.title}</h1>
+                  <p className="mb-6">{currentProperty.description}</p>
+                  
+                  {/* Características principais */}
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                    {currentProperty.bedrooms && (
+                      <div className="flex items-center bg-gray-100 rounded-lg p-3">
+                        <i className="ri-hotel-bed-line text-xl mr-3" style={{ color: detailsIconsColor }}></i>
+                        <div>
+                          <div className="text-sm text-gray-500">Quartos</div>
+                          <div className="font-bold">{currentProperty.bedrooms}</div>
+                        </div>
                       </div>
-                      
-                      {/* Coluna de miniaturas (desktop) */}
-                      <div className="hidden md:flex md:flex-col gap-2 h-full">
-                        {currentProperty.images && currentProperty.images.length > 0 ? (
-                          // Exibe até 3 miniaturas + botão "ver mais"
-                          <>
-                            {currentProperty.images.slice(0, 3).map((image, index) => {
-                              // Determinar a URL da imagem dependendo do formato
-                              const imageUrl = typeof image === 'object' && image.url 
-                                ? image.url 
-                                : typeof image === 'string' 
-                                  ? image 
-                                  : '';
-                                  
-                              if (!imageUrl) return null;
-                                  
-                              return (
-                                <div 
-                                  key={index}
-                                  className={`h-[32%] rounded overflow-hidden cursor-pointer ${
-                                    currentProperty.images && index === 2 && currentProperty.images.length > 3 ? 'relative' : ''
-                                  }`}
-                                  onClick={() => setActiveImage(imageUrl)}
-                                >
-                                  <img 
-                                    src={imageUrl} 
-                                    alt={`Imagem ${index + 1} do imóvel`}
-                                    className={`w-full h-full object-cover transition-all ${
-                                      activeImage === imageUrl ? 'ring-2 ring-offset-2 ring-primary' : 'hover:brightness-90'
-                                    }`}
-                                  />
-                                  
-                                  {/* Overlay "Ver mais" na última miniatura visível */}
-                                  {currentProperty.images && index === 2 && currentProperty.images.length > 3 && (
-                                    <div 
-                                      className="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center text-white font-medium cursor-pointer"
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        // Aqui poderia abrir uma galeria modal
-                                        window.alert('Galeria de imagens completa em desenvolvimento');
-                                      }}
-                                    >
-                                      <span>Ver mais</span>
-                                    </div>
-                                  )}
-                                </div>
-                              );
-                            })}
-                          </>
-                        ) : (
-                          // Placeholders quando não há imagens
-                          <>
-                            {[1, 2, 3].map((_, index) => (
-                              <div key={index} className="h-[32%] bg-gray-100 rounded"></div>
-                            ))}
-                          </>
-                        )}
+                    )}
+                    {currentProperty.bathrooms && (
+                      <div className="flex items-center bg-gray-100 rounded-lg p-3">
+                        <i className="ri-shower-line text-xl mr-3" style={{ color: detailsIconsColor }}></i>
+                        <div>
+                          <div className="text-sm text-gray-500">Banheiros</div>
+                          <div className="font-bold">{currentProperty.bathrooms}</div>
+                        </div>
                       </div>
-                    </div>
+                    )}
+                    {currentProperty.area && (
+                      <div className="flex items-center bg-gray-100 rounded-lg p-3">
+                        <i className="ri-ruler-line text-xl mr-3" style={{ color: detailsIconsColor }}></i>
+                        <div>
+                          <div className="text-sm text-gray-500">Área</div>
+                          <div className="font-bold">{currentProperty.area}m²</div>
+                        </div>
+                      </div>
+                    )}
+                    {currentProperty.parkingSpots && (
+                      <div className="flex items-center bg-gray-100 rounded-lg p-3">
+                        <i className="ri-car-line text-xl mr-3" style={{ color: detailsIconsColor }}></i>
+                        <div>
+                          <div className="text-sm text-gray-500">Vagas</div>
+                          <div className="font-bold">{currentProperty.parkingSpots}</div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                   
-                  {/* Título e preço no estilo da nova referência */}
-                  <div className="mb-6">
-                    <div className="flex flex-wrap items-center justify-between mb-2">
-                      <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mr-4 flex items-center">
-                        {currentProperty.title}
-                        <button className="ml-3 text-gray-500 hover:text-gray-700">
-                          <i className="ri-share-line text-xl"></i>
-                        </button>
-                      </h1>
-                      <div 
-                        className="text-2xl md:text-3xl font-bold mt-3 lg:mt-0"
-                        style={{ color: primaryColor }}
-                      >
-                        {formatCurrency(currentProperty.price)}
-                        {currentProperty.purpose === 'rent' && 
-                          <span className="text-base font-normal text-gray-500">/mês</span>
-                        }
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-center mb-4 text-gray-600">
-                      <i className="ri-map-pin-line mr-2"></i>
-                      <span>{currentProperty.address}</span>
-                      <div className="ml-auto text-sm text-gray-600 flex items-center">
-                        <i className="ri-code-line mr-1"></i>
-                        <span>Cód. LL{currentProperty.id}</span>
-                      </div>
-                    </div>
-                    
-                    <div className="border-t border-b border-gray-200 py-4 my-4">
-                      <div className="grid grid-cols-5 gap-4">
-                        <div className="flex items-center">
-                          <i className="fas fa-bed text-xl mr-2" style={{ color: detailsIconsColor }}></i>
-                          <div>
-                            <span className="font-medium" style={{ color: detailsTextColor }}>{currentProperty.bedrooms || 0}</span>
-                            <span className="text-sm ml-1 opacity-75" style={{ color: detailsTextColor }}>Quartos</span>
-                          </div>
-                        </div>
-                        
-                        <div className="flex items-center">
-                          <i className="fas fa-shower text-xl mr-2" style={{ color: detailsIconsColor }}></i>
-                          <div>
-                            <span className="font-medium" style={{ color: detailsTextColor }}>{currentProperty.bathrooms || 0}</span>
-                            <span className="text-sm ml-1 opacity-75" style={{ color: detailsTextColor }}>Banheiros</span>
-                          </div>
-                        </div>
-                        
-                        <div className="flex items-center">
-                          <i className="fas fa-bath text-xl mr-2" style={{ color: detailsIconsColor }}></i>
-                          <div>
-                            <span className="font-medium" style={{ color: detailsTextColor }}>{currentProperty.suites || 0}</span>
-                            <span className="text-sm ml-1 opacity-75" style={{ color: detailsTextColor }}>Suítes</span>
-                          </div>
-                        </div>
-                        
-                        <div className="flex items-center">
-                          <i className="fas fa-car text-xl mr-2" style={{ color: detailsIconsColor }}></i>
-                          <div>
-                            <span className="font-medium" style={{ color: detailsTextColor }}>{currentProperty.parkingSpots || 0}</span>
-                            <span className="text-sm ml-1 opacity-75" style={{ color: detailsTextColor }}>Vagas</span>
-                          </div>
-                        </div>
-                        
-                        <div className="flex items-center">
-                          <i className="fas fa-ruler-combined text-xl mr-2" style={{ color: detailsIconsColor }}></i>
-                          <div>
-                            <span className="font-medium" style={{ color: detailsTextColor }}>{currentProperty.area}</span>
-                            <span className="text-sm ml-1 opacity-75" style={{ color: detailsTextColor }}>m²</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  {/* Descrição */}
-                  <div className="mb-8">
-                    <h2 className="text-2xl font-bold mb-4" style={{ color: detailsTextColor }}>Descrição</h2>
-                    <p className="whitespace-pre-line" style={{ color: detailsTextColor }}>{currentProperty.description}</p>
-                  </div>
-                  
-                  {/* Características */}
+                  {/* Características e comodidades */}
                   {currentProperty.features && currentProperty.features.length > 0 && (
                     <div className="mb-8">
-                      <h2 className="text-2xl font-bold mb-4" style={{ color: detailsTextColor }}>Características</h2>
-                      <div className="grid grid-cols-2 md:grid-cols-3 gap-y-4">
+                      <h2 className="text-xl font-bold mb-4">Comodidades</h2>
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                         {currentProperty.features.map((feature, index) => (
                           <div key={index} className="flex items-center">
-                            <div className="w-8 h-8 rounded-full flex items-center justify-center mr-3"
-                              style={{ backgroundColor: `${detailsIconsColor}15` }}>
-                              <i 
-                                className={`${getFeatureIcon(feature)} text-lg`}
-                                style={{ color: detailsIconsColor }}
-                              ></i>
-                            </div>
-                            <span style={{ color: detailsTextColor }}>{feature}</span>
+                            <i className={`${getFeatureIcon(feature)} text-lg mr-2`} style={{ color: detailsIconsColor }}></i>
+                            <span>{feature}</span>
                           </div>
                         ))}
                       </div>
                     </div>
                   )}
                   
-                  {/* Localização */}
+                  {/* Mapa */}
                   <div className="mb-8">
-                    <h2 className="text-2xl font-bold mb-4" style={{ color: detailsTextColor }}>Localização</h2>
-                    <div className="border border-gray-200 rounded-lg h-64 overflow-hidden">
-                      {currentProperty.address ? (
-                        <iframe 
-                          width="100%" 
-                          height="100%" 
-                          frameBorder="0" 
-                          style={{ border: 0 }} 
-                          src={`https://maps.google.com/maps?q=${encodeURIComponent(
-                            `${currentProperty.address}, ${currentProperty.neighborhood || ''}, ${currentProperty.city || ''}, ${currentProperty.zipCode || ''}`
-                          )}&z=15&output=embed`}
-                          allowFullScreen
-                          title="Localização do imóvel"
-                        ></iframe>
-                      ) : (
-                        <div className="h-full flex items-center justify-center bg-gray-100">
-                          <div className="text-center">
-                            <i className="ri-map-pin-line text-4xl mb-2 text-gray-400"></i>
-                            <p className="text-gray-500">Mapa indisponível</p>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                  
-                  {/* Esta seção foi removida para ser substituída por uma seção mais abaixo */}
-                </div>
-                
-                {/* Coluna da direita - Cartão de contato no novo estilo */}
-                <div>
-                  <div className="rounded-lg sticky top-4 overflow-hidden">
-
-
-                    {/* Container principal para o box do corretor */}
-                    <div className="bg-white p-5">
-                      {/* Box único com dois grids */}
-                      <div className="w-full rounded-lg overflow-hidden mb-3">
-                        {/* Grid 1: Foto do corretor e botões principais (caixa cinza) */}
-                        <div className="bg-gray-100 p-4">
-                          {/* Foto do corretor */}
-                          <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-white shadow mx-auto mb-2">
-                            {agent?.avatar ? (
-                              <img 
-                                src={agent.avatar}
-                                alt={agent.displayName || "Corretor"} 
-                                className="w-full h-full object-cover"
-                              />
-                            ) : (
-                              <div className="w-full h-full bg-teal-100 flex items-center justify-center text-teal-500">
-                                <i className="ri-user-3-line text-2xl"></i>
-                              </div>
-                            )}
-                          </div>
-                          
-                          {/* Informações do corretor */}
-                          <div className="text-center mb-4">
-                            <h3 className="text-xl font-bold text-gray-800">
-                              {agent?.displayName || "Corretor"}
-                            </h3>
-                            <p className="text-gray-500">
-                              {agent?.role === 'agent' ? 'CRECI 111111' : 'Consultor Imobiliário'}
-                            </p>
-                          </div>
-                          
-                          {/* Botões principais */}
-                          <a 
-                            href={agent?.phone ? `https://wa.me/55${agent.phone.replace(/\D/g, '')}?text=Olá, tenho interesse no imóvel ${currentProperty.title} (Ref: #${currentProperty.id}).` : '#'}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="w-full py-3 px-4 rounded-full border border-solid text-teal-500 font-medium flex items-center justify-center mb-3 hover:bg-teal-50 transition-colors"
-                            style={{ borderColor: primaryColor, color: primaryColor }}
-                          >
-                            FALE COM O CORRETOR
-                          </a>
-                          
-                          <button 
-                            className="w-full py-3 px-4 rounded-full border border-solid font-medium flex items-center justify-center mb-0 hover:bg-teal-50 transition-colors"
-                            style={{ borderColor: primaryColor, color: primaryColor }}
-                            onClick={() => {
-                              // Função para agendar visita - poderia abrir um modal
-                              window.alert('Funcionalidade de agendamento em desenvolvimento')
-                            }}
-                          >
-                            AGENDAR UMA VISITA
-                          </button>
-                        </div>
-                        
-                        {/* Grid 2: Botão contato e ícones de compartilhamento (fundo colorido) */}
-                        <div 
-                          className="p-4 text-white"
-                          style={{ backgroundColor: primaryColor }}
-                        >
-                          {/* Botão de Contato */}
-                          <a 
-                            href={agent?.phone ? `https://wa.me/55${agent?.phone.replace(/\D/g, '')}?text=Olá, tenho interesse no imóvel ${currentProperty?.title} (Ref: #${currentProperty?.id}).` : '#'}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="w-full py-3 px-4 rounded-full border border-solid border-white text-white font-medium flex items-center justify-center mb-3 hover:bg-teal-600 transition-colors"
-                          >
-                            ENTRAR EM CONTATO
-                          </a>
-                        
-                          {/* Botões de compartilhamento */}
-                          <p className="text-center text-white text-sm mb-3">
-                            COMPARTILHAR
-                          </p>
-                          <div className="flex justify-center space-x-3">
-                            <a href="#" className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-teal-500 hover:bg-gray-100 transition-colors">
-                              <i className="ri-whatsapp-line"></i>
-                            </a>
-                            <a href="#" className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-teal-500 hover:bg-gray-100 transition-colors">
-                              <i className="ri-facebook-fill"></i>
-                            </a>
-                            <a href="#" className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-teal-500 hover:bg-gray-100 transition-colors">
-                              <i className="ri-twitter-x-fill"></i>
-                            </a>
-                            <a href="#" className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-teal-500 hover:bg-gray-100 transition-colors">
-                              <i className="ri-mail-line"></i>
-                            </a>
-                            <a href="#" className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-teal-500 hover:bg-gray-100 transition-colors">
-                              <i className="ri-printer-line"></i>
-                            </a>
-                          </div>
-                        </div>
+                    <h2 className="text-xl font-bold mb-4">Localização</h2>
+                    <div className="w-full h-[300px] bg-gray-200 rounded-lg">
+                      {/* Placeholder para o mapa */}
+                      <div className="w-full h-full flex items-center justify-center text-gray-500">
+                        <i className="ri-map-pin-line text-4xl mr-2"></i>
+                        <span className="text-lg">Mapa indisponível</span>
                       </div>
                     </div>
                   </div>
+                  
+                  {/* Botão de Falar com corretor e compartilhar abaixo do mapa */}
+                  <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-8">
+                    {agent?.phone && (
+                      <a 
+                        href={`https://wa.me/55${agent.phone.replace(/\D/g, '')}?text=Olá, tenho interesse no imóvel ${currentProperty?.title} (Ref: #${currentProperty?.id}).`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full sm:w-auto bg-[#25D366] text-white font-medium px-6 py-3 rounded-md flex items-center justify-center hover:bg-[#1fb655] transition-colors"
+                      >
+                        <i className="ri-whatsapp-line mr-2 text-xl"></i>
+                        Falar com corretor
+                      </a>
+                    )}
+                    <div className="flex space-x-2">
+                      <button
+                        onClick={() => {
+                          const url = window.location.href;
+                          navigator.clipboard.writeText(url).then(() => {
+                            alert('Link copiado!');
+                          });
+                        }}
+                        className="w-10 h-10 rounded-full bg-white border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition-colors"
+                        aria-label="Copiar link"
+                      >
+                        <i className="ri-link"></i>
+                      </button>
+                      <a 
+                        href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-10 h-10 rounded-full bg-white border border-gray-200 flex items-center justify-center text-blue-600 hover:bg-gray-100 transition-colors"
+                      >
+                        <i className="ri-facebook-fill"></i>
+                      </a>
+                      <a 
+                        href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(currentProperty.title)}&url=${encodeURIComponent(window.location.href)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-10 h-10 rounded-full bg-white border border-gray-200 flex items-center justify-center text-blue-400 hover:bg-gray-100 transition-colors"
+                      >
+                        <i className="ri-twitter-fill"></i>
+                      </a>
+                      <a 
+                        href={`https://wa.me/?text=${encodeURIComponent(currentProperty.title + " " + window.location.href)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-10 h-10 rounded-full bg-white border border-gray-200 flex items-center justify-center text-green-500 hover:bg-gray-100 transition-colors"
+                      >
+                        <i className="ri-whatsapp-line"></i>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="lg:col-span-1">
+                  {/* Galeria de imagens */}
+                  <div className="mb-6">
+                    <div className="rounded-lg overflow-hidden mb-4">
+                      {activeImage ? (
+                        <img 
+                          src={activeImage} 
+                          alt={currentProperty.title}
+                          className="w-full h-64 object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-64 bg-gray-200 flex items-center justify-center">
+                          <i className="ri-image-line text-3xl text-gray-400"></i>
+                        </div>
+                      )}
+                    </div>
+                    
+                    {currentProperty.images && currentProperty.images.length > 1 && (
+                      <div className="grid grid-cols-4 gap-2">
+                        {currentProperty.images.slice(0, 4).map((image, index) => {
+                          const imageUrl = typeof image === 'object' && image.url 
+                            ? image.url 
+                            : typeof image === 'string' 
+                              ? image 
+                              : '';
+                          
+                          if (!imageUrl) return null;
+                          
+                          return (
+                            <div 
+                              key={index}
+                              className={`cursor-pointer border-2 rounded overflow-hidden ${activeImage === imageUrl ? 'border-blue-500' : 'border-transparent'}`}
+                              onClick={() => setActiveImage(imageUrl)}
+                            >
+                              <img 
+                                src={imageUrl} 
+                                alt={`Imagem ${index + 1} do imóvel`}
+                                className="w-full h-16 object-cover"
+                              />
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                  
+                  {/* Preço */}
+                  <div className="bg-gray-100 rounded-lg p-4 mb-6">
+                    <div className="text-sm text-gray-500 mb-1">
+                      {currentProperty.purpose === 'rent' ? 'Aluguel' : 'Venda'}
+                    </div>
+                    <div className="text-2xl font-bold mb-2" style={{ color: primaryColor }}>
+                      {formatCurrency(currentProperty.price)}
+                      {currentProperty.purpose === 'rent' && <span className="text-sm font-normal text-gray-500">/mês</span>}
+                    </div>
+                    <div className="text-sm text-gray-500">
+                      Ref: #{currentProperty.id}
+                    </div>
+                  </div>
+                  
+                  {/* Agente/Corretor */}
+                  {agent && (
+                    <div className="border border-gray-200 rounded-lg p-4">
+                      <div className="flex items-center mb-4">
+                        <div className="w-12 h-12 bg-gray-200 rounded-full overflow-hidden mr-3">
+                          {agent.profilePicture ? (
+                            <img 
+                              src={agent.profilePicture} 
+                              alt={agent.name}
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center bg-gray-300 text-gray-600">
+                              <i className="ri-user-line text-xl"></i>
+                            </div>
+                          )}
+                        </div>
+                        <div>
+                          <div className="font-bold">{agent.name}</div>
+                          <div className="text-sm text-gray-500">Corretor</div>
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        {agent.phone && (
+                          <a 
+                            href={`tel:${agent.phone}`}
+                            className="flex items-center text-gray-600 hover:text-gray-800"
+                          >
+                            <i className="ri-phone-line mr-2"></i>
+                            <span>{agent.phone}</span>
+                          </a>
+                        )}
+                        {agent.email && (
+                          <a 
+                            href={`mailto:${agent.email}`}
+                            className="flex items-center text-gray-600 hover:text-gray-800"
+                          >
+                            <i className="ri-mail-line mr-2"></i>
+                            <span>{agent.email}</span>
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
           </div>
         ) : (
+          // Página de "não encontrado"
           <div className="container mx-auto px-4 py-12">
             <div className="max-w-lg mx-auto text-center">
               <div className="mb-6 w-20 h-20 rounded-full bg-red-100 mx-auto flex items-center justify-center">
@@ -707,218 +547,8 @@ export default function PropertyDetails() {
         )}
       </main>
       
-      {/* Seção de imóveis similares - Carrossel */}
-      {currentProperty && (
-        <div className="bg-gray-50 py-12">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-10">
-              <h2 className="text-3xl font-bold mb-2">Imóveis similares</h2>
-              <p className="text-gray-600">Confira outras opções que podem te interessar</p>
-            </div>
-            
-            <div className="relative mb-10">
-              {/* Controles do carrossel */}
-              <button 
-                className={`absolute left-0 top-1/2 -translate-y-1/2 -ml-5 z-10 bg-white rounded-full shadow-md p-2 hover:bg-gray-100 transition-colors hidden md:block ${carouselPage === 0 ? 'opacity-50 cursor-not-allowed' : 'opacity-100 cursor-pointer'}`} 
-                aria-label="Anterior"
-                onClick={() => navigateCarousel('prev')}
-                disabled={carouselPage === 0}
-              >
-                <i className="ri-arrow-left-s-line text-2xl text-gray-600"></i>
-              </button>
-              
-              <button 
-                className={`absolute right-0 top-1/2 -translate-y-1/2 -mr-5 z-10 bg-white rounded-full shadow-md p-2 hover:bg-gray-100 transition-colors hidden md:block ${carouselPage === totalPages - 1 ? 'opacity-50 cursor-not-allowed' : 'opacity-100 cursor-pointer'}`} 
-                aria-label="Próximo"
-                onClick={() => navigateCarousel('next')}
-                disabled={carouselPage === totalPages - 1}
-              >
-                <i className="ri-arrow-right-s-line text-2xl text-gray-600"></i>
-              </button>
-              
-              {/* Carrossel */}
-              <div className="carousel-container overflow-hidden">
-                <div 
-                  ref={carouselTrackRef}
-                  className="carousel-track flex space-x-4 py-4 overflow-x-auto scrollbar-hide"
-                >
-                  {similarProperties.length > 0 ? (
-                    similarProperties.map((property) => (
-                      <div key={property.id} className="carousel-item flex-shrink-0 w-full sm:w-1/2 md:w-1/3 lg:w-1/4 px-2">
-                        <div className="h-full bg-white rounded-lg border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-lg">
-                          <div className="h-48 bg-gray-200 relative">
-                            {property.images && property.images.length > 0 && (
-                              <img 
-                                src={typeof property.images[0] === 'object' && property.images[0].url 
-                                  ? property.images[0].url 
-                                  : typeof property.images[0] === 'string' 
-                                    ? property.images[0] 
-                                    : ''}
-                                alt={property.title}
-                                className="w-full h-full object-cover"
-                              />
-                            )}
-                            <div className="absolute top-2 left-2 bg-gray-800 text-white text-xs py-1 px-2 rounded">
-                              {property.purpose === 'rent' ? 'Aluguel' : 'Venda'}
-                            </div>
-                            {property.isFeatured && (
-                              <div className="absolute top-2 right-2 bg-yellow-500 text-white text-xs py-1 px-2 rounded">
-                                Destaque
-                              </div>
-                            )}
-                          </div>
-                          <div className="p-4">
-                            <h3 className="font-bold text-lg mb-1 truncate">
-                              {property.title}
-                            </h3>
-                            <p className="text-gray-500 text-sm mb-2 truncate">
-                              {property.neighborhood || property.city}
-                            </p>
-                            <div className="flex justify-between items-center mb-3">
-                              <div className="font-bold text-lg" style={{ color: primaryColor }}>
-                                {formatCurrency(property.price)}
-                                {property.purpose === 'rent' && <span className="text-xs font-normal text-gray-500">/mês</span>}
-                              </div>
-                            </div>
-                            <div className="flex flex-wrap gap-2 text-gray-500 text-sm mb-3">
-                              {property.bedrooms && <span><i className="ri-hotel-bed-line mr-1"></i> {property.bedrooms}</span>}
-                              {property.bathrooms && <span><i className="ri-shower-line mr-1"></i> {property.bathrooms}</span>}
-                              {property.parkingSpots && <span><i className="ri-car-line mr-1"></i> {property.parkingSpots}</span>}
-                              <span><i className="ri-ruler-line mr-1"></i> {property.area}m²</span>
-                            </div>
-                            <Link href={`/property/${property.id}`}>
-                              <button className="w-full py-2 px-4 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors text-sm font-medium flex justify-center items-center">
-                                <i className="ri-search-line mr-2"></i> Ver detalhes
-                              </button>
-                            </Link>
-                          </div>
-                        </div>
-                      </div>
-                    ))
-                  ) : (
-                    // Placeholders quando não há propriedades similares
-                    [1, 2, 3, 4].map((item) => (
-                      <div key={item} className="carousel-item flex-shrink-0 w-full sm:w-1/2 md:w-1/3 lg:w-1/4 px-2">
-                        <div className="h-full bg-white rounded-lg border border-gray-200 overflow-hidden">
-                          <div className="h-48 bg-gray-100"></div>
-                          <div className="p-4">
-                            <div className="h-6 bg-gray-100 rounded w-3/4 mb-2"></div>
-                            <div className="h-4 bg-gray-100 rounded w-1/2 mb-3"></div>
-                            <div className="h-6 bg-gray-100 rounded w-1/3 mb-3"></div>
-                            <div className="h-8 bg-gray-100 rounded w-full"></div>
-                          </div>
-                        </div>
-                      </div>
-                    ))
-                  )}
-                </div>
-              </div>
-              
-              {/* Indicadores de página */}
-              <div className="flex justify-center space-x-2 mt-6">
-                {[...Array(totalPages)].map((_, index) => (
-                  <button 
-                    key={index} 
-                    className={`h-2 rounded-full transition-all ${index === carouselPage ? 'w-8 bg-gray-800' : 'w-2 bg-gray-300'}`}
-                    aria-label={`Página ${index + 1}`}
-                    onClick={() => {
-                      if (!carouselTrackRef.current) return;
-                      const containerWidth = carouselTrackRef.current.parentElement?.clientWidth || 0;
-                      carouselTrackRef.current.scrollTo({
-                        left: containerWidth * index,
-                        behavior: 'smooth'
-                      });
-                      setCarouselPage(index);
-                    }}
-                  ></button>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-      
       {/* Footer */}
-      <footer className="bg-gray-800 text-white py-12">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div>
-              <div className="flex items-center space-x-2 mb-4">
-                <div className="h-10 w-10 rounded text-white flex items-center justify-center" 
-                  style={{ backgroundColor: primaryColor }}>
-                  <i className="ri-home-4-line text-xl"></i>
-                </div>
-                <h3 className="text-xl font-bold">Imobiliária</h3>
-              </div>
-              <p className="text-gray-400 mb-4">
-                Encontrando o lar perfeito para você desde 2005.
-              </p>
-              <div className="flex space-x-3">
-                <a href="#" className="text-gray-400 hover:text-white transition-colors">
-                  <i className="ri-facebook-circle-fill text-xl"></i>
-                </a>
-                <a href="#" className="text-gray-400 hover:text-white transition-colors">
-                  <i className="ri-instagram-fill text-xl"></i>
-                </a>
-                <a href="#" className="text-gray-400 hover:text-white transition-colors">
-                  <i className="ri-youtube-fill text-xl"></i>
-                </a>
-                <a href="#" className="text-gray-400 hover:text-white transition-colors">
-                  <i className="ri-whatsapp-fill text-xl"></i>
-                </a>
-              </div>
-            </div>
-            
-            <div>
-              <h4 className="text-lg font-semibold mb-4">Links Rápidos</h4>
-              <ul className="space-y-2">
-                <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Início</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Imóveis</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Sobre Nós</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Contato</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Blog</a></li>
-              </ul>
-            </div>
-            
-            <div>
-              <h4 className="text-lg font-semibold mb-4">Tipos de Imóveis</h4>
-              <ul className="space-y-2">
-                <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Apartamentos</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Casas</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Terrenos</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Comerciais</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Rurais</a></li>
-              </ul>
-            </div>
-            
-            <div>
-              <h4 className="text-lg font-semibold mb-4">Contato</h4>
-              <ul className="space-y-3">
-                <li className="flex items-start">
-                  <i className="ri-map-pin-line mt-1 mr-2" style={{ color: primaryColor }}></i>
-                  <span>Av. Paulista, 1000<br/>São Paulo, SP, Brasil</span>
-                </li>
-                <li className="flex items-center">
-                  <i className="ri-phone-line mr-2" style={{ color: primaryColor }}></i>
-                  <span>(11) 3333-4444</span>
-                </li>
-                <li className="flex items-center">
-                  <i className="ri-mail-line mr-2" style={{ color: primaryColor }}></i>
-                  <span>contato@imobiliaria.com.br</span>
-                </li>
-                <li className="flex items-center">
-                  <i className="ri-time-line mr-2" style={{ color: primaryColor }}></i>
-                  <span>Seg-Sex: 9h às 18h</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-          
-          <div className="mt-12 pt-8 border-t border-gray-700 text-center">
-            <p className="text-gray-400">&copy; 2025 Imobiliária. Todos os direitos reservados.</p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
