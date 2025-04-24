@@ -15,6 +15,7 @@ import { PriceRangeSlider } from '@/components/ui/price-range-slider';
 import { useLoading } from '@/contexts/LoadingContext';
 import SEO from '@/components/website/SEO';
 import Footer from '@/components/Footer';
+import LazyImage from '@/components/ui/lazy-image';
 import '@/styles/hover-effects.css';
 
 // Função para obter a imagem em destaque do imóvel
