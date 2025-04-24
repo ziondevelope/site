@@ -66,6 +66,15 @@ export default function SEO({
       <meta name="twitter:title" content={pageTitle} />
       <meta name="twitter:description" content={pageDescription} />
       {siteOgImage && <meta name="twitter:image" content={siteOgImage} />}
+      
+      {/* Preload de imagens críticas e fontes */}
+      {siteOgImage && <link rel="preload" as="image" href={siteOgImage} />}
+      {siteFavicon && <link rel="preload" as="image" href={siteFavicon} />}
+      <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" as="style" />
+
+      {/* Otimização de performance */}
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+      <meta http-equiv="Content-Security-Policy" content="block-all-mixed-content" />
     </Helmet>
   );
 }
