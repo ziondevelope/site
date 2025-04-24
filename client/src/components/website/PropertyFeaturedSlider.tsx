@@ -6,26 +6,40 @@ import { Link } from 'wouter';
 
 interface PropertyFeaturedSliderProps {
   openPropertyModal?: (propertyId: number) => void;
+  properties?: Property[];
+  config?: WebsiteConfig;
 }
 
-export default function PropertyFeaturedSlider({ openPropertyModal }: PropertyFeaturedSliderProps) {
+export default function PropertyFeaturedSlider({ 
+  openPropertyModal, 
+  properties: propProperties,
+  config: propConfig 
+}: PropertyFeaturedSliderProps) {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [autoplay, setAutoplay] = useState(true);
   
-  // Obter configurações do site para cores
-  const { data: config } = useQuery<WebsiteConfig>({
-    queryKey: ['/api/website/config']
+  // Obter configurações do site para cores (caso não tenha sido passado como prop)
+  const { data: configData } = useQuery<WebsiteConfig>({
+    queryKey: ['/api/website/config'],
+    enabled: !propConfig
   });
   
-  // Obter propriedades para o slider
-  const { data: properties, isLoading } = useQuery<Property[]>({
+  // Use a configuração passada como propriedade ou a obtida pela consulta
+  const config = propConfig || configData;
+  
+  // Se as propriedades não forem fornecidas, busque-as
+  const { data: propertiesData, isLoading } = useQuery<Property[]>({
     queryKey: ['/api/properties'],
+    enabled: !propProperties,
     select: (data) => {
       // Filtramos para pegar apenas propriedades destacadas e limitamos a 5
       const featured = data.filter(property => property.isFeatured);
       return featured.slice(0, 5);
     }
   });
+  
+  // Use as propriedades passadas como propriedade ou as obtidas pela consulta
+  const properties = propProperties || propertiesData;
   
   // Autoplay functionality
   useEffect(() => {
