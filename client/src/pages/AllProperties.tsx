@@ -450,13 +450,14 @@ export default function AllProperties() {
                       onClick={() => openPropertyModal(property.id)}
                     >
                       {/* Property Image */}
-                      <div className="property-image-container h-48 bg-gray-200 relative overflow-hidden">
+                      <div className="property-image-container h-48 relative overflow-hidden">
                         {getFeaturedImage(property) ? (
-                          <img 
+                          <LazyImage 
                             src={getFeaturedImage(property)} 
-                            alt={property.title} 
-                            className="property-image w-full h-full object-cover transition-transform duration-500"
-                            loading="lazy"
+                            alt={property.title || 'Imóvel'} 
+                            className="property-image w-full h-full"
+                            placeholderColor={config?.primaryColor ? `${config.primaryColor}15` : '#f3f4f6'}
+                            aspectRatio="4/3"
                           />
                         ) : null}
                         {/* Botão Ver Detalhes que aparece no hover */}
