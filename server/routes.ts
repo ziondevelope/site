@@ -605,15 +605,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   apiRouter.post("/clients", async (req, res) => {
     try {
+      console.log("Trying to create client with data:", req.body);
+      
+      if (typeof storageInstance.createClient !== 'function') {
+        console.error("createClient is not a function!");
+        return res.status(500).json({ message: "Implementation error: createClient is not a function" });
+      }
+      
       const validatedData = insertClientSchema.parse(req.body);
+      console.log("Data validated successfully:", validatedData);
+      
       const client = await storageInstance.createClient(validatedData);
+      console.log("Client created successfully:", client);
+      
       res.status(201).json(client);
     } catch (error) {
       console.error("Error creating client:", error);
       if (error instanceof z.ZodError) {
+        console.error("Validation errors:", error.errors);
         return res.status(400).json({ message: "Invalid client data", errors: error.errors });
       }
-      res.status(500).json({ message: "Error creating client" });
+      res.status(500).json({ message: `Error creating client: ${error instanceof Error ? error.message : 'Unknown error'}` });
     }
   });
 
