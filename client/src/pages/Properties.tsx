@@ -395,6 +395,44 @@ export default function Properties() {
       });
     },
   });
+  
+  // Batch delete properties mutation
+  const batchDeleteMutation = useMutation({
+    mutationFn: async (ids: number[]) => {
+      return apiRequest(`/api/properties/batch-delete`, {
+        method: "POST",
+        body: JSON.stringify({ ids })
+      });
+    },
+    onSuccess: (data) => {
+      setIsBatchDeleteAlertOpen(false);
+      setSelectedProperties([]);
+      setSelectAllChecked(false);
+      queryClient.invalidateQueries({ queryKey: ['/api/properties'] });
+      setIsDeleting(false);
+      
+      if (data.success === selectedProperties.length) {
+        toast({
+          title: "Imóveis excluídos",
+          description: `${data.success} imóveis foram excluídos com sucesso.`,
+        });
+      } else {
+        toast({
+          title: "Exclusão parcial",
+          description: `${data.success} imóveis excluídos. ${data.failed} operações falharam.`,
+          variant: "destructive",
+        });
+      }
+    },
+    onError: (error) => {
+      setIsDeleting(false);
+      toast({
+        title: "Erro ao excluir imóveis",
+        description: error.message || "Ocorreu um erro ao excluir os imóveis.",
+        variant: "destructive",
+      });
+    },
+  });
 
   function onSubmit(data: PropertyFormValues) {
     if (selectedProperty && isEditDialogOpen) {
@@ -415,34 +453,7 @@ export default function Properties() {
     }
   }
   
-  // Novo mutation para excluir múltiplos imóveis
-  const batchDeleteMutation = useMutation({
-    mutationFn: async (ids: number[]) => {
-      return apiRequest("/api/properties/delete-batch", {
-        method: "POST",
-        body: JSON.stringify({ ids })
-      });
-    },
-    onSuccess: (data) => {
-      setIsBatchDeleteAlertOpen(false);
-      setSelectedProperties([]);
-      setSelectAllChecked(false);
-      queryClient.invalidateQueries({ queryKey: ['/api/properties'] });
-      toast({
-        title: "Imóveis excluídos",
-        description: `${data.success} imóveis foram excluídos com sucesso. ${data.failed > 0 ? `${data.failed} falhas.` : ''}`,
-      });
-      setIsDeleting(false);
-    },
-    onError: (error) => {
-      toast({
-        title: "Erro ao excluir imóveis",
-        description: error.message || "Ocorreu um erro ao excluir os imóveis.",
-        variant: "destructive",
-      });
-      setIsDeleting(false);
-    },
-  });
+
   
   // Função para confirmar a exclusão em lote
   function handleBatchDeleteConfirm() {
@@ -1415,6 +1426,33 @@ export default function Properties() {
           </div>
         </DialogContent>
       </Dialog>
+      
+      {/* Batch Delete Confirmation Dialog */}
+      <AlertDialog open={isBatchDeleteAlertOpen} onOpenChange={setIsBatchDeleteAlertOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Excluir {selectedProperties.length} Imóveis</AlertDialogTitle>
+            <AlertDialogDescription>
+              Você tem certeza que deseja excluir os {selectedProperties.length} imóveis selecionados? Esta ação não pode ser desfeita.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel 
+              onClick={() => setIsBatchDeleteAlertOpen(false)}
+              className="rounded-full px-5"
+            >
+              Cancelar
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleBatchDeleteConfirm}
+              className="bg-red-500 hover:bg-red-600 rounded-full px-5"
+              disabled={batchDeleteMutation.isPending}
+            >
+              {batchDeleteMutation.isPending ? "Excluindo..." : `Excluir ${selectedProperties.length} Imóveis`}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
       
       {/* Delete Confirmation Dialog */}
       <AlertDialog open={isDeleteAlertOpen} onOpenChange={setIsDeleteAlertOpen}>
