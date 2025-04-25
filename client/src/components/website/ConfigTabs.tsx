@@ -6,6 +6,7 @@ import SeoSettings from "@/components/website/SeoSettings";
 import InformationSettings from "@/components/website/InformationSettings";
 import { TestimonialsManager } from "@/components/website/TestimonialsManager";
 import ChatSettings from "@/components/website/ChatSettings";
+import SliderSettings from "@/components/website/SliderSettings";
 import { WebsiteConfig, UpdateWebsiteConfig } from "@shared/schema";
 
 interface ConfigTabsProps {
@@ -59,6 +60,12 @@ export default function ConfigTabs({
               Depoimentos
             </TabsTrigger>
             <TabsTrigger 
+              value="slider" 
+              className="px-6 py-4 data-[state=active]:border-b-2 data-[state=active]:border-indigo-600 rounded-none data-[state=active]:bg-white"
+            >
+              Slider de Imóveis
+            </TabsTrigger>
+            <TabsTrigger 
               value="chat" 
               className="px-6 py-4 data-[state=active]:border-b-2 data-[state=active]:border-indigo-600 rounded-none data-[state=active]:bg-white"
             >
@@ -101,6 +108,14 @@ export default function ConfigTabs({
         
         <TabsContent value="testimonials" className="p-6 bg-white">
           <TestimonialsManager />
+        </TabsContent>
+        
+        <TabsContent value="slider" className="p-6 bg-white">
+          <SliderSettings 
+            config={config} 
+            configData={configData}
+            onConfigChange={onConfigChange}
+          />
         </TabsContent>
         
         <TabsContent value="chat" className="p-6 bg-white">
