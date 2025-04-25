@@ -28,13 +28,14 @@ export default function Header({ config, isLoadingConfig }: HeaderProps) {
     };
 
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
 
-  // Verificar o estilo de cabeçalho configurado
+  // Determina o estilo do header (transparente ou solido)
   const headerStyle = config?.headerStyle || 'transparent';
-  
-  // Se o estilo for sólido, mantemos o cabeçalho com fundo branco sempre
   const useSolidHeader = headerStyle === 'solid' || isPropertiesPage;
 
   return (
@@ -43,22 +44,9 @@ export default function Header({ config, isLoadingConfig }: HeaderProps) {
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled || useSolidHeader 
           ? 'bg-white shadow-lg py-2' 
-          : 'py-6'
+          : 'bg-transparent py-6'
       }`}
-      style={{
-        width: '100%'
-      }}
     >
-      {/* Gradiente de fundo por todo o header */}
-      {!scrolled && !useSolidHeader && (
-        <div 
-          className="absolute inset-0 w-full h-full" 
-          style={{
-            background: 'linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.5) 30%, rgba(0,0,0,0.3) 60%, rgba(0,0,0,0.1) 100%)',
-            zIndex: -1
-          }}
-        />
-      )}
       <div className="container mx-auto px-4 flex justify-between items-center">
         <div className="flex items-center">
           {/* Logo à esquerda */}
@@ -73,6 +61,7 @@ export default function Header({ config, isLoadingConfig }: HeaderProps) {
                   alt="Logo da Imobiliária" 
                   className="h-full object-contain"
                   loading="eager" 
+                  fetchPriority="high"
                   decoding="async"
                   onLoad={(e) => {
                     // Torna a imagem visível quando carregada
@@ -300,6 +289,8 @@ export default function Header({ config, isLoadingConfig }: HeaderProps) {
                     <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary opacity-0" style={{ backgroundColor: config?.primaryColor || 'var(--primary)' }}></div>
                     <span className="text-gray-700 font-medium text-[19px]">Início</span>
                   </a>
+                  
+
                   
                   <NavigationLink 
                     href="/properties" 
