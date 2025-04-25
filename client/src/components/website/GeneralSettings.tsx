@@ -344,7 +344,7 @@ export default function GeneralSettings({ config, configData, onConfigChange }: 
             <Input 
               type="text" 
               value={safeFooterIconsColor}
-              onChange={(e) => onConfigChange({ ...configData, footerIconsColor: e.target.value })}
+              onChange={(e) => onConfigChange({ footerIconsColor: e.target.value })}
               className="border border-l-0 border-gray-200 rounded-r-full px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-transparent"
             />
           </div>
