@@ -22,14 +22,17 @@ export default function PropertyFeaturedSlider({
   const [currentSlide, setCurrentSlide] = useState(0);
   const [autoplay, setAutoplay] = useState(true);
   
-  // Obter configurações do site para cores (caso não tenha sido passado como prop)
+  // Obter configurações do site para cores (mesmo que tenha sido passado como prop)
+  // Isso garante que sempre teremos os dados mais recentes
   const { data: configData } = useQuery<WebsiteConfig>({
     queryKey: ['/api/website/config'],
-    enabled: !propConfig
+    refetchOnWindowFocus: true, // Recarrega quando o usuário volta para a janela
+    refetchInterval: 3000, // Recarrega a cada 3 segundos
+    staleTime: 0 // Considera os dados obsoletos imediatamente
   });
   
-  // Use a configuração passada como propriedade ou a obtida pela consulta
-  const config = propConfig || configData;
+  // Use sempre os dados mais recentes
+  const config = configData || propConfig;
   
   // Define as cores do slider com base nas configurações
   const [primaryColor, setPrimaryColor] = useState(config?.featuredSliderBackgroundColor || config?.primaryColor || '#7f651e');
@@ -38,10 +41,14 @@ export default function PropertyFeaturedSlider({
   // Atualiza as cores quando as configurações mudarem
   useEffect(() => {
     if (config) {
+      console.log("Atualizando cores do slider:", {
+        backgroundColor: config.featuredSliderBackgroundColor,
+        textColor: config.featuredSliderTextColor
+      });
       setPrimaryColor(config.featuredSliderBackgroundColor || config.primaryColor || '#7f651e');
       setTextColor(config.featuredSliderTextColor || '#ffffff');
     }
-  }, [config]);
+  }, [config, config?.featuredSliderBackgroundColor, config?.featuredSliderTextColor]);
   
   // Se as propriedades não forem fornecidas, busque-as
   const { data: propertiesData, isLoading } = useQuery<Property[]>({
