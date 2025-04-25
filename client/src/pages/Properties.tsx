@@ -1628,6 +1628,14 @@ export default function Properties() {
               className="rounded-full px-5 border-[#12636C] text-[#12636C]">
               <i className="fas fa-file-import mr-2"></i> Importar Imóveis
             </Button>
+            {selectedProperties.length > 0 && (
+              <Button 
+                onClick={handleBatchDeleteClick}
+                variant="outline"
+                className="rounded-full px-5 border-red-500 text-red-500 hover:bg-red-50">
+                <Trash2 className="h-4 w-4 mr-2" /> Excluir ({selectedProperties.length})
+              </Button>
+            )}
           </div>
         </div>
         
@@ -1737,7 +1745,18 @@ export default function Properties() {
             <Table>
               <TableHeader className="bg-[#001623] hover:bg-[#001623]">
                 <TableRow className="hover:bg-[#001623]">
-                  <TableHead className="w-[300px] text-white hover:bg-[#001623] hover:text-white">Imóvel</TableHead>
+                  <TableHead className="text-white hover:bg-[#001623] hover:text-white w-[50px]">
+                    <div className="flex items-center">
+                      <Checkbox 
+                        id="selectAll"
+                        checked={selectAllChecked}
+                        onCheckedChange={handleSelectAll}
+                        className="data-[state=checked]:bg-white data-[state=checked]:text-[#001623] border-white"
+                        onClick={(e) => e.stopPropagation()}
+                      />
+                    </div>
+                  </TableHead>
+                  <TableHead className="w-[250px] text-white hover:bg-[#001623] hover:text-white">Imóvel</TableHead>
                   <TableHead className="text-white hover:bg-[#001623] hover:text-white">Tipo</TableHead>
                   <TableHead className="text-white hover:bg-[#001623] hover:text-white">Finalidade</TableHead>
                   <TableHead className="text-white hover:bg-[#001623] hover:text-white">Preço</TableHead>
@@ -1753,6 +1772,16 @@ export default function Properties() {
                     className="cursor-pointer hover:bg-gray-50" 
                     onClick={() => handleEditClick(property)}
                   >
+                    <TableCell className="py-3">
+                      <Checkbox
+                        checked={selectedProperties.includes(property.id)}
+                        onCheckedChange={(checked) => {
+                          handlePropertySelection(property.id, !!checked);
+                        }}
+                        onClick={(e) => e.stopPropagation()}
+                        className="mr-2"
+                      />
+                    </TableCell>
                     <TableCell className="py-3">
                       <div className="flex items-center space-x-3">
                         <div className="h-10 w-10 rounded-md bg-gray-100 overflow-hidden">
