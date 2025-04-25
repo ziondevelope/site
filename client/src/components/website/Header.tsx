@@ -53,9 +53,9 @@ export default function Header({ config, isLoadingConfig }: HeaderProps) {
           <div className="flex items-center mr-8">
             {isLoadingConfig ? (
               // Placeholder durante o carregamento - mantém o mesmo tamanho
-              <div className={`${scrolled ? 'h-12 w-28' : 'h-16 w-36'} bg-gray-100 rounded animate-pulse transition-all duration-300`}></div>
+              <div className={`${scrolled ? 'h-16 w-36' : 'h-20 w-48'} bg-gray-100 rounded animate-pulse transition-all duration-300`}></div>
             ) : config?.logo ? (
-              <NavigationLink href="/" className={`${scrolled ? 'h-12 min-w-[112px]' : 'h-16 min-w-[140px]'} transition-all duration-300 cursor-pointer`}>
+              <NavigationLink href="/" className={`${scrolled ? 'h-16 min-w-[140px]' : 'h-20 min-w-[180px]'} transition-all duration-300 cursor-pointer`}>
                 <img 
                   src={config.logo} 
                   alt="Logo da Imobiliária" 
@@ -157,7 +157,7 @@ export default function Header({ config, isLoadingConfig }: HeaderProps) {
                 >
                   {config?.logo ? (
                     <NavigationLink href="/">
-                      <img src={config.logo} alt="Logo" className="h-10 object-contain cursor-pointer" />
+                      <img src={config.logo} alt="Logo" className="h-14 object-contain cursor-pointer" />
                     </NavigationLink>
                   ) : (
                     <NavigationLink href="/" className="flex items-center cursor-pointer">
@@ -268,7 +268,7 @@ export default function Header({ config, isLoadingConfig }: HeaderProps) {
                 >
                   {config?.logo ? (
                     <NavigationLink href="/">
-                      <img src={config.logo} alt="Logo" className="h-10 object-contain cursor-pointer" />
+                      <img src={config.logo} alt="Logo" className="h-14 object-contain cursor-pointer" />
                     </NavigationLink>
                   ) : (
                     <NavigationLink href="/" className="flex items-center cursor-pointer">
