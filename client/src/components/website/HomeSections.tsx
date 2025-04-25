@@ -319,6 +319,10 @@ export default function HomeSections({
     ? config.homeSectionsOrder 
     : ['featuredProperties', 'rentProperties', 'saleProperties', 'testimonials', 'aboutSection'];
   
+  // Log para debugar a ordem das seções
+  console.log('Ordem das seções configurada:', config?.homeSectionsOrder);
+  console.log('Ordem das seções a ser usada:', sectionsOrder);
+  
   return (
     <>
       {/* Renderizar seções na ordem definida */}
