@@ -25,11 +25,11 @@ export default function HomepageSettings({ config, configData, onConfigChange }:
     : config?.bannerSubtitle || "Oferecemos as melhores opções de imóveis para compra e aluguel com atendimento personalizado";
   
   const showBannerText = configData.showBannerText !== undefined
-    ? configData.showBannerText
+    ? !!configData.showBannerText
     : config?.showBannerText !== false;
     
   const showSearchBar = configData.showSearchBar !== undefined
-    ? configData.showSearchBar
+    ? !!configData.showSearchBar
     : config?.showSearchBar !== false;
 
   // Manipuladores de eventos
@@ -51,19 +51,19 @@ export default function HomepageSettings({ config, configData, onConfigChange }:
 
   // Manipuladores para a seção "Quem Somos"
   const aboutTitle = configData.aboutTitle !== undefined
-    ? configData.aboutTitle
+    ? configData.aboutTitle || ""
     : config?.aboutTitle || "Quem Somos";
     
   const aboutSubtitle = configData.aboutSubtitle !== undefined
-    ? configData.aboutSubtitle
+    ? configData.aboutSubtitle || ""
     : config?.aboutSubtitle || "Conheça Nossa História";
     
   const aboutDescription = configData.aboutDescription !== undefined
-    ? configData.aboutDescription
+    ? configData.aboutDescription || ""
     : config?.aboutDescription || "";
     
   const showAboutSection = configData.showAboutSection !== undefined
-    ? configData.showAboutSection
+    ? !!configData.showAboutSection
     : config?.showAboutSection !== false;
   
   const handleAboutTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

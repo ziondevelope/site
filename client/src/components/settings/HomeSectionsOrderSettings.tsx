@@ -72,11 +72,21 @@ export default function HomeSectionsOrderSettings({ config, configData, onConfig
     }
   };
 
+  // Garante que temos um array de strings
+  const getInitialSections = (): string[] => {
+    if (!currentOrder) {
+      return defaultOrder;
+    }
+    
+    if (Array.isArray(currentOrder)) {
+      return currentOrder.filter(id => typeof id === 'string' && id in allSections) as string[];
+    }
+    
+    return defaultOrder;
+  };
+  
   // Seções ordenadas conforme a configuração atual
-  const [orderedSections, setOrderedSections] = useState<string[]>(() => {
-    const order = Array.isArray(currentOrder) ? currentOrder : defaultOrder;
-    return order.filter(id => typeof id === 'string' && allSections[id]);
-  });
+  const [orderedSections, setOrderedSections] = useState<string[]>(getInitialSections);
 
   // Handler para quando um item é arrastado e solto
   const handleDragEnd = (result: any) => {
