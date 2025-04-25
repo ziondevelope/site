@@ -12,6 +12,14 @@ interface GeneralSettingsProps {
 }
 
 export default function GeneralSettings({ config, configData, onConfigChange }: GeneralSettingsProps) {
+  // Log para depurar os estilos de cabeçalho e rodapé
+  console.log("GeneralSettings - Estado dos estilos:", {
+    headerStyle: configData.headerStyle,
+    configHeaderStyle: config?.headerStyle,
+    footerStyle: configData.footerStyle,
+    configFooterStyle: config?.footerStyle
+  });
+  
   // These are derived values that reflect either the current editing state (configData)
   // or fallback to the saved values (config) if no edits have been made
   const logo = configData.logo !== undefined 
@@ -278,7 +286,7 @@ export default function GeneralSettings({ config, configData, onConfigChange }: 
           </Label>
           <select
             value={configData?.headerStyle || 'transparent'}
-            onChange={(e) => onConfigChange({ ...configData, headerStyle: e.target.value })}
+            onChange={(e) => onConfigChange({ headerStyle: e.target.value })}
             className="border border-gray-200 rounded-lg px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-transparent"
           >
             <option value="transparent">Transparente (padrão)</option>
@@ -292,7 +300,7 @@ export default function GeneralSettings({ config, configData, onConfigChange }: 
           </Label>
           <select
             value={configData?.footerStyle || 'default'}
-            onChange={(e) => onConfigChange({ ...configData, footerStyle: e.target.value })}
+            onChange={(e) => onConfigChange({ footerStyle: e.target.value })}
             className="border border-gray-200 rounded-lg px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-transparent"
           >
             <option value="default">Completo (3 colunas)</option>
@@ -308,13 +316,13 @@ export default function GeneralSettings({ config, configData, onConfigChange }: 
             <Input 
               type="color" 
               value={safeFooterTextColor}
-              onChange={(e) => onConfigChange({ ...configData, footerTextColor: e.target.value })}
+              onChange={(e) => onConfigChange({ footerTextColor: e.target.value })}
               className="h-10 w-10 border-0 rounded-l-lg p-0"
             />
             <Input 
               type="text" 
               value={safeFooterTextColor}
-              onChange={(e) => onConfigChange({ ...configData, footerTextColor: e.target.value })}
+              onChange={(e) => onConfigChange({ footerTextColor: e.target.value })}
               className="border border-l-0 border-gray-200 rounded-r-full px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-transparent"
             />
           </div>
@@ -330,7 +338,7 @@ export default function GeneralSettings({ config, configData, onConfigChange }: 
             <Input 
               type="color" 
               value={safeFooterIconsColor}
-              onChange={(e) => onConfigChange({ ...configData, footerIconsColor: e.target.value })}
+              onChange={(e) => onConfigChange({ footerIconsColor: e.target.value })}
               className="h-10 w-10 border-0 rounded-l-lg p-0"
             />
             <Input 
