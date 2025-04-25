@@ -203,7 +203,7 @@ export default function Home() {
             ></div>
             {/* Imagem de fundo com lazy loading e fade in */}
             <div 
-              className="absolute inset-0 z-0 bg-black/50"
+              className="absolute inset-0 z-0"
               style={{
                 backgroundImage: `url(${config.bannerBackground})`,
                 backgroundPosition: 'center',
@@ -212,7 +212,15 @@ export default function Home() {
                 opacity: 1,
                 transition: 'opacity 0.5s ease-in'
               }}
-            ></div>
+            >
+              {/* Degradê de baixo para cima (escuro embaixo, transparente em cima) */}
+              <div 
+                className="absolute inset-0" 
+                style={{
+                  background: 'linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.5) 30%, rgba(0,0,0,0.3) 60%, rgba(0,0,0,0) 100%)'
+                }}
+              ></div>
+            </div>
           </>
         )}
         <div className="container mx-auto px-4 text-center relative z-20">
