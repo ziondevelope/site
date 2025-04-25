@@ -44,8 +44,13 @@ export default function Header({ config, isLoadingConfig }: HeaderProps) {
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled || useSolidHeader 
           ? 'bg-white shadow-lg py-2' 
-          : 'bg-transparent py-6'
+          : 'py-6'
       }`}
+      style={{
+        background: scrolled || useSolidHeader 
+          ? '' 
+          : 'linear-gradient(to top, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.3) 30%, rgba(0,0,0,0.1) 60%, rgba(0,0,0,0) 100%)'
+      }}
     >
       <div className="container mx-auto px-4 flex justify-between items-center">
         <div className="flex items-center">
