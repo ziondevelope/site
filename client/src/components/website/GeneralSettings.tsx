@@ -464,6 +464,107 @@ export default function GeneralSettings({ config, configData, onConfigChange }: 
         </div>
       </div>
       
+      {/* Configurações do Slider de Imóveis Destacados */}
+      <div className="mt-8">
+        <h3 className="text-lg font-medium text-gray-800 mb-4">Slider de Imóveis Destacados</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <Label className="block text-sm font-medium text-gray-700 mb-2">
+              Cor de Fundo
+            </Label>
+            <div className="flex">
+              <Input 
+                type="color" 
+                value={configData.featuredSliderBackgroundColor !== undefined 
+                  ? configData.featuredSliderBackgroundColor 
+                  : config?.featuredSliderBackgroundColor || '#7f651e'}
+                onChange={(e) => onConfigChange({ featuredSliderBackgroundColor: e.target.value })}
+                className="h-10 w-10 border-0 rounded-l-lg p-0"
+              />
+              <Input 
+                type="text" 
+                value={configData.featuredSliderBackgroundColor !== undefined 
+                  ? configData.featuredSliderBackgroundColor 
+                  : config?.featuredSliderBackgroundColor || '#7f651e'}
+                onChange={(e) => onConfigChange({ featuredSliderBackgroundColor: e.target.value })}
+                className="border border-l-0 border-gray-200 rounded-r-full px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-transparent"
+              />
+            </div>
+          </div>
+          
+          <div>
+            <Label className="block text-sm font-medium text-gray-700 mb-2">
+              Cor do Texto
+            </Label>
+            <div className="flex">
+              <Input 
+                type="color" 
+                value={configData.featuredSliderTextColor !== undefined 
+                  ? configData.featuredSliderTextColor 
+                  : config?.featuredSliderTextColor || '#ffffff'}
+                onChange={(e) => onConfigChange({ featuredSliderTextColor: e.target.value })}
+                className="h-10 w-10 border-0 rounded-l-lg p-0"
+              />
+              <Input 
+                type="text" 
+                value={configData.featuredSliderTextColor !== undefined 
+                  ? configData.featuredSliderTextColor 
+                  : config?.featuredSliderTextColor || '#ffffff'}
+                onChange={(e) => onConfigChange({ featuredSliderTextColor: e.target.value })}
+                className="border border-l-0 border-gray-200 rounded-r-full px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-transparent"
+              />
+            </div>
+          </div>
+        </div>
+        
+        {/* Preview do Slider */}
+        <div className="mt-4 p-4 rounded-lg border" 
+             style={{ 
+               backgroundColor: configData.featuredSliderBackgroundColor !== undefined 
+                 ? configData.featuredSliderBackgroundColor 
+                 : config?.featuredSliderBackgroundColor || '#7f651e'
+             }}
+        >
+          <h5 className="font-medium mb-2" 
+              style={{ 
+                color: configData.featuredSliderTextColor !== undefined 
+                  ? configData.featuredSliderTextColor 
+                  : config?.featuredSliderTextColor || '#ffffff'
+              }}
+          >
+            Prévia do Slider de Imóveis Destacados
+          </h5>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center">
+              <i className="fas fa-bed mr-2" 
+                 style={{ 
+                   color: configData.featuredSliderTextColor !== undefined 
+                     ? configData.featuredSliderTextColor
+                     : config?.featuredSliderTextColor || '#ffffff'
+                 }}></i>
+              <span style={{ 
+                color: configData.featuredSliderTextColor !== undefined 
+                  ? configData.featuredSliderTextColor
+                  : config?.featuredSliderTextColor || '#ffffff'
+              }}>3 Quartos</span>
+            </div>
+            <div className="flex items-center">
+              <i className="fas fa-shower mr-2" 
+                 style={{ 
+                   color: configData.featuredSliderTextColor !== undefined 
+                     ? configData.featuredSliderTextColor
+                     : config?.featuredSliderTextColor || '#ffffff'
+                 }}></i>
+              <span style={{ 
+                color: configData.featuredSliderTextColor !== undefined 
+                  ? configData.featuredSliderTextColor
+                  : config?.featuredSliderTextColor || '#ffffff'
+              }}>2 Banheiros</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
       {/* Seção de Redes Sociais */}
       <div className="mt-6">
         <h3 className="text-lg font-medium text-gray-800 mb-4">Redes Sociais</h3>
