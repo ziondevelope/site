@@ -146,7 +146,11 @@ export default function Properties() {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
+  const [isImportDialogOpen, setIsImportDialogOpen] = useState(false);
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
+  const [importMethod, setImportMethod] = useState<'csv' | 'xml' | 'json' | null>(null);
+  const [importFile, setImportFile] = useState<File | null>(null);
+  const [isImporting, setIsImporting] = useState(false);
   const { toast } = useToast();
   
   // Search and filter states
@@ -404,6 +408,65 @@ export default function Properties() {
       deletePropertyMutation.mutate(selectedProperty.id);
     }
   }
+  
+  // Lidar com o clique no botão de importação
+  const handleImportClick = () => {
+    setImportMethod(null);
+    setImportFile(null);
+    setIsImportDialogOpen(true);
+  };
+  
+  // Importação em massa de imóveis
+  const importPropertyMutation = useMutation({
+    mutationFn: async (formData: FormData) => {
+      return apiRequest("/api/properties/import", {
+        method: "POST",
+        body: formData,
+        headers: {
+          // Não incluir Content-Type, pois o navegador configura automaticamente para multipart/form-data
+        },
+      });
+    },
+    onSuccess: (data) => {
+      setIsImportDialogOpen(false);
+      setImportFile(null);
+      setImportMethod(null);
+      setIsImporting(false);
+      queryClient.invalidateQueries({ queryKey: ['/api/properties'] });
+      toast({
+        title: "Importação concluída",
+        description: `${data.imported} imóveis foram importados com sucesso.`,
+      });
+    },
+    onError: (error) => {
+      setIsImporting(false);
+      toast({
+        title: "Erro na importação",
+        description: error.message || "Ocorreu um erro ao importar os imóveis. Verifique o formato do arquivo.",
+        variant: "destructive",
+      });
+    },
+  });
+  
+  // Processa o arquivo de importação
+  const handleImportSubmit = async () => {
+    if (!importFile || !importMethod) {
+      toast({
+        title: "Erro na importação",
+        description: "Selecione um arquivo e um método de importação.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    setIsImporting(true);
+    
+    const formData = new FormData();
+    formData.append('file', importFile);
+    formData.append('method', importMethod);
+    
+    importPropertyMutation.mutate(formData);
+  };
 
   return (
     <div className="bg-[#F9FAFB] min-h-screen p-4">
