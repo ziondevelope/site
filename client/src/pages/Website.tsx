@@ -31,6 +31,7 @@ export default function Website() {
         footerIconsColor: config.footerIconsColor,
         footerInfo: config.footerInfo,
         footerStyle: config.footerStyle,
+        headerStyle: config.headerStyle,
         bannerTitle: config.bannerTitle,
         bannerSubtitle: config.bannerSubtitle,
         showBannerText: config.showBannerText,
@@ -154,6 +155,9 @@ export default function Website() {
     
     // Debug para rodapé e cores do WhatsApp
     console.log("Estado atual configData:", {
+      // Header Style
+      headerStyle: configData.headerStyle,
+      configHeaderStyle: config.headerStyle,
       // WhatsApp Chat cores
       whatsappChatBackgroundColor: configData.whatsappChatBackgroundColor,
       whatsappChatTextColor: configData.whatsappChatTextColor,
@@ -211,6 +215,7 @@ export default function Website() {
       footerIconsColor: configData.footerIconsColor || config.footerIconsColor || '',
       footerInfo: configData.footerInfo ?? config.footerInfo ?? '',
       footerStyle: configData.footerStyle ?? config.footerStyle ?? 'default',
+      headerStyle: configData.headerStyle ?? config.headerStyle ?? 'transparent',
       bannerTitle: configData.bannerTitle ?? config.bannerTitle ?? 'Encontre o imóvel dos seus sonhos',
       bannerSubtitle: configData.bannerSubtitle ?? config.bannerSubtitle ?? 'Oferecemos as melhores opções de imóveis para compra e aluguel com atendimento personalizado.',
       showBannerText: configData.showBannerText ?? config.showBannerText ?? true,
