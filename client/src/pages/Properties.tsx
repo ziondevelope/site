@@ -1352,6 +1352,172 @@ export default function Properties() {
         </AlertDialogContent>
       </AlertDialog>
       
+      {/* Import Dialog */}
+      <Dialog open={isImportDialogOpen} onOpenChange={setIsImportDialogOpen}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle>Importar Imóveis</DialogTitle>
+            <DialogDescription>
+              Selecione o formato e o arquivo para importar imóveis em massa.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-6 py-4">
+            <div className="space-y-4">
+              <Label htmlFor="importMethod">Formato do Arquivo</Label>
+              <div className="grid grid-cols-3 gap-4">
+                <div 
+                  className={`border rounded-lg p-4 text-center cursor-pointer transition-colors ${
+                    importMethod === 'csv' 
+                      ? 'bg-[#12636C]/10 border-[#12636C]' 
+                      : 'border-gray-200 hover:bg-gray-50'
+                  }`}
+                  onClick={() => setImportMethod('csv')}
+                >
+                  <i className="far fa-file-csv text-2xl mb-2 block" style={{ color: importMethod === 'csv' ? '#12636C' : '#64748b' }}></i>
+                  <span className="text-sm font-medium">CSV</span>
+                </div>
+                
+                <div 
+                  className={`border rounded-lg p-4 text-center cursor-pointer transition-colors ${
+                    importMethod === 'xml' 
+                      ? 'bg-[#12636C]/10 border-[#12636C]' 
+                      : 'border-gray-200 hover:bg-gray-50'
+                  }`}
+                  onClick={() => setImportMethod('xml')}
+                >
+                  <i className="far fa-file-code text-2xl mb-2 block" style={{ color: importMethod === 'xml' ? '#12636C' : '#64748b' }}></i>
+                  <span className="text-sm font-medium">XML</span>
+                </div>
+                
+                <div 
+                  className={`border rounded-lg p-4 text-center cursor-pointer transition-colors ${
+                    importMethod === 'json' 
+                      ? 'bg-[#12636C]/10 border-[#12636C]' 
+                      : 'border-gray-200 hover:bg-gray-50'
+                  }`}
+                  onClick={() => setImportMethod('json')}
+                >
+                  <i className="far fa-file-code text-2xl mb-2 block" style={{ color: importMethod === 'json' ? '#12636C' : '#64748b' }}></i>
+                  <span className="text-sm font-medium">JSON</span>
+                </div>
+              </div>
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="importFile">Arquivo</Label>
+              <div className={`border-2 border-dashed rounded-lg p-6 text-center ${
+                importFile ? 'border-[#12636C]/30 bg-[#12636C]/5' : 'border-gray-200'
+              }`}>
+                {importFile ? (
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-center">
+                      <i className="far fa-file text-2xl mr-2" style={{ color: '#12636C' }}></i>
+                      <span className="font-medium">{importFile.name}</span>
+                    </div>
+                    <p className="text-sm text-gray-500">
+                      {(importFile.size / 1024).toFixed(1)} KB
+                    </p>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => setImportFile(null)}
+                    >
+                      Trocar arquivo
+                    </Button>
+                  </div>
+                ) : (
+                  <div>
+                    <input
+                      id="importFile"
+                      type="file"
+                      accept={
+                        importMethod === 'csv' ? '.csv' : 
+                        importMethod === 'xml' ? '.xml' : 
+                        importMethod === 'json' ? '.json' : 
+                        '.csv,.xml,.json'
+                      }
+                      className="hidden"
+                      onChange={(e) => {
+                        if (e.target.files && e.target.files[0]) {
+                          setImportFile(e.target.files[0]);
+                        }
+                      }}
+                    />
+                    <label 
+                      htmlFor="importFile" 
+                      className="cursor-pointer block"
+                    >
+                      <div className="flex flex-col items-center justify-center space-y-2">
+                        <i className="fas fa-cloud-upload-alt text-3xl text-gray-400"></i>
+                        <p className="text-sm font-medium">
+                          Clique para selecionar ou arraste seu arquivo aqui
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          {importMethod === 'csv' ? 'Arquivos .CSV' : 
+                          importMethod === 'xml' ? 'Arquivos .XML' : 
+                          importMethod === 'json' ? 'Arquivos .JSON' :
+                          'Selecione um formato primeiro'}
+                        </p>
+                      </div>
+                    </label>
+                  </div>
+                )}
+              </div>
+            </div>
+            
+            <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+              <div className="flex">
+                <i className="fas fa-info-circle text-amber-500 mr-3 mt-1"></i>
+                <div>
+                  <p className="text-sm text-amber-800 mb-1 font-medium">Informações sobre o formato</p>
+                  {importMethod === 'csv' && (
+                    <p className="text-xs text-amber-700">
+                      O arquivo CSV deve conter cabeçalhos correspondentes aos campos dos imóveis (title, description, type, purpose, price, area, etc).
+                    </p>
+                  )}
+                  {importMethod === 'xml' && (
+                    <p className="text-xs text-amber-700">
+                      O arquivo XML deve conter elementos &lt;property&gt; com os campos dos imóveis como sub-elementos.
+                    </p>
+                  )}
+                  {importMethod === 'json' && (
+                    <p className="text-xs text-amber-700">
+                      O arquivo JSON deve conter um array de objetos, onde cada objeto representa um imóvel com os campos necessários.
+                    </p>
+                  )}
+                  {!importMethod && (
+                    <p className="text-xs text-amber-700">
+                      Selecione um formato para ver as instruções específicas.
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsImportDialogOpen(false)}>
+              Cancelar
+            </Button>
+            <Button 
+              onClick={handleImportSubmit}
+              disabled={!importFile || !importMethod || isImporting}
+              className="bg-[#12636C] hover:bg-[#12636C]/90"
+            >
+              {isImporting ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Importando...
+                </>
+              ) : (
+                'Importar Imóveis'
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      
       {/* Property Management */}
       <div className="bg-white p-6 rounded-lg shadow-sm" style={{ fontFamily: 'Montserrat, sans-serif' }}>
         <div className="flex justify-between items-center mb-6">
@@ -1364,6 +1530,12 @@ export default function Properties() {
               onClick={handleAddClick}
               className="bg-[#12636C] hover:bg-[#12636C]/90 rounded-full px-5">
               <i className="fas fa-plus mr-2"></i> Novo Imóvel
+            </Button>
+            <Button 
+              onClick={handleImportClick}
+              variant="outline"
+              className="rounded-full px-5 border-[#12636C] text-[#12636C]">
+              <i className="fas fa-file-import mr-2"></i> Importar Imóveis
             </Button>
           </div>
         </div>
