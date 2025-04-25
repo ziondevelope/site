@@ -17,6 +17,7 @@ import { MultipleImageUpload } from "@/components/ui/multiple-image-upload";
 import { CepInput } from "@/components/ui/cep-input";
 import { PropertyFeatures } from "@/components/ui/property-features";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Checkbox } from "@/components/ui/checkbox";
 import { 
   AlertDialog,
   AlertDialogAction,
@@ -36,8 +37,9 @@ import {
   Tag,
   Image,
   BadgeInfo,
-  SquareFootIcon,
-  Plus
+  SquareDot,
+  Plus,
+  Trash2
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -147,10 +149,14 @@ export default function Properties() {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
   const [isImportDialogOpen, setIsImportDialogOpen] = useState(false);
+  const [isBatchDeleteAlertOpen, setIsBatchDeleteAlertOpen] = useState(false);
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
+  const [selectedProperties, setSelectedProperties] = useState<number[]>([]);
+  const [selectAllChecked, setSelectAllChecked] = useState(false);
   const [importMethod, setImportMethod] = useState<'csv' | 'xml' | 'json' | null>(null);
   const [importFile, setImportFile] = useState<File | null>(null);
   const [isImporting, setIsImporting] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const { toast } = useToast();
   
   // Search and filter states
@@ -406,6 +412,83 @@ export default function Properties() {
   function handleDeleteConfirm() {
     if (selectedProperty) {
       deletePropertyMutation.mutate(selectedProperty.id);
+    }
+  }
+  
+  // Novo mutation para excluir múltiplos imóveis
+  const batchDeleteMutation = useMutation({
+    mutationFn: async (ids: number[]) => {
+      return apiRequest("/api/properties/delete-batch", {
+        method: "POST",
+        body: JSON.stringify({ ids })
+      });
+    },
+    onSuccess: (data) => {
+      setIsBatchDeleteAlertOpen(false);
+      setSelectedProperties([]);
+      setSelectAllChecked(false);
+      queryClient.invalidateQueries({ queryKey: ['/api/properties'] });
+      toast({
+        title: "Imóveis excluídos",
+        description: `${data.success} imóveis foram excluídos com sucesso. ${data.failed > 0 ? `${data.failed} falhas.` : ''}`,
+      });
+      setIsDeleting(false);
+    },
+    onError: (error) => {
+      toast({
+        title: "Erro ao excluir imóveis",
+        description: error.message || "Ocorreu um erro ao excluir os imóveis.",
+        variant: "destructive",
+      });
+      setIsDeleting(false);
+    },
+  });
+  
+  // Função para confirmar a exclusão em lote
+  function handleBatchDeleteConfirm() {
+    if (selectedProperties.length > 0) {
+      setIsDeleting(true);
+      batchDeleteMutation.mutate(selectedProperties);
+    }
+  }
+  
+  // Função para abrir o diálogo de confirmação de exclusão em lote
+  function handleBatchDeleteClick() {
+    if (selectedProperties.length > 0) {
+      setIsBatchDeleteAlertOpen(true);
+    } else {
+      toast({
+        title: "Nenhum imóvel selecionado",
+        description: "Selecione pelo menos um imóvel para excluir.",
+        variant: "destructive",
+      });
+    }
+  }
+  
+  // Função para selecionar/deselecionar um imóvel
+  function handlePropertySelection(propertyId: number, isChecked: boolean) {
+    // Impedir propagação para não abrir o modal de edição
+    if (isChecked) {
+      setSelectedProperties(prev => [...prev, propertyId]);
+    } else {
+      setSelectedProperties(prev => prev.filter(id => id !== propertyId));
+      // Se estamos desmarcando um item, também desmarcamos o "selecionar todos"
+      if (selectAllChecked) {
+        setSelectAllChecked(false);
+      }
+    }
+  }
+  
+  // Função para selecionar/deselecionar todos os imóveis
+  function handleSelectAll(isChecked: boolean) {
+    setSelectAllChecked(isChecked);
+    if (isChecked && filteredProperties) {
+      // Seleciona todos os imóveis filtrados
+      const allIds = filteredProperties.map(property => property.id);
+      setSelectedProperties(allIds);
+    } else {
+      // Desmarca todos
+      setSelectedProperties([]);
     }
   }
   
