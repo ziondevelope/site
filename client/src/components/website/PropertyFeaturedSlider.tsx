@@ -82,7 +82,8 @@ export default function PropertyFeaturedSlider({
     return null;
   }
 
-  const primaryColor = config?.primaryColor || '#7f651e';
+  const primaryColor = config?.featuredSliderBackgroundColor || config?.primaryColor || '#7f651e';
+  const textColor = config?.featuredSliderTextColor || '#ffffff';
   const currentProperty = properties[currentSlide];
   
   // Se não houver propriedades em destaque, não mostra o slider
@@ -150,45 +151,45 @@ export default function PropertyFeaturedSlider({
                   </div>
                   
                   {/* Informações do imóvel (lado direito) */}
-                  <div className="p-6 md:p-8 flex flex-col justify-center text-white h-full md:col-span-2" style={{ backgroundColor: primaryColor }}>
+                  <div className="p-6 md:p-8 flex flex-col justify-center h-full md:col-span-2" style={{ backgroundColor: primaryColor, color: textColor }}>
                     <div className="text-left w-full">
-                      <h3 className="text-xl md:text-2xl font-bold mb-4 line-clamp-2 text-white">
+                      <h3 className="text-xl md:text-2xl font-bold mb-4 line-clamp-2" style={{ color: textColor }}>
                         {property.title}
                       </h3>
                       
                       <div className="mb-6">
-                        <p className="text-white/80 mb-2 flex items-center text-sm">
-                          <i className="ri-map-pin-line mr-2 text-white"></i>
+                        <p className="mb-2 flex items-center text-sm" style={{ color: `${textColor}cc` }}>
+                          <i className="ri-map-pin-line mr-2" style={{ color: textColor }}></i>
                           {property.address || `${property.neighborhood}, ${property.city}`}
                         </p>
-                        <p className="text-2xl font-bold text-white">
+                        <p className="text-2xl font-bold" style={{ color: textColor }}>
                           {formatCurrency(property.price)}
-                          {property.purpose === 'rent' && <span className="text-white/70 text-base font-normal">/mês</span>}
+                          {property.purpose === 'rent' && <span className="text-base font-normal" style={{ color: `${textColor}b3` }}>/mês</span>}
                         </p>
                       </div>
                       
                       <div className="grid grid-cols-3 gap-4 mb-8">
                         <div className="flex items-center">
-                          <i className="fas fa-bed text-xl mr-2 text-white"></i>
+                          <i className="fas fa-bed text-xl mr-2" style={{ color: textColor }}></i>
                           <div>
-                            <span className="font-medium text-white">{property.bedrooms || 0}</span>
-                            <span className="text-white/70 text-sm ml-1">Quartos</span>
+                            <span className="font-medium" style={{ color: textColor }}>{property.bedrooms || 0}</span>
+                            <span className="text-sm ml-1" style={{ color: `${textColor}b3` }}>Quartos</span>
                           </div>
                         </div>
                         
                         <div className="flex items-center">
-                          <i className="fas fa-shower text-xl mr-2 text-white"></i>
+                          <i className="fas fa-shower text-xl mr-2" style={{ color: textColor }}></i>
                           <div>
-                            <span className="font-medium text-white">{property.bathrooms || 0}</span>
-                            <span className="text-white/70 text-sm ml-1">Banhos</span>
+                            <span className="font-medium" style={{ color: textColor }}>{property.bathrooms || 0}</span>
+                            <span className="text-sm ml-1" style={{ color: `${textColor}b3` }}>Banhos</span>
                           </div>
                         </div>
                         
                         <div className="flex items-center">
-                          <i className="fas fa-ruler-combined text-xl mr-2 text-white"></i>
+                          <i className="fas fa-ruler-combined text-xl mr-2" style={{ color: textColor }}></i>
                           <div>
-                            <span className="font-medium text-white">{property.area}</span>
-                            <span className="text-white/70 text-sm ml-1">m²</span>
+                            <span className="font-medium" style={{ color: textColor }}>{property.area}</span>
+                            <span className="text-sm ml-1" style={{ color: `${textColor}b3` }}>m²</span>
                           </div>
                         </div>
                       </div>
