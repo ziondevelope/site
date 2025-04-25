@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import GeneralSettings from "@/components/website/GeneralSettings";
-import HomepageSettings from "@/components/website/HomepageSettings";
+import HomepageSettings from "@/components/settings/HomepageSettings";
 import SeoSettings from "@/components/website/SeoSettings";
 import InformationSettings from "@/components/website/InformationSettings";
 import { TestimonialsManager } from "@/components/website/TestimonialsManager";
