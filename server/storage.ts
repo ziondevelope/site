@@ -848,16 +848,27 @@ export class FirebaseStorage implements IStorage {
           console.log('Primeiros 50 caracteres do favicon novo:', config.favicon.substring(0, 50));
         }
         
+        // Log para homeSectionsOrder
+        console.log('homeSectionsOrder antes:', existingData.homeSectionsOrder);
+        console.log('homeSectionsOrder sendo atualizado para:', config.homeSectionsOrder);
+        
         updatedConfig = {
           ...existingData,
           ...config,
           updatedAt: new Date().toISOString(),
         } as WebsiteConfig;
         
+        // Garantir que homeSectionsOrder seja mantido se estiver presente na atualização
+        if (config.homeSectionsOrder) {
+          updatedConfig.homeSectionsOrder = config.homeSectionsOrder;
+          console.log('homeSectionsOrder definido explicitamente:', updatedConfig.homeSectionsOrder);
+        }
+        
         // Log do resultado após a fusão
         console.log('Dados finais após mesclagem:', updatedConfig);
         console.log('showAboutSection após mesclagem:', updatedConfig.showAboutSection);
         console.log('Favicon presente após mesclagem?', !!updatedConfig.favicon);
+        console.log('homeSectionsOrder após mesclagem:', updatedConfig.homeSectionsOrder);
       }
       
       try {
