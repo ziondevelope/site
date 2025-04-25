@@ -188,44 +188,133 @@ export async function registerRoutes(app: Express): Promise<Server> {
         // Processamento de CSV
         const results: any[] = [];
         const readStream = fs.createReadStream(req.file.path);
+        const csvData = fs.readFileSync(req.file.path, 'utf8');
         
-        await new Promise<void>((resolve, reject) => {
-          readStream
-            .pipe(csvParser())
-            .on('data', (data) => results.push(data))
-            .on('end', () => {
-              properties = results;
-              resolve();
-            })
-            .on('error', (error) => {
-              reject(error);
-            });
-        });
+        console.log('Primeiras linhas do CSV:', csvData.split('\n').slice(0, 3).join('\n'));
+        
+        try {
+          await new Promise<void>((resolve, reject) => {
+            readStream
+              .pipe(csvParser())
+              .on('data', (data) => {
+                results.push(data);
+              })
+              .on('end', () => {
+                console.log(`CSV processado, ${results.length} linhas encontradas`);
+                if (results.length > 0) {
+                  console.log('Amostra de dados CSV (primeira linha):', JSON.stringify(results[0]));
+                }
+                properties = results;
+                resolve();
+              })
+              .on('error', (error) => {
+                console.error('Erro no processamento do CSV:', error);
+                reject(error);
+              });
+          });
+        } catch (error) {
+          console.error('Erro ao processar o arquivo CSV:', error);
+          throw new Error(`Erro ao processar o arquivo CSV: ${error.message}`);
+        }
       } else if (method === 'xml') {
         // Processamento de XML
         const xmlParser = new xml2js.Parser({ explicitArray: false });
         const xmlData = fs.readFileSync(req.file.path, 'utf8');
         
-        const result = await promisify(xmlParser.parseString)(xmlData);
+        console.log('Conteúdo do arquivo XML:', xmlData.substring(0, 300) + '...');
         
-        // Verificar formato esperado (array de propriedades)
-        if (result && result.properties && result.properties.property) {
-          if (Array.isArray(result.properties.property)) {
-            properties = result.properties.property;
+        try {
+          const result = await promisify(xmlParser.parseString)(xmlData);
+          
+          console.log('Estrutura do XML após parsing:', JSON.stringify(result, null, 2).substring(0, 500) + '...');
+          
+          // Verificar formato esperado (array de propriedades)
+          if (result && result.properties && result.properties.property) {
+            if (Array.isArray(result.properties.property)) {
+              properties = result.properties.property;
+              console.log(`Encontradas ${properties.length} propriedades no array`);
+            } else {
+              // Se for apenas uma propriedade, converter para array
+              properties = [result.properties.property];
+              console.log('Encontrada 1 propriedade, convertida para array');
+            }
           } else {
-            // Se for apenas uma propriedade, converter para array
-            properties = [result.properties.property];
+            console.log('Estrutura do XML não é compatível. Estrutura encontrada:', Object.keys(result || {}).join(', '));
+            
+            // Tentar outras estruturas comuns
+            if (result && result.imoveis && result.imoveis.imovel) {
+              if (Array.isArray(result.imoveis.imovel)) {
+                properties = result.imoveis.imovel;
+                console.log(`Encontradas ${properties.length} propriedades no formato alternativo (imoveis > imovel)`);
+              } else {
+                properties = [result.imoveis.imovel];
+                console.log('Encontrada 1 propriedade no formato alternativo (imoveis > imovel)');
+              }
+            } else if (result && result.root && result.root.property) {
+              if (Array.isArray(result.root.property)) {
+                properties = result.root.property;
+                console.log(`Encontradas ${properties.length} propriedades no formato alternativo (root > property)`);
+              } else {
+                properties = [result.root.property];
+                console.log('Encontrada 1 propriedade no formato alternativo (root > property)');
+              }
+            }
           }
+        } catch (error) {
+          console.error('Erro no parsing do XML:', error);
+          throw new Error(`Erro no parsing do XML: ${error.message}`);
         }
       } else if (method === 'json') {
         // Processamento de JSON
         const jsonData = fs.readFileSync(req.file.path, 'utf8');
-        const parsedData = JSON.parse(jsonData);
         
-        if (Array.isArray(parsedData)) {
-          properties = parsedData;
-        } else if (parsedData.properties && Array.isArray(parsedData.properties)) {
-          properties = parsedData.properties;
+        console.log('Amostra do arquivo JSON:', jsonData.substring(0, 300) + '...');
+        
+        try {
+          const parsedData = JSON.parse(jsonData);
+          console.log('Estrutura do JSON após parsing:', Object.keys(parsedData).join(', '));
+          
+          if (Array.isArray(parsedData)) {
+            properties = parsedData;
+            console.log(`Encontradas ${properties.length} propriedades no array JSON`);
+            if (properties.length > 0) {
+              console.log('Amostra da primeira propriedade:', JSON.stringify(properties[0]).substring(0, 300) + '...');
+            }
+          } else if (parsedData.properties && Array.isArray(parsedData.properties)) {
+            properties = parsedData.properties;
+            console.log(`Encontradas ${properties.length} propriedades no campo 'properties' do JSON`);
+          } else if (parsedData.imoveis && Array.isArray(parsedData.imoveis)) {
+            properties = parsedData.imoveis;
+            console.log(`Encontradas ${properties.length} propriedades no campo 'imoveis' do JSON`);
+          } else if (parsedData.data && Array.isArray(parsedData.data)) {
+            properties = parsedData.data;
+            console.log(`Encontradas ${properties.length} propriedades no campo 'data' do JSON`);
+          } else if (parsedData.items && Array.isArray(parsedData.items)) {
+            properties = parsedData.items;
+            console.log(`Encontradas ${properties.length} propriedades no campo 'items' do JSON`);
+          } else {
+            // Se for um objeto único, tentar converter para array
+            if (!Array.isArray(parsedData) && typeof parsedData === 'object') {
+              if (parsedData.title || parsedData.address || parsedData.description) {
+                properties = [parsedData];
+                console.log('Único objeto de imóvel encontrado no JSON, convertido para array');
+              } else {
+                // Tentar todas as propriedades do objeto para ver se alguma é um array
+                const possibleArrayProps = Object.keys(parsedData).filter(key => 
+                  Array.isArray(parsedData[key]) && parsedData[key].length > 0);
+                
+                if (possibleArrayProps.length > 0) {
+                  // Usar o primeiro array encontrado
+                  const arrayProp = possibleArrayProps[0];
+                  properties = parsedData[arrayProp];
+                  console.log(`Encontradas ${properties.length} propriedades no campo '${arrayProp}' do JSON`);
+                }
+              }
+            }
+          }
+        } catch (error) {
+          console.error('Erro no parsing do JSON:', error);
+          throw new Error(`Erro no parsing do JSON: ${error.message}`);
         }
       }
       
