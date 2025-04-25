@@ -291,6 +291,7 @@ export default function Website() {
       // Cores do Slider
       featuredSliderBackgroundColor: configData.featuredSliderBackgroundColor ?? config.featuredSliderBackgroundColor ?? (configData.primaryColor ?? config.primaryColor ?? '#3B82F6'),
       featuredSliderTextColor: configData.featuredSliderTextColor ?? config.featuredSliderTextColor ?? '#ffffff',
+      featuredSliderButtonTextColor: configData.featuredSliderButtonTextColor ?? config.featuredSliderButtonTextColor ?? (configData.primaryColor ?? config.primaryColor ?? '#3B82F6'),
     };
     
     // Log das cores da página de detalhes para depuração
@@ -338,15 +339,18 @@ export default function Website() {
     console.log("Cores do Slider ao salvar:", {
       configData: {
         background: configData.featuredSliderBackgroundColor,
-        text: configData.featuredSliderTextColor
+        text: configData.featuredSliderTextColor,
+        buttonText: configData.featuredSliderButtonTextColor
       },
       config: {
         background: config.featuredSliderBackgroundColor,
-        text: config.featuredSliderTextColor
+        text: config.featuredSliderTextColor,
+        buttonText: config.featuredSliderButtonTextColor
       },
       fullConfig: {
         background: fullConfig.featuredSliderBackgroundColor,
-        text: fullConfig.featuredSliderTextColor
+        text: fullConfig.featuredSliderTextColor,
+        buttonText: fullConfig.featuredSliderButtonTextColor
       }
     });
     

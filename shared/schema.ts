@@ -179,6 +179,7 @@ export const websiteConfig = pgTable("website_config", {
   // Slider Imóveis em Destaque
   featuredSliderBackgroundColor: text("featured_slider_background_color").default("#7f651e"),
   featuredSliderTextColor: text("featured_slider_text_color").default("#ffffff"),
+  featuredSliderButtonTextColor: text("featured_slider_button_text_color").default("#7f651e"),
   
   // WhatsApp Chat
   whatsappChatEnabled: boolean("whatsapp_chat_enabled").default(false),
