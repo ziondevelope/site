@@ -32,8 +32,16 @@ export default function PropertyFeaturedSlider({
   const config = propConfig || configData;
   
   // Define as cores do slider com base nas configurações
-  const primaryColor = config?.featuredSliderBackgroundColor || config?.primaryColor || '#7f651e';
-  const textColor = config?.featuredSliderTextColor || '#ffffff';
+  const [primaryColor, setPrimaryColor] = useState(config?.featuredSliderBackgroundColor || config?.primaryColor || '#7f651e');
+  const [textColor, setTextColor] = useState(config?.featuredSliderTextColor || '#ffffff');
+  
+  // Atualiza as cores quando as configurações mudarem
+  useEffect(() => {
+    if (config) {
+      setPrimaryColor(config.featuredSliderBackgroundColor || config.primaryColor || '#7f651e');
+      setTextColor(config.featuredSliderTextColor || '#ffffff');
+    }
+  }, [config]);
   
   // Se as propriedades não forem fornecidas, busque-as
   const { data: propertiesData, isLoading } = useQuery<Property[]>({
