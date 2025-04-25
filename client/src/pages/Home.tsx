@@ -15,6 +15,7 @@ import { useLoading } from "@/contexts/LoadingContext";
 import SEO from '@/components/website/SEO';
 import Footer from '@/components/Footer';
 import LazyImage from '@/components/ui/lazy-image';
+import HomeSections from '@/components/website/HomeSections';
 import '../styles/hover-effects.css';
 import imobsiteLogo from '../assets/imobsite-logo.png';
 
@@ -705,10 +706,14 @@ export default function Home() {
         </section>
       )}
       
-      {/* Testimonial Section */}
-      {config?.showTestimonials !== false && (
-        <Testimonials config={config} />
-      )}
+      {/* Renderizar seções na ordem configurada pelo usuário */}
+      <HomeSections 
+        config={config}
+        properties={properties}
+        isLoadingProperties={isLoadingProperties} 
+        featuredProperties={featuredProperties}
+        openPropertyModal={openPropertyModal}
+      />
       
       {/* Modal para visualização de detalhes do imóvel */}
       {selectedPropertyId && (
