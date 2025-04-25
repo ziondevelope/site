@@ -399,7 +399,7 @@ export default function Properties() {
   // Batch delete properties mutation
   const batchDeleteMutation = useMutation({
     mutationFn: async (ids: number[]) => {
-      return apiRequest(`/api/properties/batch-delete`, {
+      return apiRequest(`/api/properties/delete-batch`, {
         method: "POST",
         body: JSON.stringify({ ids })
       });
