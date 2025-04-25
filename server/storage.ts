@@ -47,6 +47,7 @@ export interface IStorage {
   createProperty(property: InsertProperty): Promise<Property>;
   updateProperty(id: number, propertyData: Partial<InsertProperty>): Promise<Property | undefined>;
   deleteProperty(id: number): Promise<boolean>;
+  deleteProperties(ids: number[]): Promise<{ success: number, failed: number }>;
 
   // Lead methods
   getLead(id: number): Promise<Lead | undefined>;
@@ -335,6 +336,46 @@ export class FirebaseStorage implements IStorage {
       console.error('Error deleting property:', error);
       return false;
     }
+  }
+  
+  async deleteProperties(ids: number[]): Promise<{ success: number, failed: number }> {
+    console.log(`Iniciando exclusão em lote de ${ids.length} imóveis`);
+    
+    const results = {
+      success: 0,
+      failed: 0
+    };
+    
+    // Use processamento em paralelo com limite de concorrência para não sobrecarregar o Firestore
+    const batchSize = 10; // Processar 10 exclusões por vez
+    
+    for (let i = 0; i < ids.length; i += batchSize) {
+      const batch = ids.slice(i, i + batchSize);
+      console.log(`Processando lote ${i/batchSize + 1}: ${batch.length} imóveis`);
+      
+      // Executar exclusões em paralelo dentro do lote atual
+      const deletePromises = batch.map(async (id) => {
+        try {
+          const success = await this.deleteProperty(id);
+          if (success) {
+            results.success++;
+          } else {
+            results.failed++;
+          }
+          return success;
+        } catch (error) {
+          console.error(`Erro ao excluir imóvel ${id}:`, error);
+          results.failed++;
+          return false;
+        }
+      });
+      
+      // Aguardar todas as exclusões do lote atual
+      await Promise.all(deletePromises);
+    }
+    
+    console.log(`Exclusão em lote concluída: ${results.success} sucesso, ${results.failed} falhas`);
+    return results;
   }
 
   // Leads collection

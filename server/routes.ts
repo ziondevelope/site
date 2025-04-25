@@ -165,6 +165,37 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
+  // Rota para excluir múltiplos imóveis de uma vez
+  apiRouter.post("/properties/delete-batch", async (req, res) => {
+    try {
+      const { ids } = req.body;
+      
+      if (!ids || !Array.isArray(ids) || ids.length === 0) {
+        return res.status(400).json({ 
+          message: "Você deve fornecer um array de IDs de imóveis para excluir" 
+        });
+      }
+      
+      console.log(`Solicitação para excluir ${ids.length} imóveis em lote:`, ids);
+      
+      // Converter IDs para números, caso não sejam
+      const propertyIds = ids.map(id => typeof id === 'number' ? id : parseInt(id));
+      
+      const result = await storageInstance.deleteProperties(propertyIds);
+      
+      res.status(200).json({
+        message: `Exclusão concluída: ${result.success} imóveis excluídos, ${result.failed} falhas`,
+        ...result
+      });
+    } catch (error) {
+      console.error("Erro ao excluir imóveis em lote:", error);
+      res.status(500).json({ 
+        message: "Erro ao processar a exclusão em lote de imóveis",
+        error: error.message 
+      });
+    }
+  });
+  
   // Importação de imóveis em massa
   apiRouter.post("/properties/import", upload.single('file'), async (req, res) => {
     try {
