@@ -419,13 +419,21 @@ export default function Properties() {
   // Importação em massa de imóveis
   const importPropertyMutation = useMutation({
     mutationFn: async (formData: FormData) => {
-      return apiRequest("/api/properties/import", {
+      // Usamos fetch diretamente em vez de apiRequest para evitar o cabeçalho Content-Type automático
+      const response = await fetch("/api/properties/import", {
         method: "POST",
         body: formData,
-        headers: {
-          // Não incluir Content-Type, pois o navegador configura automaticamente para multipart/form-data
-        },
+        // Não definir cabeçalho Content-Type para upload de arquivos
+        credentials: "include",
       });
+      
+      // Verificar se a resposta foi bem-sucedida
+      if (!response.ok) {
+        const text = await response.text();
+        throw new Error(`${response.status}: ${text}`);
+      }
+      
+      return response.json();
     },
     onSuccess: (data) => {
       setIsImportDialogOpen(false);
