@@ -129,6 +129,8 @@ export const websiteConfig = pgTable("website_config", {
   showSaleProperties: boolean("show_sale_properties").default(true),
   showRentProperties: boolean("show_rent_properties").default(true),
   showTestimonials: boolean("show_testimonials").default(false),
+  // Ordem das seções na página inicial
+  homeSectionsOrder: json("home_sections_order").$type<string[]>().default(['featuredProperties', 'saleProperties', 'rentProperties', 'testimonials', 'aboutSection']),
   // Campos de informações de contato
   address: text("address"),
   email: text("email"),
