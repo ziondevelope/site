@@ -431,14 +431,7 @@ export default function Home() {
         </div>
       )}
       
-      {/* Slider de imóveis destacados */}
-      {config?.showFeaturedProperties !== false && featuredProperties.length > 0 && (
-        <PropertyFeaturedSlider 
-          properties={featuredProperties} 
-          onPropertyClick={openPropertyModal}
-          config={config}
-        />
-      )}
+      {/* HomeSections mostra todos os componentes na ordem configurada */}
 
       {/* Properties Section - Imóveis para Aluguel */}
       {config?.showRentProperties !== false && (
