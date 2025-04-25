@@ -3,6 +3,11 @@ import { createServer, type Server } from "http";
 import { storageInstance } from "./storage";
 import { getFirestore, doc, setDoc, updateDoc, getDoc, collection, getDocs, deleteDoc } from "firebase/firestore";
 import { z } from "zod";
+import multer from "multer";
+import csvParser from "csv-parser";
+import fs from "fs";
+import { promisify } from "util";
+import * as xml2js from "xml2js";
 import {
   insertUserSchema,
   insertPropertySchema,
@@ -18,6 +23,25 @@ import {
 export async function registerRoutes(app: Express): Promise<Server> {
   // prefix all routes with /api
   const apiRouter = express.Router();
+  
+  // Configuração do multer para upload de arquivos
+  const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+      const uploadDir = './tmp/uploads';
+      if (!fs.existsSync(uploadDir)) {
+        fs.mkdirSync(uploadDir, { recursive: true });
+      }
+      cb(null, uploadDir);
+    },
+    filename: (req, file, cb) => {
+      cb(null, `${Date.now()}-${file.originalname}`);
+    }
+  });
+  
+  const upload = multer({ 
+    storage,
+    limits: { fileSize: 10 * 1024 * 1024 } // Limite de 10MB
+  });
   
   // Dashboard endpoints
   apiRouter.get("/dashboard/stats", async (req, res) => {
@@ -138,6 +162,157 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(204).send();
     } catch (error) {
       res.status(500).json({ message: "Error deleting property" });
+    }
+  });
+  
+  // Importação de imóveis em massa
+  apiRouter.post("/properties/import", upload.single('file'), async (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ message: "Nenhum arquivo enviado" });
+      }
+      
+      const method = req.body.method as 'csv' | 'xml' | 'json';
+      if (!method || !['csv', 'xml', 'json'].includes(method)) {
+        // Limpar arquivo temporário
+        fs.unlinkSync(req.file.path);
+        return res.status(400).json({ message: "Método de importação inválido" });
+      }
+      
+      console.log(`Iniciando importação de imóveis via ${method.toUpperCase()}:`, req.file.originalname);
+      
+      let properties: any[] = [];
+      
+      // Processar arquivo de acordo com o método
+      if (method === 'csv') {
+        // Processamento de CSV
+        const results: any[] = [];
+        const readStream = fs.createReadStream(req.file.path);
+        
+        await new Promise<void>((resolve, reject) => {
+          readStream
+            .pipe(csvParser())
+            .on('data', (data) => results.push(data))
+            .on('end', () => {
+              properties = results;
+              resolve();
+            })
+            .on('error', (error) => {
+              reject(error);
+            });
+        });
+      } else if (method === 'xml') {
+        // Processamento de XML
+        const xmlParser = new xml2js.Parser({ explicitArray: false });
+        const xmlData = fs.readFileSync(req.file.path, 'utf8');
+        
+        const result = await promisify(xmlParser.parseString)(xmlData);
+        
+        // Verificar formato esperado (array de propriedades)
+        if (result && result.properties && result.properties.property) {
+          if (Array.isArray(result.properties.property)) {
+            properties = result.properties.property;
+          } else {
+            // Se for apenas uma propriedade, converter para array
+            properties = [result.properties.property];
+          }
+        }
+      } else if (method === 'json') {
+        // Processamento de JSON
+        const jsonData = fs.readFileSync(req.file.path, 'utf8');
+        const parsedData = JSON.parse(jsonData);
+        
+        if (Array.isArray(parsedData)) {
+          properties = parsedData;
+        } else if (parsedData.properties && Array.isArray(parsedData.properties)) {
+          properties = parsedData.properties;
+        }
+      }
+      
+      // Limpar arquivo temporário
+      fs.unlinkSync(req.file.path);
+      
+      if (!properties.length) {
+        return res.status(400).json({ 
+          message: "Não foi possível extrair dados de imóveis do arquivo" 
+        });
+      }
+      
+      console.log(`Encontrados ${properties.length} imóveis para importação`);
+      
+      // Processar e validar cada propriedade
+      const validProperties = [];
+      const errors = [];
+      
+      for (const propData of properties) {
+        try {
+          // Garantir que os valores numéricos sejam números
+          if (propData.price) propData.price = Number(propData.price);
+          if (propData.area) propData.area = Number(propData.area);
+          if (propData.bedrooms) propData.bedrooms = Number(propData.bedrooms);
+          if (propData.bathrooms) propData.bathrooms = Number(propData.bathrooms);
+          if (propData.parkingSpots) propData.parkingSpots = Number(propData.parkingSpots);
+          if (propData.suites) propData.suites = Number(propData.suites);
+          
+          // Tentar validar com o schema parcial (validar o que for possível)
+          const validatedData = insertPropertySchema.partial().parse(propData);
+          validProperties.push(validatedData);
+        } catch (error) {
+          if (error instanceof z.ZodError) {
+            errors.push({
+              property: propData.title || 'Imóvel sem título',
+              errors: error.errors
+            });
+          } else {
+            errors.push({
+              property: propData.title || 'Imóvel sem título',
+              error: 'Erro desconhecido na validação'
+            });
+          }
+        }
+      }
+      
+      console.log(`${validProperties.length} imóveis válidos para importação`);
+      if (errors.length) {
+        console.log(`${errors.length} imóveis com erros de validação`);
+      }
+      
+      // Importar propriedades válidas
+      const imported = [];
+      
+      for (const propData of validProperties) {
+        try {
+          const property = await storageInstance.createProperty(propData);
+          imported.push(property);
+        } catch (error) {
+          console.error('Erro ao criar imóvel:', error);
+          errors.push({
+            property: propData.title || 'Imóvel sem título',
+            error: 'Erro ao salvar no banco de dados'
+          });
+        }
+      }
+      
+      // Retornar resultado
+      res.status(200).json({
+        imported: imported.length,
+        failed: errors.length,
+        total: properties.length,
+        errors: errors.length > 0 ? errors : undefined
+      });
+      
+    } catch (error) {
+      console.error('Erro na importação de imóveis:', error);
+      
+      // Limpar arquivo temporário, se existir
+      if (req.file && fs.existsSync(req.file.path)) {
+        fs.unlinkSync(req.file.path);
+      }
+      
+      res.status(500).json({ 
+        message: "Erro ao processar importação de imóveis", 
+        error: error.message 
+      });
     }
   });
 
