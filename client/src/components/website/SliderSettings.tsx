@@ -1,6 +1,7 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { WebsiteConfig, UpdateWebsiteConfig } from "@shared/schema";
+import { useState, useEffect } from "react";
 
 interface SliderSettingsProps {
   config?: WebsiteConfig;
@@ -13,14 +14,47 @@ export default function SliderSettings({
   configData, 
   onConfigChange 
 }: SliderSettingsProps) {
-  // Cores do slider
-  const featuredSliderBackgroundColor = configData.featuredSliderBackgroundColor !== undefined
-    ? configData.featuredSliderBackgroundColor
-    : config?.featuredSliderBackgroundColor || '#7f651e';
-    
-  const featuredSliderTextColor = configData.featuredSliderTextColor !== undefined
-    ? configData.featuredSliderTextColor
-    : config?.featuredSliderTextColor || '#ffffff';
+  // Estado local para as cores do slider
+  const [localBackgroundColor, setLocalBackgroundColor] = useState(
+    configData.featuredSliderBackgroundColor || config?.featuredSliderBackgroundColor || '#7f651e'
+  );
+  
+  const [localTextColor, setLocalTextColor] = useState(
+    configData.featuredSliderTextColor || config?.featuredSliderTextColor || '#ffffff'
+  );
+  
+  // Atualiza os estados locais quando as props mudam
+  useEffect(() => {
+    setLocalBackgroundColor(configData.featuredSliderBackgroundColor || config?.featuredSliderBackgroundColor || '#7f651e');
+    setLocalTextColor(configData.featuredSliderTextColor || config?.featuredSliderTextColor || '#ffffff');
+  }, [config, configData]);
+  
+  // Função para atualizar cor de fundo
+  const updateBackgroundColor = (color: string) => {
+    console.log("Atualizando cor de fundo para:", color);
+    setLocalBackgroundColor(color);
+    onConfigChange({ 
+      ...configData,
+      featuredSliderBackgroundColor: color 
+    });
+  };
+  
+  // Função para atualizar cor do texto
+  const updateTextColor = (color: string) => {
+    console.log("Atualizando cor de texto para:", color);
+    setLocalTextColor(color);
+    onConfigChange({ 
+      ...configData,
+      featuredSliderTextColor: color 
+    });
+  };
+  
+  // Log para depuração
+  console.log("SliderSettings - Valores atuais:", {
+    configData,
+    localBackgroundColor,
+    localTextColor
+  });
 
   return (
     <div className="space-y-6">
@@ -38,14 +72,14 @@ export default function SliderSettings({
             <div className="flex">
               <Input 
                 type="color" 
-                value={featuredSliderBackgroundColor}
-                onChange={(e) => onConfigChange({ featuredSliderBackgroundColor: e.target.value })}
+                value={localBackgroundColor}
+                onChange={(e) => updateBackgroundColor(e.target.value)}
                 className="h-10 w-10 border-0 rounded-l-lg p-0"
               />
               <Input 
                 type="text" 
-                value={featuredSliderBackgroundColor}
-                onChange={(e) => onConfigChange({ featuredSliderBackgroundColor: e.target.value })}
+                value={localBackgroundColor}
+                onChange={(e) => updateBackgroundColor(e.target.value)}
                 className="border border-l-0 border-gray-200 rounded-r-full px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-transparent"
               />
             </div>
@@ -58,14 +92,14 @@ export default function SliderSettings({
             <div className="flex">
               <Input 
                 type="color" 
-                value={featuredSliderTextColor}
-                onChange={(e) => onConfigChange({ featuredSliderTextColor: e.target.value })}
+                value={localTextColor}
+                onChange={(e) => updateTextColor(e.target.value)}
                 className="h-10 w-10 border-0 rounded-l-lg p-0"
               />
               <Input 
                 type="text" 
-                value={featuredSliderTextColor}
-                onChange={(e) => onConfigChange({ featuredSliderTextColor: e.target.value })}
+                value={localTextColor}
+                onChange={(e) => updateTextColor(e.target.value)}
                 className="border border-l-0 border-gray-200 rounded-r-full px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-transparent"
               />
             </div>
@@ -75,12 +109,12 @@ export default function SliderSettings({
         {/* Preview do Slider */}
         <div className="mt-6 p-6 rounded-lg border" 
              style={{ 
-               backgroundColor: featuredSliderBackgroundColor
+               backgroundColor: localBackgroundColor
              }}
         >
           <h5 className="font-medium mb-3" 
               style={{ 
-                color: featuredSliderTextColor
+                color: localTextColor
               }}
           >
             Prévia do Slider de Imóveis Destacados
@@ -89,48 +123,48 @@ export default function SliderSettings({
             <div className="flex items-center">
               <i className="fas fa-bed text-xl mr-2" 
                  style={{ 
-                   color: featuredSliderTextColor
+                   color: localTextColor
                  }}></i>
               <div>
                 <span className="font-medium" 
                       style={{ 
-                        color: featuredSliderTextColor
+                        color: localTextColor
                       }}>3 Quartos</span>
                 <span className="text-sm ml-1" 
                       style={{ 
-                        color: `${featuredSliderTextColor}b3`
+                        color: `${localTextColor}b3`
                       }}>Quartos</span>
               </div>
             </div>
             <div className="flex items-center">
               <i className="fas fa-shower text-xl mr-2" 
                  style={{ 
-                   color: featuredSliderTextColor
+                   color: localTextColor
                  }}></i>
               <div>
                 <span className="font-medium" 
                       style={{ 
-                        color: featuredSliderTextColor
+                        color: localTextColor
                       }}>2 Banheiros</span>
                 <span className="text-sm ml-1" 
                       style={{ 
-                        color: `${featuredSliderTextColor}b3`
+                        color: `${localTextColor}b3`
                       }}>Banhos</span>
               </div>
             </div>
             <div className="flex items-center">
               <i className="fas fa-ruler-combined text-xl mr-2" 
                  style={{ 
-                   color: featuredSliderTextColor
+                   color: localTextColor
                  }}></i>
               <div>
                 <span className="font-medium" 
                       style={{ 
-                        color: featuredSliderTextColor
+                        color: localTextColor
                       }}>120</span>
                 <span className="text-sm ml-1" 
                       style={{ 
-                        color: `${featuredSliderTextColor}b3`
+                        color: `${localTextColor}b3`
                       }}>m²</span>
               </div>
             </div>
@@ -138,7 +172,7 @@ export default function SliderSettings({
           <div className="mt-4">
             <button 
               className="inline-block px-6 py-3 rounded-lg bg-white font-medium transition-all hover:shadow-lg"
-              style={{ color: featuredSliderBackgroundColor }}
+              style={{ color: localBackgroundColor }}
             >
               Ver Detalhes
             </button>

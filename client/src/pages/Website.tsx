@@ -131,6 +131,14 @@ export default function Website() {
       });
     }
     
+    // Log para depuração de cores do Slider
+    if (partialConfig.featuredSliderBackgroundColor || partialConfig.featuredSliderTextColor) {
+      console.log("Cores do Slider sendo atualizadas:", {
+        background: partialConfig.featuredSliderBackgroundColor,
+        text: partialConfig.featuredSliderTextColor
+      });
+    }
+    
     setConfigData(prev => {
       const newState = {
         ...prev,
@@ -279,6 +287,10 @@ export default function Website() {
       propertyDetailsBackgroundColor: configData.propertyDetailsBackgroundColor ?? config.propertyDetailsBackgroundColor ?? (configData.primaryColor ?? config.primaryColor ?? '#3B82F6'),
       propertyDetailsTextColor: configData.propertyDetailsTextColor ?? config.propertyDetailsTextColor ?? '#ffffff',
       propertyDetailsIconsColor: configData.propertyDetailsIconsColor ?? config.propertyDetailsIconsColor ?? '#f0f0f0',
+      
+      // Cores do Slider
+      featuredSliderBackgroundColor: configData.featuredSliderBackgroundColor ?? config.featuredSliderBackgroundColor ?? (configData.primaryColor ?? config.primaryColor ?? '#3B82F6'),
+      featuredSliderTextColor: configData.featuredSliderTextColor ?? config.featuredSliderTextColor ?? '#ffffff',
     };
     
     // Log das cores da página de detalhes para depuração
@@ -319,6 +331,22 @@ export default function Website() {
         chatText: fullConfig.whatsappChatTextColor,
         buttonBackground: fullConfig.whatsappButtonBackgroundColor,
         buttonText: fullConfig.whatsappButtonTextColor
+      }
+    });
+    
+    // Log das cores do Slider
+    console.log("Cores do Slider ao salvar:", {
+      configData: {
+        background: configData.featuredSliderBackgroundColor,
+        text: configData.featuredSliderTextColor
+      },
+      config: {
+        background: config.featuredSliderBackgroundColor,
+        text: config.featuredSliderTextColor
+      },
+      fullConfig: {
+        background: fullConfig.featuredSliderBackgroundColor,
+        text: fullConfig.featuredSliderTextColor
       }
     });
     
