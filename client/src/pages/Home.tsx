@@ -203,9 +203,9 @@ export default function Home() {
             ></div>
             {/* Imagem de fundo com lazy loading e fade in */}
             <div 
-              className="absolute inset-0 z-0"
+              className="absolute inset-0 z-0 bg-black/50"
               style={{
-                backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 50%, rgba(255, 215, 0, 0.1) 100%), url(${config.bannerBackground})`,
+                backgroundImage: `url(${config.bannerBackground})`,
                 backgroundPosition: 'center',
                 backgroundSize: 'cover',
                 backgroundRepeat: 'no-repeat',
