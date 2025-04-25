@@ -37,18 +37,21 @@ export default function PropertyFeaturedSlider({
   // Define as cores do slider com base nas configurações
   const [primaryColor, setPrimaryColor] = useState(config?.featuredSliderBackgroundColor || config?.primaryColor || '#7f651e');
   const [textColor, setTextColor] = useState(config?.featuredSliderTextColor || '#ffffff');
+  const [buttonTextColor, setButtonTextColor] = useState(config?.featuredSliderButtonTextColor || config?.primaryColor || '#7f651e');
   
   // Atualiza as cores quando as configurações mudarem
   useEffect(() => {
     if (config) {
       console.log("Atualizando cores do slider:", {
         backgroundColor: config.featuredSliderBackgroundColor,
-        textColor: config.featuredSliderTextColor
+        textColor: config.featuredSliderTextColor,
+        buttonTextColor: config.featuredSliderButtonTextColor
       });
       setPrimaryColor(config.featuredSliderBackgroundColor || config.primaryColor || '#7f651e');
       setTextColor(config.featuredSliderTextColor || '#ffffff');
+      setButtonTextColor(config.featuredSliderButtonTextColor || config.primaryColor || '#7f651e');
     }
-  }, [config, config?.featuredSliderBackgroundColor, config?.featuredSliderTextColor]);
+  }, [config, config?.featuredSliderBackgroundColor, config?.featuredSliderTextColor, config?.featuredSliderButtonTextColor]);
   
   // Se as propriedades não forem fornecidas, busque-as
   const { data: propertiesData, isLoading } = useQuery<Property[]>({
@@ -216,7 +219,7 @@ export default function PropertyFeaturedSlider({
                       <button
                         onClick={() => handlePropertyClick && handlePropertyClick(property.id)}
                         className="inline-block px-6 py-3 rounded-lg bg-white font-medium transition-all hover:shadow-lg w-full text-center"
-                        style={{ color: primaryColor }}
+                        style={{ color: buttonTextColor }}
                       >
                         Ver Detalhes
                       </button>
