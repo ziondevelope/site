@@ -258,6 +258,152 @@ export async function registerRoutes(app: Express): Promise<Server> {
                 properties = [result.root.property];
                 console.log('Encontrada 1 propriedade no formato alternativo (root > property)');
               }
+            } else if (result && result.NewDataSet) {
+              // Formato de DataSet XML (MS SQL Server)
+              console.log('Formato de DataSet XML identificado');
+              
+              // Verificar se há o elemento 'Table' com os dados ou se há apenas o schema
+              if (result.NewDataSet.Table) {
+                // Temos dados na tabela
+                if (Array.isArray(result.NewDataSet.Table)) {
+                  properties = result.NewDataSet.Table;
+                  console.log(`Encontradas ${properties.length} propriedades no formato DataSet (NewDataSet > Table)`);
+                } else {
+                  properties = [result.NewDataSet.Table];
+                  console.log('Encontrada 1 propriedade no formato DataSet (NewDataSet > Table)');
+                }
+              } else {
+                // Pode ser que apenas o esquema esteja presente, vamos procurar outras tabelas no arquivo
+                console.log('Esquema XML encontrado, mas sem dados na tabela "Table". Verificando todo o arquivo...');
+                
+                // Reler o arquivo e procurar diretamente por elementos <Table>
+                const rawXml = fs.readFileSync(req.file.path, 'utf8');
+                
+                // Verificar se há o padrão <Table>...</Table> no arquivo
+                const tableMatches = rawXml.match(/<Table>[\s\S]*?<\/Table>/g);
+                
+                if (tableMatches && tableMatches.length > 0) {
+                  console.log(`Encontrados ${tableMatches.length} elementos <Table> no arquivo XML`);
+                  
+                  // Criar um novo XML com esses elementos para facilitar o parsing
+                  const fixedXml = `<?xml version="1.0" encoding="UTF-8"?><root>${tableMatches.join('')}</root>`;
+                  
+                  // Parsear o XML corrigido
+                  const fixedResult = await promisify(xmlParser.parseString)(fixedXml);
+                  
+                  if (fixedResult && fixedResult.root && fixedResult.root.Table) {
+                    if (Array.isArray(fixedResult.root.Table)) {
+                      properties = fixedResult.root.Table;
+                      console.log(`Extraídos ${properties.length} imóveis dos elementos <Table>`);
+                    } else {
+                      properties = [fixedResult.root.Table];
+                      console.log('Extraído 1 imóvel dos elementos <Table>');
+                    }
+                  }
+                } else {
+                  // Se não encontramos elementos Table, pode ser que o XML tenha um formato diferente
+                  console.log('Nenhum elemento <Table> encontrado no arquivo XML. Verificando outros padrões...');
+                  
+                  // Tentar outros padrões comuns para imóveis
+                  const imovelMatches = rawXml.match(/<imovel[\s\S]*?<\/imovel>/gi) || 
+                                        rawXml.match(/<property[\s\S]*?<\/property>/gi) ||
+                                        rawXml.match(/<imoveis[\s\S]*?<\/imoveis>/gi);
+                  
+                  if (imovelMatches && imovelMatches.length > 0) {
+                    console.log(`Encontrados ${imovelMatches.length} elementos de imóveis com padrão alternativo`);
+                    
+                    // Criar um novo XML com esses elementos para facilitar o parsing
+                    const fixedXml = `<?xml version="1.0" encoding="UTF-8"?><root>${imovelMatches.join('')}</root>`;
+                    
+                    // Parsear o XML corrigido
+                    const fixedResult = await promisify(xmlParser.parseString)(fixedXml);
+                    
+                    if (fixedResult && fixedResult.root) {
+                      if (fixedResult.root.imovel) {
+                        properties = Array.isArray(fixedResult.root.imovel) ? 
+                                    fixedResult.root.imovel : [fixedResult.root.imovel];
+                      } else if (fixedResult.root.property) {
+                        properties = Array.isArray(fixedResult.root.property) ? 
+                                    fixedResult.root.property : [fixedResult.root.property];
+                      } else if (fixedResult.root.imoveis) {
+                        properties = Array.isArray(fixedResult.root.imoveis) ? 
+                                    fixedResult.root.imoveis : [fixedResult.root.imoveis];
+                      }
+                      
+                      console.log(`Extraídos ${properties.length} imóveis usando padrão alternativo`);
+                    }
+                  }
+                }
+              }
+              
+              // Mapear os campos para o formato esperado
+              properties = properties.map(item => {
+                // Converter os nomes dos campos para o formato esperado
+                const mappedProperty: any = {};
+                
+                // Mapeamento básico de campos
+                if (item.principaltipo) mappedProperty.type = item.principaltipo;
+                if (item.principalvalvenda) mappedProperty.price = Number(item.principalvalvenda);
+                if (item.principalvallocalacao) mappedProperty.rentPrice = Number(item.principalvallocalacao);
+                if (item.principaldescricao) mappedProperty.description = item.principaldescricao;
+                if (item.principaltipo && item.principalsubtipo) {
+                  mappedProperty.title = `${item.principalsubtipo} - ${item.principalbairro || ''}`;
+                }
+                
+                // Endereço
+                if (item.principalendereco) mappedProperty.address = item.principalendereco;
+                if (item.principalbairro) mappedProperty.neighborhood = item.principalbairro;
+                if (item.principalcidade) mappedProperty.city = item.principalcidade;
+                if (item.principaluf) mappedProperty.state = item.principaluf;
+                if (item.principalcep) mappedProperty.zipCode = item.principalcep;
+                
+                // Características
+                if (item.detalheareautil) mappedProperty.area = Number(item.detalheareautil);
+                if (item.detalhedormitorios) mappedProperty.bedrooms = Number(item.detalhedormitorios);
+                if (item.detalhebanheiros) mappedProperty.bathrooms = Number(item.detalhebanheiros);
+                if (item.detalhegaragens) mappedProperty.parkingSpots = Number(item.detalhegaragens);
+                if (item.detalhesuite) mappedProperty.suites = Number(item.detalhesuite);
+                
+                // Finalidade (propósito)
+                if (item.principalvenda && item.principalvenda == 1) {
+                  mappedProperty.purpose = 'sale';
+                } else if (item.principallocalacao && item.principallocalacao == 1) {
+                  mappedProperty.purpose = 'rent';
+                } else {
+                  mappedProperty.purpose = 'sale'; // padrão
+                }
+                
+                // Status
+                if (item.principalsituacao) {
+                  if (item.principalsituacao.toLowerCase().includes('vend')) {
+                    mappedProperty.status = 'sold';
+                  } else if (item.principalsituacao.toLowerCase().includes('alug')) {
+                    mappedProperty.status = 'rented';
+                  } else {
+                    mappedProperty.status = 'available';
+                  }
+                } else {
+                  mappedProperty.status = 'available'; // padrão
+                }
+                
+                // Características como array
+                const features = [];
+                if (item.detalhechurrasqueira && item.detalhechurrasqueira == 1) features.push('Churrasqueira');
+                if (item.detalhepiscina && item.detalhepiscina == 1) features.push('Piscina');
+                if (item.detalheportaoeletronico && item.detalheportaoeletronico == 1) features.push('Portão Eletrônico');
+                if (item.detalhearcondicionado && item.detalhearcondicionado == 1) features.push('Ar Condicionado');
+                if (item.detalhesacada && item.detalhesacada == 1) features.push('Sacada');
+                if (item.detalhelavanderia && item.detalhelavanderia == 1) features.push('Lavanderia');
+                
+                if (features.length > 0) {
+                  mappedProperty.features = features;
+                }
+                
+                return mappedProperty;
+              });
+              
+              console.log('Dados mapeados com sucesso. Exemplo do primeiro imóvel:', 
+                JSON.stringify(properties[0]).substring(0, 300) + '...');
             }
           }
         } catch (error) {
