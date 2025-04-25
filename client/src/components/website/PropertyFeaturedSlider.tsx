@@ -114,7 +114,7 @@ export default function PropertyFeaturedSlider({
     >
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center mb-8">
-          <h2 className="text-2xl md:text-3xl font-bold" style={{ color: primaryColor }}>
+          <h2 className="text-2xl md:text-3xl font-bold" style={{ color: config?.primaryColor || '#7f651e' }}>
             Imóveis Exclusivos
           </h2>
           
