@@ -397,7 +397,7 @@ function PropertyDetailsContent({ propertyId, isOpen, onClose, propConfig }: {
                   
                   <div className="flex items-center mb-4" style={{ color: `${detailsTextColor}DD` }}>
                     <i className="ri-map-pin-line mr-2" style={{ color: detailsIconsColor }}></i>
-                    <span>{currentProperty.address}</span>
+                    <span>{currentProperty.neighborhood || ''}{currentProperty.neighborhood && currentProperty.city ? ', ' : ''}{currentProperty.city || ''}</span>
                     <div className="ml-auto text-sm flex items-center" style={{ color: `${detailsTextColor}DD` }}>
                       <i className="ri-code-line mr-1" style={{ color: detailsIconsColor }}></i>
                       <span>Cód. LL{currentProperty.id}</span>
