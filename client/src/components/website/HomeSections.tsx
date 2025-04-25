@@ -266,7 +266,12 @@ export default function HomeSections({
       
       case 'testimonials':
         return config?.showTestimonials !== false && (
-          <Testimonials key="testimonials" config={config} />
+          <section key="testimonials" id="testimonials" className="py-16 bg-gray-50">
+            <div className="container mx-auto px-4">
+              <h2 className="text-3xl font-bold text-center mb-12" style={{ color: config?.primaryColor || 'var(--primary)' }}>O que nossos clientes dizem</h2>
+              <Testimonials config={config} />
+            </div>
+          </section>
         );
       
       case 'aboutSection':

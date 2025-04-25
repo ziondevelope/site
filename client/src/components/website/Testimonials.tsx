@@ -3,6 +3,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useCallback, useEffect, useState } from "react";
 import useEmblaCarousel from 'embla-carousel-react';
+import { WebsiteConfig } from '@shared/schema';
 
 interface Testimonial {
   id: number;
@@ -14,7 +15,11 @@ interface Testimonial {
   createdAt: string;
 }
 
-export function Testimonials() {
+interface TestimonialsProps {
+  config?: WebsiteConfig;
+}
+
+export function Testimonials({ config }: TestimonialsProps) {
   
   // Embla carousel setup
   // Configuração do carrossel com 3 slides visíveis em telas grandes
