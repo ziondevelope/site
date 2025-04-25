@@ -136,10 +136,9 @@ export default function PropertyFeaturedSlider({
                       alt={property.title}
                       loading="lazy"
                       decoding="async"
-                      className="w-full h-full object-cover object-center transition-transform duration-700 hover:scale-105"
+                      className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
                     />
-                    {/* Degradê na parte inferior da imagem */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                    <div className="absolute bottom-0 left-0 bg-gradient-to-t from-black/60 to-transparent w-full h-1/3"></div>
                     <div className="absolute bottom-4 left-4">
                       <span 
                         className="inline-block px-3 py-1 text-xs font-semibold rounded-full text-white"
