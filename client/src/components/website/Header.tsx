@@ -34,11 +34,15 @@ export default function Header({ config, isLoadingConfig }: HeaderProps) {
     };
   }, []);
 
+  // Determina o estilo do header (transparente ou solido)
+  const headerStyle = config?.headerStyle || 'transparent';
+  const useSolidHeader = headerStyle === 'solid' || isPropertiesPage;
+
   return (
     <header 
       ref={headerRef}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isPropertiesPage || scrolled 
+        scrolled || useSolidHeader 
           ? 'bg-white shadow-lg py-2' 
           : 'bg-transparent py-6'
       }`}
@@ -57,7 +61,7 @@ export default function Header({ config, isLoadingConfig }: HeaderProps) {
                   alt="Logo da Imobiliária" 
                   className="h-full object-contain"
                   loading="eager" 
-                  fetchpriority="high"
+                  fetchPriority="high"
                   decoding="async"
                   onLoad={(e) => {
                     // Torna a imagem visível quando carregada

@@ -274,6 +274,20 @@ export default function GeneralSettings({ config, configData, onConfigChange }: 
         
         <div>
           <Label className="block text-sm font-medium text-gray-700 mb-2">
+            Estilo do Cabeçalho
+          </Label>
+          <select
+            value={configData?.headerStyle || 'transparent'}
+            onChange={(e) => onConfigChange({ ...configData, headerStyle: e.target.value })}
+            className="border border-gray-200 rounded-lg px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:border-transparent"
+          >
+            <option value="transparent">Transparente (padrão)</option>
+            <option value="solid">Sólido</option>
+          </select>
+        </div>
+        
+        <div>
+          <Label className="block text-sm font-medium text-gray-700 mb-2">
             Estilo do Rodapé
           </Label>
           <select
@@ -340,7 +354,7 @@ export default function GeneralSettings({ config, configData, onConfigChange }: 
             <div className="flex">
               <Input 
                 type="color" 
-                value={configData.propertyDetailsBackgroundColor !== undefined ? configData.propertyDetailsBackgroundColor : config?.propertyDetailsBackgroundColor || primaryColor}
+                value={configData.propertyDetailsBackgroundColor !== undefined ? configData.propertyDetailsBackgroundColor : config?.propertyDetailsBackgroundColor || primaryColor || '#ffffff'}
                 onChange={(e) => onConfigChange({ propertyDetailsBackgroundColor: e.target.value })}
                 className="h-10 w-10 border-0 rounded-l-lg p-0"
               />
