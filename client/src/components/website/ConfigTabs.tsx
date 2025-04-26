@@ -7,7 +7,6 @@ import InformationSettings from "@/components/website/InformationSettings";
 import { TestimonialsManager } from "@/components/website/TestimonialsManager";
 import ChatSettings from "@/components/website/ChatSettings";
 import SliderSettings from "@/components/website/SliderSettings";
-
 import { WebsiteConfig, UpdateWebsiteConfig } from "@shared/schema";
 
 interface ConfigTabsProps {
@@ -72,7 +71,6 @@ export default function ConfigTabs({
             >
               Chat WhatsApp
             </TabsTrigger>
-
           </TabsList>
         </div>
         
@@ -127,8 +125,6 @@ export default function ConfigTabs({
             onConfigChange={onConfigChange}
           />
         </TabsContent>
-        
-
       </Tabs>
     </div>
   );

@@ -198,53 +198,6 @@ export const websiteConfig = pgTable("website_config", {
   whatsappButtonBackgroundColor: text("whatsapp_button_background_color").default("#25D366"),
   whatsappButtonTextColor: text("whatsapp_button_text_color").default("#ffffff"),
   
-  // Configurações de Portais Imobiliários
-  // Viva Real
-  vivarealEnabled: boolean("vivareal_enabled").default(false),
-  vivarealApiKey: text("vivareal_api_key"),
-  vivarealSecret: text("vivareal_secret"),
-  vivarealEndpoint: text("vivareal_endpoint"),
-  vivarealSyncInterval: text("vivareal_sync_interval").default("daily"),
-  vivarealNotes: text("vivareal_notes"),
-  
-  // ZAP Imóveis
-  zapEnabled: boolean("zap_enabled").default(false),
-  zapApiKey: text("zap_api_key"),
-  zapSecret: text("zap_secret"),
-  zapEndpoint: text("zap_endpoint"),
-  zapSyncInterval: text("zap_sync_interval").default("daily"),
-  zapNotes: text("zap_notes"),
-  
-  // Imóvel Web
-  imovelwebEnabled: boolean("imovelweb_enabled").default(false),
-  imovelwebApiKey: text("imovelweb_api_key"),
-  imovelwebSecret: text("imovelweb_secret"),
-  imovelwebEndpoint: text("imovelweb_endpoint"),
-  imovelwebSyncInterval: text("imovelweb_sync_interval").default("daily"),
-  imovelwebNotes: text("imovelweb_notes"),
-  
-  // QuintoAndar
-  quintoandarEnabled: boolean("quintoandar_enabled").default(false),
-  quintoandarApiKey: text("quintoandar_api_key"),
-  quintoandarSecret: text("quintoandar_secret"),
-  quintoandarEndpoint: text("quintoandar_endpoint"),
-  quintoandarSyncInterval: text("quintoandar_sync_interval").default("daily"),
-  quintoandarNotes: text("quintoandar_notes"),
-  
-  // Outros portais
-  outrosEnabled: boolean("outros_enabled").default(false),
-  outrosApiKey: text("outros_api_key"),
-  outrosSecret: text("outros_secret"),
-  outrosEndpoint: text("outros_endpoint"),
-  outrosSyncInterval: text("outros_sync_interval").default("daily"),
-  outrosNotes: text("outros_notes"),
-  
-  // Configurações de sincronização
-  autoSyncEnabled: boolean("auto_sync_enabled").default(false),
-  syncDirection: text("sync_direction").default("export"),
-  conflictResolution: text("conflict_resolution").default("crm-wins"),
-  lastSyncDate: timestamp("last_sync_date"),
-  
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
