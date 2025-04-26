@@ -590,7 +590,7 @@ export default function GeneralSettings({ config, configData, onConfigChange }: 
                     type="checkbox" 
                     id="vivareal-enabled"
                     checked={configData.vivarealEnabled !== undefined ? configData.vivarealEnabled : config?.vivarealEnabled || false}
-                    onChange={(e) => onConfigChange({ vivarealEnabled: e.target.checked })}
+                    onChange={(e) => onConfigChange({ ...configData, vivarealEnabled: e.target.checked })}
                     className="w-4 h-4 text-indigo-600"
                   />
                 </div>
@@ -603,7 +603,7 @@ export default function GeneralSettings({ config, configData, onConfigChange }: 
                     type="text" 
                     placeholder="Chave da API"
                     value={configData.vivarealApiKey !== undefined ? configData.vivarealApiKey : config?.vivarealApiKey || ''}
-                    onChange={(e) => onConfigChange({ vivarealApiKey: e.target.value })}
+                    onChange={(e) => onConfigChange({ ...configData, vivarealApiKey: e.target.value })}
                     className="border border-gray-200 rounded-lg"
                   />
                 </div>
@@ -614,7 +614,7 @@ export default function GeneralSettings({ config, configData, onConfigChange }: 
                     type="text" 
                     placeholder="https://api.vivareal.com.br/v1"
                     value={configData.vivarealEndpoint !== undefined ? configData.vivarealEndpoint : config?.vivarealEndpoint || ''}
-                    onChange={(e) => onConfigChange({ vivarealEndpoint: e.target.value })}
+                    onChange={(e) => onConfigChange({ ...configData, vivarealEndpoint: e.target.value })}
                     className="border border-gray-200 rounded-lg"
                   />
                 </div>
@@ -623,7 +623,7 @@ export default function GeneralSettings({ config, configData, onConfigChange }: 
                   <Label className="text-sm font-medium text-gray-700 mb-1">Intervalo de Sincronização</Label>
                   <select 
                     value={configData.vivarealSyncInterval !== undefined ? configData.vivarealSyncInterval : config?.vivarealSyncInterval || 'daily'}
-                    onChange={(e) => onConfigChange({ vivarealSyncInterval: e.target.value })}
+                    onChange={(e) => onConfigChange({ ...configData, vivarealSyncInterval: e.target.value })}
                     className="w-full border border-gray-200 rounded-lg p-2"
                   >
                     <option value="hourly">A cada hora</option>
@@ -645,7 +645,7 @@ export default function GeneralSettings({ config, configData, onConfigChange }: 
                     type="checkbox" 
                     id="zap-enabled"
                     checked={configData.zapEnabled !== undefined ? configData.zapEnabled : config?.zapEnabled || false}
-                    onChange={(e) => onConfigChange({ zapEnabled: e.target.checked })}
+                    onChange={(e) => onConfigChange({ ...configData, zapEnabled: e.target.checked })}
                     className="w-4 h-4 text-indigo-600"
                   />
                 </div>
@@ -658,7 +658,7 @@ export default function GeneralSettings({ config, configData, onConfigChange }: 
                     type="text" 
                     placeholder="Chave da API"
                     value={configData.zapApiKey !== undefined ? configData.zapApiKey : config?.zapApiKey || ''}
-                    onChange={(e) => onConfigChange({ zapApiKey: e.target.value })}
+                    onChange={(e) => onConfigChange({ ...configData, zapApiKey: e.target.value })}
                     className="border border-gray-200 rounded-lg"
                   />
                 </div>
@@ -669,7 +669,7 @@ export default function GeneralSettings({ config, configData, onConfigChange }: 
                     type="text" 
                     placeholder="https://api.zapimoveis.com.br/v1"
                     value={configData.zapEndpoint !== undefined ? configData.zapEndpoint : config?.zapEndpoint || ''}
-                    onChange={(e) => onConfigChange({ zapEndpoint: e.target.value })}
+                    onChange={(e) => onConfigChange({ ...configData, zapEndpoint: e.target.value })}
                     className="border border-gray-200 rounded-lg"
                   />
                 </div>
@@ -678,7 +678,7 @@ export default function GeneralSettings({ config, configData, onConfigChange }: 
                   <Label className="text-sm font-medium text-gray-700 mb-1">Intervalo de Sincronização</Label>
                   <select 
                     value={configData.zapSyncInterval !== undefined ? configData.zapSyncInterval : config?.zapSyncInterval || 'daily'}
-                    onChange={(e) => onConfigChange({ zapSyncInterval: e.target.value })}
+                    onChange={(e) => onConfigChange({ ...configData, zapSyncInterval: e.target.value })}
                     className="w-full border border-gray-200 rounded-lg p-2"
                   >
                     <option value="hourly">A cada hora</option>
@@ -702,7 +702,7 @@ export default function GeneralSettings({ config, configData, onConfigChange }: 
                     type="checkbox" 
                     id="auto-sync-enabled"
                     checked={configData.autoSyncEnabled !== undefined ? configData.autoSyncEnabled : config?.autoSyncEnabled || false}
-                    onChange={(e) => onConfigChange({ autoSyncEnabled: e.target.checked })}
+                    onChange={(e) => onConfigChange({ ...configData, autoSyncEnabled: e.target.checked })}
                     className="w-4 h-4 text-indigo-600"
                   />
                 </div>
