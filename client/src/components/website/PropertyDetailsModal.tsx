@@ -871,7 +871,8 @@ function PropertyDetailsContent({ propertyId, isOpen, onClose, propConfig }: {
                       <div className="pt-2">
                         <button
                           type="submit"
-                          className="w-full py-3 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 transition-colors shadow-sm flex items-center justify-center"
+                          className="w-full py-3 text-white font-medium rounded-md transition-colors shadow-sm flex items-center justify-center"
+                          style={{ backgroundColor: config?.primaryColor || '#130a01', borderColor: config?.primaryColor || '#130a01' }}
                         >
                           <span className="text-base">
                             Agendar visita
@@ -956,7 +957,7 @@ function PropertyDetailsContent({ propertyId, isOpen, onClose, propConfig }: {
           <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-[9999]">
             <button 
               className="flex items-center shadow-lg rounded-full cursor-pointer px-8 py-3 whitespace-nowrap animate-fadeIn"
-              style={{ backgroundColor: '#25D366', minWidth: '260px' }}
+              style={{ backgroundColor: config?.primaryColor || '#130a01', minWidth: '260px' }}
               onClick={() => {
                 if (!agent || !currentProperty) return;
                 const phone = agent.phone?.replace(/\D/g, '') || '';
