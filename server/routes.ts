@@ -1283,27 +1283,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  // Rota para servir o arquivo XML
-  app.get("/:xmlFileName", async (req, res, next) => {
-    const xmlFileName = req.params.xmlFileName;
-    // Verificar se o arquivo solicitado parece ser um XML
-    if (xmlFileName.endsWith('.xml')) {
-      const filePath = path.join(process.cwd(), 'public', xmlFileName);
-      try {
-        // Verificar se o arquivo existe
-        await fs.promises.access(filePath, fs.constants.F_OK);
-        // Servir o arquivo
-        res.setHeader('Content-Type', 'application/xml');
-        res.sendFile(filePath);
-      } catch (error) {
-        // Se o arquivo não existir, seguir para o próximo handler
-        next();
-      }
-    } else {
-      // Não é um arquivo XML, seguir para o próximo handler
-      next();
-    }
-  });
+  // Configurar diretório public para servir arquivos estáticos
+  // Isso será chamado na função principal depois de registrar as rotas
+  const publicDir = path.join(process.cwd(), 'public');
+  if (!fs.existsSync(publicDir)) {
+    fs.mkdirSync(publicDir, { recursive: true });
+  }
 
   // Sales Funnels endpoints
   apiRouter.get("/sales-funnels", async (req, res) => {
@@ -1612,6 +1597,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   app.use("/api", apiRouter);
+  
+  // Configurar o Express para servir arquivos estáticos da pasta 'public'
+  app.use(express.static('public'));
+  
+  // Rota específica para servir arquivos XML com cabeçalho correto
+  app.get('*.xml', (req, res, next) => {
+    const xmlPath = path.join(process.cwd(), 'public', req.path);
+    fs.access(xmlPath, fs.constants.R_OK, (err) => {
+      if (err) {
+        next(); // Arquivo não existe, prosseguir para o próximo handler
+      } else {
+        res.set('Content-Type', 'application/xml');
+        res.sendFile(xmlPath);
+      }
+    });
+  });
 
   const httpServer = createServer(app);
   return httpServer;
