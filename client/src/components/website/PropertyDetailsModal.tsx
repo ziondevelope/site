@@ -538,21 +538,23 @@ function PropertyDetailsContent({ propertyId, isOpen, onClose, propConfig }: {
                 
                 {/* Formulário de contato */}
                 <div className="mb-8">
-                  <div className="p-6 rounded-lg shadow-md relative overflow-hidden" 
+                  <div className="p-6 rounded-lg shadow-sm border overflow-hidden" 
                       style={{ 
-                        backgroundColor: `${detailsIconsColor}15`, 
-                        borderColor: `${detailsTextColor}22`
+                        backgroundColor: '#ffffff', 
+                        borderColor: '#e5e7eb'
                       }}>
-                    
-                    {/* Fundo decorativo */}
-                    <div className="absolute top-0 right-0 w-40 h-40 opacity-5" style={{ background: `radial-gradient(circle, ${detailsIconsColor} 0%, transparent 70%)` }}></div>
                     
                     {/* Cabeçalho do formulário */}
                     <div className="mb-5 relative">
+                      {/* Título do formulário */}
+                      <h3 className="text-lg font-semibold mb-4" style={{ color: detailsTextColor }}>
+                        Agende uma visita
+                      </h3>
+                      
                       {/* Detalhes do corretor */}
                       {agent && (
                         <div className="mb-5 flex items-center">
-                          <div className="w-12 h-12 rounded-full overflow-hidden mr-3 border-2 border-white shadow-sm flex-shrink-0">
+                          <div className="w-12 h-12 rounded-full overflow-hidden mr-3 shadow-sm flex-shrink-0">
                             {agent.avatar ? (
                               <img src={agent.avatar} alt={agent.name} className="w-full h-full object-cover" />
                             ) : (
@@ -562,7 +564,7 @@ function PropertyDetailsContent({ propertyId, isOpen, onClose, propConfig }: {
                             )}
                           </div>
                           <div>
-                            <p className="font-medium" style={{ color: detailsTextColor }}>
+                            <p className="font-medium text-sm" style={{ color: detailsTextColor }}>
                               {agent.name || 'Corretor Especializado'}
                             </p>
                             <p className="text-xs" style={{ color: `${detailsTextColor}99` }}>
@@ -573,8 +575,8 @@ function PropertyDetailsContent({ propertyId, isOpen, onClose, propConfig }: {
                       )}
                       
                       {/* Informações do imóvel no formulário de contato */}
-                      <div className="mb-3">
-                        <div className="font-medium mb-1" style={{ color: detailsTextColor }}>
+                      <div className="mb-5 pb-4 border-b border-gray-100">
+                        <div className="font-medium mb-1 text-lg" style={{ color: detailsTextColor }}>
                           {formatCurrency(currentProperty.price)}
                           {currentProperty.purpose === 'rent' && 
                             <span className="text-base font-normal" style={{ color: `${detailsTextColor}BB` }}>/mês</span>
@@ -583,32 +585,31 @@ function PropertyDetailsContent({ propertyId, isOpen, onClose, propConfig }: {
                         
                         {/* Parcelas para aluguel */}
                         {currentProperty.purpose === 'rent' && currentProperty.condoFee ? (
-                          <div className="text-sm" style={{ color: `${detailsTextColor}AA` }}>
+                          <div className="text-sm mb-2" style={{ color: `${detailsTextColor}AA` }}>
                             <div className="flex justify-between">
                               <span>Parcelas a partir de</span>
-                              <span className="text-[#19a974]">{formatCurrency(currentProperty.price / 24)}/mês</span>
+                              <span className="font-medium text-green-600">{formatCurrency(currentProperty.price / 24)}/mês</span>
                             </div>
                           </div>
                         ) : null}
                         
-                        {/* IPTU */}
-                        {currentProperty.iptuValue ? (
-                          <div className="flex justify-between items-center mt-1 text-sm" style={{ color: `${detailsTextColor}AA` }}>
-                            <div className="flex items-center">
-                              <span>IPTU</span>
-                              <span className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-gray-400 text-white text-[10px] ml-1">i</span>
+                        <div className="grid grid-cols-2 gap-2 mt-3">
+                          {/* IPTU */}
+                          {currentProperty.iptuValue ? (
+                            <div className="text-sm" style={{ color: `${detailsTextColor}AA` }}>
+                              <span className="block text-xs uppercase font-medium text-gray-500 mb-1">IPTU</span>
+                              <span className="font-medium" style={{ color: detailsTextColor }}>{formatCurrency(currentProperty.iptuValue)}/ano</span>
                             </div>
-                            <span>{formatCurrency(currentProperty.iptuValue)}/ano</span>
-                          </div>
-                        ) : null}
-                        
-                        {/* Condomínio */}
-                        {currentProperty.condoFee ? (
-                          <div className="flex justify-between items-center mt-1 text-sm" style={{ color: `${detailsTextColor}AA` }}>
-                            <span>Condomínio</span>
-                            <span>{formatCurrency(currentProperty.condoFee)}/mês</span>
-                          </div>
-                        ) : null}
+                          ) : null}
+                          
+                          {/* Condomínio */}
+                          {currentProperty.condoFee ? (
+                            <div className="text-sm" style={{ color: `${detailsTextColor}AA` }}>
+                              <span className="block text-xs uppercase font-medium text-gray-500 mb-1">Condomínio</span>
+                              <span className="font-medium" style={{ color: detailsTextColor }}>{formatCurrency(currentProperty.condoFee)}/mês</span>
+                            </div>
+                          ) : null}
+                        </div>
                       </div>
                     </div>
                     
@@ -784,101 +785,64 @@ function PropertyDetailsContent({ propertyId, isOpen, onClose, propConfig }: {
                       }}
                       className="space-y-4"
                     >
+                      {/* Nome e Email numa linha */}
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                          <label htmlFor="name" className="block text-sm font-medium mb-1" style={{ color: detailsTextColor }}>
-                            Nome completo <span className="text-[#25D366]">*</span>
+                          <label htmlFor="name" className="block text-xs font-medium mb-1 text-gray-500 uppercase">
+                            Nome completo*
                           </label>
-                          <div className="relative">
-                            <span className="absolute inset-y-0 left-0 flex items-center pl-3" style={{ color: `${detailsTextColor}80` }}>
-                              <i className="fas fa-user text-sm"></i>
-                            </span>
-                            <input
-                              type="text"
-                              id="name"
-                              name="name"
-                              required
-                              className="w-full pl-10 pr-3 py-2.5 border rounded-md focus:ring-2 focus:ring-[#25D366] focus:border-transparent transition-all"
-                              style={{ 
-                                borderColor: `${detailsTextColor}22`, 
-                                color: detailsTextColor, 
-                                backgroundColor: `${detailsBackgroundColor}90` 
-                              }}
-                              placeholder="Digite seu nome"
-                            />
-                          </div>
+                          <input
+                            type="text"
+                            id="name"
+                            name="name"
+                            required
+                            className="w-full px-3 py-2.5 border border-gray-300 rounded-md focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                            placeholder="Digite seu nome"
+                          />
                         </div>
                         
                         <div>
-                          <label htmlFor="email" className="block text-sm font-medium mb-1" style={{ color: detailsTextColor }}>
-                            E-mail <span className="text-[#25D366]">*</span>
+                          <label htmlFor="email" className="block text-xs font-medium mb-1 text-gray-500 uppercase">
+                            E-mail*
                           </label>
-                          <div className="relative">
-                            <span className="absolute inset-y-0 left-0 flex items-center pl-3" style={{ color: `${detailsTextColor}80` }}>
-                              <i className="fas fa-envelope text-sm"></i>
-                            </span>
-                            <input
-                              type="email"
-                              id="email"
-                              name="email"
-                              required
-                              className="w-full pl-10 pr-3 py-2.5 border rounded-md focus:ring-2 focus:ring-[#25D366] focus:border-transparent transition-all"
-                              style={{ 
-                                borderColor: `${detailsTextColor}22`, 
-                                color: detailsTextColor, 
-                                backgroundColor: `${detailsBackgroundColor}90`
-                              }}
-                              placeholder="Digite seu e-mail"
-                            />
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <div>
-                        <label htmlFor="phone" className="block text-sm font-medium mb-1" style={{ color: detailsTextColor }}>
-                          Telefone/WhatsApp <span className="text-[#25D366]">*</span>
-                        </label>
-                        <div className="relative">
-                          <span className="absolute inset-y-0 left-0 flex items-center pl-3" style={{ color: `${detailsTextColor}80` }}>
-                            <i className="fas fa-phone-alt text-sm"></i>
-                          </span>
                           <input
-                            type="tel"
-                            id="phone"
-                            name="phone"
+                            type="email"
+                            id="email"
+                            name="email"
                             required
-                            className="w-full pl-10 pr-3 py-2.5 border rounded-md focus:ring-2 focus:ring-[#25D366] focus:border-transparent transition-all"
-                            style={{ 
-                              borderColor: `${detailsTextColor}22`, 
-                              color: detailsTextColor, 
-                              backgroundColor: `${detailsBackgroundColor}90`
-                            }}
-                            placeholder="(00) 00000-0000"
+                            className="w-full px-3 py-2.5 border border-gray-300 rounded-md focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                            placeholder="Digite seu e-mail"
                           />
                         </div>
                       </div>
                       
+                      {/* Telefone */}
                       <div>
-                        <label htmlFor="message" className="block text-sm font-medium mb-1" style={{ color: detailsTextColor }}>
+                        <label htmlFor="phone" className="block text-xs font-medium mb-1 text-gray-500 uppercase">
+                          Telefone/WhatsApp*
+                        </label>
+                        <input
+                          type="tel"
+                          id="phone"
+                          name="phone"
+                          required
+                          className="w-full px-3 py-2.5 border border-gray-300 rounded-md focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                          placeholder="(00) 00000-0000"
+                        />
+                      </div>
+                      
+                      {/* Mensagem */}
+                      <div>
+                        <label htmlFor="message" className="block text-xs font-medium mb-1 text-gray-500 uppercase">
                           Mensagem
                         </label>
-                        <div className="relative">
-                          <span className="absolute top-3 left-3" style={{ color: `${detailsTextColor}80` }}>
-                            <i className="fas fa-comment-alt text-sm"></i>
-                          </span>
-                          <textarea
-                            id="message"
-                            name="message"
-                            rows={3}
-                            className="w-full pl-10 pr-3 py-2.5 border rounded-md focus:ring-2 focus:ring-[#25D366] focus:border-transparent transition-all"
-                            style={{ 
-                              borderColor: `${detailsTextColor}22`, 
-                              color: detailsTextColor, 
-                              backgroundColor: `${detailsBackgroundColor}90`
-                            }}
-                            placeholder="Tenho interesse neste imóvel. Gostaria de agendar uma visita..."
-                          ></textarea>
-                        </div>
+                        <textarea
+                          id="message"
+                          name="message"
+                          rows={3}
+                          className="w-full px-3 py-2.5 border border-gray-300 rounded-md focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                          placeholder="Tenho interesse neste imóvel. Gostaria de agendar uma visita..."
+                        ></textarea>
                       </div>
                       
                       {/* Opções de contato preferencial */}
@@ -888,10 +852,10 @@ function PropertyDetailsContent({ propertyId, isOpen, onClose, propConfig }: {
                             type="checkbox" 
                             id="prefer-whatsapp" 
                             name="prefer-whatsapp" 
-                            className="w-4 h-4 text-[#25D366] border-gray-300 rounded focus:ring-[#25D366]" 
+                            className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" 
                             defaultChecked={true}
                           />
-                          <label htmlFor="prefer-whatsapp" className="ml-2 text-sm" style={{ color: `${detailsTextColor}CC` }}>
+                          <label htmlFor="prefer-whatsapp" className="ml-2 text-sm text-gray-600">
                             Contato por WhatsApp
                           </label>
                         </div>
@@ -900,9 +864,9 @@ function PropertyDetailsContent({ propertyId, isOpen, onClose, propConfig }: {
                             type="checkbox" 
                             id="prefer-email" 
                             name="prefer-email" 
-                            className="w-4 h-4 text-[#25D366] border-gray-300 rounded focus:ring-[#25D366]"
+                            className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                           />
-                          <label htmlFor="prefer-email" className="ml-2 text-sm" style={{ color: `${detailsTextColor}CC` }}>
+                          <label htmlFor="prefer-email" className="ml-2 text-sm text-gray-600">
                             Contato por E-mail
                           </label>
                         </div>
@@ -911,9 +875,9 @@ function PropertyDetailsContent({ propertyId, isOpen, onClose, propConfig }: {
                             type="checkbox" 
                             id="prefer-call" 
                             name="prefer-call" 
-                            className="w-4 h-4 text-[#25D366] border-gray-300 rounded focus:ring-[#25D366]"
+                            className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                           />
-                          <label htmlFor="prefer-call" className="ml-2 text-sm" style={{ color: `${detailsTextColor}CC` }}>
+                          <label htmlFor="prefer-call" className="ml-2 text-sm text-gray-600">
                             Prefiro receber ligação
                           </label>
                         </div>
@@ -922,14 +886,13 @@ function PropertyDetailsContent({ propertyId, isOpen, onClose, propConfig }: {
                       <div className="pt-2">
                         <button
                           type="submit"
-                          className="w-full py-3 md:py-3.5 bg-[#25D366] text-white font-medium rounded-md hover:bg-[#22c55e] transition-colors shadow-md flex items-center justify-center"
+                          className="w-full py-3 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 transition-colors shadow-sm flex items-center justify-center"
                         >
-                          <i className="fab fa-whatsapp mr-2 text-xl hidden xs:inline-block"></i>
-                          <span className="text-sm xs:text-base sm:text-base md:text-base lg:text-base whitespace-normal xs:whitespace-nowrap text-center">
-                            Falar com corretor
+                          <span className="text-base">
+                            Agendar visita
                           </span>
                         </button>
-                        <p className="text-xs mt-3 text-center" style={{ color: `${detailsTextColor}99` }}>
+                        <p className="text-xs mt-3 text-center text-gray-500">
                           Ao enviar, você concorda em receber contato de nossos corretores. Seus dados estão seguros conosco.
                         </p>
                       </div>
