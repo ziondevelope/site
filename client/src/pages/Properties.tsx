@@ -669,25 +669,31 @@ export default function Properties() {
                       />
                     </div>
                     
-                    <FormField
-                      control={form.control}
-                      name="price"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Preço (R$)</FormLabel>
-                          <FormControl>
-                            <Input 
-                              type="number" 
-                              placeholder="Ex: 450000" 
-                              {...field}
-                              onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
-                              value={field.value || 0}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                    <div className="space-y-2">
+                      <FormField
+                        control={form.control}
+                        name="price"
+                        render={({ field: priceField }) => (
+                          <FormField
+                            control={form.control}
+                            name="iptuValue"
+                            render={({ field: iptuField }) => (
+                              <FormField
+                                control={form.control}
+                                name="condoFee"
+                                render={({ field: condoField }) => (
+                                  <PriceWithTaxesFields
+                                    priceField={priceField}
+                                    iptuField={iptuField}
+                                    condoField={condoField}
+                                  />
+                                )}
+                              />
+                            )}
+                          />
+                        )}
+                      />
+                    </div>
                     
                     <FormField
                       control={form.control}
@@ -1096,25 +1102,31 @@ export default function Properties() {
                       />
                     </div>
                     
-                    <FormField
-                      control={form.control}
-                      name="price"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Preço (R$)</FormLabel>
-                          <FormControl>
-                            <Input 
-                              type="number" 
-                              placeholder="Ex: 450000" 
-                              {...field}
-                              onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
-                              value={field.value || 0}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                    <div className="space-y-2">
+                      <FormField
+                        control={form.control}
+                        name="price"
+                        render={({ field: priceField }) => (
+                          <FormField
+                            control={form.control}
+                            name="iptuValue"
+                            render={({ field: iptuField }) => (
+                              <FormField
+                                control={form.control}
+                                name="condoFee"
+                                render={({ field: condoField }) => (
+                                  <PriceWithTaxesFields
+                                    priceField={priceField}
+                                    iptuField={iptuField}
+                                    condoField={condoField}
+                                  />
+                                )}
+                              />
+                            )}
+                          />
+                        )}
+                      />
+                    </div>
                     
                     <FormField
                       control={form.control}
