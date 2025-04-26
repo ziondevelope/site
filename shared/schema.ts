@@ -28,6 +28,8 @@ export const properties = pgTable("properties", {
   type: text("type").notNull(), // apartment, house, commercial, land
   purpose: text("purpose").notNull(), // sale, rent
   price: integer("price").notNull(),
+  iptuValue: integer("iptu_value"), // Valor do IPTU anual
+  condoFee: integer("condo_fee"), // Valor do condomínio mensal
   area: integer("area").notNull(),
   bedrooms: integer("bedrooms"),
   bathrooms: integer("bathrooms"),

@@ -62,6 +62,8 @@ const propertyFormSchema = insertPropertySchema.extend({
   parkingSpots: z.number().min(0).default(0),
   suites: z.number().min(0).default(0),
   features: z.array(z.string()).optional().default([]),
+  iptuValue: z.number().min(0).optional(),
+  condoFee: z.number().min(0).optional(),
 });
 
 type PropertyFormValues = z.infer<typeof propertyFormSchema>;
