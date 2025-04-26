@@ -415,22 +415,7 @@ function PropertyDetailsContent({ propertyId, isOpen, onClose, propConfig }: {
                         </div>
                       ) : null}
                       
-                      {currentProperty.iptuValue ? (
-                        <div className="flex justify-between items-center mt-2 text-sm" style={{ color: `${detailsTextColor}AA` }}>
-                          <div className="flex items-center">
-                            <span>IPTU</span>
-                            <span className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-gray-400 text-white text-[10px] ml-1">i</span>
-                          </div>
-                          <span>{formatCurrency(currentProperty.iptuValue)}/ano</span>
-                        </div>
-                      ) : null}
-                      
-                      {currentProperty.condoFee ? (
-                        <div className="flex justify-between items-center mt-1 text-sm" style={{ color: `${detailsTextColor}AA` }}>
-                          <span>Condomínio</span>
-                          <span>{formatCurrency(currentProperty.condoFee)}/mês</span>
-                        </div>
-                      ) : null}
+
                     </div>
                   </div>
                   
