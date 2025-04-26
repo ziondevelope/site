@@ -571,15 +571,7 @@ function PropertyDetailsContent({ propertyId, isOpen, onClose, propConfig }: {
                           </div>
                         </div>
                         
-                        {/* Parcelas para aluguel */}
-                        {currentProperty.purpose === 'rent' && currentProperty.condoFee ? (
-                          <div className="text-sm mb-2" style={{ color: `${detailsTextColor}AA` }}>
-                            <div className="flex justify-between">
-                              <span>Parcelas a partir de</span>
-                              <span className="font-medium text-green-600">{formatCurrency(currentProperty.price / 24)}/mês</span>
-                            </div>
-                          </div>
-                        ) : null}
+                        {/* Seção de parcelas foi removida conforme solicitado */}
                         
                         <div className="grid grid-cols-2 gap-2 mt-3">
                           {/* IPTU */}
