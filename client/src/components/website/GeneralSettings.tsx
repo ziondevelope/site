@@ -576,6 +576,179 @@ export default function GeneralSettings({ config, configData, onConfigChange }: 
       
       {/* Seção de Tags de Marketing */}
       <div className="mt-8 border-t pt-6">
+        <h3 className="text-lg font-medium text-gray-800 mb-4">Portais Imobiliários</h3>
+        
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Viva Real */}
+            <div className="border rounded-lg p-4 shadow-sm">
+              <div className="flex items-center justify-between mb-4">
+                <h4 className="font-medium">Viva Real</h4>
+                <div className="flex items-center">
+                  <Label htmlFor="vivareal-enabled" className="mr-2 text-sm">Ativar</Label>
+                  <input 
+                    type="checkbox" 
+                    id="vivareal-enabled"
+                    checked={configData.vivarealEnabled !== undefined ? configData.vivarealEnabled : config?.vivarealEnabled || false}
+                    onChange={(e) => onConfigChange({ vivarealEnabled: e.target.checked })}
+                    className="w-4 h-4 text-indigo-600"
+                  />
+                </div>
+              </div>
+              
+              <div className="space-y-3">
+                <div>
+                  <Label className="text-sm font-medium text-gray-700 mb-1">Chave da API</Label>
+                  <Input 
+                    type="text" 
+                    placeholder="Chave da API"
+                    value={configData.vivarealApiKey !== undefined ? configData.vivarealApiKey : config?.vivarealApiKey || ''}
+                    onChange={(e) => onConfigChange({ vivarealApiKey: e.target.value })}
+                    className="border border-gray-200 rounded-lg"
+                  />
+                </div>
+                
+                <div>
+                  <Label className="text-sm font-medium text-gray-700 mb-1">URL do Endpoint</Label>
+                  <Input 
+                    type="text" 
+                    placeholder="https://api.vivareal.com.br/v1"
+                    value={configData.vivarealEndpoint !== undefined ? configData.vivarealEndpoint : config?.vivarealEndpoint || ''}
+                    onChange={(e) => onConfigChange({ vivarealEndpoint: e.target.value })}
+                    className="border border-gray-200 rounded-lg"
+                  />
+                </div>
+                
+                <div>
+                  <Label className="text-sm font-medium text-gray-700 mb-1">Intervalo de Sincronização</Label>
+                  <select 
+                    value={configData.vivarealSyncInterval !== undefined ? configData.vivarealSyncInterval : config?.vivarealSyncInterval || 'daily'}
+                    onChange={(e) => onConfigChange({ vivarealSyncInterval: e.target.value })}
+                    className="w-full border border-gray-200 rounded-lg p-2"
+                  >
+                    <option value="hourly">A cada hora</option>
+                    <option value="daily">Diariamente</option>
+                    <option value="weekly">Semanalmente</option>
+                    <option value="manual">Manual</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            
+            {/* ZAP Imóveis */}
+            <div className="border rounded-lg p-4 shadow-sm">
+              <div className="flex items-center justify-between mb-4">
+                <h4 className="font-medium">ZAP Imóveis</h4>
+                <div className="flex items-center">
+                  <Label htmlFor="zap-enabled" className="mr-2 text-sm">Ativar</Label>
+                  <input 
+                    type="checkbox" 
+                    id="zap-enabled"
+                    checked={configData.zapEnabled !== undefined ? configData.zapEnabled : config?.zapEnabled || false}
+                    onChange={(e) => onConfigChange({ zapEnabled: e.target.checked })}
+                    className="w-4 h-4 text-indigo-600"
+                  />
+                </div>
+              </div>
+              
+              <div className="space-y-3">
+                <div>
+                  <Label className="text-sm font-medium text-gray-700 mb-1">Chave da API</Label>
+                  <Input 
+                    type="text" 
+                    placeholder="Chave da API"
+                    value={configData.zapApiKey !== undefined ? configData.zapApiKey : config?.zapApiKey || ''}
+                    onChange={(e) => onConfigChange({ zapApiKey: e.target.value })}
+                    className="border border-gray-200 rounded-lg"
+                  />
+                </div>
+                
+                <div>
+                  <Label className="text-sm font-medium text-gray-700 mb-1">URL do Endpoint</Label>
+                  <Input 
+                    type="text" 
+                    placeholder="https://api.zapimoveis.com.br/v1"
+                    value={configData.zapEndpoint !== undefined ? configData.zapEndpoint : config?.zapEndpoint || ''}
+                    onChange={(e) => onConfigChange({ zapEndpoint: e.target.value })}
+                    className="border border-gray-200 rounded-lg"
+                  />
+                </div>
+                
+                <div>
+                  <Label className="text-sm font-medium text-gray-700 mb-1">Intervalo de Sincronização</Label>
+                  <select 
+                    value={configData.zapSyncInterval !== undefined ? configData.zapSyncInterval : config?.zapSyncInterval || 'daily'}
+                    onChange={(e) => onConfigChange({ zapSyncInterval: e.target.value })}
+                    className="w-full border border-gray-200 rounded-lg p-2"
+                  >
+                    <option value="hourly">A cada hora</option>
+                    <option value="daily">Diariamente</option>
+                    <option value="weekly">Semanalmente</option>
+                    <option value="manual">Manual</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div className="border rounded-lg p-4 shadow-sm">
+            <h4 className="font-medium mb-4">Configurações de Sincronização</h4>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <div className="flex items-center mb-4">
+                  <Label htmlFor="auto-sync-enabled" className="mr-2">Sincronização Automática</Label>
+                  <input 
+                    type="checkbox" 
+                    id="auto-sync-enabled"
+                    checked={configData.autoSyncEnabled !== undefined ? configData.autoSyncEnabled : config?.autoSyncEnabled || false}
+                    onChange={(e) => onConfigChange({ autoSyncEnabled: e.target.checked })}
+                    className="w-4 h-4 text-indigo-600"
+                  />
+                </div>
+                
+                <div className="mb-4">
+                  <Label className="text-sm font-medium text-gray-700 mb-1">Direção da Sincronização</Label>
+                  <select 
+                    value={configData.syncDirection !== undefined ? configData.syncDirection : config?.syncDirection || 'export'}
+                    onChange={(e) => onConfigChange({ syncDirection: e.target.value })}
+                    className="w-full border border-gray-200 rounded-lg p-2"
+                  >
+                    <option value="export">Apenas exportar (do CRM para os portais)</option>
+                    <option value="import">Apenas importar (dos portais para o CRM)</option>
+                    <option value="both">Bidirecional (ambas as direções)</option>
+                  </select>
+                </div>
+              </div>
+              
+              <div>
+                <div className="mb-4">
+                  <Label className="text-sm font-medium text-gray-700 mb-1">Resolução de Conflitos</Label>
+                  <select 
+                    value={configData.conflictResolution !== undefined ? configData.conflictResolution : config?.conflictResolution || 'crm-wins'}
+                    onChange={(e) => onConfigChange({ conflictResolution: e.target.value })}
+                    className="w-full border border-gray-200 rounded-lg p-2"
+                  >
+                    <option value="crm-wins">CRM tem prioridade</option>
+                    <option value="portal-wins">Portal tem prioridade</option>
+                    <option value="newer-wins">Mais recente tem prioridade</option>
+                    <option value="manual">Resolução manual</option>
+                  </select>
+                </div>
+                
+                <div>
+                  <Button variant="outline" type="button" className="w-full">
+                    <i className="fas fa-sync-alt mr-2"></i>
+                    Sincronizar Agora
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div className="mt-8 border-t pt-6">
         <h3 className="text-lg font-medium text-gray-800 mb-4">Tags de Conversão e Remarketing</h3>
         
         <div className="space-y-6">
