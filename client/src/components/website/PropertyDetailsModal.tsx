@@ -553,6 +553,10 @@ function PropertyDetailsContent({ propertyId, isOpen, onClose, propConfig }: {
                         Gostou deste imóvel?
                       </h2>
                       
+                      <p className="text-base mb-3" style={{ color: `${detailsTextColor}CC` }}>
+                        Fale com um de nossos especialistas e agende uma visita hoje mesmo!
+                      </p>
+                      
                       {/* Informações do imóvel no formulário de contato */}
                       <div className="mb-3">
                         <div className="font-medium mb-1" style={{ color: detailsTextColor }}>
@@ -591,10 +595,6 @@ function PropertyDetailsContent({ propertyId, isOpen, onClose, propConfig }: {
                           </div>
                         ) : null}
                       </div>
-                      
-                      <p className="text-base" style={{ color: `${detailsTextColor}CC` }}>
-                        Fale com um de nossos especialistas e agende uma visita hoje mesmo!
-                      </p>
                     </div>
                     
                     {/* Detalhes do corretor */}
