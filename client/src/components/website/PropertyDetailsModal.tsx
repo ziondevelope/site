@@ -561,11 +561,14 @@ function PropertyDetailsContent({ propertyId, isOpen, onClose, propConfig }: {
                       
                       {/* Informações do imóvel no formulário de contato */}
                       <div className="mb-5 pb-4 border-b border-gray-100">
-                        <div className="font-medium mb-1 text-lg" style={{ color: detailsTextColor }}>
-                          {formatCurrency(currentProperty.price)}
-                          {currentProperty.purpose === 'rent' && 
-                            <span className="text-base font-normal" style={{ color: `${detailsTextColor}BB` }}>/mês</span>
-                          }
+                        <div className="mb-1">
+                          <span className="block text-xs uppercase font-medium text-gray-500 mb-1">Valor do Imóvel</span>
+                          <div className="font-medium text-lg" style={{ color: detailsTextColor }}>
+                            {formatCurrency(currentProperty.price)}
+                            {currentProperty.purpose === 'rent' && 
+                              <span className="text-base font-normal" style={{ color: `${detailsTextColor}BB` }}>/mês</span>
+                            }
+                          </div>
                         </div>
                         
                         {/* Parcelas para aluguel */}
