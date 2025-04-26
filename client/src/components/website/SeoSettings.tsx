@@ -4,6 +4,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
 import { ImageUpload } from "@/components/ui/image-upload";
 import { WebsiteConfig, UpdateWebsiteConfig } from "@shared/schema";
+import { useState, useEffect } from "react";
 
 interface SeoSettingsProps {
   config?: WebsiteConfig;
@@ -12,6 +13,20 @@ interface SeoSettingsProps {
 }
 
 export default function SeoSettings({ config, configData, onConfigChange }: SeoSettingsProps) {
+  // Estado para armazenar o domínio atual
+  const [currentDomain, setCurrentDomain] = useState<string>("");
+  
+  // Detectar o domínio atual
+  useEffect(() => {
+    const domain = window.location.hostname;
+    // Usar dominio.com.br para previas, mas filtrar localhost e replit.dev
+    if (domain === 'localhost' || domain.includes('replit.dev')) {
+      setCurrentDomain('seudominio.com.br');
+    } else {
+      setCurrentDomain(domain);
+    }
+  }, []);
+  
   // These are derived values that reflect either the current editing state (configData)
   // or fallback to the saved values (config) if no edits have been made
   const seoTitle = configData.seoTitle !== undefined 
@@ -127,7 +142,7 @@ export default function SeoSettings({ config, configData, onConfigChange }: SeoS
         <h4 className="font-medium mb-2">Prévia nos Resultados de Busca</h4>
         <Card className="p-4 border border-gray-200 rounded-xl shadow-sm">
           <p className="text-xl text-blue-700 hover:underline cursor-pointer mb-1">{seoTitle}</p>
-          <p className="text-green-700 text-sm mb-1">https://www.imobiliariaxyz.com.br/</p>
+          <p className="text-green-700 text-sm mb-1">https://www.{currentDomain}/</p>
           <p className="text-sm text-gray-700">{seoDescription}</p>
         </Card>
       </div>
