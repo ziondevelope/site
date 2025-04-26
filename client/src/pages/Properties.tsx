@@ -18,6 +18,7 @@ import { CepInput } from "@/components/ui/cep-input";
 import { PropertyFeatures } from "@/components/ui/property-features";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Checkbox } from "@/components/ui/checkbox";
+import { PriceWithTaxesFields } from "@/components/ui/price-with-taxes-fields";
 import { 
   AlertDialog,
   AlertDialogAction,
