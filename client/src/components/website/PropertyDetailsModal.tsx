@@ -384,14 +384,43 @@ function PropertyDetailsContent({ propertyId, isOpen, onClose, propConfig }: {
                     <h1 className="text-2xl md:text-3xl font-bold mb-2" style={{ lineHeight: '2rem', color: detailsTextColor }}>
                       {currentProperty.title}
                     </h1>
-                    <div 
-                      className="font-medium"
-                      style={{ color: detailsTextColor, fontSize: '22px', fontWeight: 500 }}
-                    >
-                      {formatCurrency(currentProperty.price)}
-                      {currentProperty.purpose === 'rent' && 
-                        <span className="text-base font-normal" style={{ color: `${detailsTextColor}BB` }}>/mês</span>
-                      }
+                    <div className="mb-2">
+                      <div 
+                        className="font-medium"
+                        style={{ color: detailsTextColor, fontSize: '22px', fontWeight: 500 }}
+                      >
+                        {formatCurrency(currentProperty.price)}
+                        {currentProperty.purpose === 'rent' && 
+                          <span className="text-base font-normal" style={{ color: `${detailsTextColor}BB` }}>/mês</span>
+                        }
+                      </div>
+                      
+                      {/* Informações de IPTU e condomínio no estilo da imagem de referência */}
+                      {currentProperty.purpose === 'rent' && currentProperty.condoFee ? (
+                        <div className="text-sm mt-1" style={{ color: `${detailsTextColor}AA` }}>
+                          <div className="flex justify-between">
+                            <span>Parcelas a partir de</span>
+                            <span className="text-[#19a974]">{formatCurrency(currentProperty.price / 24)}/mês</span>
+                          </div>
+                        </div>
+                      ) : null}
+                      
+                      {currentProperty.iptuValue ? (
+                        <div className="flex justify-between items-center mt-2 text-sm" style={{ color: `${detailsTextColor}AA` }}>
+                          <div className="flex items-center">
+                            <span>IPTU</span>
+                            <span className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-gray-400 text-white text-[10px] ml-1">i</span>
+                          </div>
+                          <span>{formatCurrency(currentProperty.iptuValue)}/ano</span>
+                        </div>
+                      ) : null}
+                      
+                      {currentProperty.condoFee ? (
+                        <div className="flex justify-between items-center mt-1 text-sm" style={{ color: `${detailsTextColor}AA` }}>
+                          <span>Condomínio</span>
+                          <span>{formatCurrency(currentProperty.condoFee)}/mês</span>
+                        </div>
+                      ) : null}
                     </div>
                   </div>
                   
@@ -523,13 +552,6 @@ function PropertyDetailsContent({ propertyId, isOpen, onClose, propConfig }: {
                         Gostou deste imóvel?
                       </h2>
                       <p className="text-base" style={{ color: `${detailsTextColor}CC` }}>
-                        {currentProperty.iptuValue || currentProperty.condoFee ? 
-                          <span className="block mb-2">
-                            {currentProperty.iptuValue ? `IPTU: ${formatCurrency(currentProperty.iptuValue)}/ano` : ''}
-                            {currentProperty.iptuValue && currentProperty.condoFee ? ' • ' : ''}
-                            {currentProperty.condoFee ? `Condomínio: ${formatCurrency(currentProperty.condoFee)}/mês` : ''}
-                          </span> 
-                        : null}
                         Fale com um de nossos especialistas e agende uma visita hoje mesmo!
                       </p>
                     </div>
