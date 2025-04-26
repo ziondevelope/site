@@ -166,6 +166,9 @@ export default function Properties() {
   const [isDeleting, setIsDeleting] = useState(false);
   const { toast } = useToast();
   
+  // Tab state for properties/integrations
+  const [activeTab, setActiveTab] = useState('properties');
+  
   // Search and filter states
   const [searchQuery, setSearchQuery] = useState("");
   const [typeFilter, setTypeFilter] = useState("all");
