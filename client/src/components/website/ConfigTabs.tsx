@@ -72,12 +72,6 @@ export default function ConfigTabs({
             >
               Chat WhatsApp
             </TabsTrigger>
-            <TabsTrigger 
-              value="integration" 
-              className="px-6 py-4 data-[state=active]:border-b-2 data-[state=active]:border-indigo-600 rounded-none data-[state=active]:bg-white"
-            >
-              Integração
-            </TabsTrigger>
           </TabsList>
         </div>
         
@@ -133,9 +127,7 @@ export default function ConfigTabs({
           />
         </TabsContent>
         
-        <TabsContent value="integration" className="p-6 bg-white">
-          <IntegrationSettings />
-        </TabsContent>
+
       </Tabs>
     </div>
   );

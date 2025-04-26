@@ -40,8 +40,12 @@ import {
   BadgeInfo,
   SquareDot,
   Plus,
-  Trash2
+  Trash2,
+  FileText,
+  RefreshCw,
+  ExternalLink
 } from "lucide-react";
+import IntegrationSettings from "@/components/website/IntegrationSettings";
 import { cn } from "@/lib/utils";
 
 // Tipo para corrigir o erro de tipagem do agente
