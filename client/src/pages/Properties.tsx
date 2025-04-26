@@ -227,6 +227,8 @@ export default function Properties() {
       parkingSpots: 0,
       suites: 0,
       features: [],
+      iptuValue: undefined,
+      condoFee: undefined,
     },
   });
 
@@ -277,6 +279,8 @@ export default function Properties() {
       suites: property.suites || 0,
       features: property.features || [],
       agentId: property.agentId || null,
+      iptuValue: property.iptuValue,
+      condoFee: property.condoFee,
     });
     setIsEditDialogOpen(true);
   };
@@ -304,6 +308,8 @@ export default function Properties() {
       suites: 0,
       features: [],
       agentId: null,
+      iptuValue: undefined,
+      condoFee: undefined,
     });
     setIsAddDialogOpen(true);
   };
