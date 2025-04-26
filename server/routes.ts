@@ -1283,12 +1283,38 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
+  // Rota para exibir o arquivo XML diretamente pelo caminho personalizado
+  app.get('/:xmlPath([a-zA-Z0-9_-]+\\.xml)', async (req, res) => {
+    try {
+      const xmlPath = req.params.xmlPath;
+      const publicDir = path.join(process.cwd(), 'public');
+      const filePath = path.join(publicDir, xmlPath);
+      
+      // Verificar se o arquivo existe
+      if (!fs.existsSync(filePath)) {
+        return res.status(404).send('XML file not found. You may need to generate it first.');
+      }
+      
+      // Configurar cabeçalhos para forçar o download ou exibição como XML
+      res.header('Content-Type', 'application/xml');
+      res.header('Content-Disposition', `inline; filename="${xmlPath}"`);
+      
+      // Enviar o arquivo
+      fs.createReadStream(filePath).pipe(res);
+    } catch (error) {
+      console.error("Error serving XML file:", error);
+      res.status(500).send('Error serving XML file');
+    }
+  });
+
   // Configurar diretório public para servir arquivos estáticos
-  // Isso será chamado na função principal depois de registrar as rotas
   const publicDir = path.join(process.cwd(), 'public');
   if (!fs.existsSync(publicDir)) {
     fs.mkdirSync(publicDir, { recursive: true });
   }
+  
+  // Configurar o Express para servir arquivos estáticos do diretório 'public'
+  app.use(express.static(publicDir));
 
   // Sales Funnels endpoints
   apiRouter.get("/sales-funnels", async (req, res) => {
