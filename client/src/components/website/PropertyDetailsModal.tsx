@@ -875,7 +875,7 @@ function PropertyDetailsContent({ propertyId, isOpen, onClose, propConfig }: {
                           style={{ backgroundColor: config?.primaryColor || '#130a01', borderColor: config?.primaryColor || '#130a01' }}
                         >
                           <span className="text-base">
-                            Agendar visita
+                            Enviar mensagem
                           </span>
                         </button>
                         <p className="text-xs mt-3 text-center text-gray-500">
