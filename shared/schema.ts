@@ -198,6 +198,15 @@ export const websiteConfig = pgTable("website_config", {
   whatsappButtonBackgroundColor: text("whatsapp_button_background_color").default("#25D366"),
   whatsappButtonTextColor: text("whatsapp_button_text_color").default("#ffffff"),
   
+  // Configurações de integração VivaReal/ZAP
+  enableVivaRealIntegration: boolean("enable_vivareal_integration").default(false),
+  vivaRealUsername: text("vivareal_username"),
+  xmlAutomaticUpdate: boolean("xml_automatic_update").default(true),
+  customXmlPath: text("custom_xml_path"),
+  includeInactiveProperties: boolean("include_inactive_properties").default(false),
+  includeSoldProperties: boolean("include_sold_properties").default(false),
+  lastXmlUpdate: timestamp("last_xml_update"),
+  
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
