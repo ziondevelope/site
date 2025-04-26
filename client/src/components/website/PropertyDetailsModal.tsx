@@ -554,7 +554,7 @@ function PropertyDetailsContent({ propertyId, isOpen, onClose, propConfig }: {
                       </h2>
                       
                       {/* Informações do imóvel no formulário de contato */}
-                      <div className="mb-3 p-3 rounded-lg" style={{ backgroundColor: `${detailsIconsColor}10` }}>
+                      <div className="mb-3">
                         <div className="font-medium mb-1" style={{ color: detailsTextColor }}>
                           {formatCurrency(currentProperty.price)}
                           {currentProperty.purpose === 'rent' && 
