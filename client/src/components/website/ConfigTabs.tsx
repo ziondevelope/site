@@ -7,6 +7,7 @@ import InformationSettings from "@/components/website/InformationSettings";
 import { TestimonialsManager } from "@/components/website/TestimonialsManager";
 import ChatSettings from "@/components/website/ChatSettings";
 import SliderSettings from "@/components/website/SliderSettings";
+import PortalSettings from "@/components/website/PortalSettings";
 import { WebsiteConfig, UpdateWebsiteConfig } from "@shared/schema";
 
 interface ConfigTabsProps {
@@ -71,6 +72,12 @@ export default function ConfigTabs({
             >
               Chat WhatsApp
             </TabsTrigger>
+            <TabsTrigger 
+              value="portal" 
+              className="px-6 py-4 data-[state=active]:border-b-2 data-[state=active]:border-indigo-600 rounded-none data-[state=active]:bg-white"
+            >
+              Adicionar Portal
+            </TabsTrigger>
           </TabsList>
         </div>
         
@@ -120,6 +127,14 @@ export default function ConfigTabs({
         
         <TabsContent value="chat" className="p-6 bg-white">
           <ChatSettings 
+            config={config} 
+            configData={configData}
+            onConfigChange={onConfigChange}
+          />
+        </TabsContent>
+        
+        <TabsContent value="portal" className="p-6 bg-white">
+          <PortalSettings 
             config={config} 
             configData={configData}
             onConfigChange={onConfigChange}
