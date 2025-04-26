@@ -395,6 +395,16 @@ function PropertyDetailsContent({ propertyId, isOpen, onClose, propConfig }: {
                         }
                       </div>
                       
+                      {/* Localização logo abaixo do preço principal */}
+                      <div className="flex items-center mt-1 mb-2" style={{ color: `${detailsTextColor}DD` }}>
+                        <i className="ri-map-pin-line mr-2" style={{ color: detailsIconsColor }}></i>
+                        <span>{currentProperty.neighborhood || ''}{currentProperty.neighborhood && currentProperty.city ? ', ' : ''}{currentProperty.city || ''}</span>
+                        <div className="ml-auto text-sm flex items-center" style={{ color: `${detailsTextColor}DD` }}>
+                          <i className="ri-code-line mr-1" style={{ color: detailsIconsColor }}></i>
+                          <span>Cód. LL{currentProperty.id}</span>
+                        </div>
+                      </div>
+                      
                       {/* Informações de IPTU e condomínio no estilo da imagem de referência */}
                       {currentProperty.purpose === 'rent' && currentProperty.condoFee ? (
                         <div className="text-sm mt-1" style={{ color: `${detailsTextColor}AA` }}>
@@ -421,15 +431,6 @@ function PropertyDetailsContent({ propertyId, isOpen, onClose, propConfig }: {
                           <span>{formatCurrency(currentProperty.condoFee)}/mês</span>
                         </div>
                       ) : null}
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center mb-4" style={{ color: `${detailsTextColor}DD` }}>
-                    <i className="ri-map-pin-line mr-2" style={{ color: detailsIconsColor }}></i>
-                    <span>{currentProperty.neighborhood || ''}{currentProperty.neighborhood && currentProperty.city ? ', ' : ''}{currentProperty.city || ''}</span>
-                    <div className="ml-auto text-sm flex items-center" style={{ color: `${detailsTextColor}DD` }}>
-                      <i className="ri-code-line mr-1" style={{ color: detailsIconsColor }}></i>
-                      <span>Cód. LL{currentProperty.id}</span>
                     </div>
                   </div>
                   
