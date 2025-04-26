@@ -1819,6 +1819,8 @@ export default function Properties() {
                   <TableHead className="text-white hover:bg-[#001623] hover:text-white">Tipo</TableHead>
                   <TableHead className="text-white hover:bg-[#001623] hover:text-white">Finalidade</TableHead>
                   <TableHead className="text-white hover:bg-[#001623] hover:text-white">Preço</TableHead>
+                  <TableHead className="text-white hover:bg-[#001623] hover:text-white">IPTU</TableHead>
+                  <TableHead className="text-white hover:bg-[#001623] hover:text-white">Condomínio</TableHead>
                   <TableHead className="text-white hover:bg-[#001623] hover:text-white">Detalhes</TableHead>
                   <TableHead className="text-white hover:bg-[#001623] hover:text-white text-center">Destaque</TableHead>
                   <TableHead className="text-white hover:bg-[#001623] hover:text-white text-right">Ações</TableHead>
@@ -1879,6 +1881,12 @@ export default function Properties() {
                     </TableCell>
                     <TableCell>
                       <span className="font-medium">{formatCurrency(property.price)}</span>
+                    </TableCell>
+                    <TableCell>
+                      <span className="text-gray-600">{property.iptuValue ? formatCurrency(property.iptuValue) : '-'}</span>
+                    </TableCell>
+                    <TableCell>
+                      <span className="text-gray-600">{property.condoFee ? formatCurrency(property.condoFee) : '-'}</span>
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center space-x-3">
