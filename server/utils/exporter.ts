@@ -14,7 +14,7 @@ function formatMoney(value: number): string {
 }
 
 /**
- * Gera o XML no formato ZAP/VivaReal 4.0
+ * Gera o XML no formato do portal imobiliário brasileiro
  */
 export async function generatePropertyXml(
   properties: Property[],
@@ -37,159 +37,122 @@ export async function generatePropertyXml(
     return true;
   });
 
-  // Construir o objeto XML
+  // Construir o objeto XML no formato brasileiro
   const xmlObj = {
-    'ListingDataFeed': {
-      '$': {
-        'xmlns': 'http://www.vivareal.com/schemas/1.0/VivaReal.xsd',
-        'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
-        'xsi:schemaLocation': 'http://www.vivareal.com/schemas/1.0/VivaReal.xsd'
-      },
-      'Header': {
-        'Provider': {
-          'Name': 'ImobSite CRM',
-          'Logo': '',
-          'Email': '',
-          'Phone': '',
-        },
-        'Email': '',
-        'Website': '',
-        'PublishDate': new Date().toISOString(),
-      },
-      'Listings': {
-        'Listing': filteredProperties.map(property => {
-          // Valores padrão para campos opcionais
-          let bathrooms = property.bathrooms || 0;
-          let bedrooms = property.bedrooms || 0;
-          let parkingSpots = property.parkingSpots || 0;
-          let iptuValue = property.iptuValue ? formatMoney(property.iptuValue) : '';
-          let condoFee = property.condoFee ? formatMoney(property.condoFee) : '';
-          
-          // Determinar tipo de transação (venda ou aluguel)
-          const transactionType = property.purpose === 'sale' ? 'For Sale' : 'For Rent';
-          
-          // Preparar endereço completo
-          const fullAddress = [
-            property.address,
-            property.neighborhood,
-            property.city,
-            property.zipCode
-          ].filter(Boolean).join(', ');
-          
-          // Mapear o tipo de imóvel para formato VivaReal
-          let propertyType = 'Residential';
-          let subType = 'Apartment';
-          
-          switch (property.type.toLowerCase()) {
-            case 'apartment':
-              propertyType = 'Residential';
-              subType = 'Apartment';
-              break;
-            case 'house':
-              propertyType = 'Residential';
-              subType = 'Home';
-              break;
-            case 'commercial':
-              propertyType = 'Commercial';
-              subType = 'Office';
-              break;
-            case 'land':
-              propertyType = 'Commercial';
-              subType = 'Land';
-              break;
-            default:
-              propertyType = 'Residential';
-              subType = 'Apartment';
+    'imoveis': {
+      'imovel': filteredProperties.map(property => {
+        // Valores padrão para campos opcionais
+        let bathrooms = property.bathrooms || 0;
+        let bedrooms = property.bedrooms || 0;
+        let suites = property.suites || 0;
+        let parkingSpots = property.parkingSpots || 0;
+        
+        // Mapear o tipo de imóvel para categorias brasileiras
+        let categoria = 'Residencial';
+        let tipo = 'Apartamento';
+        let subtipo = '';
+        
+        switch (property.type.toLowerCase()) {
+          case 'apartment':
+            categoria = 'Residencial';
+            tipo = 'Apartamento';
+            break;
+          case 'house':
+            categoria = 'Residencial';
+            tipo = 'Casa';
+            subtipo = 'Casa';
+            break;
+          case 'townhouse':
+            categoria = 'Residencial';
+            tipo = 'Casa';
+            subtipo = 'Casa de condomínio';
+            break;
+          case 'commercial':
+            categoria = 'Comercial';
+            tipo = 'Sala Comercial';
+            break;
+          case 'office':
+            categoria = 'Comercial';
+            tipo = 'Sala Comercial';
+            break;
+          case 'land':
+            categoria = 'Terrenos e Lotes';
+            tipo = 'Terreno';
+            break;
+          case 'rural':
+            categoria = 'Rural';
+            tipo = 'Fazenda';
+            break;
+          default:
+            categoria = 'Residencial';
+            tipo = 'Apartamento';
+        }
+        
+        // Identificar disponibilidade do imóvel
+        let disponibilidade = 'ativo';
+        if (property.status === 'sold') {
+          disponibilidade = 'vendido';
+        } else if (property.status === 'rented') {
+          disponibilidade = 'alugado';
+        } else if (property.status !== 'available') {
+          disponibilidade = 'inativo';
+        }
+        
+        // Extrair informações do endereço
+        const cityParts = property.city.split('-');
+        const cidade = cityParts[0]?.trim() || property.city;
+        const uf = cityParts[1]?.trim() || 'SP';
+        
+        // Extrair número do endereço (se disponível)
+        const addressParts = property.address.match(/^(.*?)(?:,\s*(\d+)|$)/);
+        const logradouro = addressParts ? addressParts[1] : property.address;
+        const numero = addressParts && addressParts[2] ? addressParts[2] : '';
+        
+        // Preparar características/features
+        const caracteristicas = Array.isArray(property.features) ? property.features : [];
+        
+        // Preparar fotos
+        const fotos = [];
+        if (Array.isArray(property.images)) {
+          for (const img of property.images) {
+            const url = typeof img === 'string' ? img : img.url;
+            fotos.push({
+              url: url
+            });
           }
-          
-          // Preparar imagens
-          const photos = Array.isArray(property.images) 
-            ? property.images.map((img: any, index: number) => ({
-                'Photo': {
-                  '$': { 'main': index === 0 ? 'true' : 'false' },
-                  'URL': typeof img === 'string' ? img : img.url,
-                  'Caption': `Imagem ${index + 1} de ${property.title}`
-                }
-              }))
-            : [];
-          
-          // Identificar status do imóvel
-          let propertyStatus = 'Active';
-          if (property.status === 'sold' || property.status === 'rented') {
-            propertyStatus = 'Inactive';
-          } else if (property.status === 'available') {
-            propertyStatus = 'Active';
-          }
-          
-          // Construir o objeto da propriedade no formato VivaReal
-          return {
-            'ListingID': property.id.toString(),
-            'Title': property.title,
-            'TransactionType': transactionType,
-            'PropertyType': propertyType,
-            'PropertySubType': subType,
-            'ListPrice': {
-              '$': {
-                'currency': 'BRL',
-              },
-              '_': formatMoney(property.price)
-            },
-            'Description': property.description,
-            'ContactInfo': {
-              'Email': '',
-              'Phone': '',
-              'Website': '',
-              'Name': vivaRealUsername || 'ImobSite CRM',
-            },
-            'Location': {
-              'Country': {
-                '$': {
-                  'abbreviation': 'BR'
-                },
-                '_': 'Brasil'
-              },
-              'State': {
-                '_': property.city.split('-').pop()?.trim() || 'SP'
-              },
-              'City': {
-                '_': property.city.split('-').shift()?.trim() || property.city
-              },
-              'Neighborhood': {
-                '_': property.neighborhood
-              },
-              'Address': {
-                '_': property.address
-              },
-              'PostalCode': property.zipCode || '',
-            },
-            'Details': {
-              'UsableArea': {
-                '$': {
-                  'unit': 'square metres'
-                },
-                '_': property.area.toString()
-              },
-              'Bedrooms': bedrooms.toString(),
-              'Bathrooms': bathrooms.toString(),
-              'Garages': parkingSpots.toString(),
-              'UnitFeatures': {
-                'UnitFeature': property.features || []
-              },
-              'OtherFeatures': {
-                'Feature': [
-                  ...(property.iptuValue ? [`IPTU: ${iptuValue}/ano`] : []),
-                  ...(property.condoFee ? [`Condomínio: ${condoFee}/mês`] : [])
-                ]
-              }
-            },
-            'Media': {
-              'Item': photos
-            },
-            'Status': propertyStatus,
-            'FeaturedListing': property.isFeatured ? 'true' : 'false',
-          };
-        })
-      }
+        }
+        
+        // Construir o objeto da propriedade no formato exato do exemplo
+        return {
+          codigo: property.id.toString(),
+          categoria: categoria,
+          tipo: tipo,
+          subtipo: subtipo,
+          endereco: {
+            logradouro: logradouro,
+            numero: numero,
+            bairro: property.neighborhood,
+            cidade: cidade,
+            uf: uf,
+            cep: property.zipCode || ''
+          },
+          area_util: property.area,
+          area_total: property.totalArea || property.area,
+          quartos: bedrooms,
+          suites: suites,
+          banheiros: bathrooms,
+          vagas: parkingSpots,
+          valor: property.price.toFixed(2),
+          descricao: property.description,
+          caracteristicas: {
+            caracteristica: caracteristicas
+          },
+          fotos: {
+            foto: fotos
+          },
+          disponibilidade: disponibilidade
+        };
+      })
     }
   };
 
