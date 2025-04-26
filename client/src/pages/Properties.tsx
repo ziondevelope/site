@@ -40,12 +40,8 @@ import {
   BadgeInfo,
   SquareDot,
   Plus,
-  Trash2,
-  FileText,
-  RefreshCw,
-  ExternalLink
+  Trash2
 } from "lucide-react";
-import IntegrationSettings from "@/components/website/IntegrationSettings";
 import { cn } from "@/lib/utils";
 
 // Tipo para corrigir o erro de tipagem do agente
@@ -166,9 +162,6 @@ export default function Properties() {
   const [isDeleting, setIsDeleting] = useState(false);
   const { toast } = useToast();
   
-  // Tab state for properties/integrations
-  const [activeTab, setActiveTab] = useState('properties');
-  
   // Search and filter states
   const [searchQuery, setSearchQuery] = useState("");
   const [typeFilter, setTypeFilter] = useState("all");
@@ -286,7 +279,7 @@ export default function Properties() {
       parkingSpots: property.parkingSpots || 0,
       suites: property.suites || 0,
       features: property.features || [],
-      agentId: property.agentId || undefined,
+      agentId: property.agentId || null,
       iptuValue: property.iptuValue,
       condoFee: property.condoFee,
     });
@@ -315,7 +308,7 @@ export default function Properties() {
       parkingSpots: 0,
       suites: 0,
       features: [],
-      agentId: undefined,
+      agentId: null,
       iptuValue: undefined,
       condoFee: undefined,
     });
@@ -533,11 +526,14 @@ export default function Properties() {
       const response = await fetch("/api/properties/import", {
         method: "POST",
         body: formData,
+        // Não definir cabeçalho Content-Type para upload de arquivos
+        credentials: "include",
       });
       
+      // Verificar se a resposta foi bem-sucedida
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Erro ao importar imóveis");
+        const text = await response.text();
+        throw new Error(`${response.status}: ${text}`);
       }
       
       return response.json();
@@ -547,127 +543,1077 @@ export default function Properties() {
       setImportFile(null);
       setImportMethod(null);
       setIsImporting(false);
-      
       queryClient.invalidateQueries({ queryKey: ['/api/properties'] });
-      
       toast({
         title: "Importação concluída",
-        description: `${data.imported} imóveis foram importados com sucesso.${data.errors ? ` ${data.errors} erros encontrados.` : ''}`,
+        description: `${data.imported} imóveis foram importados com sucesso.`,
       });
     },
     onError: (error) => {
       setIsImporting(false);
       toast({
         title: "Erro na importação",
-        description: error.message || "Ocorreu um erro ao importar os imóveis.",
+        description: error.message || "Ocorreu um erro ao importar os imóveis. Verifique o formato do arquivo.",
         variant: "destructive",
       });
     },
   });
   
-  // Função para lidar com a submissão do formulário de importação
-  const handleImportSubmit = () => {
-    if (!importFile || !importMethod) return;
+  // Processa o arquivo de importação
+  const handleImportSubmit = async () => {
+    if (!importFile || !importMethod) {
+      toast({
+        title: "Erro na importação",
+        description: "Selecione um arquivo e um método de importação.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    setIsImporting(true);
     
     const formData = new FormData();
     formData.append('file', importFile);
     formData.append('method', importMethod);
     
-    setIsImporting(true);
     importPropertyMutation.mutate(formData);
-  };
-  
-  // Função para lidar com a seleção de arquivo
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      setImportFile(e.target.files[0]);
-    }
   };
 
   return (
-    <div className="container mx-auto p-6">
-      <div className="flex flex-col">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-semibold">Propriedades</h1>
-          <div className="flex gap-2">
-            <Button 
-              variant="outline" 
-              className="flex items-center space-x-1" 
-              onClick={() => setIsImportDialogOpen(true)}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
-              <span>Importar</span>
-            </Button>
-            <Button 
-              className="flex items-center space-x-1 bg-[#12636C] hover:bg-[#12636C]/90"
-              onClick={handleAddClick}
-            >
-              <Plus className="h-4 w-4" />
-              <span>Novo Imóvel</span>
-            </Button>
-          </div>
-        </div>
-        
-        {/* Import Dialog */}
-        <Dialog open={isImportDialogOpen} onOpenChange={setIsImportDialogOpen}>
-          <DialogContent className="sm:max-w-[500px]">
-            <DialogHeader>
-              <DialogTitle>Importar Imóveis</DialogTitle>
-              <DialogDescription>
-                Selecione o formato e o arquivo para importar imóveis em lote.
-              </DialogDescription>
-            </DialogHeader>
-            
-            <div className="grid gap-4 py-4">
-              <div className="grid gap-2">
-                <Label htmlFor="importMethod">Formato do arquivo</Label>
-                <Select
-                  value={importMethod || undefined}
-                  onValueChange={(value) => setImportMethod(value as 'csv' | 'xml' | 'json')}
-                >
-                  <SelectTrigger id="importMethod">
-                    <SelectValue placeholder="Selecione um formato" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="csv">CSV (valores separados por vírgula)</SelectItem>
-                    <SelectItem value="xml">XML</SelectItem>
-                    <SelectItem value="json">JSON</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              {importMethod && (
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-                  <input
-                    id="importFile"
-                    type="file"
-                    accept={
-                      importMethod === 'csv' ? '.csv' : 
-                      importMethod === 'xml' ? '.xml' : 
-                      importMethod === 'json' ? '.json' : undefined
-                    }
-                    onChange={handleFileChange}
-                    className="hidden"
-                  />
-                  <label 
-                    htmlFor="importFile" 
-                    className="cursor-pointer block"
-                  >
-                    <div className="flex flex-col items-center justify-center space-y-2">
-                      <i className="fas fa-cloud-upload-alt text-3xl text-gray-400"></i>
-                      <p className="text-sm font-medium">
-                        Clique para selecionar ou arraste seu arquivo aqui
-                      </p>
-                      <p className="text-xs text-gray-500">
-                        {importMethod === 'csv' ? 'Arquivos .CSV' : 
-                        importMethod === 'xml' ? 'Arquivos .XML' : 
-                        importMethod === 'json' ? 'Arquivos .JSON' :
-                        'Selecione um formato primeiro'}
-                      </p>
+    <div className="bg-[#F9FAFB] min-h-screen p-4">
+      {/* Add Property Dialog */}
+      <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+        <DialogContent className="sm:max-w-[600px] p-0 max-h-[90vh] overflow-hidden">
+          <DialogHeader className="p-4 border-b border-gray-100 sticky top-0 bg-white z-10">
+            <DialogTitle className="text-lg font-light text-gray-700">Adicionar Novo Imóvel</DialogTitle>
+            <DialogDescription className="text-sm text-gray-500 mt-1">
+              Preencha os dados abaixo para cadastrar um novo imóvel
+            </DialogDescription>
+          </DialogHeader>
+          <div className="overflow-y-auto max-h-[calc(90vh-130px)]">
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="p-4">
+                <Tabs defaultValue="info" className="w-full">
+                  <TabsList className="grid grid-cols-3 mb-4 sticky top-0">
+                    <TabsTrigger value="info">Informações Básicas</TabsTrigger>
+                    <TabsTrigger value="details">Detalhes</TabsTrigger>
+                    <TabsTrigger value="location">Localização e Imagem</TabsTrigger>
+                  </TabsList>
+                  
+                  <TabsContent value="info" className="space-y-4">
+                    <FormField
+                      control={form.control}
+                      name="title"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Título do imóvel</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Ex: Apartamento com 3 quartos na Barra da Tijuca" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <div className="grid grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="type"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Tipo de imóvel</FormLabel>
+                            <Select 
+                              value={field.value} 
+                              onValueChange={field.onChange}
+                            >
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Selecione o tipo" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectItem value="apartment">Apartamento</SelectItem>
+                                <SelectItem value="house">Casa</SelectItem>
+                                <SelectItem value="commercial">Comercial</SelectItem>
+                                <SelectItem value="land">Terreno</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="purpose"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Finalidade</FormLabel>
+                            <Select 
+                              value={field.value} 
+                              onValueChange={field.onChange}
+                            >
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Selecione a finalidade" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectItem value="sale">Venda</SelectItem>
+                                <SelectItem value="rent">Aluguel</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
                     </div>
-                  </label>
+                    
+                    <div className="space-y-2">
+                      <FormField
+                        control={form.control}
+                        name="price"
+                        render={({ field: priceField }) => (
+                          <FormField
+                            control={form.control}
+                            name="iptuValue"
+                            render={({ field: iptuField }) => (
+                              <FormField
+                                control={form.control}
+                                name="condoFee"
+                                render={({ field: condoField }) => (
+                                  <PriceWithTaxesFields
+                                    priceField={priceField}
+                                    iptuField={iptuField}
+                                    condoField={condoField}
+                                  />
+                                )}
+                              />
+                            )}
+                          />
+                        )}
+                      />
+                    </div>
+                    
+                    <FormField
+                      control={form.control}
+                      name="description"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Descrição</FormLabel>
+                          <FormControl>
+                            <Textarea 
+                              placeholder="Descreva o imóvel em detalhes" 
+                              className="min-h-[120px]" 
+                              {...field} 
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={form.control}
+                      name="status"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Status</FormLabel>
+                          <Select 
+                            value={field.value} 
+                            onValueChange={field.onChange}
+                          >
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Selecione o status" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="available">Disponível</SelectItem>
+                              <SelectItem value="sold">Vendido</SelectItem>
+                              <SelectItem value="rented">Alugado</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={form.control}
+                      name="isFeatured"
+                      render={({ field }) => (
+                        <FeaturedCheckbox field={field} />
+                      )}
+                    />
+                  </TabsContent>
+                  
+                  <TabsContent value="details" className="space-y-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="area"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Área (m²)</FormLabel>
+                            <FormControl>
+                              <Input 
+                                type="number" 
+                                placeholder="Ex: 120" 
+                                {...field}
+                                onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
+                                value={field.value || 0}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="bedrooms"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Quartos</FormLabel>
+                            <FormControl>
+                              <Input 
+                                type="number" 
+                                placeholder="Ex: 3" 
+                                {...field}
+                                onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
+                                value={field.value || 0}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="suites"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Suítes</FormLabel>
+                            <FormControl>
+                              <Input 
+                                type="number" 
+                                placeholder="Ex: 2" 
+                                {...field}
+                                onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
+                                value={field.value || 0}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="bathrooms"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Banheiros</FormLabel>
+                            <FormControl>
+                              <Input 
+                                type="number" 
+                                placeholder="Ex: 2" 
+                                {...field}
+                                onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
+                                value={field.value || 0}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="parkingSpots"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Vagas de garagem</FormLabel>
+                            <FormControl>
+                              <Input 
+                                type="number" 
+                                placeholder="Ex: 1" 
+                                {...field}
+                                onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
+                                value={field.value || 0}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="agentId"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Corretor</FormLabel>
+                            <Select 
+                              value={field.value?.toString() || ""}
+                              onValueChange={(value) => field.onChange(Number(value) || null)}
+                            >
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Selecione o corretor" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectItem value="none">Sem corretor</SelectItem>
+                                {allAgents?.map(agent => (
+                                  <SelectItem key={agent.id} value={agent.id.toString()}>
+                                    {agent.displayName}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    
+                    <FormField
+                      control={form.control}
+                      name="features"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Características</FormLabel>
+                          <FormControl>
+                            <PropertyFeatures 
+                              value={field.value || []} 
+                              onChange={field.onChange}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </TabsContent>
+                  
+                  <TabsContent value="location" className="space-y-4">
+                    <FormField
+                      control={form.control}
+                      name="zipCode"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>CEP</FormLabel>
+                          <FormControl>
+                            <CepInput
+                              value={field.value}
+                              onChange={field.onChange}
+                              name={field.name}
+                              onBlur={field.onBlur}
+                              onAddressFound={(addressData) => {
+                                form.setValue("address", addressData.logradouro || "");
+                                form.setValue("city", addressData.localidade || "");
+                                form.setValue("neighborhood", addressData.bairro || "");
+                              }}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={form.control}
+                      name="address"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Endereço</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Rua, número" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <div className="grid grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="neighborhood"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Bairro</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Bairro" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="city"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Cidade</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Cidade" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    
+                    <FormField
+                      control={form.control}
+                      name="images"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Imagens do imóvel</FormLabel>
+                          <FormControl>
+                            <MultipleImageUpload
+                              value={field.value || []}
+                              onChange={field.onChange}
+                              maxFiles={10}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </TabsContent>
+                </Tabs>
+                
+                <div className="flex justify-end mt-6 pt-4 border-t border-gray-100">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setIsAddDialogOpen(false)}
+                    className="mr-2"
+                  >
+                    Cancelar
+                  </Button>
+                  <Button 
+                    type="submit" 
+                    disabled={addPropertyMutation.isPending}
+                    className="bg-[#12636C] hover:bg-[#12636C]/90 rounded-full px-5"
+                  >
+                    {addPropertyMutation.isPending ? 'Adicionando...' : 'Adicionar Imóvel'}
+                  </Button>
                 </div>
-              )}
+              </form>
+            </Form>
+          </div>
+        </DialogContent>
+      </Dialog>
+      
+      {/* Edit Property Dialog */}
+      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+        <DialogContent className="sm:max-w-[600px] p-0 max-h-[90vh] overflow-hidden">
+          <DialogHeader className="p-4 border-b border-gray-100 sticky top-0 bg-white z-10">
+            <DialogTitle className="text-lg font-light text-gray-700">Editar Imóvel</DialogTitle>
+            <DialogDescription className="text-sm text-gray-500 mt-1">
+              Atualize as informações do imóvel
+            </DialogDescription>
+          </DialogHeader>
+          <div className="overflow-y-auto max-h-[calc(90vh-130px)]">
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="p-4">
+                <Tabs defaultValue="info" className="w-full">
+                  <TabsList className="grid grid-cols-3 mb-4 sticky top-0">
+                    <TabsTrigger value="info">Informações Básicas</TabsTrigger>
+                    <TabsTrigger value="details">Detalhes</TabsTrigger>
+                    <TabsTrigger value="location">Localização e Imagem</TabsTrigger>
+                  </TabsList>
+                  
+                  <TabsContent value="info" className="space-y-4">
+                    <FormField
+                      control={form.control}
+                      name="title"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Título do imóvel</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Ex: Apartamento com 3 quartos na Barra da Tijuca" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <div className="grid grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="type"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Tipo de imóvel</FormLabel>
+                            <Select 
+                              value={field.value} 
+                              onValueChange={field.onChange}
+                            >
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Selecione o tipo" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectItem value="apartment">Apartamento</SelectItem>
+                                <SelectItem value="house">Casa</SelectItem>
+                                <SelectItem value="commercial">Comercial</SelectItem>
+                                <SelectItem value="land">Terreno</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="purpose"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Finalidade</FormLabel>
+                            <Select 
+                              value={field.value} 
+                              onValueChange={field.onChange}
+                            >
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Selecione a finalidade" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectItem value="sale">Venda</SelectItem>
+                                <SelectItem value="rent">Aluguel</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <FormField
+                        control={form.control}
+                        name="price"
+                        render={({ field: priceField }) => (
+                          <FormField
+                            control={form.control}
+                            name="iptuValue"
+                            render={({ field: iptuField }) => (
+                              <FormField
+                                control={form.control}
+                                name="condoFee"
+                                render={({ field: condoField }) => (
+                                  <PriceWithTaxesFields
+                                    priceField={priceField}
+                                    iptuField={iptuField}
+                                    condoField={condoField}
+                                  />
+                                )}
+                              />
+                            )}
+                          />
+                        )}
+                      />
+                    </div>
+                    
+                    <FormField
+                      control={form.control}
+                      name="description"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Descrição</FormLabel>
+                          <FormControl>
+                            <Textarea 
+                              placeholder="Descreva o imóvel em detalhes" 
+                              className="min-h-[120px]" 
+                              {...field} 
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={form.control}
+                      name="status"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Status</FormLabel>
+                          <Select 
+                            value={field.value} 
+                            onValueChange={field.onChange}
+                          >
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Selecione o status" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="available">Disponível</SelectItem>
+                              <SelectItem value="sold">Vendido</SelectItem>
+                              <SelectItem value="rented">Alugado</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={form.control}
+                      name="isFeatured"
+                      render={({ field }) => (
+                        <FeaturedCheckbox field={field} />
+                      )}
+                    />
+                  </TabsContent>
+                  
+                  <TabsContent value="details" className="space-y-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="area"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Área (m²)</FormLabel>
+                            <FormControl>
+                              <Input 
+                                type="number" 
+                                placeholder="Ex: 120" 
+                                {...field}
+                                onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
+                                value={field.value || 0}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="bedrooms"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Quartos</FormLabel>
+                            <FormControl>
+                              <Input 
+                                type="number" 
+                                placeholder="Ex: 3" 
+                                {...field}
+                                onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
+                                value={field.value || 0}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="suites"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Suítes</FormLabel>
+                            <FormControl>
+                              <Input 
+                                type="number" 
+                                placeholder="Ex: 2" 
+                                {...field}
+                                onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
+                                value={field.value || 0}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="bathrooms"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Banheiros</FormLabel>
+                            <FormControl>
+                              <Input 
+                                type="number" 
+                                placeholder="Ex: 2" 
+                                {...field}
+                                onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
+                                value={field.value || 0}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="parkingSpots"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Vagas de garagem</FormLabel>
+                            <FormControl>
+                              <Input 
+                                type="number" 
+                                placeholder="Ex: 1" 
+                                {...field}
+                                onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
+                                value={field.value || 0}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="agentId"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Corretor</FormLabel>
+                            <Select 
+                              value={field.value?.toString() || ""}
+                              onValueChange={(value) => field.onChange(Number(value) || null)}
+                            >
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Selecione o corretor" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectItem value="none">Sem corretor</SelectItem>
+                                {allAgents?.map(agent => (
+                                  <SelectItem key={agent.id} value={agent.id.toString()}>
+                                    {agent.displayName}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    
+                    <FormField
+                      control={form.control}
+                      name="features"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Características</FormLabel>
+                          <FormControl>
+                            <PropertyFeatures 
+                              value={field.value || []} 
+                              onChange={field.onChange}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </TabsContent>
+                  
+                  <TabsContent value="location" className="space-y-4">
+                    <FormField
+                      control={form.control}
+                      name="zipCode"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>CEP</FormLabel>
+                          <FormControl>
+                            <CepInput
+                              value={field.value}
+                              onChange={field.onChange}
+                              name={field.name}
+                              onBlur={field.onBlur}
+                              onAddressFound={(addressData) => {
+                                form.setValue("address", addressData.logradouro || "");
+                                form.setValue("city", addressData.localidade || "");
+                                form.setValue("neighborhood", addressData.bairro || "");
+                              }}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={form.control}
+                      name="address"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Endereço</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Rua, número" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <div className="grid grid-cols-2 gap-4">
+                      <FormField
+                        control={form.control}
+                        name="neighborhood"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Bairro</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Bairro" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
+                        name="city"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Cidade</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Cidade" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    
+                    <FormField
+                      control={form.control}
+                      name="images"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Imagens do imóvel</FormLabel>
+                          <FormControl>
+                            <MultipleImageUpload
+                              value={field.value || []}
+                              onChange={field.onChange}
+                              maxFiles={10}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </TabsContent>
+                </Tabs>
+                
+                <div className="flex justify-between mt-6 pt-4 border-t border-gray-100">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="px-3 py-1 h-10 text-xs rounded-full bg-red-50 border-red-200 text-red-500 hover:bg-red-100"
+                    onClick={() => handleDeleteClick(selectedProperty!)}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+                    Excluir Imóvel
+                  </Button>
+                  <Button 
+                    type="submit" 
+                    disabled={updatePropertyMutation.isPending}
+                    className="rounded-full px-5 bg-[#12636C] hover:bg-[#12636C]/90"
+                  >
+                    {updatePropertyMutation.isPending ? 'Salvando...' : 'Salvar Alterações'}
+                  </Button>
+                </div>
+              </form>
+            </Form>
+          </div>
+        </DialogContent>
+      </Dialog>
+      
+      {/* Batch Delete Confirmation Dialog */}
+      <AlertDialog open={isBatchDeleteAlertOpen} onOpenChange={setIsBatchDeleteAlertOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Excluir {selectedProperties.length} Imóveis</AlertDialogTitle>
+            <AlertDialogDescription>
+              Você tem certeza que deseja excluir os {selectedProperties.length} imóveis selecionados? Esta ação não pode ser desfeita.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel 
+              onClick={() => setIsBatchDeleteAlertOpen(false)}
+              className="rounded-full px-5"
+            >
+              Cancelar
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleBatchDeleteConfirm}
+              className="bg-red-500 hover:bg-red-600 rounded-full px-5"
+              disabled={batchDeleteMutation.isPending}
+            >
+              {batchDeleteMutation.isPending ? "Excluindo..." : `Excluir ${selectedProperties.length} Imóveis`}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+      
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={isDeleteAlertOpen} onOpenChange={setIsDeleteAlertOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Excluir Imóvel</AlertDialogTitle>
+            <AlertDialogDescription>
+              Você tem certeza que deseja excluir este imóvel? Esta ação não pode ser desfeita.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel 
+              onClick={() => setIsDeleteAlertOpen(false)}
+              className="rounded-full px-5"
+            >
+              Cancelar
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteConfirm}
+              className="bg-red-500 hover:bg-red-600 rounded-full px-5"
+              disabled={deletePropertyMutation.isPending}
+            >
+              {deletePropertyMutation.isPending ? "Excluindo..." : "Excluir Imóvel"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+      
+      {/* Import Dialog */}
+      <Dialog open={isImportDialogOpen} onOpenChange={setIsImportDialogOpen}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle>Importar Imóveis</DialogTitle>
+            <DialogDescription>
+              Selecione o formato e o arquivo para importar imóveis em massa.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-6 py-4">
+            <div className="space-y-4">
+              <Label htmlFor="importMethod">Formato do Arquivo</Label>
+              <div className="grid grid-cols-3 gap-4">
+                <div 
+                  className={`border rounded-lg p-4 text-center cursor-pointer transition-colors ${
+                    importMethod === 'csv' 
+                      ? 'bg-[#12636C]/10 border-[#12636C]' 
+                      : 'border-gray-200 hover:bg-gray-50'
+                  }`}
+                  onClick={() => setImportMethod('csv')}
+                >
+                  <i className="far fa-file-csv text-2xl mb-2 block" style={{ color: importMethod === 'csv' ? '#12636C' : '#64748b' }}></i>
+                  <span className="text-sm font-medium">CSV</span>
+                </div>
+                
+                <div 
+                  className={`border rounded-lg p-4 text-center cursor-pointer transition-colors ${
+                    importMethod === 'xml' 
+                      ? 'bg-[#12636C]/10 border-[#12636C]' 
+                      : 'border-gray-200 hover:bg-gray-50'
+                  }`}
+                  onClick={() => setImportMethod('xml')}
+                >
+                  <i className="far fa-file-code text-2xl mb-2 block" style={{ color: importMethod === 'xml' ? '#12636C' : '#64748b' }}></i>
+                  <span className="text-sm font-medium">XML</span>
+                </div>
+                
+                <div 
+                  className={`border rounded-lg p-4 text-center cursor-pointer transition-colors ${
+                    importMethod === 'json' 
+                      ? 'bg-[#12636C]/10 border-[#12636C]' 
+                      : 'border-gray-200 hover:bg-gray-50'
+                  }`}
+                  onClick={() => setImportMethod('json')}
+                >
+                  <i className="far fa-file-code text-2xl mb-2 block" style={{ color: importMethod === 'json' ? '#12636C' : '#64748b' }}></i>
+                  <span className="text-sm font-medium">JSON</span>
+                </div>
+              </div>
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="importFile">Arquivo</Label>
+              <div className={`border-2 border-dashed rounded-lg p-6 text-center ${
+                importFile ? 'border-[#12636C]/30 bg-[#12636C]/5' : 'border-gray-200'
+              }`}>
+                {importFile ? (
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-center">
+                      <i className="far fa-file text-2xl mr-2" style={{ color: '#12636C' }}></i>
+                      <span className="font-medium">{importFile.name}</span>
+                    </div>
+                    <p className="text-sm text-gray-500">
+                      {(importFile.size / 1024).toFixed(1)} KB
+                    </p>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => setImportFile(null)}
+                    >
+                      Trocar arquivo
+                    </Button>
+                  </div>
+                ) : (
+                  <div>
+                    <input
+                      id="importFile"
+                      type="file"
+                      accept={
+                        importMethod === 'csv' ? '.csv' : 
+                        importMethod === 'xml' ? '.xml' : 
+                        importMethod === 'json' ? '.json' : 
+                        '.csv,.xml,.json'
+                      }
+                      className="hidden"
+                      onChange={(e) => {
+                        if (e.target.files && e.target.files[0]) {
+                          setImportFile(e.target.files[0]);
+                        }
+                      }}
+                    />
+                    <label 
+                      htmlFor="importFile" 
+                      className="cursor-pointer block"
+                    >
+                      <div className="flex flex-col items-center justify-center space-y-2">
+                        <i className="fas fa-cloud-upload-alt text-3xl text-gray-400"></i>
+                        <p className="text-sm font-medium">
+                          Clique para selecionar ou arraste seu arquivo aqui
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          {importMethod === 'csv' ? 'Arquivos .CSV' : 
+                          importMethod === 'xml' ? 'Arquivos .XML' : 
+                          importMethod === 'json' ? 'Arquivos .JSON' :
+                          'Selecione um formato primeiro'}
+                        </p>
+                      </div>
+                    </label>
+                  </div>
+                )}
+              </div>
             </div>
             
             <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
@@ -698,1236 +1644,323 @@ export default function Properties() {
                 </div>
               </div>
             </div>
-            
-            {importFile && (
-              <div className="text-sm text-gray-700 bg-gray-50 p-3 rounded-lg">
-                <p className="font-medium">Arquivo selecionado:</p>
-                <p className="truncate">{importFile.name} ({Math.round(importFile.size / 1024)} KB)</p>
-              </div>
-            )}
-            
-            <DialogFooter>
-              <Button variant="outline" onClick={() => setIsImportDialogOpen(false)}>
-                Cancelar
-              </Button>
-              <Button 
-                onClick={handleImportSubmit}
-                disabled={!importFile || !importMethod || isImporting}
-                className="bg-[#12636C] hover:bg-[#12636C]/90"
-              >
-                {isImporting ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Importando...
-                  </>
-                ) : (
-                  'Importar Imóveis'
-                )}
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-        
-        {/* Delete Alert Dialog */}
-        <AlertDialog open={isDeleteAlertOpen} onOpenChange={setIsDeleteAlertOpen}>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Excluir Imóvel</AlertDialogTitle>
-              <AlertDialogDescription>
-                Tem certeza que deseja excluir este imóvel? Esta ação não pode ser desfeita.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancelar</AlertDialogCancel>
-              <AlertDialogAction onClick={handleDeleteConfirm} className="bg-red-600 hover:bg-red-700">
-                Excluir
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-        
-        {/* Batch Delete Alert Dialog */}
-        <AlertDialog open={isBatchDeleteAlertOpen} onOpenChange={setIsBatchDeleteAlertOpen}>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Excluir Imóveis</AlertDialogTitle>
-              <AlertDialogDescription>
-                Tem certeza que deseja excluir {selectedProperties.length} imóveis? Esta ação não pode ser desfeita.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancelar</AlertDialogCancel>
-              <AlertDialogAction 
-                onClick={handleBatchDeleteConfirm} 
-                className="bg-red-600 hover:bg-red-700"
-                disabled={isDeleting}
-              >
-                {isDeleting ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Excluindo...
-                  </>
-                ) : (
-                  'Excluir'
-                )}
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-      
-        {/* Add Property Dialog */}
-        <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-          <DialogContent className="sm:max-w-[600px] p-0 max-h-[90vh] overflow-hidden">
-            <DialogHeader className="p-4 border-b border-gray-100 sticky top-0 bg-white z-10">
-              <DialogTitle className="text-lg font-light text-gray-700">Adicionar Imóvel</DialogTitle>
-              <DialogDescription className="text-sm text-gray-500 mt-1">
-                Preencha as informações do novo imóvel
-              </DialogDescription>
-            </DialogHeader>
-            <div className="p-4 overflow-y-auto max-h-[calc(90vh-130px)]">
-              <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                  <Tabs defaultValue="basic" className="w-full">
-                    <TabsList className="mb-4">
-                      <TabsTrigger value="basic">Informações Básicas</TabsTrigger>
-                      <TabsTrigger value="address">Endereço</TabsTrigger>
-                      <TabsTrigger value="details">Detalhes</TabsTrigger>
-                      <TabsTrigger value="pricing">Preços</TabsTrigger>
-                      <TabsTrigger value="images">Imagens</TabsTrigger>
-                    </TabsList>
-                    
-                    <TabsContent value="basic" className="space-y-4">
-                      <div className="grid grid-cols-1 gap-4">
-                        <FormField
-                          control={form.control}
-                          name="title"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Título do Imóvel*</FormLabel>
-                              <FormControl>
-                                <Input placeholder="Ex: Apartamento 3 quartos em Copacabana" {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        
-                        <FormField
-                          control={form.control}
-                          name="description"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Descrição*</FormLabel>
-                              <FormControl>
-                                <Textarea 
-                                  placeholder="Descreva o imóvel em detalhes..." 
-                                  className="min-h-[120px]"
-                                  {...field} 
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-                      
-                      <div className="grid grid-cols-2 gap-4">
-                        <FormField
-                          control={form.control}
-                          name="type"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Tipo de Imóvel*</FormLabel>
-                              <Select
-                                onValueChange={field.onChange}
-                                defaultValue={field.value}
-                              >
-                                <FormControl>
-                                  <SelectTrigger>
-                                    <SelectValue placeholder="Selecione o tipo" />
-                                  </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                  <SelectItem value="apartment">Apartamento</SelectItem>
-                                  <SelectItem value="house">Casa</SelectItem>
-                                  <SelectItem value="commercial">Comercial</SelectItem>
-                                  <SelectItem value="land">Terreno</SelectItem>
-                                </SelectContent>
-                              </Select>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        
-                        <FormField
-                          control={form.control}
-                          name="purpose"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Finalidade*</FormLabel>
-                              <Select
-                                onValueChange={field.onChange}
-                                defaultValue={field.value}
-                              >
-                                <FormControl>
-                                  <SelectTrigger>
-                                    <SelectValue placeholder="Selecione a finalidade" />
-                                  </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                  <SelectItem value="sale">Venda</SelectItem>
-                                  <SelectItem value="rent">Aluguel</SelectItem>
-                                </SelectContent>
-                              </Select>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-                      
-                      <div className="grid grid-cols-2 gap-4">
-                        <FormField
-                          control={form.control}
-                          name="status"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Status*</FormLabel>
-                              <Select
-                                onValueChange={field.onChange}
-                                defaultValue={field.value}
-                              >
-                                <FormControl>
-                                  <SelectTrigger>
-                                    <SelectValue placeholder="Selecione o status" />
-                                  </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                  <SelectItem value="available">Disponível</SelectItem>
-                                  <SelectItem value="sold">Vendido</SelectItem>
-                                  <SelectItem value="rented">Alugado</SelectItem>
-                                </SelectContent>
-                              </Select>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        
-                        <FormField
-                          control={form.control}
-                          name="agentId"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Corretor Responsável</FormLabel>
-                              <Select
-                                onValueChange={(value) => field.onChange(value ? parseInt(value) : undefined)}
-                                value={field.value?.toString() || ""}
-                              >
-                                <FormControl>
-                                  <SelectTrigger>
-                                    <SelectValue placeholder="Selecione um corretor" />
-                                  </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                  <SelectItem value="">Nenhum</SelectItem>
-                                  {allAgents?.map(agent => (
-                                    <SelectItem key={agent.id} value={agent.id.toString()}>
-                                      {agent.displayName}
-                                    </SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-                      
-                      <FormField
-                        control={form.control}
-                        name="isFeatured"
-                        render={({ field }) => (
-                          <FeaturedCheckbox field={field} />
-                        )}
-                      />
-                    </TabsContent>
-                    
-                    <TabsContent value="address" className="space-y-4">
-                      <div className="grid grid-cols-2 gap-4">
-                        <FormField
-                          control={form.control}
-                          name="address"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Endereço*</FormLabel>
-                              <FormControl>
-                                <Input placeholder="Ex: Rua das Flores, 123" {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        
-                        <FormField
-                          control={form.control}
-                          name="zipCode"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>CEP</FormLabel>
-                              <FormControl>
-                                <CepInput
-                                  value={field.value || ""}
-                                  onChange={(e, value) => {
-                                    field.onChange(value);
-                                  }}
-                                  className="w-full"
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-                      
-                      <div className="grid grid-cols-2 gap-4">
-                        <FormField
-                          control={form.control}
-                          name="neighborhood"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Bairro*</FormLabel>
-                              <FormControl>
-                                <Input placeholder="Ex: Centro" {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        
-                        <FormField
-                          control={form.control}
-                          name="city"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Cidade*</FormLabel>
-                              <FormControl>
-                                <Input placeholder="Ex: São Paulo" {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-                    </TabsContent>
-                    
-                    <TabsContent value="details" className="space-y-4">
-                      <div className="grid grid-cols-2 gap-4">
-                        <FormField
-                          control={form.control}
-                          name="area"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Área (m²)</FormLabel>
-                              <FormControl>
-                                <Input 
-                                  type="number" 
-                                  placeholder="Ex: 120" 
-                                  {...field}
-                                  onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
-                                  value={field.value || 0}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        
-                        <FormField
-                          control={form.control}
-                          name="bedrooms"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Quartos</FormLabel>
-                              <FormControl>
-                                <Input 
-                                  type="number" 
-                                  placeholder="Ex: 3" 
-                                  {...field}
-                                  onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
-                                  value={field.value || 0}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-                      
-                      <div className="grid grid-cols-2 gap-4">
-                        <FormField
-                          control={form.control}
-                          name="suites"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Suítes</FormLabel>
-                              <FormControl>
-                                <Input 
-                                  type="number" 
-                                  placeholder="Ex: 1" 
-                                  {...field}
-                                  onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
-                                  value={field.value || 0}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        
-                        <FormField
-                          control={form.control}
-                          name="bathrooms"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Banheiros</FormLabel>
-                              <FormControl>
-                                <Input 
-                                  type="number" 
-                                  placeholder="Ex: 2" 
-                                  {...field}
-                                  onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
-                                  value={field.value || 0}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-                      
-                      <div className="grid grid-cols-2 gap-4">
-                        <FormField
-                          control={form.control}
-                          name="parkingSpots"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Vagas de Garagem</FormLabel>
-                              <FormControl>
-                                <Input 
-                                  type="number" 
-                                  placeholder="Ex: 1" 
-                                  {...field}
-                                  onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
-                                  value={field.value || 0}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-                      
-                      <FormField
-                        control={form.control}
-                        name="features"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Características e Comodidades</FormLabel>
-                            <FormControl>
-                              <PropertyFeatures
-                                value={field.value || []}
-                                onChange={field.onChange}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </TabsContent>
-                    
-                    <TabsContent value="pricing" className="space-y-4">
-                      <PriceWithTaxesFields form={form} />
-                    </TabsContent>
-                    
-                    <TabsContent value="images" className="space-y-4">
-                      <FormField
-                        control={form.control}
-                        name="images"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Imagens do imóvel</FormLabel>
-                            <FormControl>
-                              <MultipleImageUpload
-                                value={field.value || []}
-                                onChange={field.onChange}
-                                maxFiles={10}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </TabsContent>
-                  </Tabs>
-                  
-                  <div className="flex justify-end mt-6 pt-4 border-t border-gray-100">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => setIsAddDialogOpen(false)}
-                      className="mr-2"
-                    >
-                      Cancelar
-                    </Button>
-                    <Button 
-                      type="submit" 
-                      disabled={addPropertyMutation.isPending}
-                      className="bg-[#12636C] hover:bg-[#12636C]/90 rounded-full px-5"
-                    >
-                      {addPropertyMutation.isPending ? 'Adicionando...' : 'Adicionar Imóvel'}
-                    </Button>
-                  </div>
-                </form>
-              </Form>
-            </div>
-          </DialogContent>
-        </Dialog>
-        
-        {/* Edit Property Dialog */}
-        <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-          <DialogContent className="sm:max-w-[600px] p-0 max-h-[90vh] overflow-hidden">
-            <DialogHeader className="p-4 border-b border-gray-100 sticky top-0 bg-white z-10">
-              <DialogTitle className="text-lg font-light text-gray-700">Editar Imóvel</DialogTitle>
-              <DialogDescription className="text-sm text-gray-500 mt-1">
-                Atualize as informações do imóvel
-              </DialogDescription>
-            </DialogHeader>
-            <div className="p-4 overflow-y-auto max-h-[calc(90vh-130px)]">
-              <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                  <Tabs defaultValue="basic" className="w-full">
-                    <TabsList className="mb-4">
-                      <TabsTrigger value="basic">Informações Básicas</TabsTrigger>
-                      <TabsTrigger value="address">Endereço</TabsTrigger>
-                      <TabsTrigger value="details">Detalhes</TabsTrigger>
-                      <TabsTrigger value="pricing">Preços</TabsTrigger>
-                      <TabsTrigger value="images">Imagens</TabsTrigger>
-                    </TabsList>
-                    
-                    <TabsContent value="basic" className="space-y-4">
-                      <div className="grid grid-cols-1 gap-4">
-                        <FormField
-                          control={form.control}
-                          name="title"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Título do Imóvel*</FormLabel>
-                              <FormControl>
-                                <Input placeholder="Ex: Apartamento 3 quartos em Copacabana" {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        
-                        <FormField
-                          control={form.control}
-                          name="description"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Descrição*</FormLabel>
-                              <FormControl>
-                                <Textarea 
-                                  placeholder="Descreva o imóvel em detalhes..." 
-                                  className="min-h-[120px]"
-                                  {...field} 
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-                      
-                      <div className="grid grid-cols-2 gap-4">
-                        <FormField
-                          control={form.control}
-                          name="type"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Tipo de Imóvel*</FormLabel>
-                              <Select
-                                onValueChange={field.onChange}
-                                defaultValue={field.value}
-                              >
-                                <FormControl>
-                                  <SelectTrigger>
-                                    <SelectValue placeholder="Selecione o tipo" />
-                                  </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                  <SelectItem value="apartment">Apartamento</SelectItem>
-                                  <SelectItem value="house">Casa</SelectItem>
-                                  <SelectItem value="commercial">Comercial</SelectItem>
-                                  <SelectItem value="land">Terreno</SelectItem>
-                                </SelectContent>
-                              </Select>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        
-                        <FormField
-                          control={form.control}
-                          name="purpose"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Finalidade*</FormLabel>
-                              <Select
-                                onValueChange={field.onChange}
-                                defaultValue={field.value}
-                              >
-                                <FormControl>
-                                  <SelectTrigger>
-                                    <SelectValue placeholder="Selecione a finalidade" />
-                                  </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                  <SelectItem value="sale">Venda</SelectItem>
-                                  <SelectItem value="rent">Aluguel</SelectItem>
-                                </SelectContent>
-                              </Select>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-                      
-                      <div className="grid grid-cols-2 gap-4">
-                        <FormField
-                          control={form.control}
-                          name="status"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Status*</FormLabel>
-                              <Select
-                                onValueChange={field.onChange}
-                                defaultValue={field.value}
-                              >
-                                <FormControl>
-                                  <SelectTrigger>
-                                    <SelectValue placeholder="Selecione o status" />
-                                  </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                  <SelectItem value="available">Disponível</SelectItem>
-                                  <SelectItem value="sold">Vendido</SelectItem>
-                                  <SelectItem value="rented">Alugado</SelectItem>
-                                </SelectContent>
-                              </Select>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        
-                        <FormField
-                          control={form.control}
-                          name="agentId"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Corretor Responsável</FormLabel>
-                              <Select
-                                onValueChange={(value) => field.onChange(value ? parseInt(value) : undefined)}
-                                value={field.value?.toString() || ""}
-                              >
-                                <FormControl>
-                                  <SelectTrigger>
-                                    <SelectValue placeholder="Selecione um corretor" />
-                                  </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                  <SelectItem value="">Nenhum</SelectItem>
-                                  {allAgents?.map(agent => (
-                                    <SelectItem key={agent.id} value={agent.id.toString()}>
-                                      {agent.displayName}
-                                    </SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-                      
-                      <FormField
-                        control={form.control}
-                        name="isFeatured"
-                        render={({ field }) => (
-                          <FeaturedCheckbox field={field} />
-                        )}
-                      />
-                    </TabsContent>
-                    
-                    <TabsContent value="address" className="space-y-4">
-                      <div className="grid grid-cols-2 gap-4">
-                        <FormField
-                          control={form.control}
-                          name="address"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Endereço*</FormLabel>
-                              <FormControl>
-                                <Input placeholder="Ex: Rua das Flores, 123" {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        
-                        <FormField
-                          control={form.control}
-                          name="zipCode"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>CEP</FormLabel>
-                              <FormControl>
-                                <CepInput
-                                  value={field.value || ""}
-                                  onChange={(e, value) => {
-                                    field.onChange(value);
-                                  }}
-                                  className="w-full"
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-                      
-                      <div className="grid grid-cols-2 gap-4">
-                        <FormField
-                          control={form.control}
-                          name="neighborhood"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Bairro*</FormLabel>
-                              <FormControl>
-                                <Input placeholder="Ex: Centro" {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        
-                        <FormField
-                          control={form.control}
-                          name="city"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Cidade*</FormLabel>
-                              <FormControl>
-                                <Input placeholder="Ex: São Paulo" {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-                    </TabsContent>
-                    
-                    <TabsContent value="details" className="space-y-4">
-                      <div className="grid grid-cols-2 gap-4">
-                        <FormField
-                          control={form.control}
-                          name="area"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Área (m²)</FormLabel>
-                              <FormControl>
-                                <Input 
-                                  type="number" 
-                                  placeholder="Ex: 120" 
-                                  {...field}
-                                  onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
-                                  value={field.value || 0}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        
-                        <FormField
-                          control={form.control}
-                          name="bedrooms"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Quartos</FormLabel>
-                              <FormControl>
-                                <Input 
-                                  type="number" 
-                                  placeholder="Ex: 3" 
-                                  {...field}
-                                  onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
-                                  value={field.value || 0}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-                      
-                      <div className="grid grid-cols-2 gap-4">
-                        <FormField
-                          control={form.control}
-                          name="suites"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Suítes</FormLabel>
-                              <FormControl>
-                                <Input 
-                                  type="number" 
-                                  placeholder="Ex: 1" 
-                                  {...field}
-                                  onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
-                                  value={field.value || 0}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        
-                        <FormField
-                          control={form.control}
-                          name="bathrooms"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Banheiros</FormLabel>
-                              <FormControl>
-                                <Input 
-                                  type="number" 
-                                  placeholder="Ex: 2" 
-                                  {...field}
-                                  onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
-                                  value={field.value || 0}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-                      
-                      <div className="grid grid-cols-2 gap-4">
-                        <FormField
-                          control={form.control}
-                          name="parkingSpots"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Vagas de Garagem</FormLabel>
-                              <FormControl>
-                                <Input 
-                                  type="number" 
-                                  placeholder="Ex: 1" 
-                                  {...field}
-                                  onChange={(e) => field.onChange(e.target.valueAsNumber || 0)}
-                                  value={field.value || 0}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-                      
-                      <FormField
-                        control={form.control}
-                        name="features"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Características e Comodidades</FormLabel>
-                            <FormControl>
-                              <PropertyFeatures
-                                value={field.value || []}
-                                onChange={field.onChange}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </TabsContent>
-                    
-                    <TabsContent value="pricing" className="space-y-4">
-                      <PriceWithTaxesFields form={form} />
-                    </TabsContent>
-                    
-                    <TabsContent value="images" className="space-y-4">
-                      <FormField
-                        control={form.control}
-                        name="images"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Imagens do imóvel</FormLabel>
-                            <FormControl>
-                              <MultipleImageUpload
-                                value={field.value || []}
-                                onChange={field.onChange}
-                                maxFiles={10}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </TabsContent>
-                  </Tabs>
-                  
-                  <div className="flex justify-end mt-6 pt-4 border-t border-gray-100">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => setIsEditDialogOpen(false)}
-                      className="mr-2"
-                    >
-                      Cancelar
-                    </Button>
-                    <Button 
-                      type="submit" 
-                      disabled={updatePropertyMutation.isPending}
-                      className="bg-[#12636C] hover:bg-[#12636C]/90 rounded-full px-5"
-                    >
-                      {updatePropertyMutation.isPending ? 'Salvando...' : 'Salvar Alterações'}
-                    </Button>
-                  </div>
-                </form>
-              </Form>
-            </div>
-          </DialogContent>
-        </Dialog>
-      
-        {/* Property Management with Tabs */}
-        <div className="bg-white rounded-lg shadow-sm" style={{ fontFamily: 'Montserrat, sans-serif' }}>
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="w-full border-b bg-gray-50 p-0 h-auto">
-              <TabsTrigger 
-                value="properties" 
-                className="flex-1 py-3 rounded-none data-[state=active]:border-b-2 data-[state=active]:border-[#12636C] data-[state=active]:bg-white"
-              >
-                <Home className="h-4 w-4 mr-2" />
-                Imóveis
-              </TabsTrigger>
-              <TabsTrigger 
-                value="integrations" 
-                className="flex-1 py-3 rounded-none data-[state=active]:border-b-2 data-[state=active]:border-[#12636C] data-[state=active]:bg-white"
-              >
-                <FileText className="h-4 w-4 mr-2" />
-                Integração com Portais
-              </TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="properties" className="p-6">
-              <div className="flex justify-between items-center mb-6">
-                <div>
-                  <h2 className="text-lg font-semibold text-gray-800 mb-1">Gerenciamento de Imóveis</h2>
-                  <p className="text-sm text-gray-500">Cadastre aqui todos os imóveis disponíveis em sua imobiliária.</p>
-                </div>
-                <div className="flex space-x-2">
-                  <Button 
-                    onClick={handleAddClick}
-                    className="bg-[#12636C] hover:bg-[#12636C]/90 rounded-full px-5">
-                    <Plus className="h-4 w-4 mr-2" /> Novo Imóvel
-                  </Button>
-                  <Button 
-                    onClick={handleImportClick}
-                    variant="outline"
-                    className="rounded-full px-5 border-[#12636C] text-[#12636C]">
-                    <FileText className="h-4 w-4 mr-2" /> Importar Imóveis
-                  </Button>
-                  {selectedProperties.length > 0 && (
-                    <Button 
-                      onClick={handleBatchDeleteClick}
-                      variant="outline"
-                      className="rounded-full px-5 border-red-500 text-red-500 hover:bg-red-50">
-                      <Trash2 className="h-4 w-4 mr-2" /> Excluir ({selectedProperties.length})
-                    </Button>
-                  )}
-                </div>
-              </div>
+          </div>
           
-              <div className="p-4 bg-[#F9FAFB] rounded-lg mb-6">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div>
-                    <Label htmlFor="typeFilter" className="text-sm font-medium text-gray-700 mb-1 block">Tipo de Imóvel</Label>
-                    <Select
-                      value={typeFilter}
-                      onValueChange={setTypeFilter}
-                    >
-                      <SelectTrigger id="typeFilter" className="bg-white border border-gray-300">
-                        <SelectValue placeholder="Todos os tipos" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">Todos os tipos</SelectItem>
-                        <SelectItem value="apartment">Apartamentos</SelectItem>
-                        <SelectItem value="house">Casas</SelectItem>
-                        <SelectItem value="commercial">Comerciais</SelectItem>
-                        <SelectItem value="land">Terrenos</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  
-                  <div>
-                    <Label htmlFor="statusFilter" className="text-sm font-medium text-gray-700 mb-1 block">Status</Label>
-                    <Select
-                      value={statusFilter}
-                      onValueChange={setStatusFilter}
-                    >
-                      <SelectTrigger id="statusFilter" className="bg-white border border-gray-300">
-                        <SelectValue placeholder="Todos os status" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">Todos</SelectItem>
-                        <SelectItem value="available">Disponível</SelectItem>
-                        <SelectItem value="sold">Vendido</SelectItem>
-                        <SelectItem value="rented">Alugado</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  
-                  <div>
-                    <Label htmlFor="searchQuery" className="text-sm font-medium text-gray-700 mb-1 block">Buscar</Label>
-                    <div className="relative">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
-                      <input 
-                        id="searchQuery"
-                        type="search" 
-                        placeholder="Buscar por título ou endereço..." 
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="pl-9 pr-4 py-2 rounded-md border border-gray-300 w-full text-sm focus:outline-none focus:ring-2 focus:ring-indigo-200"
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsImportDialogOpen(false)}>
+              Cancelar
+            </Button>
+            <Button 
+              onClick={handleImportSubmit}
+              disabled={!importFile || !importMethod || isImporting}
+              className="bg-[#12636C] hover:bg-[#12636C]/90"
+            >
+              {isImporting ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Importando...
+                </>
+              ) : (
+                'Importar Imóveis'
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      
+      {/* Property Management */}
+      <div className="bg-white p-6 rounded-lg shadow-sm" style={{ fontFamily: 'Montserrat, sans-serif' }}>
+        <div className="flex justify-between items-center mb-6">
+          <div>
+            <h2 className="text-lg font-semibold text-gray-800 mb-1">Gerenciamento de Imóveis</h2>
+            <p className="text-sm text-gray-500">Cadastre aqui todos os imóveis disponíveis em sua imobiliária.</p>
+          </div>
+          <div className="flex space-x-2">
+            <Button 
+              onClick={handleAddClick}
+              className="bg-[#12636C] hover:bg-[#12636C]/90 rounded-full px-5">
+              <i className="fas fa-plus mr-2"></i> Novo Imóvel
+            </Button>
+            <Button 
+              onClick={handleImportClick}
+              variant="outline"
+              className="rounded-full px-5 border-[#12636C] text-[#12636C]">
+              <i className="fas fa-file-import mr-2"></i> Importar Imóveis
+            </Button>
+            {selectedProperties.length > 0 && (
+              <Button 
+                onClick={handleBatchDeleteClick}
+                variant="outline"
+                className="rounded-full px-5 border-red-500 text-red-500 hover:bg-red-50">
+                <Trash2 className="h-4 w-4 mr-2" /> Excluir ({selectedProperties.length})
+              </Button>
+            )}
+          </div>
+        </div>
+        
+        <div className="p-4 bg-[#F9FAFB] rounded-lg mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <Label htmlFor="typeFilter" className="text-sm font-medium text-gray-700 mb-1 block">Tipo de Imóvel</Label>
+              <Select
+                value={typeFilter}
+                onValueChange={setTypeFilter}
+              >
+                <SelectTrigger id="typeFilter" className="bg-white border border-gray-300">
+                  <SelectValue placeholder="Todos os tipos" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todos os tipos</SelectItem>
+                  <SelectItem value="apartment">Apartamentos</SelectItem>
+                  <SelectItem value="house">Casas</SelectItem>
+                  <SelectItem value="commercial">Comerciais</SelectItem>
+                  <SelectItem value="land">Terrenos</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <div>
+              <Label htmlFor="statusFilter" className="text-sm font-medium text-gray-700 mb-1 block">Status</Label>
+              <Select
+                value={statusFilter}
+                onValueChange={setStatusFilter}
+              >
+                <SelectTrigger id="statusFilter" className="bg-white border border-gray-300">
+                  <SelectValue placeholder="Todos os status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todos</SelectItem>
+                  <SelectItem value="available">Disponível</SelectItem>
+                  <SelectItem value="sold">Vendido</SelectItem>
+                  <SelectItem value="rented">Alugado</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <div>
+              <Label htmlFor="searchQuery" className="text-sm font-medium text-gray-700 mb-1 block">Buscar</Label>
+              <div className="relative">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+                <input 
+                  id="searchQuery"
+                  type="search" 
+                  placeholder="Buscar por título ou endereço..." 
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-9 pr-4 py-2 rounded-md border border-gray-300 w-full text-sm focus:outline-none focus:ring-2 focus:ring-indigo-200"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        {isLoading ? (
+          <div className="flex justify-center py-8">
+            <Loader2 className="h-8 w-8 animate-spin text-[#12636C]" />
+          </div>
+        ) : !properties || properties.length === 0 ? (
+          <div className="py-10 text-center">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 mb-4">
+              <Home className="h-8 w-8 text-gray-400" />
+            </div>
+            <h3 className="text-lg font-medium text-gray-900 mb-1">Nenhum imóvel cadastrado</h3>
+            <p className="text-gray-500">
+              Adicione imóveis para exibi-los em seu site e gerenciá-los de forma eficiente.
+            </p>
+            <Button
+              onClick={handleAddClick}
+              size="sm"
+              className="mt-4 rounded-full px-5 bg-[#12636C] hover:bg-[#12636C]/90"
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              Adicionar Imóvel
+            </Button>
+          </div>
+        ) : filteredProperties.length === 0 ? (
+          <div className="py-10 text-center">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 mb-4">
+              <Home className="h-8 w-8 text-gray-400" />
+            </div>
+            <h3 className="text-lg font-medium text-gray-900 mb-1">Nenhum resultado encontrado</h3>
+            <p className="text-gray-500">
+              Tente ajustar seus filtros para encontrar o que está procurando.
+            </p>
+            <Button
+              onClick={() => {
+                setSearchQuery("");
+                setTypeFilter("all");
+                setStatusFilter("all");
+                setPurposeFilter("all");
+              }}
+              size="sm"
+              variant="outline"
+              className="mt-4 rounded-full px-5"
+            >
+              Limpar filtros
+            </Button>
+          </div>
+        ) : (
+          <div className="overflow-hidden rounded-lg border">
+            <Table>
+              <TableHeader className="bg-[#001623] hover:bg-[#001623]">
+                <TableRow className="hover:bg-[#001623]">
+                  <TableHead className="text-white hover:bg-[#001623] hover:text-white w-[50px]">
+                    <div className="flex items-center">
+                      <Checkbox 
+                        id="selectAll"
+                        checked={selectAllChecked}
+                        onCheckedChange={handleSelectAll}
+                        className="data-[state=checked]:bg-white data-[state=checked]:text-[#001623] border-white"
+                        onClick={(e) => e.stopPropagation()}
                       />
                     </div>
-                  </div>
-                </div>
-              </div>
-              
-              {isLoading ? (
-                <div className="flex justify-center py-8">
-                  <Loader2 className="h-8 w-8 animate-spin text-[#12636C]" />
-                </div>
-              ) : !properties || properties.length === 0 ? (
-                <div className="py-10 text-center">
-                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 mb-4">
-                    <Home className="h-8 w-8 text-gray-400" />
-                  </div>
-                  <h3 className="text-lg font-medium text-gray-900 mb-1">Nenhum imóvel cadastrado</h3>
-                  <p className="text-gray-500">
-                    Adicione imóveis para exibi-los em seu site e gerenciá-los de forma eficiente.
-                  </p>
-                  <Button
-                    onClick={handleAddClick}
-                    size="sm"
-                    className="mt-4 rounded-full px-5 bg-[#12636C] hover:bg-[#12636C]/90"
+                  </TableHead>
+                  <TableHead className="w-[250px] text-white hover:bg-[#001623] hover:text-white">Imóvel</TableHead>
+                  <TableHead className="text-white hover:bg-[#001623] hover:text-white">Tipo</TableHead>
+                  <TableHead className="text-white hover:bg-[#001623] hover:text-white">Finalidade</TableHead>
+                  <TableHead className="text-white hover:bg-[#001623] hover:text-white">Preço</TableHead>
+                  <TableHead className="text-white hover:bg-[#001623] hover:text-white">IPTU</TableHead>
+                  <TableHead className="text-white hover:bg-[#001623] hover:text-white">Condomínio</TableHead>
+                  <TableHead className="text-white hover:bg-[#001623] hover:text-white">Detalhes</TableHead>
+                  <TableHead className="text-white hover:bg-[#001623] hover:text-white text-center">Destaque</TableHead>
+                  <TableHead className="text-white hover:bg-[#001623] hover:text-white text-right">Ações</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filteredProperties.map((property) => (
+                  <TableRow 
+                    key={property.id} 
+                    className="cursor-pointer hover:bg-gray-50" 
+                    onClick={() => handleEditClick(property)}
                   >
-                    <Plus className="mr-2 h-4 w-4" />
-                    Adicionar Imóvel
-                  </Button>
-                </div>
-              ) : filteredProperties.length === 0 ? (
-                <div className="py-10 text-center">
-                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 mb-4">
-                    <Home className="h-8 w-8 text-gray-400" />
-                  </div>
-                  <h3 className="text-lg font-medium text-gray-900 mb-1">Nenhum resultado encontrado</h3>
-                  <p className="text-gray-500">
-                    Tente ajustar seus filtros para encontrar o que está procurando.
-                  </p>
-                  <Button
-                    onClick={() => {
-                      setSearchQuery("");
-                      setTypeFilter("all");
-                      setStatusFilter("all");
-                      setPurposeFilter("all");
-                    }}
-                    size="sm"
-                    variant="outline"
-                    className="mt-4 rounded-full px-5"
-                  >
-                    Limpar filtros
-                  </Button>
-                </div>
-              ) : (
-                <div className="overflow-hidden rounded-lg border">
-                  <Table>
-                    <TableHeader className="bg-[#001623] hover:bg-[#001623]">
-                      <TableRow className="hover:bg-[#001623]">
-                        <TableHead className="text-white hover:bg-[#001623] hover:text-white w-[50px]">
-                          <div className="flex items-center">
-                            <Checkbox 
-                              id="selectAll"
-                              checked={selectAllChecked}
-                              onCheckedChange={handleSelectAll}
-                              className="data-[state=checked]:bg-white data-[state=checked]:text-[#001623] border-white"
-                              onClick={(e) => e.stopPropagation()}
+                    <TableCell className="py-3">
+                      <Checkbox
+                        checked={selectedProperties.includes(property.id)}
+                        onCheckedChange={(checked) => {
+                          handlePropertySelection(property.id, !!checked);
+                        }}
+                        onClick={(e) => e.stopPropagation()}
+                        className="mr-2"
+                      />
+                    </TableCell>
+                    <TableCell className="py-3">
+                      <div className="flex items-center space-x-3">
+                        <div className="h-10 w-10 rounded-md bg-gray-100 overflow-hidden">
+                          {getFeaturedImage(property) ? (
+                            <img
+                              src={getFeaturedImage(property)}
+                              alt={property.title}
+                              className="h-full w-full object-cover"
                             />
+                          ) : (
+                            <div className="flex items-center justify-center h-full">
+                              <Home className="h-5 w-5 text-gray-400" />
+                            </div>
+                          )}
+                        </div>
+                        <div>
+                          <p className="font-medium text-gray-900">{property.title}</p>
+                          <p className="text-xs text-gray-500">
+                            {property.address?.city && `${property.address.city}, `}
+                            {property.address?.state || ''}
+                          </p>
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <span>
+                        {property.type === 'apartment' ? 'Apartamento' : 
+                        property.type === 'house' ? 'Casa' : 
+                        property.type === 'commercial' ? 'Comercial' : 'Terreno'}
+                      </span>
+                    </TableCell>
+                    <TableCell>
+                      <span>
+                        {property.purpose === 'sale' ? 'Venda' : 'Aluguel'}
+                      </span>
+                    </TableCell>
+                    <TableCell>
+                      <span className="font-medium">{formatCurrency(property.price)}</span>
+                    </TableCell>
+                    <TableCell>
+                      <span className="text-gray-600">{property.iptuValue ? formatCurrency(property.iptuValue) : '-'}</span>
+                    </TableCell>
+                    <TableCell>
+                      <span className="text-gray-600">{property.condoFee ? formatCurrency(property.condoFee) : '-'}</span>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center space-x-3">
+                        {property.area > 0 && (
+                          <div className="flex items-center" title={`Área: ${property.area}m²`}>
+                            <i className="fas fa-ruler-combined text-gray-500 mr-1"></i>
+                            <span className="text-xs text-gray-600">{property.area}m²</span>
                           </div>
-                        </TableHead>
-                        <TableHead className="w-[250px] text-white hover:bg-[#001623] hover:text-white">Imóvel</TableHead>
-                        <TableHead className="text-white hover:bg-[#001623] hover:text-white">Tipo</TableHead>
-                        <TableHead className="text-white hover:bg-[#001623] hover:text-white">Finalidade</TableHead>
-                        <TableHead className="text-white hover:bg-[#001623] hover:text-white">Preço</TableHead>
-                        <TableHead className="text-white hover:bg-[#001623] hover:text-white">IPTU</TableHead>
-                        <TableHead className="text-white hover:bg-[#001623] hover:text-white">Condomínio</TableHead>
-                        <TableHead className="text-white hover:bg-[#001623] hover:text-white">Detalhes</TableHead>
-                        <TableHead className="text-white hover:bg-[#001623] hover:text-white text-center">Destaque</TableHead>
-                        <TableHead className="text-white hover:bg-[#001623] hover:text-white text-right">Ações</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {filteredProperties.map((property) => (
-                        <TableRow 
-                          key={property.id} 
-                          className="cursor-pointer hover:bg-gray-50" 
-                          onClick={() => handleEditClick(property)}
+                        )}
+                        {property.bedrooms > 0 && (
+                          <div className="flex items-center" title={`Quartos: ${property.bedrooms}`}>
+                            <i className="fas fa-bed text-gray-500 mr-1"></i>
+                            <span className="text-xs text-gray-600">{property.bedrooms}</span>
+                          </div>
+                        )}
+                        {property.suites > 0 && (
+                          <div className="flex items-center" title={`Suítes: ${property.suites}`}>
+                            <i className="fas fa-bath mr-1" style={{ color: '#4B5563' }}></i>
+                            <span className="text-xs text-gray-600">{property.suites}</span>
+                          </div>
+                        )}
+                        {property.bathrooms > 0 && (
+                          <div className="flex items-center" title={`Banheiros: ${property.bathrooms}`}>
+                            <i className="fas fa-shower mr-1" style={{ color: '#4B5563' }}></i>
+                            <span className="text-xs text-gray-600">{property.bathrooms}</span>
+                          </div>
+                        )}
+                        {property.parkingSpots > 0 && (
+                          <div className="flex items-center" title={`Vagas: ${property.parkingSpots}`}>
+                            <i className="fas fa-car text-gray-500 mr-1"></i>
+                            <span className="text-xs text-gray-600">{property.parkingSpots}</span>
+                          </div>
+                        )}
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-center">
+                      {property.isFeatured ? (
+                        <span className="text-amber-500 font-medium text-sm">Em Destaque</span>
+                      ) : (
+                        <span></span>
+                      )}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex items-center justify-end space-x-2">
+                        <Button 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleEditClick(property);
+                          }} 
+                          size="sm"
+                          variant="ghost"
+                          className="text-gray-600 hover:text-gray-900"
                         >
-                          <TableCell className="py-3">
-                            <Checkbox
-                              checked={selectedProperties.includes(property.id)}
-                              onCheckedChange={(checked) => {
-                                handlePropertySelection(property.id, !!checked);
-                              }}
-                              onClick={(e) => e.stopPropagation()}
-                              className="mr-2"
-                            />
-                          </TableCell>
-                          <TableCell className="py-3">
-                            <div className="flex items-center space-x-3">
-                              <div className="h-10 w-10 rounded-md bg-gray-100 overflow-hidden">
-                                {getFeaturedImage(property) ? (
-                                  <img
-                                    src={getFeaturedImage(property)}
-                                    alt={property.title}
-                                    className="h-full w-full object-cover"
-                                  />
-                                ) : (
-                                  <div className="flex items-center justify-center h-full">
-                                    <Home className="h-5 w-5 text-gray-400" />
-                                  </div>
-                                )}
-                              </div>
-                              <div>
-                                <p className="font-medium text-gray-900">{property.title}</p>
-                                <p className="text-xs text-gray-500">
-                                  {property.city && property.neighborhood && 
-                                    `${property.neighborhood}, ${property.city}`}
-                                </p>
-                              </div>
-                            </div>
-                          </TableCell>
-                          <TableCell>
-                            <span>
-                              {property.type === 'apartment' ? 'Apartamento' : 
-                              property.type === 'house' ? 'Casa' : 
-                              property.type === 'commercial' ? 'Comercial' : 'Terreno'}
-                            </span>
-                          </TableCell>
-                          <TableCell>
-                            <span>
-                              {property.purpose === 'sale' ? 'Venda' : 'Aluguel'}
-                            </span>
-                          </TableCell>
-                          <TableCell>
-                            <span className="font-medium">{formatCurrency(property.price)}</span>
-                          </TableCell>
-                          <TableCell>
-                            <span className="text-gray-600">{property.iptuValue ? formatCurrency(property.iptuValue) : '-'}</span>
-                          </TableCell>
-                          <TableCell>
-                            <span className="text-gray-600">{property.condoFee ? formatCurrency(property.condoFee) : '-'}</span>
-                          </TableCell>
-                          <TableCell>
-                            <div className="flex items-center space-x-2 text-gray-600">
-                              {property.area > 0 && (
-                                <div className="flex items-center" title={`Área: ${property.area}m²`}>
-                                  <i className="fas fa-vector-square mr-1" style={{ color: '#4B5563' }}></i>
-                                  <span className="text-xs text-gray-600">{property.area}m²</span>
-                                </div>
-                              )}
-                              {property.bedrooms && property.bedrooms > 0 && (
-                                <div className="flex items-center" title={`Quartos: ${property.bedrooms}`}>
-                                  <i className="fas fa-bed text-gray-500 mr-1"></i>
-                                  <span className="text-xs text-gray-600">{property.bedrooms}</span>
-                                </div>
-                              )}
-                              {property.suites && property.suites > 0 && (
-                                <div className="flex items-center" title={`Suítes: ${property.suites}`}>
-                                  <i className="fas fa-bath mr-1" style={{ color: '#4B5563' }}></i>
-                                  <span className="text-xs text-gray-600">{property.suites}</span>
-                                </div>
-                              )}
-                              {property.bathrooms && property.bathrooms > 0 && (
-                                <div className="flex items-center" title={`Banheiros: ${property.bathrooms}`}>
-                                  <i className="fas fa-shower mr-1" style={{ color: '#4B5563' }}></i>
-                                  <span className="text-xs text-gray-600">{property.bathrooms}</span>
-                                </div>
-                              )}
-                              {property.parkingSpots && property.parkingSpots > 0 && (
-                                <div className="flex items-center" title={`Vagas: ${property.parkingSpots}`}>
-                                  <i className="fas fa-car text-gray-500 mr-1"></i>
-                                  <span className="text-xs text-gray-600">{property.parkingSpots}</span>
-                                </div>
-                              )}
-                            </div>
-                          </TableCell>
-                          <TableCell className="text-center">
-                            {property.isFeatured ? (
-                              <span className="text-amber-500 font-medium text-sm">Em Destaque</span>
-                            ) : (
-                              <span></span>
-                            )}
-                          </TableCell>
-                          <TableCell className="text-right">
-                            <div className="flex items-center justify-end space-x-2">
-                              <Button 
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleEditClick(property);
-                                }} 
-                                size="sm"
-                                variant="ghost"
-                                className="text-gray-600 hover:text-gray-900"
-                              >
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                              </Button>
-                              <Button 
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleDeleteClick(property);
-                                }} 
-                                size="sm"
-                                variant="ghost"
-                                className="text-red-500 hover:text-red-700"
-                              >
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
-                              </Button>
-                            </div>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </div>
-              )}
-            </TabsContent>
-            
-            <TabsContent value="integrations" className="p-6">
-              <IntegrationSettings />
-            </TabsContent>
-          </Tabs>
-        </div>
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                        </Button>
+                        <Button 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteClick(property);
+                          }} 
+                          size="sm"
+                          variant="ghost"
+                          className="text-red-500 hover:text-red-700"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        )}
       </div>
     </div>
   );
