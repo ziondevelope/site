@@ -6,8 +6,10 @@ import { z } from "zod";
 import multer from "multer";
 import csvParser from "csv-parser";
 import fs from "fs";
+import path from "path";
 import { promisify } from "util";
 import * as xml2js from "xml2js";
+import { generatePropertyXml, saveXmlToFile } from './utils/exporter';
 import {
   insertUserSchema,
   insertPropertySchema,
@@ -1209,6 +1211,97 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "Invalid config data", errors: error.errors });
       }
       res.status(500).json({ message: "Error updating website configuration" });
+    }
+  });
+  
+  // Endpoint para atualização parcial das configurações
+  apiRouter.patch("/website/config", async (req, res) => {
+    try {
+      // Obter a configuração atual
+      const currentConfig = await storageInstance.getWebsiteConfig();
+      if (!currentConfig) {
+        return res.status(404).json({ message: "Website configuration not found" });
+      }
+      
+      // Mesclar com as atualizações recebidas
+      const updatedConfig = {
+        ...currentConfig,
+        ...req.body,
+      };
+      
+      // Atualizar no banco de dados
+      const config = await storageInstance.updateWebsiteConfig(updatedConfig);
+      res.json(config);
+    } catch (error) {
+      console.error("Error updating website configuration:", error);
+      res.status(500).json({ message: "Error updating website configuration" });
+    }
+  });
+  
+  // Rotas para integração e exportação
+  apiRouter.post("/integrations/generate-xml", async (req, res) => {
+    try {
+      // Obter a configuração do site
+      const config = await storageInstance.getWebsiteConfig();
+      if (!config) {
+        return res.status(404).json({ message: "Website configuration not found" });
+      }
+      
+      // Obter todos os imóveis
+      const properties = await storageInstance.getAllProperties();
+      
+      // Gerar o XML
+      const xmlContent = await generatePropertyXml(
+        properties,
+        config.vivaRealUsername,
+        config.includeInactiveProperties || false,
+        config.includeSoldProperties || false
+      );
+      
+      // Definir o nome do arquivo
+      const xmlFilename = config.customXmlPath || "xml_imoveis.xml";
+      
+      // Salvar o XML no diretório public
+      await saveXmlToFile(xmlContent, xmlFilename);
+      
+      // Atualizar a data da última atualização do XML
+      const updatedConfig = {
+        ...config,
+        lastXmlUpdate: new Date().toISOString()
+      };
+      await storageInstance.updateWebsiteConfig(updatedConfig);
+      
+      res.json({ 
+        success: true, 
+        message: "XML generated successfully", 
+        filename: xmlFilename,
+        propertiesCount: properties.length 
+      });
+    } catch (error) {
+      console.error("Error generating XML:", error);
+      res.status(500).json({ message: "Error generating XML file" });
+    }
+  });
+  
+  // Rota para servir o arquivo XML
+  app.get("/:xmlFileName", async (req, res, next) => {
+    const xmlFileName = req.params.xmlFileName;
+    // Verificar se o arquivo solicitado parece ser um XML
+    if (xmlFileName.endsWith('.xml')) {
+      const filePath = path.join(process.cwd(), 'public', xmlFileName);
+      try {
+        // Verificar se o arquivo existe
+        await fs.promises.access(filePath, fs.constants.F_OK);
+        // Servir o arquivo
+        res.setHeader('Content-Type', 'application/xml');
+        res.sendFile(filePath);
+      } catch (error) {
+        // Se o arquivo não existir, seguir para o próximo handler
+        next();
+      }
+    } else {
+      // Não é um arquivo XML, seguir para o próximo handler
+      next();
     }
   });
 
