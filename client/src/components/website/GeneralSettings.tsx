@@ -711,7 +711,7 @@ export default function GeneralSettings({ config, configData, onConfigChange }: 
                   <Label className="text-sm font-medium text-gray-700 mb-1">Direção da Sincronização</Label>
                   <select 
                     value={configData.syncDirection !== undefined ? configData.syncDirection : config?.syncDirection || 'export'}
-                    onChange={(e) => onConfigChange({ syncDirection: e.target.value })}
+                    onChange={(e) => onConfigChange({ ...configData, syncDirection: e.target.value })}
                     className="w-full border border-gray-200 rounded-lg p-2"
                   >
                     <option value="export">Apenas exportar (do CRM para os portais)</option>
@@ -726,7 +726,7 @@ export default function GeneralSettings({ config, configData, onConfigChange }: 
                   <Label className="text-sm font-medium text-gray-700 mb-1">Resolução de Conflitos</Label>
                   <select 
                     value={configData.conflictResolution !== undefined ? configData.conflictResolution : config?.conflictResolution || 'crm-wins'}
-                    onChange={(e) => onConfigChange({ conflictResolution: e.target.value })}
+                    onChange={(e) => onConfigChange({ ...configData, conflictResolution: e.target.value })}
                     className="w-full border border-gray-200 rounded-lg p-2"
                   >
                     <option value="crm-wins">CRM tem prioridade</option>
