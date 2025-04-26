@@ -549,13 +549,28 @@ function PropertyDetailsContent({ propertyId, isOpen, onClose, propConfig }: {
                     
                     {/* Cabeçalho do formulário */}
                     <div className="mb-5 relative">
-                      <h2 className="text-2xl font-bold mb-2" style={{ color: detailsTextColor }}>
-                        Gostou deste imóvel?
-                      </h2>
-                      
-                      <p className="text-base mb-3" style={{ color: `${detailsTextColor}CC` }}>
-                        Fale com um de nossos especialistas e agende uma visita hoje mesmo!
-                      </p>
+                      {/* Detalhes do corretor */}
+                      {agent && (
+                        <div className="mb-5 flex items-center p-3 rounded-lg" style={{ backgroundColor: `${detailsIconsColor}10` }}>
+                          <div className="w-12 h-12 rounded-full overflow-hidden mr-3 border-2 border-white shadow-sm flex-shrink-0">
+                            {agent.avatar ? (
+                              <img src={agent.avatar} alt={agent.name} className="w-full h-full object-cover" />
+                            ) : (
+                              <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                                <i className="fas fa-user text-gray-400"></i>
+                              </div>
+                            )}
+                          </div>
+                          <div>
+                            <p className="font-medium" style={{ color: detailsTextColor }}>
+                              {agent.name || 'Corretor Especializado'}
+                            </p>
+                            <p className="text-xs" style={{ color: `${detailsTextColor}99` }}>
+                              {agent.role === 'admin' ? 'Corretor(a) Chefe' : 'Corretor(a) Especializado(a)'} • CRECI: {agent.creci || 'Consulte'}
+                            </p>
+                          </div>
+                        </div>
+                      )}
                       
                       {/* Informações do imóvel no formulário de contato */}
                       <div className="mb-3">
@@ -596,29 +611,6 @@ function PropertyDetailsContent({ propertyId, isOpen, onClose, propConfig }: {
                         ) : null}
                       </div>
                     </div>
-                    
-                    {/* Detalhes do corretor */}
-                    {agent && (
-                      <div className="mb-5 flex items-center p-3 rounded-lg" style={{ backgroundColor: `${detailsIconsColor}10` }}>
-                        <div className="w-12 h-12 rounded-full overflow-hidden mr-3 border-2 border-white shadow-sm flex-shrink-0">
-                          {agent.avatar ? (
-                            <img src={agent.avatar} alt={agent.name} className="w-full h-full object-cover" />
-                          ) : (
-                            <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                              <i className="fas fa-user text-gray-400"></i>
-                            </div>
-                          )}
-                        </div>
-                        <div>
-                          <p className="font-medium" style={{ color: detailsTextColor }}>
-                            {agent.name || 'Corretor Especializado'}
-                          </p>
-                          <p className="text-xs" style={{ color: `${detailsTextColor}99` }}>
-                            {agent.role === 'admin' ? 'Corretor(a) Chefe' : 'Corretor(a) Especializado(a)'} • CRECI: {agent.creci || 'Consulte'}
-                          </p>
-                        </div>
-                      </div>
-                    )}
                     
                     <form 
                       onSubmit={(e) => {
