@@ -523,6 +523,13 @@ function PropertyDetailsContent({ propertyId, isOpen, onClose, propConfig }: {
                         Gostou deste imóvel?
                       </h2>
                       <p className="text-base" style={{ color: `${detailsTextColor}CC` }}>
+                        {currentProperty.iptuValue || currentProperty.condoFee ? 
+                          <span className="block mb-2">
+                            {currentProperty.iptuValue ? `IPTU: ${formatCurrency(currentProperty.iptuValue)}/ano` : ''}
+                            {currentProperty.iptuValue && currentProperty.condoFee ? ' • ' : ''}
+                            {currentProperty.condoFee ? `Condomínio: ${formatCurrency(currentProperty.condoFee)}/mês` : ''}
+                          </span> 
+                        : null}
                         Fale com um de nossos especialistas e agende uma visita hoje mesmo!
                       </p>
                     </div>
@@ -603,13 +610,15 @@ function PropertyDetailsContent({ propertyId, isOpen, onClose, propConfig }: {
                               `Título: ${currentProperty?.title || 'N/A'}`,
                               `Código: ${currentProperty?.id || 'N/A'}`,
                               `Preço: R$ ${currentProperty?.price?.toLocaleString('pt-BR') || 'N/A'}`,
+                              currentProperty?.iptuValue ? `IPTU: R$ ${currentProperty.iptuValue.toLocaleString('pt-BR')}/ano` : null,
+                              currentProperty?.condoFee ? `Condomínio: R$ ${currentProperty.condoFee.toLocaleString('pt-BR')}/mês` : null,
                               `Tipo: ${currentProperty?.type || 'N/A'}`,
                               `Endereço: ${currentProperty?.address || 'N/A'}`,
                               `Bairro: ${currentProperty?.neighborhood || 'N/A'}`,
                               `Cidade: ${currentProperty?.city || 'N/A'}`,
                               `Quartos: ${currentProperty?.bedrooms || 'N/A'}`,
                               `Banheiros: ${currentProperty?.bathrooms || 'N/A'}`
-                            ].join('\n');
+                            ].filter(Boolean).join('\n');
                             
                             let noteContent = `Lead demonstrou interesse neste imóvel:\n\n${propertyDetails}`;
                             
