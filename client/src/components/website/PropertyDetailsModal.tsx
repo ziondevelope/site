@@ -551,7 +551,7 @@ function PropertyDetailsContent({ propertyId, isOpen, onClose, propConfig }: {
                     <div className="mb-5 relative">
                       {/* Detalhes do corretor */}
                       {agent && (
-                        <div className="mb-5 flex items-center p-3 rounded-lg" style={{ backgroundColor: `${detailsIconsColor}10` }}>
+                        <div className="mb-5 flex items-center">
                           <div className="w-12 h-12 rounded-full overflow-hidden mr-3 border-2 border-white shadow-sm flex-shrink-0">
                             {agent.avatar ? (
                               <img src={agent.avatar} alt={agent.name} className="w-full h-full object-cover" />
