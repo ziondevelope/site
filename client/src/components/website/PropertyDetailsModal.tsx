@@ -483,37 +483,7 @@ function PropertyDetailsContent({ propertyId, isOpen, onClose, propConfig }: {
                   </div>
                 )}
                 
-                {/* Localização */}
-                <div className="mb-8">
-                  <h2 className="text-xl font-bold mb-3" style={{ color: detailsTextColor }}>Localização</h2>
-                  <div className="border rounded-lg h-64 overflow-hidden" style={{ borderColor: `${detailsTextColor}22` }}>
-                    {currentProperty.address ? (
-                      <iframe 
-                        width="100%" 
-                        height="100%" 
-                        frameBorder="0" 
-                        style={{ border: 0 }} 
-                        src={`https://maps.google.com/maps?q=${encodeURIComponent(
-                          `${currentProperty.address}, ${currentProperty.neighborhood || ''}, ${currentProperty.city || ''}, ${currentProperty.zipCode || ''}`
-                        )}&z=15&output=embed`}
-                        allowFullScreen
-                        title="Localização do imóvel"
-                      ></iframe>
-                    ) : (
-                      <div className="h-full flex items-center justify-center" style={{ backgroundColor: `${detailsIconsColor}15` }}>
-                        <div className="text-center">
-                          <i className="ri-map-pin-line text-4xl mb-2" style={{ color: `${detailsIconsColor}66` }}></i>
-                          <p style={{ color: `${detailsTextColor}99` }}>Mapa indisponível</p>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                  
-                  {/* Espaçador para separar o mapa do formulário de contato */}
-                  <div className="mt-4"></div>
-                </div>
-                
-                {/* Formulário de contato */}
+                {/* Formulário de contato - Movido para antes da localização */}
                 <div className="mb-8">
                   <div className="p-6 rounded-lg shadow-sm border overflow-hidden" 
                       style={{ 
@@ -870,6 +840,33 @@ function PropertyDetailsContent({ propertyId, isOpen, onClose, propConfig }: {
                         </p>
                       </div>
                     </form>
+                  </div>
+                </div>
+                
+                {/* Localização */}
+                <div className="mb-8">
+                  <h2 className="text-xl font-bold mb-3" style={{ color: detailsTextColor }}>Localização</h2>
+                  <div className="border rounded-lg h-64 overflow-hidden" style={{ borderColor: `${detailsTextColor}22` }}>
+                    {currentProperty.address ? (
+                      <iframe 
+                        width="100%" 
+                        height="100%" 
+                        frameBorder="0" 
+                        style={{ border: 0 }} 
+                        src={`https://maps.google.com/maps?q=${encodeURIComponent(
+                          `${currentProperty.address}, ${currentProperty.neighborhood || ''}, ${currentProperty.city || ''}, ${currentProperty.zipCode || ''}`
+                        )}&z=15&output=embed`}
+                        allowFullScreen
+                        title="Localização do imóvel"
+                      ></iframe>
+                    ) : (
+                      <div className="h-full flex items-center justify-center" style={{ backgroundColor: `${detailsIconsColor}15` }}>
+                        <div className="text-center">
+                          <i className="ri-map-pin-line text-4xl mb-2" style={{ color: `${detailsIconsColor}66` }}></i>
+                          <p style={{ color: `${detailsTextColor}99` }}>Mapa indisponível</p>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
                 
