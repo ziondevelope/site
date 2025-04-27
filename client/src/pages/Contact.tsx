@@ -1,10 +1,200 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { WebsiteConfig } from '@shared/schema';
+import { WebsiteConfig, Property } from '@shared/schema';
 // Using plain footer HTML elements instead of an imported component
 // Create a simple inline header instead of using the imported component
 import { Link } from 'wouter';
-import { MapPin, Phone, Mail, Clock, Send } from 'lucide-react';
+import { MapPin, Phone, Mail, Clock, Send, ChevronLeft, ChevronRight, Home, Map, Bed, Bath, Square } from 'lucide-react';
+
+// Property Carousel Component
+const PropertyCarousel = () => {
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  
+  const { data: properties } = useQuery<Property[]>({
+    queryKey: ['/api/properties'],
+  });
+  
+  const { data: config } = useQuery<WebsiteConfig>({
+    queryKey: ['/api/website/config'],
+  });
+  
+  const bgColor = config?.primaryColor || '#7f651e';
+  
+  const scrollToNext = () => {
+    if (!carouselRef.current || !properties) return;
+    
+    if (currentIndex < properties.length - 1) {
+      setCurrentIndex(currentIndex + 1);
+      carouselRef.current.scrollTo({
+        left: (currentIndex + 1) * carouselRef.current.offsetWidth,
+        behavior: 'smooth'
+      });
+    }
+  };
+  
+  const scrollToPrevious = () => {
+    if (!carouselRef.current || !properties) return;
+    
+    if (currentIndex > 0) {
+      setCurrentIndex(currentIndex - 1);
+      carouselRef.current.scrollTo({
+        left: (currentIndex - 1) * carouselRef.current.offsetWidth,
+        behavior: 'smooth'
+      });
+    }
+  };
+  
+  const formatPrice = (price: number) => {
+    return price.toLocaleString('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    });
+  };
+  
+  // Add CSS to hide scrollbar but keep functionality
+  const scrollbarHideStyle = `
+    .carousel-container::-webkit-scrollbar {
+      display: none;
+    }
+    .carousel-container {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  `;
+
+  return (
+    <div className="relative overflow-hidden">
+      <style dangerouslySetInnerHTML={{ __html: scrollbarHideStyle }} />
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-bold" style={{ color: bgColor }}>Imóveis em Destaque</h2>
+        
+        <div className="flex gap-2">
+          <button
+            onClick={scrollToPrevious}
+            disabled={currentIndex === 0}
+            className={`p-2 rounded-full ${currentIndex === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-100'}`}
+            style={{ color: bgColor }}
+            aria-label="Anterior"
+          >
+            <ChevronLeft className="w-6 h-6" />
+          </button>
+          
+          <button
+            onClick={scrollToNext}
+            disabled={properties && currentIndex >= properties.length - 1}
+            className={`p-2 rounded-full ${properties && currentIndex >= properties.length - 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-100'}`}
+            style={{ color: bgColor }}
+            aria-label="Próximo"
+          >
+            <ChevronRight className="w-6 h-6" />
+          </button>
+        </div>
+      </div>
+      
+      <div
+        ref={carouselRef}
+        className="flex overflow-x-auto snap-x snap-mandatory carousel-container"
+        style={{ 
+          WebkitOverflowScrolling: 'touch',
+          scrollSnapType: 'x mandatory',
+          scrollBehavior: 'smooth'
+        }}
+      >
+        {properties?.map((property, index) => (
+          <div
+            key={property.id}
+            className="min-w-full w-full flex-shrink-0 snap-center px-1 md:px-2"
+          >
+            <div className="bg-white rounded-lg overflow-hidden shadow-lg border border-gray-200">
+              <div className="relative">
+                <img
+                  src={property.images?.[0]?.url || '/placeholder-property.jpg'}
+                  alt={property.title || 'Imóvel'}
+                  className="w-full h-64 object-cover"
+                />
+                
+                <div className="absolute top-4 left-4">
+                  <span
+                    className="text-white px-3 py-1 rounded-md text-sm font-medium"
+                    style={{ backgroundColor: bgColor }}
+                  >
+                    {property.type === 'house' ? 'Casa' : 
+                     property.type === 'apartment' ? 'Apartamento' : 
+                     property.type === 'land' ? 'Terreno' : 'Imóvel'}
+                  </span>
+                </div>
+                
+                {property.purpose === 'rent' && (
+                  <div className="absolute top-4 right-4">
+                    <span className="bg-blue-600 text-white px-3 py-1 rounded-md text-sm font-medium">
+                      Aluguel
+                    </span>
+                  </div>
+                )}
+                
+                {property.purpose === 'sale' && (
+                  <div className="absolute top-4 right-4">
+                    <span className="bg-green-600 text-white px-3 py-1 rounded-md text-sm font-medium">
+                      Venda
+                    </span>
+                  </div>
+                )}
+              </div>
+              
+              <div className="p-5">
+                <h3 className="text-xl font-semibold mb-2 line-clamp-1">{property.title || 'Imóvel sem título'}</h3>
+                <p className="text-gray-600 mb-3 line-clamp-2">{property.address || 'Localização não informada'}</p>
+                
+                <div className="flex justify-between mb-4">
+                  <div className="text-xl font-bold" style={{ color: bgColor }}>
+                    {formatPrice(property.price)}
+                    {property.purpose === 'rent' ? '/mês' : ''}
+                  </div>
+                </div>
+                
+                <div className="flex justify-between text-gray-600 font-medium">
+                  {property.bedrooms && (
+                    <div className="flex items-center">
+                      <Bed className="w-5 h-5 mr-1" />
+                      <span>{property.bedrooms} {property.bedrooms === 1 ? 'Quarto' : 'Quartos'}</span>
+                    </div>
+                  )}
+                  
+                  {property.bathrooms && (
+                    <div className="flex items-center">
+                      <Bath className="w-5 h-5 mr-1" />
+                      <span>{property.bathrooms} {property.bathrooms === 1 ? 'Banheiro' : 'Banheiros'}</span>
+                    </div>
+                  )}
+                  
+                  {property.area && (
+                    <div className="flex items-center">
+                      <Square className="w-5 h-5 mr-1" />
+                      <span>{property.area}m²</span>
+                    </div>
+                  )}
+                </div>
+                
+                <div className="mt-5 pt-4 border-t border-gray-200">
+                  <Link
+                    href={`/properties/${property.id}`}
+                    className="inline-flex items-center justify-center w-full py-3 px-4 rounded-lg font-medium transition-colors"
+                    style={{ backgroundColor: bgColor, color: 'white' }}
+                  >
+                    Ver Detalhes
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
 
 const ContactPage = () => {
   const [name, setName] = useState('');
@@ -365,6 +555,11 @@ const ContactPage = () => {
               </form>
             </div>
           </div>
+        </div>
+        
+        {/* Property Carousel Section */}
+        <div className="container mx-auto py-12 px-4 md:px-8">
+          <PropertyCarousel />
         </div>
 
         {/* Map Section */}
