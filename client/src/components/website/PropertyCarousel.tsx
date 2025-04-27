@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { WebsiteConfig, Property } from '@shared/schema';
 import { ChevronLeft, ChevronRight, Bed, Bath, Square, Car } from 'lucide-react';
+import PropertyDetailsModal from './PropertyDetailsModal';
 
 interface PropertyCarouselProps {
   title?: string;
@@ -10,6 +11,10 @@ interface PropertyCarouselProps {
 const PropertyCarousel: React.FC<PropertyCarouselProps> = ({ title = "Imóveis em Destaque" }) => {
   const carouselRef = useRef<HTMLDivElement>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
+  
+  // Estado para o modal de detalhes do imóvel
+  const [selectedPropertyId, setSelectedPropertyId] = useState<number | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   
   const { data: properties } = useQuery<Property[]>({
     queryKey: ['/api/properties'],
@@ -21,9 +26,15 @@ const PropertyCarousel: React.FC<PropertyCarouselProps> = ({ title = "Imóveis e
   
   const bgColor = config?.primaryColor || '#7f651e';
   
-  // Para navegar para a página de detalhes do imóvel
+  // Função para abrir o modal de detalhes
   const openPropertyDetails = (id: number) => {
-    window.location.href = `/properties/${id}`;
+    setSelectedPropertyId(id);
+    setIsModalOpen(true);
+  };
+  
+  // Função para fechar o modal
+  const closePropertyModal = () => {
+    setIsModalOpen(false);
   };
   
   const formatPrice = (price: number) => {
@@ -136,6 +147,15 @@ const PropertyCarousel: React.FC<PropertyCarouselProps> = ({ title = "Imóveis e
   return (
     <div className="relative overflow-hidden">
       <style dangerouslySetInnerHTML={{ __html: customStyles }} />
+      {/* Modal de detalhes do imóvel */}
+      {isModalOpen && selectedPropertyId && (
+        <PropertyDetailsModal
+          isOpen={isModalOpen}
+          onClose={closePropertyModal}
+          propertyId={selectedPropertyId}
+        />
+      )}
+      
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold" style={{ color: bgColor }}>{title}</h2>
         
