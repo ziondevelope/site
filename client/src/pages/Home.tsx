@@ -449,11 +449,13 @@ export default function Home() {
       )}
 
       {/* Carrossel de Imóveis em Destaque */}
-      <div className="py-12 bg-white">
-        <div className="container mx-auto px-4">
-          <PropertyCarousel title="Imóveis em Destaque" />
+      {config?.showFeaturedProperties !== false && (
+        <div className="py-12 bg-white">
+          <div className="container mx-auto px-4">
+            <PropertyCarousel title="Imóveis em Destaque" />
+          </div>
         </div>
-      </div>
+      )}
       
       {/* Properties Section - Imóveis para Aluguel */}
       {config?.showRentProperties !== false && (
