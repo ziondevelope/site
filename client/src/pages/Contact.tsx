@@ -159,7 +159,7 @@ const PropertyCarousel = () => {
 
   return (
     <div className="relative overflow-hidden">
-      <style dangerouslySetInnerHTML={{ __html: scrollbarHideStyle }} />
+      <style dangerouslySetInnerHTML={{ __html: customStyles }} />
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold" style={{ color: bgColor }}>Imóveis em Destaque</h2>
         
