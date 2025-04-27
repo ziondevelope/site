@@ -10,6 +10,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShower, faBed, faRulerCombined, faCar, faBath } from "@fortawesome/free-solid-svg-icons";
 import PropertyDetailsModal from '@/components/website/PropertyDetailsModal';
 import PropertyFeaturedSlider from '@/components/website/PropertyFeaturedSlider';
+import ShowcaseTabs from '@/components/website/ShowcaseTabs';
 import { Testimonials } from '@/components/website/Testimonials';
 import { useLoading } from "@/contexts/LoadingContext";
 import SEO from '@/components/website/SEO';
