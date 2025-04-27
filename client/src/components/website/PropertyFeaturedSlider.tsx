@@ -24,7 +24,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property, onClick, primaryC
   };
 
   // Selecionar a imagem principal
-  const mainImage = property.featuredImage || property.coverImage || (property.images && property.images.length > 0
+  const mainImage = (property.images && property.images.length > 0
     ? typeof property.images[0] === 'string'
       ? property.images[0]
       : property.images[0].url
@@ -139,40 +139,169 @@ const PropertyFeaturedSlider: React.FC<PropertyFeaturedSliderProps> = ({
   // Calcular o número máximo de páginas
   const pageCount = Math.max(1, Math.ceil(properties.length / visibleItems));
   
-  // Função para navegar para a próxima página
+  // Estado para armazenar posição do swipe
+  const [touchStart, setTouchStart] = useState(0);
+  const [touchEnd, setTouchEnd] = useState(0);
+  const [autoplayPaused, setAutoplayPaused] = useState(false);
+  
+  // Função para navegar para a próxima página com animação suave
   const nextPage = () => {
     if (isTransitioning) return;
     setIsTransitioning(true);
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % pageCount);
-    setTimeout(() => setIsTransitioning(false), 500);
+    
+    // Efeito visual de transição
+    const sliderElement = document.querySelector('.property-slider-container');
+    if (sliderElement) {
+      sliderElement.classList.add('transition-opacity');
+      sliderElement.classList.add('opacity-80');
+      
+      setTimeout(() => {
+        setCurrentIndex((prevIndex) => (prevIndex + 1) % pageCount);
+        
+        // Restaura a opacidade após a mudança
+        setTimeout(() => {
+          sliderElement.classList.remove('opacity-80');
+          setTimeout(() => {
+            sliderElement.classList.remove('transition-opacity');
+            setIsTransitioning(false);
+          }, 300);
+        }, 200);
+      }, 150);
+    } else {
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % pageCount);
+      setTimeout(() => setIsTransitioning(false), 500);
+    }
   };
   
-  // Função para navegar para a página anterior
+  // Função para navegar para a página anterior com animação suave
   const prevPage = () => {
     if (isTransitioning) return;
     setIsTransitioning(true);
-    setCurrentIndex((prevIndex) => (prevIndex === 0 ? pageCount - 1 : prevIndex - 1));
-    setTimeout(() => setIsTransitioning(false), 500);
+    
+    // Efeito visual de transição
+    const sliderElement = document.querySelector('.property-slider-container');
+    if (sliderElement) {
+      sliderElement.classList.add('transition-opacity');
+      sliderElement.classList.add('opacity-80');
+      
+      setTimeout(() => {
+        setCurrentIndex((prevIndex) => (prevIndex === 0 ? pageCount - 1 : prevIndex - 1));
+        
+        // Restaura a opacidade após a mudança
+        setTimeout(() => {
+          sliderElement.classList.remove('opacity-80');
+          setTimeout(() => {
+            sliderElement.classList.remove('transition-opacity');
+            setIsTransitioning(false);
+          }, 300);
+        }, 200);
+      }, 150);
+    } else {
+      setCurrentIndex((prevIndex) => (prevIndex === 0 ? pageCount - 1 : prevIndex - 1));
+      setTimeout(() => setIsTransitioning(false), 500);
+    }
   };
   
-  // Função para ir para uma página específica
+  // Função para ir para uma página específica com animação suave
   const goToPage = (index: number) => {
     if (isTransitioning || index === currentIndex) return;
     setIsTransitioning(true);
-    setCurrentIndex(index);
-    setTimeout(() => setIsTransitioning(false), 500);
+    
+    // Efeito visual de transição
+    const sliderElement = document.querySelector('.property-slider-container');
+    if (sliderElement) {
+      sliderElement.classList.add('transition-opacity');
+      sliderElement.classList.add('opacity-80');
+      
+      setTimeout(() => {
+        setCurrentIndex(index);
+        
+        // Restaura a opacidade após a mudança
+        setTimeout(() => {
+          sliderElement.classList.remove('opacity-80');
+          setTimeout(() => {
+            sliderElement.classList.remove('transition-opacity');
+            setIsTransitioning(false);
+          }, 300);
+        }, 200);
+      }, 150);
+    } else {
+      setCurrentIndex(index);
+      setTimeout(() => setIsTransitioning(false), 500);
+    }
   };
   
-  // Autoplay
+  // Manipuladores de eventos de toque para swipe
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStart(e.targetTouches[0].clientX);
+    setAutoplayPaused(true);
+  };
+  
+  const handleTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+  
+  const handleTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > 50;
+    const isRightSwipe = distance < -50;
+    
+    if (isLeftSwipe && !isTransitioning) {
+      nextPage();
+    } else if (isRightSwipe && !isTransitioning) {
+      prevPage();
+    }
+    
+    // Reseta valores de toque
+    setTouchStart(0);
+    setTouchEnd(0);
+    
+    // Restaura autoplay após 3 segundos
+    setTimeout(() => setAutoplayPaused(false), 3000);
+  };
+  
+  // Manipuladores de eventos do mouse para pausar autoplay
+  const handleMouseEnter = () => {
+    setAutoplayPaused(true);
+  };
+  
+  const handleMouseLeave = () => {
+    setAutoplayPaused(false);
+  };
+  
+  // Autoplay com pausa/retomada
   useEffect(() => {
-    if (pageCount <= 1) return;
+    if (pageCount <= 1 || autoplayPaused) return;
     
     const interval = setInterval(() => {
-      nextPage();
+      if (!isTransitioning && !autoplayPaused) {
+        nextPage();
+      }
     }, 5000);
     
     return () => clearInterval(interval);
-  }, [currentIndex, pageCount, isTransitioning]);
+  }, [currentIndex, pageCount, isTransitioning, autoplayPaused]);
+  
+  // Adicionar uma classe CSS para animar a transição
+  useEffect(() => {
+    // Quando o componente é montado ou o índice atual muda,
+    // adicionamos um efeito sutil de entrada
+    const sliderContainer = document.querySelector('.property-slider-container');
+    if (sliderContainer) {
+      sliderContainer.classList.add('opacity-0');
+      setTimeout(() => {
+        sliderContainer.classList.remove('opacity-0');
+        sliderContainer.classList.add('animate-fade-in');
+        
+        // Remover a classe de animação após a conclusão
+        setTimeout(() => {
+          sliderContainer.classList.remove('animate-fade-in');
+        }, 500);
+      }, 50);
+    }
+  }, [currentIndex]);
   
   // Handler para clicar em uma propriedade
   const handlePropertyClick = (id: number) => {
@@ -241,7 +370,14 @@ const PropertyFeaturedSlider: React.FC<PropertyFeaturedSliderProps> = ({
         
         {/* Grid responsivo de cards de propriedades */}
         <div className="relative">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div 
+            className="property-slider-container grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 transition-opacity duration-300"
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+          >
             {visibleProperties.map((property) => (
               <div key={property.id} className="h-full">
                 <PropertyCard
