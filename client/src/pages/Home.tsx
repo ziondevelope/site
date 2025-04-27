@@ -10,6 +10,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShower, faBed, faRulerCombined, faCar, faBath } from "@fortawesome/free-solid-svg-icons";
 import PropertyDetailsModal from '@/components/website/PropertyDetailsModal';
 import PropertyFeaturedSlider from '@/components/website/PropertyFeaturedSlider';
+import PropertyCarousel from '@/components/website/PropertyCarousel';
 import { Testimonials } from '@/components/website/Testimonials';
 import { useLoading } from "@/contexts/LoadingContext";
 import SEO from '@/components/website/SEO';
@@ -447,6 +448,13 @@ export default function Home() {
         />
       )}
 
+      {/* Carrossel de Imóveis em Destaque */}
+      <div className="py-12 bg-white">
+        <div className="container mx-auto px-4">
+          <PropertyCarousel title="Imóveis em Destaque" />
+        </div>
+      </div>
+      
       {/* Properties Section - Imóveis para Aluguel */}
       {config?.showRentProperties !== false && (
         <section id="rent-properties" className="py-16 bg-gray-50">
