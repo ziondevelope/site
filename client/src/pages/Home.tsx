@@ -448,8 +448,11 @@ export default function Home() {
         />
       )}
 
+      {/* ShowcaseTabs - Novo componente de tabs para visualização de imóveis por categoria */}
+      <ShowcaseTabs config={config} onPropertyClick={openPropertyModal} />
+
       {/* Properties Section - Imóveis para Aluguel */}
-      {config?.showRentProperties !== false && (
+      {false && config?.showRentProperties !== false && (
         <section id="rent-properties" className="py-16 bg-gray-50">
           <div className="container mx-auto px-4">
             <h2 className="text-3xl font-bold text-left mb-12" style={{ color: config?.primaryColor || 'var(--primary)' }}>Imóveis para Aluguel</h2>
@@ -563,7 +566,7 @@ export default function Home() {
       )}
 
       {/* Properties Section - Imóveis para Venda */}
-      {config?.showSaleProperties !== false && (
+      {false && config?.showSaleProperties !== false && (
         <section id="sale-properties" className="py-16 bg-white">
           <div className="container mx-auto px-4">
             <h2 className="text-3xl font-bold text-left mb-12" style={{ color: config?.primaryColor || 'var(--primary)' }}>Imóveis para Venda</h2>

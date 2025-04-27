@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Property, WebsiteConfig } from '@shared/schema';
 import { Link } from 'wouter';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Property as PropertyCard } from '@/components/property/Property';
+import { Property as PropertyCard } from '../../components/property/Property';
 import { MapPin, Home, ArrowRight, ArrowLeft } from 'lucide-react';
 import './showcase-tabs.css';
 
@@ -298,9 +298,9 @@ export default function ShowcaseTabs({ config, onPropertyClick }: ShowcaseTabsPr
                 
                 {filteredItems.length > 0 && (
                   <div className="flex justify-center mt-8">
-                    <Link href={`/imoveis?tipo=${category.id !== 'all' ? category.id : ''}`}>
-                      <a 
-                        className="flex items-center px-6 py-2 rounded-md transition-all"
+                    <Link href={`/properties?tipo=${category.id !== 'all' ? category.id : ''}`}>
+                      <div 
+                        className="flex items-center px-6 py-2 rounded-md transition-all cursor-pointer"
                         style={{ 
                           backgroundColor: `${primaryColor}10`, 
                           color: primaryColor 
@@ -308,7 +308,7 @@ export default function ShowcaseTabs({ config, onPropertyClick }: ShowcaseTabsPr
                       >
                         Ver todos os imóveis
                         <ArrowRight className="ml-2 w-4 h-4" />
-                      </a>
+                      </div>
                     </Link>
                   </div>
                 )}
