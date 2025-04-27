@@ -4,7 +4,7 @@ import { WebsiteConfig, Property } from '@shared/schema';
 // Using plain footer HTML elements instead of an imported component
 // Create a simple inline header instead of using the imported component
 import { Link } from 'wouter';
-import { MapPin, Phone, Mail, Clock, Send, ChevronLeft, ChevronRight, Home, Map, Bed, Bath, Square } from 'lucide-react';
+import { MapPin, Phone, Mail, Clock, Send, ChevronLeft, ChevronRight, Home, Map, Bed, Bath, Square, Car } from 'lucide-react';
 
 // Property Carousel Component
 const PropertyCarousel = () => {
@@ -20,6 +20,11 @@ const PropertyCarousel = () => {
   });
   
   const bgColor = config?.primaryColor || '#7f651e';
+  
+  // Para navegar para a página de detalhes do imóvel
+  const openPropertyDetails = (id: number) => {
+    window.location.href = `/properties/${id}`;
+  };
   
   const scrollToNext = () => {
     if (!carouselRef.current || !properties) return;
@@ -54,14 +59,28 @@ const PropertyCarousel = () => {
     });
   };
   
-  // Add CSS to hide scrollbar but keep functionality
-  const scrollbarHideStyle = `
+  // Add CSS to hide scrollbar and add hover effects
+  const customStyles = `
     .carousel-container::-webkit-scrollbar {
       display: none;
     }
     .carousel-container {
       -ms-overflow-style: none;
       scrollbar-width: none;
+    }
+    
+    /* Property card hover effects */
+    .property-card:hover .eye-icon {
+      opacity: 1;
+    }
+    
+    .property-card:hover .property-image {
+      transform: scale(1.05);
+      transition: transform 0.5s ease;
+    }
+    
+    .property-image {
+      transition: transform 0.5s ease;
     }
   `;
 
@@ -181,84 +200,62 @@ const PropertyCarousel = () => {
             key={property.id}
             className="min-w-full md:min-w-[25%] w-full md:w-1/4 flex-shrink-0 snap-center px-1 md:px-2"
           >
-            <div className="bg-white rounded-lg overflow-hidden shadow-lg border border-gray-200 h-full flex flex-col">
-              <div className="relative">
+            <div 
+              className="property-card h-full bg-white rounded-lg border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-lg hover:bg-white cursor-pointer relative"
+              onClick={() => openPropertyDetails(property.id)}>
+              {/* Property Image */}
+              <div className="property-image-container h-48 relative overflow-hidden">
                 <img
                   src={property.images?.[0]?.url || '/placeholder-property.jpg'}
                   alt={property.title || 'Imóvel'}
-                  className="w-full h-52 md:h-40 object-cover"
+                  className="property-image w-full h-full object-cover"
                 />
-                
-                <div className="absolute top-4 left-4">
-                  <span
-                    className="text-white px-3 py-1 rounded-md text-sm font-medium"
-                    style={{ backgroundColor: bgColor }}
-                  >
-                    {property.type === 'house' ? 'Casa' : 
-                     property.type === 'apartment' ? 'Apartamento' : 
-                     property.type === 'land' ? 'Terreno' : 'Imóvel'}
-                  </span>
+                {/* Botão Ver Detalhes que aparece no hover */}
+                <div className="eye-icon absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300">
+                  <div className="rounded-md bg-white/90 px-4 py-2 backdrop-blur-sm flex items-center gap-2">
+                    <i className="fas fa-eye text-sm" style={{ color: bgColor }}></i>
+                    <span className="text-sm font-medium" style={{ color: bgColor }}>Ver Detalhes</span>
+                  </div>
                 </div>
-                
-                {property.purpose === 'rent' && (
-                  <div className="absolute top-4 right-4">
-                    <span className="bg-blue-600 text-white px-3 py-1 rounded-md text-sm font-medium">
-                      Aluguel
-                    </span>
-                  </div>
-                )}
-                
-                {property.purpose === 'sale' && (
-                  <div className="absolute top-4 right-4">
-                    <span className="bg-green-600 text-white px-3 py-1 rounded-md text-sm font-medium">
-                      Venda
-                    </span>
-                  </div>
-                )}
               </div>
               
-              <div className="p-4 flex-1 flex flex-col">
-                <h3 className="text-lg md:text-base lg:text-lg font-semibold mb-1 line-clamp-1">{property.title || 'Imóvel sem título'}</h3>
-                <p className="text-gray-600 mb-2 text-sm line-clamp-2">{property.address || 'Localização não informada'}</p>
+              {/* Property Details */}
+              <div className="p-5">
+                <h3 className="text-lg font-semibold mb-2 truncate">{property.title || 'Imóvel sem título'}</h3>
+                <p className="text-gray-600 text-sm mb-3 truncate">{property.neighborhood || property.city || property.address || 'Localização não informada'}</p>
                 
-                <div className="mb-3">
-                  <div className="text-lg md:text-base lg:text-lg font-bold" style={{ color: bgColor }}>
-                    {formatPrice(property.price)}
-                    {property.purpose === 'rent' ? '/mês' : ''}
-                  </div>
+                {/* Property Price */}
+                <div className="text-lg font-bold mb-3" style={{ color: bgColor }}>
+                  {formatPrice(property.price)}
+                  {property.purpose === 'rent' && <span className="text-sm text-gray-600 font-normal">/mês</span>}
                 </div>
                 
-                <div className="grid grid-cols-3 gap-1 text-xs md:text-xs lg:text-sm text-gray-600 font-medium">
+                {/* Property Features */}
+                <div className="flex items-center justify-between mt-2 text-gray-500 text-sm">
                   {property.bedrooms && (
                     <div className="flex items-center">
-                      <Bed className="w-4 h-4 mr-1 flex-shrink-0" />
+                      <Bed className="mr-1 w-3.5 h-3.5" />
                       <span>{property.bedrooms}</span>
                     </div>
                   )}
-                  
                   {property.bathrooms && (
                     <div className="flex items-center">
-                      <Bath className="w-4 h-4 mr-1 flex-shrink-0" />
+                      <Bath className="mr-1 w-3.5 h-3.5" />
                       <span>{property.bathrooms}</span>
                     </div>
                   )}
-                  
                   {property.area && (
                     <div className="flex items-center">
-                      <Square className="w-4 h-4 mr-1 flex-shrink-0" />
+                      <Square className="mr-1 w-3.5 h-3.5" />
                       <span>{property.area}m²</span>
                     </div>
                   )}
-                </div>
-                
-                <div className="mt-auto pt-3 border-t border-gray-200">
-                  <Link
-                    href={`/properties/${property.id}`}
-                    className="inline-flex items-center justify-center w-full py-2 px-3 rounded-lg font-medium text-sm transition-colors"
-                    style={{ backgroundColor: bgColor, color: 'white' }}
-                  >
-                    Ver Detalhes
-                  </Link>
+                  {property.parkingSpots && (
+                    <div className="flex items-center">
+                      <Car className="mr-1 w-3.5 h-3.5" />
+                      <span>{property.parkingSpots}</span>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
