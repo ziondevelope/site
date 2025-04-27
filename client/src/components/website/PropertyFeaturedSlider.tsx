@@ -22,10 +22,7 @@ interface PropertyCardProps {
 const PropertyCard: React.FC<PropertyCardProps> = ({ property, onClick, primaryColor, buttonTextColor }) => {
   // Função para formatar o preço em moeda brasileira
   const formatCurrency = (value: number) => {
-    return value.toLocaleString('pt-BR', {
-      style: 'currency',
-      currency: 'BRL',
-    });
+    return new Intl.NumberFormat('pt-BR').format(value);
   };
 
   // Selecionar a imagem principal
@@ -36,63 +33,58 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property, onClick, primaryC
     : '');
 
   return (
-    <div className="group flex-shrink-0 w-full rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 bg-white m-1 p-0.5">
-      <div className="relative aspect-[3/2] overflow-hidden">
-        <img
-          src={mainImage}
-          alt={property.title}
-          loading="lazy"
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+    <div 
+      className="property-card h-full bg-white rounded-lg border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-lg hover:bg-white cursor-pointer relative m-1 p-0.5"
+      onClick={onClick}
+    >
+      {/* Property Image */}
+      <div className="property-image-container h-48 relative overflow-hidden">
+        <img 
+          src={mainImage} 
+          alt={property.title || 'Imóvel'} 
+          className="property-image w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-        <div className="absolute top-3 left-3">
-          <span
-            className="inline-block px-2 py-1 text-xs font-medium rounded-md text-white"
-            style={{ backgroundColor: `${primaryColor}` }}
-          >
-            {property.purpose === 'sale' ? 'Venda' : 'Aluguel'}
-          </span>
+        {/* Botão Ver Detalhes que aparece no hover */}
+        <div className="eye-icon absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300 bg-black/20 group-hover:opacity-100">
+          <div className="rounded-md bg-white/90 px-4 py-2 backdrop-blur-sm flex items-center gap-2">
+            <i className="fas fa-eye text-sm" style={{ color: primaryColor }}></i>
+            <span className="text-sm font-medium" style={{ color: primaryColor }}>Ver Detalhes</span>
+          </div>
         </div>
-        <div className="absolute bottom-3 left-3 right-3">
-          <p className="text-lg font-bold text-white drop-shadow-md line-clamp-1">
-            {formatCurrency(property.price)}
-            {property.purpose === 'rent' && <span className="text-sm font-normal">/mês</span>}
-          </p>
+        <div 
+          className="absolute bottom-0 left-0 text-white px-3 py-1 rounded-tr-lg"
+          style={{ backgroundColor: primaryColor }}
+        >
+          {property.purpose === 'sale' ? 'Venda' : 'Aluguel'}
         </div>
       </div>
       
       <div className="p-4">
-        <h3 className="font-semibold text-gray-800 mb-2 line-clamp-2 h-[50px]">
-          {property.title}
-        </h3>
-        
-        <p className="text-sm text-gray-600 mb-3 flex items-center line-clamp-1">
-          <i className="ri-map-pin-line mr-1"></i>
+        <h3 className="text-md mb-1 line-clamp-1 font-medium">{property.title}</h3>
+        <div className="flex justify-start items-center mb-2">
+          <div className="text-lg font-bold text-gray-700">
+            R$ {formatCurrency(property.price)}
+            {property.purpose === 'rent' && <span className="text-xs font-normal text-gray-500">/mês</span>}
+          </div>
+        </div>
+        <p className="text-gray-500 text-sm mb-4 line-clamp-1">
           {property.neighborhood}{property.city ? `, ${property.city}` : ''}
         </p>
         
-        <div className="flex justify-between text-sm text-gray-700 mb-4">
-          <div className="flex items-center">
-            <i className="fas fa-bed mr-1"></i>
-            <span>{property.bedrooms || 0}</span>
-          </div>
-          <div className="flex items-center">
-            <i className="fas fa-shower mr-1"></i>
-            <span>{property.bathrooms || 0}</span>
-          </div>
-          <div className="flex items-center">
-            <i className="fas fa-ruler-combined mr-1"></i>
-            <span>{property.area} m²</span>
-          </div>
+        <div className="flex items-center justify-between text-sm text-gray-600">
+          <span className="flex items-center">
+            <i className="fas fa-ruler-combined fa-sm mr-1"></i>
+            {property.area}m²
+          </span>
+          <span className="flex items-center">
+            <i className="fas fa-bed fa-sm mr-1"></i>
+            {property.bedrooms || 0}
+          </span>
+          <span className="flex items-center">
+            <i className="fas fa-bath fa-sm mr-1"></i>
+            {property.bathrooms || 0}
+          </span>
         </div>
-        
-        <button
-          onClick={onClick}
-          className="w-full py-2 mt-auto text-center border border-gray-200 rounded-md transition-all hover:bg-gray-50 text-sm font-medium"
-          style={{ color: buttonTextColor }}
-        >
-          Ver Detalhes
-        </button>
       </div>
     </div>
   );
