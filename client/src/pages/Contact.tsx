@@ -65,6 +65,79 @@ const PropertyCarousel = () => {
     }
   `;
 
+  const [isDesktop, setIsDesktop] = useState(false);
+  const totalItems = properties?.length || 0;
+  const itemsPerPage = { mobile: 1, desktop: 4 };
+  const maxIndexMobile = totalItems - itemsPerPage.mobile;
+  const maxIndexDesktop = Math.max(0, totalItems - itemsPerPage.desktop);
+  const maxScrollIndex = isDesktop ? maxIndexDesktop : maxIndexMobile;
+  
+  // Verificar tamanho da tela quando o componente montar
+  useEffect(() => {
+    const checkIfDesktop = () => {
+      setIsDesktop(window.innerWidth >= 768);
+    };
+    
+    checkIfDesktop();
+    window.addEventListener('resize', checkIfDesktop);
+    
+    return () => {
+      window.removeEventListener('resize', checkIfDesktop);
+    };
+  }, []);
+
+  const scrollNext = () => {
+    if (!carouselRef.current || !properties) return;
+    
+    if (currentIndex < maxScrollIndex) {
+      const nextIndex = currentIndex + 1;
+      setCurrentIndex(nextIndex);
+      
+      if (isDesktop) {
+        // No desktop, cada card tem 25% da largura
+        const containerWidth = carouselRef.current.offsetWidth;
+        const scrollAmount = nextIndex * (containerWidth / 4);
+        
+        carouselRef.current.scrollTo({
+          left: scrollAmount,
+          behavior: 'smooth'
+        });
+      } else {
+        // No mobile, scroll para o próximo item (100% da largura)
+        carouselRef.current.scrollTo({
+          left: nextIndex * carouselRef.current.offsetWidth,
+          behavior: 'smooth'
+        });
+      }
+    }
+  };
+  
+  const scrollPrev = () => {
+    if (!carouselRef.current || !properties) return;
+    
+    if (currentIndex > 0) {
+      const prevIndex = currentIndex - 1;
+      setCurrentIndex(prevIndex);
+      
+      if (isDesktop) {
+        // No desktop, cada card tem 25% da largura
+        const containerWidth = carouselRef.current.offsetWidth;
+        const scrollAmount = prevIndex * (containerWidth / 4);
+        
+        carouselRef.current.scrollTo({
+          left: scrollAmount,
+          behavior: 'smooth'
+        });
+      } else {
+        // No mobile, scroll para o item anterior (100% da largura)
+        carouselRef.current.scrollTo({
+          left: prevIndex * carouselRef.current.offsetWidth,
+          behavior: 'smooth'
+        });
+      }
+    }
+  };
+
   return (
     <div className="relative overflow-hidden">
       <style dangerouslySetInnerHTML={{ __html: scrollbarHideStyle }} />
@@ -73,7 +146,7 @@ const PropertyCarousel = () => {
         
         <div className="flex gap-2">
           <button
-            onClick={scrollToPrevious}
+            onClick={scrollPrev}
             disabled={currentIndex === 0}
             className={`p-2 rounded-full ${currentIndex === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-100'}`}
             style={{ color: bgColor }}
@@ -83,9 +156,9 @@ const PropertyCarousel = () => {
           </button>
           
           <button
-            onClick={scrollToNext}
-            disabled={properties && currentIndex >= properties.length - 1}
-            className={`p-2 rounded-full ${properties && currentIndex >= properties.length - 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-100'}`}
+            onClick={scrollNext}
+            disabled={currentIndex >= maxScrollIndex}
+            className={`p-2 rounded-full ${currentIndex >= maxScrollIndex ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-100'}`}
             style={{ color: bgColor }}
             aria-label="Próximo"
           >
@@ -106,14 +179,14 @@ const PropertyCarousel = () => {
         {properties?.map((property, index) => (
           <div
             key={property.id}
-            className="min-w-full w-full flex-shrink-0 snap-center px-1 md:px-2"
+            className="min-w-full md:min-w-[25%] w-full md:w-1/4 flex-shrink-0 snap-center px-1 md:px-2"
           >
-            <div className="bg-white rounded-lg overflow-hidden shadow-lg border border-gray-200">
+            <div className="bg-white rounded-lg overflow-hidden shadow-lg border border-gray-200 h-full flex flex-col">
               <div className="relative">
                 <img
                   src={property.images?.[0]?.url || '/placeholder-property.jpg'}
                   alt={property.title || 'Imóvel'}
-                  className="w-full h-64 object-cover"
+                  className="w-full h-52 md:h-40 object-cover"
                 />
                 
                 <div className="absolute top-4 left-4">
@@ -144,44 +217,44 @@ const PropertyCarousel = () => {
                 )}
               </div>
               
-              <div className="p-5">
-                <h3 className="text-xl font-semibold mb-2 line-clamp-1">{property.title || 'Imóvel sem título'}</h3>
-                <p className="text-gray-600 mb-3 line-clamp-2">{property.address || 'Localização não informada'}</p>
+              <div className="p-4 flex-1 flex flex-col">
+                <h3 className="text-lg md:text-base lg:text-lg font-semibold mb-1 line-clamp-1">{property.title || 'Imóvel sem título'}</h3>
+                <p className="text-gray-600 mb-2 text-sm line-clamp-2">{property.address || 'Localização não informada'}</p>
                 
-                <div className="flex justify-between mb-4">
-                  <div className="text-xl font-bold" style={{ color: bgColor }}>
+                <div className="mb-3">
+                  <div className="text-lg md:text-base lg:text-lg font-bold" style={{ color: bgColor }}>
                     {formatPrice(property.price)}
                     {property.purpose === 'rent' ? '/mês' : ''}
                   </div>
                 </div>
                 
-                <div className="flex justify-between text-gray-600 font-medium">
+                <div className="grid grid-cols-3 gap-1 text-xs md:text-xs lg:text-sm text-gray-600 font-medium">
                   {property.bedrooms && (
                     <div className="flex items-center">
-                      <Bed className="w-5 h-5 mr-1" />
-                      <span>{property.bedrooms} {property.bedrooms === 1 ? 'Quarto' : 'Quartos'}</span>
+                      <Bed className="w-4 h-4 mr-1 flex-shrink-0" />
+                      <span>{property.bedrooms}</span>
                     </div>
                   )}
                   
                   {property.bathrooms && (
                     <div className="flex items-center">
-                      <Bath className="w-5 h-5 mr-1" />
-                      <span>{property.bathrooms} {property.bathrooms === 1 ? 'Banheiro' : 'Banheiros'}</span>
+                      <Bath className="w-4 h-4 mr-1 flex-shrink-0" />
+                      <span>{property.bathrooms}</span>
                     </div>
                   )}
                   
                   {property.area && (
                     <div className="flex items-center">
-                      <Square className="w-5 h-5 mr-1" />
+                      <Square className="w-4 h-4 mr-1 flex-shrink-0" />
                       <span>{property.area}m²</span>
                     </div>
                   )}
                 </div>
                 
-                <div className="mt-5 pt-4 border-t border-gray-200">
+                <div className="mt-auto pt-3 border-t border-gray-200">
                   <Link
                     href={`/properties/${property.id}`}
-                    className="inline-flex items-center justify-center w-full py-3 px-4 rounded-lg font-medium transition-colors"
+                    className="inline-flex items-center justify-center w-full py-2 px-3 rounded-lg font-medium text-sm transition-colors"
                     style={{ backgroundColor: bgColor, color: 'white' }}
                   >
                     Ver Detalhes
