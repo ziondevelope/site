@@ -1,8 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Property, WebsiteConfig } from '@shared/schema';
 import { useQuery } from '@tanstack/react-query';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { Link } from 'wouter';
 
 interface PropertyFeaturedSliderProps {
   openPropertyModal?: (propertyId: number) => void;
@@ -15,18 +14,17 @@ interface PropertyCardProps {
   property: Property;
   onClick?: () => void;
   primaryColor: string;
-  buttonTextColor: string;
 }
 
 // Componente de card individual para imóvel
-const PropertyCard: React.FC<PropertyCardProps> = ({ property, onClick, primaryColor, buttonTextColor }) => {
+const PropertyCard: React.FC<PropertyCardProps> = ({ property, onClick, primaryColor }) => {
   // Função para formatar o preço em moeda brasileira
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('pt-BR').format(value);
   };
 
   // Selecionar a imagem principal
-  const mainImage = property.featuredImage || (property.images && property.images.length > 0
+  const mainImage = property.featuredImage || property.coverImage || (property.images && property.images.length > 0
     ? typeof property.images[0] === 'string'
       ? property.images[0]
       : property.images[0].url
@@ -34,106 +32,71 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property, onClick, primaryC
 
   return (
     <div 
-      className="property-card h-full bg-white rounded-lg border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-lg hover:bg-white cursor-pointer relative"
+      className="h-full bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 cursor-pointer"
       onClick={onClick}
     >
-      {/* Property Image */}
-      <div className="property-image-container h-56 sm:h-48 md:h-52 relative overflow-hidden">
+      <div className="relative h-48 md:h-52">
         <img 
           src={mainImage} 
           alt={property.title || 'Imóvel'} 
-          className="property-image w-full h-full object-cover absolute inset-0"
+          className="w-full h-full object-cover"
         />
-        {/* Botão Ver Detalhes que aparece no hover */}
-        <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300 bg-black/20">
-          <div className="rounded-md bg-white/90 px-4 py-2 backdrop-blur-sm flex items-center gap-2">
-            <i className="fas fa-eye text-sm" style={{ color: primaryColor }}></i>
-            <span className="text-sm font-medium" style={{ color: primaryColor }}>Ver Detalhes</span>
-          </div>
-        </div>
         <div 
           className="absolute bottom-0 left-0 text-white px-3 py-1 rounded-tr-lg"
           style={{ backgroundColor: primaryColor }}
         >
           {property.purpose === 'sale' ? 'Venda' : 'Aluguel'}
         </div>
+        
+        {/* Overlay com ação de visualizar */}
+        <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300 bg-black/20">
+          <div className="bg-white/90 px-3 py-2 rounded-md flex items-center gap-2">
+            <i className="fas fa-eye text-sm" style={{ color: primaryColor }}></i>
+            <span style={{ color: primaryColor }}>Ver Detalhes</span>
+          </div>
+        </div>
       </div>
       
       <div className="p-4">
-        <h3 className="text-md mb-1 line-clamp-1 font-medium">{property.title}</h3>
-        <div className="flex justify-start items-center mb-2">
-          <div className="text-lg font-bold text-gray-700">
-            R$ {formatCurrency(property.price)}
-            {property.purpose === 'rent' && <span className="text-xs font-normal text-gray-500">/mês</span>}
-          </div>
+        <h3 className="text-md font-medium mb-1 line-clamp-1">{property.title}</h3>
+        <div className="text-lg font-bold text-gray-800 mb-2">
+          R$ {formatCurrency(property.price)}
+          {property.purpose === 'rent' && <span className="text-xs font-normal text-gray-500">/mês</span>}
         </div>
-        <p className="text-gray-500 text-sm mb-4 line-clamp-1">
+        <p className="text-sm text-gray-500 mb-3 line-clamp-1">
           {property.neighborhood}{property.city ? `, ${property.city}` : ''}
         </p>
         
         <div className="flex items-center justify-between text-sm text-gray-600">
-          <span className="flex items-center">
-            <i className="fas fa-ruler-combined fa-sm mr-1"></i>
+          <div className="flex items-center">
+            <i className="fas fa-ruler-combined mr-1"></i>
             {property.area}m²
-          </span>
-          <span className="flex items-center">
-            <i className="fas fa-bed fa-sm mr-1"></i>
+          </div>
+          <div className="flex items-center">
+            <i className="fas fa-bed mr-1"></i>
             {property.bedrooms || 0}
-          </span>
-          <span className="flex items-center">
-            <i className="fas fa-bath fa-sm mr-1"></i>
+          </div>
+          <div className="flex items-center">
+            <i className="fas fa-bath mr-1"></i>
             {property.bathrooms || 0}
-          </span>
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-export default function PropertyFeaturedSlider({ 
-  openPropertyModal, 
+const PropertyFeaturedSlider: React.FC<PropertyFeaturedSliderProps> = ({
+  openPropertyModal,
   onPropertyClick,
   properties: propProperties,
-  config: propConfig 
-}: PropertyFeaturedSliderProps) {
-  // Use onPropertyClick se openPropertyModal não estiver definido
-  const handlePropertyClick = openPropertyModal || onPropertyClick;
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [autoplay, setAutoplay] = useState(true);
-  const sliderRef = useRef<HTMLDivElement>(null);
-  const [visibleProperties, setVisibleProperties] = useState(4);
+  config: propConfig
+}) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [visibleItems, setVisibleItems] = useState(4);
+  const [isTransitioning, setIsTransitioning] = useState(false);
   
-  // Atualizar o número de propriedades visíveis de acordo com o tamanho da tela
-  useEffect(() => {
-    const updateVisibleCount = () => {
-      if (window.innerWidth < 768) {
-        // Apenas 1 item visível em telas pequenas
-        setVisibleProperties(1);
-      } else if (window.innerWidth < 1024) {
-        setVisibleProperties(2);
-      } else if (window.innerWidth < 1280) {
-        setVisibleProperties(3);
-      } else {
-        setVisibleProperties(4);
-      }
-    };
-
-    // Atualiza imediatamente e em cada redimensionamento
-    updateVisibleCount();
-    window.addEventListener('resize', updateVisibleCount);
-    
-    // Recalcula após certo tempo para garantir que o DOM esteja pronto
-    const timer = setTimeout(() => {
-      updateVisibleCount();
-    }, 300);
-    
-    return () => {
-      window.removeEventListener('resize', updateVisibleCount);
-      clearTimeout(timer);
-    };
-  }, []);
-  
-  // Obter configurações do site para cores (mesmo que tenha sido passado como prop)
+  // Obter configurações do site
   const { data: configData } = useQuery<WebsiteConfig>({
     queryKey: ['/api/website/config'],
     staleTime: 0
@@ -141,185 +104,169 @@ export default function PropertyFeaturedSlider({
   
   // Use sempre os dados mais recentes
   const config = configData || propConfig;
-  
-  // Define as cores do slider com base nas configurações
-  const [primaryColor, setPrimaryColor] = useState(config?.featuredSliderBackgroundColor || config?.primaryColor || '#7f651e');
-  const [buttonTextColor, setButtonTextColor] = useState(config?.featuredSliderButtonTextColor || config?.primaryColor || '#7f651e');
-  
-  // Atualiza as cores quando as configurações mudarem
-  useEffect(() => {
-    if (config) {
-      console.log("Atualizando cores do slider:", {
-        backgroundColor: config.featuredSliderBackgroundColor,
-        textColor: config.featuredSliderTextColor,
-        buttonTextColor: config.featuredSliderButtonTextColor
-      });
-      setPrimaryColor(config.featuredSliderBackgroundColor || config.primaryColor || '#7f651e');
-      setButtonTextColor(config.featuredSliderButtonTextColor || config.primaryColor || '#7f651e');
-    }
-  }, [config]);
+  const primaryColor = config?.primaryColor || '#7f651e';
   
   // Se as propriedades não forem fornecidas, busque-as
   const { data: propertiesData, isLoading } = useQuery<Property[]>({
     queryKey: ['/api/properties'],
     enabled: !propProperties,
-    select: (data) => {
-      // Filtramos para pegar apenas propriedades destacadas, sem limitar o número
-      return data.filter(property => property.isFeatured);
-    }
+    select: (data) => data.filter(property => property.isFeatured)
   });
   
-  // Use as propriedades passadas como propriedade ou as obtidas pela consulta
+  // Use as propriedades passadas como prop ou as obtidas pela consulta
   const properties = propProperties || propertiesData || [];
-
-  // No modo mobile, cada slide mostra apenas uma propriedade
-  // Em telas maiores, mostramos múltiplas propriedades por slide
-  const maxSlides = visibleProperties === 1 
-    ? Math.max(0, properties.length - 1) 
-    : Math.max(0, Math.ceil(properties.length / visibleProperties) - 1);
   
-  // Garante que currentSlide está dentro dos limites válidos quando properties ou visibleProperties mudam
+  // Determinar quantos itens mostrar com base na largura da tela
   useEffect(() => {
-    if (currentSlide > maxSlides) {
-      setCurrentSlide(maxSlides);
-    }
-  }, [properties.length, visibleProperties, currentSlide, maxSlides]);
+    const handleResize = () => {
+      const width = window.innerWidth;
+      if (width < 640) {
+        setVisibleItems(1);
+      } else if (width < 1024) {
+        setVisibleItems(2);
+      } else if (width < 1280) {
+        setVisibleItems(3);
+      } else {
+        setVisibleItems(4);
+      }
+    };
+    
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
   
-  // Autoplay functionality
+  // Calcular o número máximo de páginas
+  const pageCount = Math.max(1, Math.ceil(properties.length / visibleItems));
+  
+  // Função para navegar para a próxima página
+  const nextPage = () => {
+    if (isTransitioning) return;
+    setIsTransitioning(true);
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % pageCount);
+    setTimeout(() => setIsTransitioning(false), 500);
+  };
+  
+  // Função para navegar para a página anterior
+  const prevPage = () => {
+    if (isTransitioning) return;
+    setIsTransitioning(true);
+    setCurrentIndex((prevIndex) => (prevIndex === 0 ? pageCount - 1 : prevIndex - 1));
+    setTimeout(() => setIsTransitioning(false), 500);
+  };
+  
+  // Função para ir para uma página específica
+  const goToPage = (index: number) => {
+    if (isTransitioning || index === currentIndex) return;
+    setIsTransitioning(true);
+    setCurrentIndex(index);
+    setTimeout(() => setIsTransitioning(false), 500);
+  };
+  
+  // Autoplay
   useEffect(() => {
-    if (!autoplay || properties.length <= visibleProperties) return;
+    if (pageCount <= 1) return;
     
     const interval = setInterval(() => {
-      setCurrentSlide(current => {
-        return current >= maxSlides ? 0 : current + 1;
-      });
-    }, 5000); // 5 segundos por slide
+      nextPage();
+    }, 5000);
     
     return () => clearInterval(interval);
-  }, [autoplay, properties.length, visibleProperties, maxSlides]);
+  }, [currentIndex, pageCount, isTransitioning]);
   
-  // Pausa o autoplay quando o mouse está sobre o slider
-  const handleMouseEnter = () => setAutoplay(false);
-  const handleMouseLeave = () => setAutoplay(true);
-  
-  // Navegação de slides
-  const goToNextSlide = () => {
-    setCurrentSlide(current => {
-      return current >= maxSlides ? 0 : current + 1;
-    });
+  // Handler para clicar em uma propriedade
+  const handlePropertyClick = (id: number) => {
+    if (openPropertyModal) {
+      openPropertyModal(id);
+    } else if (onPropertyClick) {
+      onPropertyClick(id);
+    }
   };
-  
-  const goToPrevSlide = () => {
-    setCurrentSlide(current => {
-      return current <= 0 ? maxSlides : current - 1;
-    });
-  };
-
-  // Calcular a largura de cada slide com base no número de propriedades visíveis
-  const slideWidth = 100 / visibleProperties;
   
   if (isLoading || properties.length === 0) {
     return null;
   }
   
+  // Determinar quais propriedades mostrar na página atual
+  const startIdx = currentIndex * visibleItems;
+  const visibleProperties = properties.slice(startIdx, startIdx + visibleItems);
+  
   return (
-    <div 
-      className="mx-auto py-16 relative bg-gradient-to-b from-white to-gray-50"
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-    >
-      <div className="container mx-auto px-6 md:px-8 overflow-visible">
-        {/* Header com título e navegação */}
-        <div className="flex flex-col md:flex-row justify-between items-center mb-10">
-          <div className="flex items-center mb-4 md:mb-0">
-            <div className="w-1.5 h-10 rounded-full mr-3" style={{ backgroundColor: config?.primaryColor || '#7f651e' }}></div>
-            <h2 className="text-2xl md:text-3xl font-bold" style={{ color: '#1a1a1a' }}>
-              Imóveis Exclusivos
-            </h2>
+    <section className="py-16 bg-gradient-to-b from-white to-gray-50">
+      <div className="container mx-auto px-4 sm:px-6">
+        {/* Cabeçalho da seção */}
+        <div className="flex flex-col md:flex-row justify-between items-center mb-8 md:mb-12">
+          <div className="flex items-center mb-6 md:mb-0">
+            <div className="w-1.5 h-10 rounded-full mr-3" style={{ backgroundColor: primaryColor }}></div>
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900">Imóveis Exclusivos</h2>
           </div>
           
-          <div className="flex items-center gap-3">
-            {/* Botões de navegação principais */}
-            {properties.length > visibleProperties && (
-              <div className="flex gap-2">
+          {/* Navegação para desktop */}
+          {pageCount > 1 && (
+            <div className="flex items-center gap-4">
+              <div className="hidden md:flex gap-2">
                 <button 
-                  onClick={goToPrevSlide}
+                  onClick={prevPage}
                   className="w-10 h-10 rounded-md border border-gray-200 flex items-center justify-center hover:border-gray-400 transition-colors"
-                  aria-label="Slide anterior"
+                  aria-label="Página anterior"
                 >
                   <ChevronLeft className="w-5 h-5 text-gray-600" />
                 </button>
                 <button 
-                  onClick={goToNextSlide}
+                  onClick={nextPage}
                   className="w-10 h-10 rounded-md border border-gray-200 flex items-center justify-center hover:border-gray-400 transition-colors"
-                  aria-label="Próximo slide"
+                  aria-label="Próxima página"
                 >
                   <ChevronRight className="w-5 h-5 text-gray-600" />
                 </button>
               </div>
-            )}
-            
-            {/* Indicadores de slides para telas maiores */}
-            {maxSlides > 0 && (
+              
+              {/* Indicadores de páginas para desktop */}
               <div className="hidden md:flex space-x-1.5">
-                {Array.from({ length: maxSlides + 1 }).map((_, index) => (
+                {Array.from({ length: pageCount }).map((_, index) => (
                   <button 
                     key={index}
-                    onClick={() => setCurrentSlide(index)}
-                    className={`h-1 transition-all rounded-full ${
-                      index === currentSlide ? 'w-8 bg-black' : 'w-3 bg-gray-300'
+                    onClick={() => goToPage(index)}
+                    className={`h-1.5 transition-all rounded-full ${
+                      index === currentIndex ? 'w-8' : 'w-3 bg-gray-300'
                     }`}
-                    aria-label={`Ir para slide ${index + 1}`}
-                    style={index === currentSlide ? { backgroundColor: primaryColor } : {}}
+                    aria-label={`Ir para página ${index + 1}`}
+                    style={{ backgroundColor: index === currentIndex ? primaryColor : undefined }}
                   />
                 ))}
               </div>
-            )}
-          </div>
+            </div>
+          )}
         </div>
         
-        {/* Carrossel com 4 cards por tela */}
+        {/* Grid responsivo de cards de propriedades */}
         <div className="relative">
-          <div className="overflow-hidden px-0 sm:px-1 py-2">
-            <div 
-              ref={sliderRef}
-              className="flex flex-nowrap gap-4 md:gap-5 transition-transform duration-500 ease-out"
-              style={{ 
-                transform: `translateX(-${currentSlide * 100}%)`,
-                width: visibleProperties === 1 ? '100%' : 'auto'
-              }}
-            >
-              {properties.map((property) => (
-                <div 
-                  key={property.id} 
-                  className="flex-shrink-0 w-full sm:w-auto"
-                  style={{ width: visibleProperties === 1 ? '100%' : `${slideWidth}%` }}
-                >
-                  <PropertyCard 
-                    property={property}
-                    onClick={() => handlePropertyClick && handlePropertyClick(property.id)}
-                    primaryColor={primaryColor}
-                    buttonTextColor={buttonTextColor}
-                  />
-                </div>
-              ))}
-            </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {visibleProperties.map((property) => (
+              <div key={property.id} className="h-full">
+                <PropertyCard
+                  property={property}
+                  onClick={() => handlePropertyClick(property.id)}
+                  primaryColor={primaryColor}
+                />
+              </div>
+            ))}
           </div>
           
           {/* Botões de navegação para dispositivos móveis */}
-          {properties.length > visibleProperties && (
+          {pageCount > 1 && (
             <>
               <button 
-                onClick={goToPrevSlide}
-                className="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center hover:bg-gray-50 transition-all z-10 md:hidden"
-                aria-label="Slide anterior"
+                onClick={prevPage}
+                className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center hover:bg-gray-50 transition-all z-10 md:hidden"
+                aria-label="Página anterior"
               >
                 <ChevronLeft className="w-5 h-5" style={{ color: primaryColor }} />
               </button>
               <button 
-                onClick={goToNextSlide}
-                className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center hover:bg-gray-50 transition-all z-10 md:hidden"
-                aria-label="Próximo slide"
+                onClick={nextPage}
+                className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center hover:bg-gray-50 transition-all z-10 md:hidden"
+                aria-label="Próxima página"
               >
                 <ChevronRight className="w-5 h-5" style={{ color: primaryColor }} />
               </button>
@@ -327,23 +274,25 @@ export default function PropertyFeaturedSlider({
           )}
         </div>
         
-        {/* Indicadores de slides para dispositivos móveis */}
-        {maxSlides > 0 && (
+        {/* Indicadores de páginas para dispositivos móveis */}
+        {pageCount > 1 && (
           <div className="flex justify-center mt-6 space-x-1.5 md:hidden">
-            {Array.from({ length: maxSlides + 1 }).map((_, index) => (
+            {Array.from({ length: pageCount }).map((_, index) => (
               <button 
                 key={index}
-                onClick={() => setCurrentSlide(index)}
+                onClick={() => goToPage(index)}
                 className={`w-2 h-2 rounded-full transition-all ${
-                  index === currentSlide ? 'bg-gray-800' : 'bg-gray-300'
+                  index === currentIndex ? 'bg-gray-800' : 'bg-gray-300'
                 }`}
-                aria-label={`Ir para slide ${index + 1}`}
-                style={index === currentSlide ? { backgroundColor: primaryColor } : {}}
+                aria-label={`Ir para página ${index + 1}`}
+                style={{ backgroundColor: index === currentIndex ? primaryColor : undefined }}
               />
             ))}
           </div>
         )}
       </div>
-    </div>
+    </section>
   );
-}
+};
+
+export default PropertyFeaturedSlider;
