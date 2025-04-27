@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { WebsiteConfig } from '@shared/schema';
 // Using plain footer HTML elements instead of an imported component
-import Header from '../components/website/Header';
+// Create a simple inline header instead of using the imported component
+import { Link } from 'wouter';
 import { MapPin, Phone, Mail, Clock, Send } from 'lucide-react';
 
 const ContactPage = () => {
@@ -56,14 +57,53 @@ const ContactPage = () => {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Header />
+      {/* Simple Header */}
+      <header className="bg-white border-b border-gray-200 shadow-sm">
+        <div className="container mx-auto px-4 py-3">
+          <div className="flex justify-between items-center">
+            <Link href="/" className="flex items-center">
+              {config?.logo ? (
+                <img 
+                  src={config.logo} 
+                  alt="Logo" 
+                  className="h-12 object-contain"
+                />
+              ) : (
+                <div className="text-xl font-semibold" style={{ color: config?.primaryColor || '#7f651e' }}>
+                  Imobiliária
+                </div>
+              )}
+            </Link>
+            
+            <nav className="hidden md:flex space-x-6">
+              <Link href="/" className="text-gray-700 hover:text-gray-900 font-medium">
+                Início
+              </Link>
+              <Link href="/properties" className="text-gray-700 hover:text-gray-900 font-medium">
+                Imóveis
+              </Link>
+              <Link href="/contact" className="font-medium" style={{ color: config?.primaryColor || '#7f651e' }}>
+                Contato
+              </Link>
+            </nav>
+            
+            <div className="md:hidden">
+              <Link href="/" className="text-gray-700 hover:text-gray-900 p-2">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </header>
       
       <main className="flex-grow">
         {/* Hero Section */}
         <div 
           className="w-full bg-cover bg-center h-64 md:h-80 flex items-center justify-center"
           style={{ 
-            backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${config?.contactBanner || '/images/contact-bg.jpg'})`,
+            backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${config?.bannerBackground || '/images/contact-bg.jpg'})`,
             backgroundPosition: 'center',
             backgroundSize: 'cover',
             backgroundRepeat: 'no-repeat'
@@ -122,8 +162,8 @@ const ContactPage = () => {
                     <div>
                       <h4 className="font-medium">Horário de Funcionamento</h4>
                       <p className="text-gray-600 mt-1">
-                        {config?.businessHours || 'Segunda à Sexta: 9h às 18h'}<br />
-                        {config?.businessHoursSat || 'Sábado: 9h às 13h'}
+                        Segunda à Sexta: 9h às 18h<br />
+                        Sábado: 9h às 13h
                       </p>
                     </div>
                   </div>
@@ -329,9 +369,9 @@ const ContactPage = () => {
 
         {/* Map Section */}
         <div className="w-full h-[400px] bg-gray-100">
-          {config?.mapEmbedUrl ? (
+          {false ? (
             <iframe
-              src={config.mapEmbedUrl}
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3656.6722371475703!2d-46.653383!3d-23.5651315!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce59c7f481fd9f%3A0x9982bfde4df54830!2sAv.%20Paulista%2C%201000%20-%20Bela%20Vista%2C%20S%C3%A3o%20Paulo%20-%20SP%2C%2001310-100!5e0!3m2!1spt-BR!2sbr!4v1674824762111!5m2!1spt-BR!2sbr"
               width="100%"
               height="100%"
               style={{ border: 0 }}
@@ -352,7 +392,121 @@ const ContactPage = () => {
         </div>
       </main>
       
-      <Footer />
+      {/* Simple Footer */}
+      <footer className="bg-gray-800 text-white py-12">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Sobre nós</h3>
+              <p className="text-gray-400 mb-4">
+                Somos especializados na compra, venda e locação de imóveis residenciais e comerciais. 
+                Nosso objetivo é proporcionar a melhor experiência imobiliária para nossos clientes.
+              </p>
+              {config?.logo && (
+                <img 
+                  src={config.logo} 
+                  alt="Logo" 
+                  className="h-12 object-contain opacity-70"
+                />
+              )}
+            </div>
+            
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Contato</h3>
+              <div className="space-y-3 text-gray-400">
+                <p className="flex items-center">
+                  <MapPin className="w-5 h-5 mr-2 flex-shrink-0 text-gray-500" />
+                  {config?.address || 'Av. Paulista, 1000 - Bela Vista, São Paulo - SP'}
+                </p>
+                <p className="flex items-center">
+                  <Phone className="w-5 h-5 mr-2 flex-shrink-0 text-gray-500" />
+                  {config?.phone || '(11) 9999-9999'}
+                </p>
+                <p className="flex items-center">
+                  <Mail className="w-5 h-5 mr-2 flex-shrink-0 text-gray-500" />
+                  {config?.email || 'contato@imobiliaria.com.br'}
+                </p>
+              </div>
+            </div>
+            
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Links Rápidos</h3>
+              <ul className="space-y-2">
+                <li>
+                  <Link href="/" className="text-gray-400 hover:text-white transition-colors">
+                    Início
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/properties" className="text-gray-400 hover:text-white transition-colors">
+                    Imóveis
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/contact" className="text-gray-400 hover:text-white transition-colors">
+                    Contato
+                  </Link>
+                </li>
+              </ul>
+              
+              {/* Social Icons */}
+              <div className="mt-6 flex space-x-4">
+                {config?.facebookUrl && (
+                  <a 
+                    href={config.facebookUrl}
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-gray-400 hover:text-white transition-colors"
+                    aria-label="Facebook"
+                  >
+                    <i className="fab fa-facebook-f text-xl"></i>
+                  </a>
+                )}
+                
+                {config?.instagramUrl && (
+                  <a 
+                    href={config.instagramUrl}
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-gray-400 hover:text-white transition-colors"
+                    aria-label="Instagram"
+                  >
+                    <i className="fab fa-instagram text-xl"></i>
+                  </a>
+                )}
+                
+                {config?.linkedinUrl && (
+                  <a 
+                    href={config.linkedinUrl}
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-gray-400 hover:text-white transition-colors"
+                    aria-label="LinkedIn"
+                  >
+                    <i className="fab fa-linkedin-in text-xl"></i>
+                  </a>
+                )}
+                
+                {config?.youtubeUrl && (
+                  <a 
+                    href={config.youtubeUrl}
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-gray-400 hover:text-white transition-colors"
+                    aria-label="YouTube"
+                  >
+                    <i className="fab fa-youtube text-xl"></i>
+                  </a>
+                )}
+              </div>
+            </div>
+          </div>
+          
+          <div className="border-t border-gray-700 mt-10 pt-6 text-center text-gray-500 text-sm">
+            <p>&copy; {new Date().getFullYear()} Imobiliária. Todos os direitos reservados.</p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };
