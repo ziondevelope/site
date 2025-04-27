@@ -36,7 +36,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property, onClick, primaryC
     : '');
 
   return (
-    <div className="group flex-shrink-0 w-full rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 bg-white">
+    <div className="group flex-shrink-0 w-full rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 bg-white m-1 p-0.5">
       <div className="relative aspect-[3/2] overflow-hidden">
         <img
           src={mainImage}
@@ -222,7 +222,7 @@ export default function PropertyFeaturedSlider({
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      <div className="container mx-auto px-4 md:px-8">
+      <div className="container mx-auto px-6 md:px-8 overflow-visible">
         {/* Header com título e navegação */}
         <div className="flex flex-col md:flex-row justify-between items-center mb-10">
           <div className="flex items-center mb-4 md:mb-0">
@@ -274,12 +274,12 @@ export default function PropertyFeaturedSlider({
         
         {/* Carrossel com 4 cards por tela */}
         <div className="relative">
-          <div className="overflow-hidden">
+          <div className="overflow-hidden px-1 py-2">
             <div 
               ref={sliderRef}
-              className="flex flex-nowrap gap-4 transition-transform duration-500 ease-out"
+              className="flex flex-nowrap gap-5 transition-transform duration-500 ease-out"
               style={{ 
-                transform: `translateX(-${currentSlide * (100 / visibleProperties + (16 / visibleProperties))}%)`
+                transform: `translateX(-${currentSlide * (100 / visibleProperties + (20 / visibleProperties))}%)`
               }}
             >
               {properties.map((property) => (
