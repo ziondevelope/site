@@ -1,14 +1,20 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { WebsiteConfig, Property } from '@shared/schema';
-import { ChevronLeft, ChevronRight, Bed, Bath, Square, Car } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBed, faBath, faRulerCombined, faCar } from '@fortawesome/free-solid-svg-icons';
 import PropertyDetailsModal from './PropertyDetailsModal';
 
 interface PropertyCarouselProps {
   title?: string;
+  properties?: Property[];
 }
 
-const PropertyCarousel: React.FC<PropertyCarouselProps> = ({ title = "Imóveis em Destaque" }) => {
+const PropertyCarousel: React.FC<PropertyCarouselProps> = ({ 
+  title = "Imóveis em Destaque",
+  properties: customProperties
+}) => {
   const carouselRef = useRef<HTMLDivElement>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   
@@ -16,9 +22,12 @@ const PropertyCarousel: React.FC<PropertyCarouselProps> = ({ title = "Imóveis e
   const [selectedPropertyId, setSelectedPropertyId] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   
-  const { data: properties } = useQuery<Property[]>({
+  const { data: fetchedProperties } = useQuery<Property[]>({
     queryKey: ['/api/properties'],
   });
+  
+  // Usa as propriedades passadas por prop ou as buscadas pela API
+  const properties = customProperties || fetchedProperties;
   
   const { data: config } = useQuery<WebsiteConfig>({
     queryKey: ['/api/website/config'],
@@ -230,25 +239,25 @@ const PropertyCarousel: React.FC<PropertyCarouselProps> = ({ title = "Imóveis e
                 <div className="flex items-center justify-between mt-2 text-gray-500 text-sm">
                   {property.bedrooms && (
                     <div className="flex items-center">
-                      <Bed className="mr-1 w-3.5 h-3.5" />
+                      <FontAwesomeIcon icon={faBed} className="mr-1 w-3.5 h-3.5" />
                       <span>{property.bedrooms}</span>
                     </div>
                   )}
                   {property.bathrooms && (
                     <div className="flex items-center">
-                      <Bath className="mr-1 w-3.5 h-3.5" />
+                      <FontAwesomeIcon icon={faBath} className="mr-1 w-3.5 h-3.5" />
                       <span>{property.bathrooms}</span>
                     </div>
                   )}
                   {property.area && (
                     <div className="flex items-center">
-                      <Square className="mr-1 w-3.5 h-3.5" />
+                      <FontAwesomeIcon icon={faRulerCombined} className="mr-1 w-3.5 h-3.5" />
                       <span>{property.area}m²</span>
                     </div>
                   )}
                   {property.parkingSpots && (
                     <div className="flex items-center">
-                      <Car className="mr-1 w-3.5 h-3.5" />
+                      <FontAwesomeIcon icon={faCar} className="mr-1 w-3.5 h-3.5" />
                       <span>{property.parkingSpots}</span>
                     </div>
                   )}
