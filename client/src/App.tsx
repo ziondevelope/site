@@ -13,6 +13,7 @@ import Agents from "@/pages/Agents";
 import Website from "@/pages/Website";
 import Settings from "@/pages/Settings";
 import Home from "@/pages/Home";
+import Contact from "@/pages/Contact";
 import AuthPage from "@/pages/auth-page";
 import AppLayout from "@/components/layout/AppLayout";
 import { queryClient } from "./lib/queryClient";
@@ -61,6 +62,7 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/properties" component={AllProperties} />
       <Route path="/properties/:id" component={PropertyDetails} />
+      <Route path="/contact" component={Contact} />
       <Route path="/auth" component={AuthPage} />
       <Route path="/admin">
         <ProtectedRoute component={AdminRouter} />
