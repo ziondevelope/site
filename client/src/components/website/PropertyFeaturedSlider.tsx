@@ -38,7 +38,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property, onClick, primaryC
       onClick={onClick}
     >
       {/* Property Image */}
-      <div className="property-image-container h-48 md:h-52 relative overflow-hidden">
+      <div className="property-image-container h-56 sm:h-48 md:h-52 relative overflow-hidden">
         <img 
           src={mainImage} 
           alt={property.title || 'Imóvel'} 
@@ -106,7 +106,8 @@ export default function PropertyFeaturedSlider({
   // Atualizar o número de propriedades visíveis de acordo com o tamanho da tela
   useEffect(() => {
     const updateVisibleCount = () => {
-      if (window.innerWidth < 640) {
+      if (window.innerWidth < 768) {
+        // Apenas 1 item visível em telas pequenas
         setVisibleProperties(1);
       } else if (window.innerWidth < 1024) {
         setVisibleProperties(2);
@@ -279,19 +280,20 @@ export default function PropertyFeaturedSlider({
         
         {/* Carrossel com 4 cards por tela */}
         <div className="relative">
-          <div className="overflow-hidden px-1 py-2">
+          <div className="overflow-hidden px-0 sm:px-1 py-2">
             <div 
               ref={sliderRef}
               className="flex flex-nowrap gap-4 md:gap-5 transition-transform duration-500 ease-out"
               style={{ 
-                transform: `translateX(-${currentSlide * 100}%)`
+                transform: `translateX(-${currentSlide * 100}%)`,
+                width: visibleProperties === 1 ? '100%' : 'auto'
               }}
             >
               {properties.map((property) => (
                 <div 
                   key={property.id} 
-                  className="flex-shrink-0"
-                  style={{ width: `${slideWidth}%` }}
+                  className="flex-shrink-0 w-full sm:w-auto"
+                  style={{ width: visibleProperties === 1 ? '100%' : `${slideWidth}%` }}
                 >
                   <PropertyCard 
                     property={property}
