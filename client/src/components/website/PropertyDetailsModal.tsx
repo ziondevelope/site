@@ -184,6 +184,16 @@ function PropertyDetailsContent({ propertyId, isOpen, onClose, propConfig }: {
         // Compatibility with older versions
         setActiveImage(property.featuredImage);
       }
+      
+      // Se estamos em um dispositivo móvel, mostrar o indicador de swipe
+      if (window.matchMedia('(hover: none) and (pointer: coarse)').matches) {
+        setTimeout(() => {
+          const indicator = document.querySelector('.swipe-indicator');
+          if (indicator) {
+            indicator.classList.add('swipe-visible');
+          }
+        }, 300);
+      }
     }, 50);
     
     return () => clearTimeout(timer);
@@ -310,7 +320,7 @@ function PropertyDetailsContent({ propertyId, isOpen, onClose, propConfig }: {
         <div className="relative w-full" style={{ aspectRatio: '16/9', maxHeight: '500px' }}>
           {activeImage ? (
             <div 
-              className="w-full h-full touch-pan-y"
+              className="w-full h-full touch-pan-y swipeable swipe-image-container"
               onTouchStart={(e: React.TouchEvent) => {
                 // Armazenar a posição inicial do toque na referência
                 touchStartXRef.current = e.touches[0].clientX;
@@ -374,13 +384,16 @@ function PropertyDetailsContent({ propertyId, isOpen, onClose, propConfig }: {
                 touchingRef.current = false;
               }}
             >
-              <img 
-                src={activeImage} 
-                alt={currentProperty?.title || "Imagem do imóvel"} 
-                className="w-full h-full object-cover"
-                style={{ objectPosition: 'center center' }}
-                draggable="false" 
-              />
+              <>
+                <img 
+                  src={activeImage} 
+                  alt={currentProperty?.title || "Imagem do imóvel"} 
+                  className="w-full h-full object-cover"
+                  style={{ objectPosition: 'center center' }}
+                  draggable="false" 
+                />
+                <div className="swipe-indicator" aria-hidden="true"></div>
+              </>
             </div>
           ) : (
             <div className="flex items-center justify-center bg-gray-200 w-full h-full">
