@@ -9,7 +9,7 @@ import { Property } from "@shared/schema";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShower, faBed, faRulerCombined, faCar, faBath } from "@fortawesome/free-solid-svg-icons";
 import PropertyDetailsModal from '@/components/website/PropertyDetailsModal';
-import PropertyFeaturedSlider from '@/components/website/PropertyFeaturedSlider';
+
 import PropertyCarousel from '@/components/website/PropertyCarousel';
 import { Testimonials } from '@/components/website/Testimonials';
 import { useLoading } from "@/contexts/LoadingContext";
@@ -80,14 +80,8 @@ export default function Home() {
     },
   });
   
-  // Filtra apenas os imóveis marcados como destaque
-  const featuredProperties = properties?.filter(property => property.isFeatured) || [];
-  
-  // Calcula o número de páginas no carrossel baseado na quantidade de imóveis em destaque
-  const itemsPerPage = 4; // Quantidade de itens por página do carrossel
-  const totalCarouselPages = featuredProperties.length > 0 
-    ? Math.ceil(featuredProperties.length / itemsPerPage) 
-    : 1;
+
+
 
   // Efeito para monitorar o scroll e mudar a aparência do header
   useEffect(() => {
@@ -439,20 +433,16 @@ export default function Home() {
         </div>
       )}
       
-      {/* Slider de imóveis destacados */}
-      {config?.showFeaturedProperties !== false && featuredProperties.length > 0 && (
-        <PropertyFeaturedSlider 
-          properties={featuredProperties} 
-          onPropertyClick={openPropertyModal}
-          config={config}
-        />
-      )}
+
 
       {/* Carrossel de Imóveis em Destaque */}
       {config?.showFeaturedProperties !== false && (
         <div className="py-12 bg-white">
           <div className="container mx-auto px-4">
-            <PropertyCarousel title="Imóveis em Destaque" />
+            <PropertyCarousel 
+              title="Imóveis em Destaque" 
+              properties={properties?.filter(property => property.isFeatured) || []}
+            />
           </div>
         </div>
       )}
