@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, TouchEvent } from 'react';
 import { Property, WebsiteConfig } from '@shared/schema';
 import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
@@ -251,15 +251,80 @@ function PropertyDetailsContent({ propertyId, isOpen, onClose, propConfig }: {
           '--primary': primaryColor
         } as React.CSSProperties}
       >
-        {/* Imagem principal do imóvel - Estendida até as bordas */}
+        {/* Imagem principal do imóvel - Estendida até as bordas, com suporte a toque/arraste */}
         <div className="relative w-full" style={{ aspectRatio: '16/9', maxHeight: '500px' }}>
           {activeImage ? (
-            <img 
-              src={activeImage} 
-              alt={currentProperty?.title || "Imagem do imóvel"} 
-              className="w-full h-full object-cover"
-              style={{ objectPosition: 'center center' }}
-            />
+            <div 
+              className="w-full h-full"
+              onTouchStart={(e: React.TouchEvent) => {
+                const touchStartX = e.touches[0].clientX;
+                const touchObj = e.currentTarget;
+                
+                // Variável para armazenar a posição inicial do toque
+                let startX = touchStartX;
+                
+                const handleTouchMove = (e: TouchEvent) => {
+                  e.preventDefault(); // Prevenir comportamento padrão de scroll
+                };
+                
+                const handleTouchEnd = (e: TouchEvent) => {
+                  const touchEndX = e.changedTouches[0].clientX;
+                  const diff = startX - touchEndX;
+                  
+                  // Se o movimento for significativo (mais de 50px)
+                  if (Math.abs(diff) > 50 && currentProperty?.images) {
+                    const index = currentProperty.images.findIndex(img => {
+                      if (typeof img === 'object' && 'url' in img) return img.url === activeImage;
+                      if (typeof img === 'string') return img === activeImage;
+                      return false;
+                    });
+                    
+                    // Deslizar para a direita (próxima imagem)
+                    if (diff > 0 && index < currentProperty.images.length - 1) {
+                      const nextImg = currentProperty.images[index + 1];
+                      let imgUrl = '';
+                      
+                      if (typeof nextImg === 'object' && 'url' in nextImg) {
+                        imgUrl = nextImg.url;
+                      } else if (typeof nextImg === 'string') {
+                        imgUrl = nextImg;
+                      }
+                      
+                      if (imgUrl) setActiveImage(imgUrl);
+                    } 
+                    // Deslizar para a esquerda (imagem anterior)
+                    else if (diff < 0 && index > 0) {
+                      const prevImg = currentProperty.images[index - 1];
+                      let imgUrl = '';
+                      
+                      if (typeof prevImg === 'object' && 'url' in prevImg) {
+                        imgUrl = prevImg.url;
+                      } else if (typeof prevImg === 'string') {
+                        imgUrl = prevImg;
+                      }
+                      
+                      if (imgUrl) setActiveImage(imgUrl);
+                    }
+                  }
+                  
+                  // Remover event listeners após o fim do toque
+                  touchObj.removeEventListener('touchmove', handleTouchMove);
+                  touchObj.removeEventListener('touchend', handleTouchEnd);
+                };
+                
+                // Adicionar event listeners para o movimento e fim do toque
+                touchObj.addEventListener('touchmove', handleTouchMove, { passive: false });
+                touchObj.addEventListener('touchend', handleTouchEnd);
+              }}
+            >
+              <img 
+                src={activeImage} 
+                alt={currentProperty?.title || "Imagem do imóvel"} 
+                className="w-full h-full object-cover"
+                style={{ objectPosition: 'center center' }}
+                draggable="false" 
+              />
+            </div>
           ) : (
             <div className="flex items-center justify-center bg-gray-200 w-full h-full">
               <i className="ri-image-line text-4xl text-gray-400"></i>
