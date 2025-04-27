@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { X } from 'lucide-react';
 import './scrollbar.css';
+import './image-swipe.css';
 import { useUI } from '@/contexts/UIContext';
 import { motion, useAnimation } from 'framer-motion';
 
@@ -56,15 +57,13 @@ function PropertyDetailsContent({ propertyId, isOpen, onClose, propConfig }: {
   const contentRef = useRef<HTMLDivElement>(null);
   const { setPropertyModalOpen } = useUI();
   
+  // Referências para controlar eventos de toque
+  const touchStartXRef = useRef<number | null>(null);
+  const touchingRef = useRef<boolean>(false);
+  
   // Estados para controle de rolagem e animação do botão "Falar com corretor"
   const [showContactButton, setShowContactButton] = useState(false);
   const controls = useAnimation();
-  
-  // Limpa a imagem ativa quando muda de imóvel ou quando abre/fecha o modal
-  useEffect(() => {
-    // Limpa a imagem ativa ao abrir o modal com um novo propertyId ou ao fechar o modal
-    setActiveImage(null);
-  }, [propertyId, isOpen]);
   
   // Fetch property details
   const { data: property, isLoading: isLoadingProperty, refetch } = useQuery<Property>({
@@ -73,6 +72,62 @@ function PropertyDetailsContent({ propertyId, isOpen, onClose, propConfig }: {
     refetchOnWindowFocus: false,
     staleTime: 0  // Força sempre buscar dados novos
   });
+  
+  // Limpa a imagem ativa quando muda de imóvel ou quando abre/fecha o modal
+  useEffect(() => {
+    // Limpa a imagem ativa ao abrir o modal com um novo propertyId ou ao fechar o modal
+    setActiveImage(null);
+  }, [propertyId, isOpen]);
+  
+  // Função para navegação com teclas de seta
+  useEffect(() => {
+    // Função para lidar com a navegação de imagens via teclado
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!property?.images || !activeImage) return;
+      
+      const index = property.images.findIndex(img => {
+        if (typeof img === 'object' && 'url' in img) return img.url === activeImage;
+        if (typeof img === 'string') return img === activeImage;
+        return false;
+      });
+      
+      // Tecla seta para a direita (próxima imagem)
+      if (e.key === 'ArrowRight' && index < property.images.length - 1) {
+        const nextImg = property.images[index + 1];
+        let imgUrl = '';
+        
+        if (typeof nextImg === 'object' && 'url' in nextImg) {
+          imgUrl = nextImg.url;
+        } else if (typeof nextImg === 'string') {
+          imgUrl = nextImg;
+        }
+        
+        if (imgUrl) setActiveImage(imgUrl);
+      } 
+      // Tecla seta para a esquerda (imagem anterior)
+      else if (e.key === 'ArrowLeft' && index > 0) {
+        const prevImg = property.images[index - 1];
+        let imgUrl = '';
+        
+        if (typeof prevImg === 'object' && 'url' in prevImg) {
+          imgUrl = prevImg.url;
+        } else if (typeof prevImg === 'string') {
+          imgUrl = prevImg;
+        }
+        
+        if (imgUrl) setActiveImage(imgUrl);
+      }
+    };
+    
+    // Adicionar o event listener apenas quando o modal estiver aberto
+    if (isOpen && property) {
+      document.addEventListener('keydown', handleKeyDown);
+    }
+    
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [property, isOpen, activeImage]);
   
   // Quando o modal é aberto, forçar o refetch dos dados
   useEffect(() => {
@@ -255,66 +310,68 @@ function PropertyDetailsContent({ propertyId, isOpen, onClose, propConfig }: {
         <div className="relative w-full" style={{ aspectRatio: '16/9', maxHeight: '500px' }}>
           {activeImage ? (
             <div 
-              className="w-full h-full"
+              className="w-full h-full touch-pan-y"
               onTouchStart={(e: React.TouchEvent) => {
-                const touchStartX = e.touches[0].clientX;
-                const touchObj = e.currentTarget;
+                // Armazenar a posição inicial do toque na referência
+                touchStartXRef.current = e.touches[0].clientX;
+                touchingRef.current = true;
+              }}
+              onTouchMove={(e: React.TouchEvent) => {
+                if (!touchingRef.current) return;
+                // Evitamos o comportamento padrão do scroll apenas se for horizontal
+                const currentX = e.touches[0].clientX;
+                const startX = touchStartXRef.current || 0;
+                const diffX = Math.abs(currentX - startX);
                 
-                // Variável para armazenar a posição inicial do toque
-                let startX = touchStartX;
+                if (diffX > 10) {
+                  e.preventDefault();
+                }
+              }}
+              onTouchEnd={(e: React.TouchEvent) => {
+                if (!touchingRef.current || touchStartXRef.current === null || !property?.images) return;
                 
-                const handleTouchMove = (e: TouchEvent) => {
-                  e.preventDefault(); // Prevenir comportamento padrão de scroll
-                };
+                const touchEndX = e.changedTouches[0].clientX;
+                const diff = touchStartXRef.current - touchEndX;
                 
-                const handleTouchEnd = (e: TouchEvent) => {
-                  const touchEndX = e.changedTouches[0].clientX;
-                  const diff = startX - touchEndX;
+                // Se o movimento for significativo (mais de 50px)
+                if (Math.abs(diff) > 50) {
+                  const index = property.images.findIndex(img => {
+                    if (typeof img === 'object' && 'url' in img) return img.url === activeImage;
+                    if (typeof img === 'string') return img === activeImage;
+                    return false;
+                  });
                   
-                  // Se o movimento for significativo (mais de 50px)
-                  if (Math.abs(diff) > 50 && currentProperty?.images) {
-                    const index = currentProperty.images.findIndex(img => {
-                      if (typeof img === 'object' && 'url' in img) return img.url === activeImage;
-                      if (typeof img === 'string') return img === activeImage;
-                      return false;
-                    });
+                  // Deslizar para a direita (próxima imagem)
+                  if (diff > 0 && index < property.images.length - 1) {
+                    const nextImg = property.images[index + 1];
+                    let imgUrl = '';
                     
-                    // Deslizar para a direita (próxima imagem)
-                    if (diff > 0 && index < currentProperty.images.length - 1) {
-                      const nextImg = currentProperty.images[index + 1];
-                      let imgUrl = '';
-                      
-                      if (typeof nextImg === 'object' && 'url' in nextImg) {
-                        imgUrl = nextImg.url;
-                      } else if (typeof nextImg === 'string') {
-                        imgUrl = nextImg;
-                      }
-                      
-                      if (imgUrl) setActiveImage(imgUrl);
-                    } 
-                    // Deslizar para a esquerda (imagem anterior)
-                    else if (diff < 0 && index > 0) {
-                      const prevImg = currentProperty.images[index - 1];
-                      let imgUrl = '';
-                      
-                      if (typeof prevImg === 'object' && 'url' in prevImg) {
-                        imgUrl = prevImg.url;
-                      } else if (typeof prevImg === 'string') {
-                        imgUrl = prevImg;
-                      }
-                      
-                      if (imgUrl) setActiveImage(imgUrl);
+                    if (typeof nextImg === 'object' && 'url' in nextImg) {
+                      imgUrl = nextImg.url;
+                    } else if (typeof nextImg === 'string') {
+                      imgUrl = nextImg;
                     }
+                    
+                    if (imgUrl) setActiveImage(imgUrl);
+                  } 
+                  // Deslizar para a esquerda (imagem anterior)
+                  else if (diff < 0 && index > 0) {
+                    const prevImg = property.images[index - 1];
+                    let imgUrl = '';
+                    
+                    if (typeof prevImg === 'object' && 'url' in prevImg) {
+                      imgUrl = prevImg.url;
+                    } else if (typeof prevImg === 'string') {
+                      imgUrl = prevImg;
+                    }
+                    
+                    if (imgUrl) setActiveImage(imgUrl);
                   }
-                  
-                  // Remover event listeners após o fim do toque
-                  touchObj.removeEventListener('touchmove', handleTouchMove);
-                  touchObj.removeEventListener('touchend', handleTouchEnd);
-                };
+                }
                 
-                // Adicionar event listeners para o movimento e fim do toque
-                touchObj.addEventListener('touchmove', handleTouchMove, { passive: false });
-                touchObj.addEventListener('touchend', handleTouchEnd);
+                // Resetar o estado de toque
+                touchStartXRef.current = null;
+                touchingRef.current = false;
               }}
             >
               <img 
