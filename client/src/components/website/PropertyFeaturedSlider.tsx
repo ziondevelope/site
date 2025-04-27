@@ -45,7 +45,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property, onClick, primaryC
           className="property-image w-full h-full object-cover"
         />
         {/* Botão Ver Detalhes que aparece no hover */}
-        <div className="eye-icon absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300 bg-black/20 group-hover:opacity-100">
+        <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300 bg-black/20">
           <div className="rounded-md bg-white/90 px-4 py-2 backdrop-blur-sm flex items-center gap-2">
             <i className="fas fa-eye text-sm" style={{ color: primaryColor }}></i>
             <span className="text-sm font-medium" style={{ color: primaryColor }}>Ver Detalhes</span>
@@ -117,9 +117,19 @@ export default function PropertyFeaturedSlider({
       }
     };
 
+    // Atualiza imediatamente e em cada redimensionamento
     updateVisibleCount();
     window.addEventListener('resize', updateVisibleCount);
-    return () => window.removeEventListener('resize', updateVisibleCount);
+    
+    // Recalcula após certo tempo para garantir que o DOM esteja pronto
+    const timer = setTimeout(() => {
+      updateVisibleCount();
+    }, 300);
+    
+    return () => {
+      window.removeEventListener('resize', updateVisibleCount);
+      clearTimeout(timer);
+    };
   }, []);
   
   // Obter configurações do site para cores (mesmo que tenha sido passado como prop)
@@ -161,8 +171,11 @@ export default function PropertyFeaturedSlider({
   // Use as propriedades passadas como propriedade ou as obtidas pela consulta
   const properties = propProperties || propertiesData || [];
 
-  // Calcule o número máximo de slides com base no número de propriedades visíveis por vez
-  const maxSlides = Math.max(0, Math.ceil(properties.length / visibleProperties) - 1);
+  // No modo mobile, cada slide mostra apenas uma propriedade
+  // Em telas maiores, mostramos múltiplas propriedades por slide
+  const maxSlides = visibleProperties === 1 
+    ? Math.max(0, properties.length - 1) 
+    : Math.max(0, Math.ceil(properties.length / visibleProperties) - 1);
   
   // Garante que currentSlide está dentro dos limites válidos quando properties ou visibleProperties mudam
   useEffect(() => {
@@ -271,7 +284,7 @@ export default function PropertyFeaturedSlider({
               ref={sliderRef}
               className="flex flex-nowrap gap-5 transition-transform duration-500 ease-out"
               style={{ 
-                transform: `translateX(-${currentSlide * (100 / visibleProperties + (20 / visibleProperties))}%)`
+                transform: `translateX(-${currentSlide * 100}%)`
               }}
             >
               {properties.map((property) => (
