@@ -9,6 +9,7 @@ import './showcase-tabs.css';
 
 interface ShowcaseTabsProps {
   config?: WebsiteConfig;
+  onPropertyClick?: (id: number) => void;
 }
 
 // Tipo definido para as categorias de imóveis
@@ -18,10 +19,10 @@ type PropertyCategory = {
   purpose?: string;
   type?: string;
   neighborhood?: string;
-  featured?: boolean;
+  isFeatured?: boolean;
 };
 
-export default function ShowcaseTabs({ config }: ShowcaseTabsProps) {
+export default function ShowcaseTabs({ config, onPropertyClick }: ShowcaseTabsProps) {
   const [activeTab, setActiveTab] = useState<string>('all');
   const [currentSlide, setCurrentSlide] = useState(0);
   const carouselRef = useRef<HTMLDivElement>(null);
@@ -34,7 +35,7 @@ export default function ShowcaseTabs({ config }: ShowcaseTabsProps) {
     { id: 'all', label: 'Todos os imóveis' },
     { id: 'sale', label: 'À Venda', purpose: 'sale' },
     { id: 'rent', label: 'Para Alugar', purpose: 'rent' },
-    { id: 'featured', label: 'Destaques', featured: true },
+    { id: 'featured', label: 'Destaques', isFeatured: true },
     { id: 'apartment', label: 'Apartamentos', type: 'apartment' },
     { id: 'house', label: 'Casas', type: 'house' },
   ];
@@ -64,7 +65,7 @@ export default function ShowcaseTabs({ config }: ShowcaseTabsProps) {
       if (category.purpose && property.purpose === category.purpose) return true;
       if (category.type && property.type === category.type) return true;
       if (category.neighborhood && property.neighborhood === category.neighborhood) return true;
-      if (category.featured && property.featured) return true;
+      if (category.isFeatured && property.isFeatured) return true;
       return false;
     });
   };
@@ -259,6 +260,7 @@ export default function ShowcaseTabs({ config }: ShowcaseTabsProps) {
                                     key={property.id} 
                                     property={property}
                                     primaryColor={primaryColor}
+                                    onClick={onPropertyClick}
                                   />
                                 ))}
                             </div>
