@@ -401,10 +401,10 @@ function PropertyDetailsContent({ propertyId, isOpen, onClose, propConfig }: {
             </div>
           )}
           
-          {/* Botão de fechar sobre a imagem */}
+          {/* Botão de fechar fixo no topo */}
           <button 
             onClick={onClose}
-            className="absolute top-4 right-4 z-50 w-10 h-10 rounded-full bg-white bg-opacity-75 hover:bg-opacity-100 shadow-lg flex items-center justify-center transition-all"
+            className="fixed top-4 right-4 z-50 w-10 h-10 rounded-full bg-white bg-opacity-75 hover:bg-opacity-100 shadow-lg flex items-center justify-center transition-all"
           >
             <X className="w-5 h-5 text-gray-800" />
           </button>
