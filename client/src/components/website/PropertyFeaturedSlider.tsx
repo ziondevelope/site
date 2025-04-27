@@ -34,15 +34,15 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property, onClick, primaryC
 
   return (
     <div 
-      className="property-card h-full bg-white rounded-lg border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-lg hover:bg-white cursor-pointer relative m-1 p-0.5"
+      className="property-card h-full bg-white rounded-lg border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-lg hover:bg-white cursor-pointer relative"
       onClick={onClick}
     >
       {/* Property Image */}
-      <div className="property-image-container h-48 relative overflow-hidden">
+      <div className="property-image-container h-48 md:h-52 relative overflow-hidden">
         <img 
           src={mainImage} 
           alt={property.title || 'Imóvel'} 
-          className="property-image w-full h-full object-cover"
+          className="property-image w-full h-full object-cover absolute inset-0"
         />
         {/* Botão Ver Detalhes que aparece no hover */}
         <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300 bg-black/20">
@@ -282,7 +282,7 @@ export default function PropertyFeaturedSlider({
           <div className="overflow-hidden px-1 py-2">
             <div 
               ref={sliderRef}
-              className="flex flex-nowrap gap-5 transition-transform duration-500 ease-out"
+              className="flex flex-nowrap gap-4 md:gap-5 transition-transform duration-500 ease-out"
               style={{ 
                 transform: `translateX(-${currentSlide * 100}%)`
               }}
