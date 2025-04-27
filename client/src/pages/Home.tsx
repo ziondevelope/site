@@ -10,7 +10,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShower, faBed, faRulerCombined, faCar, faBath } from "@fortawesome/free-solid-svg-icons";
 import PropertyDetailsModal from '@/components/website/PropertyDetailsModal';
 import PropertyFeaturedSlider from '@/components/website/PropertyFeaturedSlider';
-import ShowcaseTabs from '@/components/website/ShowcaseTabs';
 import { Testimonials } from '@/components/website/Testimonials';
 import { useLoading } from "@/contexts/LoadingContext";
 import SEO from '@/components/website/SEO';
@@ -448,11 +447,8 @@ export default function Home() {
         />
       )}
 
-      {/* ShowcaseTabs - Novo componente de tabs para visualização de imóveis por categoria */}
-      <ShowcaseTabs config={config} onPropertyClick={openPropertyModal} />
-
       {/* Properties Section - Imóveis para Aluguel */}
-      {false && config?.showRentProperties !== false && (
+      {config?.showRentProperties !== false && (
         <section id="rent-properties" className="py-16 bg-gray-50">
           <div className="container mx-auto px-4">
             <h2 className="text-3xl font-bold text-left mb-12" style={{ color: config?.primaryColor || 'var(--primary)' }}>Imóveis para Aluguel</h2>
@@ -566,7 +562,7 @@ export default function Home() {
       )}
 
       {/* Properties Section - Imóveis para Venda */}
-      {false && config?.showSaleProperties !== false && (
+      {config?.showSaleProperties !== false && (
         <section id="sale-properties" className="py-16 bg-white">
           <div className="container mx-auto px-4">
             <h2 className="text-3xl font-bold text-left mb-12" style={{ color: config?.primaryColor || 'var(--primary)' }}>Imóveis para Venda</h2>
