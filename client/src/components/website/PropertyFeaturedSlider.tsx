@@ -36,13 +36,12 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property, onClick, primaryC
     : '');
 
   return (
-    <div className="group flex-shrink-0 w-full md:w-[calc(25%-12px)] rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 bg-white">
+    <div className="group flex-shrink-0 w-full rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 bg-white">
       <div className="relative aspect-[3/2] overflow-hidden">
         <img
           src={mainImage}
           alt={property.title}
           loading="lazy"
-          fetchpriority="high"
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
@@ -280,7 +279,7 @@ export default function PropertyFeaturedSlider({
               ref={sliderRef}
               className="flex flex-nowrap gap-4 transition-transform duration-500 ease-out"
               style={{ 
-                transform: `translateX(-${currentSlide * (100 + (16 * visibleProperties / slideWidth))}%)` 
+                transform: `translateX(-${currentSlide * (100 / visibleProperties + (16 / visibleProperties))}%)`
               }}
             >
               {properties.map((property) => (
