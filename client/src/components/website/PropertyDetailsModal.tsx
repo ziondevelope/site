@@ -241,7 +241,7 @@ function PropertyDetailsContent({ propertyId, isOpen, onClose, propConfig }: {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 bg-black">
+    <div className="fixed inset-0 z-50 backdrop-blur-md bg-black/50">
       <div 
         ref={modalRef}
         className="bg-white w-full md:w-[70%] lg:w-[60%] xl:w-[50%] 2xl:w-[45%] h-full overflow-y-auto mx-auto modal-custom-scrollbar"
@@ -405,15 +405,7 @@ function PropertyDetailsContent({ propertyId, isOpen, onClose, propConfig }: {
                         </div>
                       </div>
                       
-                      {/* Informações de IPTU e condomínio no estilo da imagem de referência */}
-                      {currentProperty.purpose === 'rent' && currentProperty.condoFee ? (
-                        <div className="text-sm mt-1" style={{ color: `${detailsTextColor}AA` }}>
-                          <div className="flex justify-between">
-                            <span>Parcelas a partir de</span>
-                            <span className="text-[#19a974]">{formatCurrency(currentProperty.price / 24)}/mês</span>
-                          </div>
-                        </div>
-                      ) : null}
+                      {/* Seção de parcelas removida */}
                       
 
                     </div>
