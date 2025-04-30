@@ -24,15 +24,13 @@ import ScrollToTop from "@/components/ui/scroll-to-top";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import MarketingTags from "@/components/MarketingTags";
 import WhatsAppChat from "@/components/website/WhatsAppChat";
+import InitialSetup from "./pages/InitialSetup";
+
 
 function AdminRouter() {
-  // Usando useLocation para determinar a rota atual
   const [location] = useLocation();
-  
-  // Componente padrão é Dashboard
   let CurrentComponent = Dashboard;
-  
-  // Seleciona o componente baseado na URL atual
+
   if (location.includes("/admin/imoveis")) {
     CurrentComponent = Properties;
   } else if (location.includes("/admin/crm")) {
@@ -48,7 +46,7 @@ function AdminRouter() {
   } else if (location !== "/admin") {
     CurrentComponent = NotFound;
   }
-  
+
   return (
     <AppLayout>
       <CurrentComponent />
@@ -76,26 +74,31 @@ function Router() {
 }
 
 function App() {
-  // Usa o hook useLocation para determinar se estamos na área administrativa
-  const [location] = useLocation();
-  const isAdmin = location.startsWith('/admin');
-  
+  const isInitialSetupComplete = localStorage.getItem("INITIAL_SETUP_COMPLETE") === "true";
+  const [location, setLocation] = useLocation();
+
+  if (!isInitialSetupComplete && location !== "/setup") {
+    setLocation("/setup");
+  }
+
   return (
-    <QueryClientProvider client={queryClient}>
-      <HelmetProvider>
-        <LoadingProvider>
-          <UIProvider>
-            <MarketingTags />
-            <Router />
-            {/* Só mostra o WhatsApp Chat fora da área administrativa */}
-            {!isAdmin && <WhatsAppChat />}
-            <ScrollToTop />
-            <PageLoadingController />
-            <Toaster />
-          </UIProvider>
-        </LoadingProvider>
-      </HelmetProvider>
-    </QueryClientProvider>
+    <>
+      <Route path="/setup" component={InitialSetup} />
+      <QueryClientProvider client={queryClient}>
+        <HelmetProvider>
+          <LoadingProvider>
+            <UIProvider>
+              <MarketingTags />
+              <Router />
+              {!location.startsWith('/admin') && <WhatsAppChat />}
+              <ScrollToTop />
+              <PageLoadingController />
+              <Toaster />
+            </UIProvider>
+          </LoadingProvider>
+        </HelmetProvider>
+      </QueryClientProvider>
+    </>
   );
 }
 
