@@ -34,9 +34,9 @@ export default function InitialSetup() {
         description: "O sistema será reiniciado para aplicar as configurações.",
       });
 
-      // Redirecionar para a página de login
+      // Redirecionar para a página inicial
       setTimeout(() => {
-        window.location.reload();
+        setLocation("/");
       }, 2000);
     } catch (error) {
       toast({
