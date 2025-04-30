@@ -27,7 +27,7 @@ export const firebaseConfig = {
   
   appId: isBrowser && import.meta.env.VITE_FIREBASE_APP_ID ? 
     import.meta.env.VITE_FIREBASE_APP_ID : 
-    process.env.VITE_FIREBASE_APP_ID || "1:659864253826:web:be28e2b76da214a9d28b9b""
+    process.env.VITE_FIREBASE_APP_ID || "1:659864253826:web:be28e2b76da214a9d28b9b"
 };
 
 // Configurações do servidor
