@@ -7,27 +7,27 @@ const isBrowser = typeof window !== 'undefined';
 export const firebaseConfig = {
   apiKey: isBrowser && import.meta.env.VITE_FIREBASE_API_KEY ? 
     import.meta.env.VITE_FIREBASE_API_KEY : 
-    process.env.VITE_FIREBASE_API_KEY || "AIzaSyD5NShwJQyEN8znPckPr_KafH-C2MtL-zA",
+    process.env.VITE_FIREBASE_API_KEY || "AIzaSyBIe3S6v12OABxSC7fJCgbONhusqEKYdB4",
   
   authDomain: `${isBrowser && import.meta.env.VITE_FIREBASE_PROJECT_ID ? 
     import.meta.env.VITE_FIREBASE_PROJECT_ID : 
-    process.env.VITE_FIREBASE_PROJECT_ID || "cadastro-web-fa5dd"}.firebaseapp.com`,
+    process.env.VITE_FIREBASE_PROJECT_ID || "projetoimobsite"}.firebaseapp.com`,
   
   projectId: isBrowser && import.meta.env.VITE_FIREBASE_PROJECT_ID ? 
     import.meta.env.VITE_FIREBASE_PROJECT_ID : 
-    process.env.VITE_FIREBASE_PROJECT_ID || "cadastro-web-fa5dd",
+    process.env.VITE_FIREBASE_PROJECT_ID || "projetoimobsite",
   
   storageBucket: `${isBrowser && import.meta.env.VITE_FIREBASE_PROJECT_ID ? 
     import.meta.env.VITE_FIREBASE_PROJECT_ID : 
-    process.env.VITE_FIREBASE_PROJECT_ID || "cadastro-web-fa5dd"}.appspot.com`,
+    process.env.VITE_FIREBASE_PROJECT_ID || "projetoimobsite"}.appspot.com`,
   
   messagingSenderId: isBrowser && import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID ? 
     import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID : 
-    process.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "256771876237",
+    process.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "659864253826",
   
   appId: isBrowser && import.meta.env.VITE_FIREBASE_APP_ID ? 
     import.meta.env.VITE_FIREBASE_APP_ID : 
-    process.env.VITE_FIREBASE_APP_ID || "1:256771876237:web:299156662370a64c0f89c4"
+    process.env.VITE_FIREBASE_APP_ID || "1:659864253826:web:be28e2b76da214a9d28b9b""
 };
 
 // Configurações do servidor
