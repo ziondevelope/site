@@ -5,9 +5,9 @@ const isBrowser = typeof window !== 'undefined';
 
 // Configurações do Firebase
 export const firebaseConfig = {
-  apiKey: isBrowser ? 
-    (localStorage.getItem("VITE_FIREBASE_API_KEY") || import.meta.env.VITE_FIREBASE_API_KEY) : 
-    process.env.VITE_FIREBASE_API_KEY,
+  apiKey: isBrowser && import.meta.env.VITE_FIREBASE_API_KEY ? 
+    import.meta.env.VITE_FIREBASE_API_KEY : 
+    process.env.VITE_FIREBASE_API_KEY || "AIzaSyBIe3S6v12OABxSC7fJCgbONhusqEKYdB4",
   
   authDomain: `${isBrowser && import.meta.env.VITE_FIREBASE_PROJECT_ID ? 
     import.meta.env.VITE_FIREBASE_PROJECT_ID : 
