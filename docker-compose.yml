@@ -7,9 +7,9 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - VITE_FIREBASE_API_KEY=AIzaSyD5NShwJQyEN8znPckPr_KafH-C2MtL-zA
-      - VITE_FIREBASE_PROJECT_ID=cadastro-web-fa5dd
-      - VITE_FIREBASE_APP_ID=1:256771876237:web:299156662370a64c0f89c4
+      - VITE_FIREBASE_API_KEY=AIzaSyBIe3S6v12OABxSC7fJCgbONhusqEKYdB4
+      - VITE_FIREBASE_PROJECT_ID=projetoimobsite
+      - VITE_FIREBASE_APP_ID=1:659864253826:web:be28e2b76da214a9d28b9b
       - PORT=3000
       - SESSION_SECRET=imobsite-secret-key
       - NODE_ENV=production
