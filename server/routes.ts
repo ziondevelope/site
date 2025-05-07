@@ -1221,12 +1221,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const validatedData = updateWebsiteConfigSchema.parse(req.body);
       const config = await storageInstance.updateWebsiteConfig(validatedData);
+      if (!config) {
+        return res.status(500).json({ message: "Failed to update configuration" });
+      }
       res.json(config);
     } catch (error) {
+      console.error("Error updating website config:", error);
       if (error instanceof z.ZodError) {
         return res.status(400).json({ message: "Invalid config data", errors: error.errors });
       }
-      res.status(500).json({ message: "Error updating website configuration" });
+      res.status(500).json({ 
+        message: "Error updating website configuration",
+        error: error instanceof Error ? error.message : "Unknown error"
+      });
     }
   });
   
