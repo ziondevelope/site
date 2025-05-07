@@ -159,7 +159,30 @@ export const MultipleImageUpload = ({
         id="gallery-upload"
         type="file"
         accept="image/*"
-        onChange={handleAddImage}
+        multiple
+        onChange={(e) => {
+          const files = Array.from(e.target.files || []);
+          if (files.length + images.length > maxImagesCount) {
+            alert(`Você pode adicionar no máximo ${maxImagesCount} imagens.`);
+            return;
+          }
+          files.forEach((file) => {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+              const base64 = reader.result as string;
+              const newImage: GalleryImage = {
+                url: base64,
+                isFeatured: images.length === 0 // Se for a primeira imagem, marca como destaque
+              };
+              setImages(prev => {
+                const newImages = [...prev, newImage];
+                onChange(newImages);
+                return newImages;
+              });
+            };
+            reader.readAsDataURL(file);
+          });
+        }}
         className="hidden"
         disabled={disabled}
       />
