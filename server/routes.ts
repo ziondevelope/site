@@ -141,13 +141,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   apiRouter.patch("/properties/:id", async (req, res) => {
     try {
-      const validatedData = insertPropertySchema.partial().parse(req.body);
-      const property = await storageInstance.updateProperty(parseInt(req.params.id), validatedData);
-      if (!property) {
+      const id = parseInt(req.params.id);
+      const db = getFirestore();
+      const propertyRef = doc(db, 'properties', id.toString());
+      
+      // Check if property exists
+      const propertyDoc = await getDoc(propertyRef);
+      if (!propertyDoc.exists()) {
         return res.status(404).json({ message: "Property not found" });
       }
-      res.json(property);
+
+      const validatedData = insertPropertySchema.partial().parse(req.body);
+      
+      // Update property
+      await updateDoc(propertyRef, {
+        ...validatedData,
+        updatedAt: new Date().toISOString()
+      });
+
+      // Get updated document
+      const updatedDoc = await getDoc(propertyRef);
+      res.json({ id, ...updatedDoc.data() });
     } catch (error) {
+      console.error("Error updating property:", error);
       if (error instanceof z.ZodError) {
         return res.status(400).json({ message: "Invalid property data", errors: error.errors });
       }
