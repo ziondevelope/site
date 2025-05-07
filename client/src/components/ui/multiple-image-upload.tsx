@@ -24,7 +24,7 @@ export const MultipleImageUpload = ({
   value = [],
   label,
   disabled,
-  maxImages = 10,
+  maxImages = 50,
   maxFiles
 }: MultipleImageUploadProps) => {
   // Se maxFiles for fornecido, usar ele no lugar de maxImages

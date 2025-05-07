@@ -88,33 +88,33 @@ const getFeaturedImage = (property: Property): string | undefined => {
     const featuredImage = property.images.find(img => 
       typeof img === 'object' && 'isFeatured' in img && img.isFeatured
     );
-    
+
     // Se encontrou imagem de destaque, retorna sua URL
     if (featuredImage && typeof featuredImage === 'object' && 'url' in featuredImage) {
       return featuredImage.url;
     }
-    
+
     // Caso não encontre, retorna a primeira imagem
     if (property.images[0] && typeof property.images[0] === 'object' && 'url' in property.images[0]) {
       return property.images[0].url;
     }
-    
+
     // Caso seja um array de strings (formato antigo)
     if (typeof property.images[0] === 'string') {
       return property.images[0] as string;
     }
   }
-  
+
   // Compatibilidade com o campo featuredImage (formato antigo)
   if (property.featuredImage) {
     return property.featuredImage;
   }
-  
+
   // Compatibilidade com o campo imageUrl (formato mais antigo)
   if ('imageUrl' in property && property.imageUrl) {
     return property.imageUrl as string;
   }
-  
+
   return undefined;
 };
 
@@ -134,7 +134,7 @@ function FeaturedCheckbox({ field }: { field: any }) {
           </FormControl>
           <div className="ml-3">
             <FormLabel className="text-base font-medium flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1.5 text-indigo-500"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1.5 text-indigo-500"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L12 3Z"/></svg>
               Destacar na página inicial
             </FormLabel>
             <div className="text-sm text-gray-500 mt-1">
@@ -161,47 +161,47 @@ export default function Properties() {
   const [isImporting, setIsImporting] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const { toast } = useToast();
-  
+
   // Search and filter states
   const [searchQuery, setSearchQuery] = useState("");
   const [typeFilter, setTypeFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
   const [purposeFilter, setPurposeFilter] = useState("all");
-  
+
   // Fetch properties
   const { data: properties, isLoading } = useQuery<Property[]>({
     queryKey: ['/api/properties'],
   });
-  
+
   // Fetch agents
   const { data: allAgents } = useQuery<Agent[]>({
     queryKey: ['/api/agents'],
   });
-  
+
   // Fetch tasks
   const { data: tasks, isLoading: tasksLoading } = useQuery({
     queryKey: ['/api/tasks/scheduled'],
   });
-  
+
   // Filtered properties
   const filteredProperties = useMemo(() => {
     if (!properties) return [];
-    
+
     return properties.filter(property => {
       // Text search (title or address)
       const matchesSearch = searchQuery === "" || 
         property.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         property.address?.toLowerCase().includes(searchQuery.toLowerCase());
-      
+
       // Type filter
       const matchesType = typeFilter === "all" || property.type === typeFilter;
-      
+
       // Status filter
       const matchesStatus = statusFilter === "all" || property.status === statusFilter;
-      
+
       // Purpose filter
       const matchesPurpose = purposeFilter === "all" || property.purpose === purposeFilter;
-      
+
       return matchesSearch && matchesType && matchesStatus && matchesPurpose;
     });
   }, [properties, searchQuery, typeFilter, statusFilter, purposeFilter]);
@@ -236,7 +236,7 @@ export default function Properties() {
   // Initialize edit form with property data
   const initEditForm = (property: Property) => {
     setSelectedProperty(property);
-    
+
     // Converter as imagens para o formato correto se necessário
     let formattedImages: any[] = [];
     if (property.images) {
@@ -259,7 +259,7 @@ export default function Properties() {
         isFeatured: true
       }];
     }
-    
+
     form.reset({
       title: property.title || "",
       description: property.description || "",
@@ -404,7 +404,7 @@ export default function Properties() {
       });
     },
   });
-  
+
   // Batch delete properties mutation
   const batchDeleteMutation = useMutation({
     mutationFn: async (ids: number[]) => {
@@ -419,7 +419,7 @@ export default function Properties() {
       setSelectAllChecked(false);
       queryClient.invalidateQueries({ queryKey: ['/api/properties'] });
       setIsDeleting(false);
-      
+
       if (data.success === selectedProperties.length) {
         toast({
           title: "Imóveis excluídos",
@@ -461,9 +461,9 @@ export default function Properties() {
       deletePropertyMutation.mutate(selectedProperty.id);
     }
   }
-  
 
-  
+
+
   // Função para confirmar a exclusão em lote
   function handleBatchDeleteConfirm() {
     if (selectedProperties.length > 0) {
@@ -471,7 +471,7 @@ export default function Properties() {
       batchDeleteMutation.mutate(selectedProperties);
     }
   }
-  
+
   // Função para abrir o diálogo de confirmação de exclusão em lote
   function handleBatchDeleteClick() {
     if (selectedProperties.length > 0) {
@@ -484,7 +484,7 @@ export default function Properties() {
       });
     }
   }
-  
+
   // Função para selecionar/deselecionar um imóvel
   function handlePropertySelection(propertyId: number, isChecked: boolean) {
     // Impedir propagação para não abrir o modal de edição
@@ -498,7 +498,7 @@ export default function Properties() {
       }
     }
   }
-  
+
   // Função para selecionar/deselecionar todos os imóveis
   function handleSelectAll(isChecked: boolean) {
     setSelectAllChecked(isChecked);
@@ -511,14 +511,14 @@ export default function Properties() {
       setSelectedProperties([]);
     }
   }
-  
+
   // Lidar com o clique no botão de importação
   const handleImportClick = () => {
     setImportMethod(null);
     setImportFile(null);
     setIsImportDialogOpen(true);
   };
-  
+
   // Importação em massa de imóveis
   const importPropertyMutation = useMutation({
     mutationFn: async (formData: FormData) => {
@@ -529,13 +529,13 @@ export default function Properties() {
         // Não definir cabeçalho Content-Type para upload de arquivos
         credentials: "include",
       });
-      
+
       // Verificar se a resposta foi bem-sucedida
       if (!response.ok) {
         const text = await response.text();
         throw new Error(`${response.status}: ${text}`);
       }
-      
+
       return response.json();
     },
     onSuccess: (data) => {
@@ -558,7 +558,7 @@ export default function Properties() {
       });
     },
   });
-  
+
   // Processa o arquivo de importação
   const handleImportSubmit = async () => {
     if (!importFile || !importMethod) {
@@ -569,13 +569,13 @@ export default function Properties() {
       });
       return;
     }
-    
+
     setIsImporting(true);
-    
+
     const formData = new FormData();
     formData.append('file', importFile);
     formData.append('method', importMethod);
-    
+
     importPropertyMutation.mutate(formData);
   };
 
@@ -599,7 +599,7 @@ export default function Properties() {
                     <TabsTrigger value="details">Detalhes</TabsTrigger>
                     <TabsTrigger value="location">Localização e Imagem</TabsTrigger>
                   </TabsList>
-                  
+
                   <TabsContent value="info" className="space-y-4">
                     <FormField
                       control={form.control}
@@ -614,7 +614,7 @@ export default function Properties() {
                         </FormItem>
                       )}
                     />
-                    
+
                     <div className="grid grid-cols-2 gap-4">
                       <FormField
                         control={form.control}
@@ -642,7 +642,7 @@ export default function Properties() {
                           </FormItem>
                         )}
                       />
-                      
+
                       <FormField
                         control={form.control}
                         name="purpose"
@@ -668,7 +668,7 @@ export default function Properties() {
                         )}
                       />
                     </div>
-                    
+
                     <div className="space-y-2">
                       <FormField
                         control={form.control}
@@ -694,7 +694,7 @@ export default function Properties() {
                         )}
                       />
                     </div>
-                    
+
                     <FormField
                       control={form.control}
                       name="description"
@@ -712,7 +712,7 @@ export default function Properties() {
                         </FormItem>
                       )}
                     />
-                    
+
                     <FormField
                       control={form.control}
                       name="status"
@@ -738,7 +738,7 @@ export default function Properties() {
                         </FormItem>
                       )}
                     />
-                    
+
                     <FormField
                       control={form.control}
                       name="isFeatured"
@@ -747,7 +747,7 @@ export default function Properties() {
                       )}
                     />
                   </TabsContent>
-                  
+
                   <TabsContent value="details" className="space-y-4">
                     <div className="grid grid-cols-2 gap-4">
                       <FormField
@@ -769,7 +769,7 @@ export default function Properties() {
                           </FormItem>
                         )}
                       />
-                      
+
                       <FormField
                         control={form.control}
                         name="bedrooms"
@@ -790,7 +790,7 @@ export default function Properties() {
                         )}
                       />
                     </div>
-                    
+
                     <div className="grid grid-cols-2 gap-4">
                       <FormField
                         control={form.control}
@@ -811,7 +811,7 @@ export default function Properties() {
                           </FormItem>
                         )}
                       />
-                      
+
                       <FormField
                         control={form.control}
                         name="bathrooms"
@@ -832,7 +832,7 @@ export default function Properties() {
                         )}
                       />
                     </div>
-                    
+
                     <div className="grid grid-cols-2 gap-4">
                       <FormField
                         control={form.control}
@@ -853,7 +853,7 @@ export default function Properties() {
                           </FormItem>
                         )}
                       />
-                      
+
                       <FormField
                         control={form.control}
                         name="agentId"
@@ -883,7 +883,7 @@ export default function Properties() {
                         )}
                       />
                     </div>
-                    
+
                     <FormField
                       control={form.control}
                       name="features"
@@ -901,7 +901,7 @@ export default function Properties() {
                       )}
                     />
                   </TabsContent>
-                  
+
                   <TabsContent value="location" className="space-y-4">
                     <FormField
                       control={form.control}
@@ -926,7 +926,7 @@ export default function Properties() {
                         </FormItem>
                       )}
                     />
-                    
+
                     <FormField
                       control={form.control}
                       name="address"
@@ -940,7 +940,7 @@ export default function Properties() {
                         </FormItem>
                       )}
                     />
-                    
+
                     <div className="grid grid-cols-2 gap-4">
                       <FormField
                         control={form.control}
@@ -955,7 +955,7 @@ export default function Properties() {
                           </FormItem>
                         )}
                       />
-                      
+
                       <FormField
                         control={form.control}
                         name="city"
@@ -970,7 +970,7 @@ export default function Properties() {
                         )}
                       />
                     </div>
-                    
+
                     <FormField
                       control={form.control}
                       name="images"
@@ -981,7 +981,7 @@ export default function Properties() {
                             <MultipleImageUpload
                               value={field.value || []}
                               onChange={field.onChange}
-                              maxFiles={10}
+                              maxFiles={50}
                             />
                           </FormControl>
                           <FormMessage />
@@ -990,7 +990,7 @@ export default function Properties() {
                     />
                   </TabsContent>
                 </Tabs>
-                
+
                 <div className="flex justify-end mt-6 pt-4 border-t border-gray-100">
                   <Button
                     type="button"
@@ -1013,7 +1013,7 @@ export default function Properties() {
           </div>
         </DialogContent>
       </Dialog>
-      
+
       {/* Edit Property Dialog */}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
         <DialogContent className="sm:max-w-[600px] p-0 max-h-[90vh] overflow-hidden">
@@ -1032,7 +1032,7 @@ export default function Properties() {
                     <TabsTrigger value="details">Detalhes</TabsTrigger>
                     <TabsTrigger value="location">Localização e Imagem</TabsTrigger>
                   </TabsList>
-                  
+
                   <TabsContent value="info" className="space-y-4">
                     <FormField
                       control={form.control}
@@ -1047,7 +1047,7 @@ export default function Properties() {
                         </FormItem>
                       )}
                     />
-                    
+
                     <div className="grid grid-cols-2 gap-4">
                       <FormField
                         control={form.control}
@@ -1075,7 +1075,7 @@ export default function Properties() {
                           </FormItem>
                         )}
                       />
-                      
+
                       <FormField
                         control={form.control}
                         name="purpose"
@@ -1101,7 +1101,7 @@ export default function Properties() {
                         )}
                       />
                     </div>
-                    
+
                     <div className="space-y-2">
                       <FormField
                         control={form.control}
@@ -1127,7 +1127,7 @@ export default function Properties() {
                         )}
                       />
                     </div>
-                    
+
                     <FormField
                       control={form.control}
                       name="description"
@@ -1145,7 +1145,7 @@ export default function Properties() {
                         </FormItem>
                       )}
                     />
-                    
+
                     <FormField
                       control={form.control}
                       name="status"
@@ -1171,7 +1171,7 @@ export default function Properties() {
                         </FormItem>
                       )}
                     />
-                    
+
                     <FormField
                       control={form.control}
                       name="isFeatured"
@@ -1180,7 +1180,7 @@ export default function Properties() {
                       )}
                     />
                   </TabsContent>
-                  
+
                   <TabsContent value="details" className="space-y-4">
                     <div className="grid grid-cols-2 gap-4">
                       <FormField
@@ -1202,7 +1202,7 @@ export default function Properties() {
                           </FormItem>
                         )}
                       />
-                      
+
                       <FormField
                         control={form.control}
                         name="bedrooms"
@@ -1223,7 +1223,7 @@ export default function Properties() {
                         )}
                       />
                     </div>
-                    
+
                     <div className="grid grid-cols-2 gap-4">
                       <FormField
                         control={form.control}
@@ -1244,7 +1244,7 @@ export default function Properties() {
                           </FormItem>
                         )}
                       />
-                      
+
                       <FormField
                         control={form.control}
                         name="bathrooms"
@@ -1265,7 +1265,7 @@ export default function Properties() {
                         )}
                       />
                     </div>
-                    
+
                     <div className="grid grid-cols-2 gap-4">
                       <FormField
                         control={form.control}
@@ -1286,7 +1286,7 @@ export default function Properties() {
                           </FormItem>
                         )}
                       />
-                      
+
                       <FormField
                         control={form.control}
                         name="agentId"
@@ -1316,7 +1316,7 @@ export default function Properties() {
                         )}
                       />
                     </div>
-                    
+
                     <FormField
                       control={form.control}
                       name="features"
@@ -1334,7 +1334,7 @@ export default function Properties() {
                       )}
                     />
                   </TabsContent>
-                  
+
                   <TabsContent value="location" className="space-y-4">
                     <FormField
                       control={form.control}
@@ -1359,7 +1359,7 @@ export default function Properties() {
                         </FormItem>
                       )}
                     />
-                    
+
                     <FormField
                       control={form.control}
                       name="address"
@@ -1373,7 +1373,7 @@ export default function Properties() {
                         </FormItem>
                       )}
                     />
-                    
+
                     <div className="grid grid-cols-2 gap-4">
                       <FormField
                         control={form.control}
@@ -1388,7 +1388,7 @@ export default function Properties() {
                           </FormItem>
                         )}
                       />
-                      
+
                       <FormField
                         control={form.control}
                         name="city"
@@ -1403,7 +1403,7 @@ export default function Properties() {
                         )}
                       />
                     </div>
-                    
+
                     <FormField
                       control={form.control}
                       name="images"
@@ -1414,7 +1414,7 @@ export default function Properties() {
                             <MultipleImageUpload
                               value={field.value || []}
                               onChange={field.onChange}
-                              maxFiles={10}
+                              maxFiles={50}
                             />
                           </FormControl>
                           <FormMessage />
@@ -1423,7 +1423,7 @@ export default function Properties() {
                     />
                   </TabsContent>
                 </Tabs>
-                
+
                 <div className="flex justify-between mt-6 pt-4 border-t border-gray-100">
                   <Button
                     type="button"
@@ -1447,7 +1447,7 @@ export default function Properties() {
           </div>
         </DialogContent>
       </Dialog>
-      
+
       {/* Batch Delete Confirmation Dialog */}
       <AlertDialog open={isBatchDeleteAlertOpen} onOpenChange={setIsBatchDeleteAlertOpen}>
         <AlertDialogContent>
@@ -1474,7 +1474,7 @@ export default function Properties() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-      
+
       {/* Delete Confirmation Dialog */}
       <AlertDialog open={isDeleteAlertOpen} onOpenChange={setIsDeleteAlertOpen}>
         <AlertDialogContent>
@@ -1501,7 +1501,7 @@ export default function Properties() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-      
+
       {/* Import Dialog */}
       <Dialog open={isImportDialogOpen} onOpenChange={setIsImportDialogOpen}>
         <DialogContent className="sm:max-w-[500px]">
@@ -1511,7 +1511,7 @@ export default function Properties() {
               Selecione o formato e o arquivo para importar imóveis em massa.
             </DialogDescription>
           </DialogHeader>
-          
+
           <div className="space-y-6 py-4">
             <div className="space-y-4">
               <Label htmlFor="importMethod">Formato do Arquivo</Label>
@@ -1527,7 +1527,7 @@ export default function Properties() {
                   <i className="far fa-file-csv text-2xl mb-2 block" style={{ color: importMethod === 'csv' ? '#12636C' : '#64748b' }}></i>
                   <span className="text-sm font-medium">CSV</span>
                 </div>
-                
+
                 <div 
                   className={`border rounded-lg p-4 text-center cursor-pointer transition-colors ${
                     importMethod === 'xml' 
@@ -1539,7 +1539,7 @@ export default function Properties() {
                   <i className="far fa-file-code text-2xl mb-2 block" style={{ color: importMethod === 'xml' ? '#12636C' : '#64748b' }}></i>
                   <span className="text-sm font-medium">XML</span>
                 </div>
-                
+
                 <div 
                   className={`border rounded-lg p-4 text-center cursor-pointer transition-colors ${
                     importMethod === 'json' 
@@ -1553,7 +1553,7 @@ export default function Properties() {
                 </div>
               </div>
             </div>
-            
+
             <div className="space-y-2">
               <Label htmlFor="importFile">Arquivo</Label>
               <div className={`border-2 border-dashed rounded-lg p-6 text-center ${
@@ -1615,7 +1615,7 @@ export default function Properties() {
                 )}
               </div>
             </div>
-            
+
             <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
               <div className="flex">
                 <i className="fas fa-info-circle text-amber-500 mr-3 mt-1"></i>
@@ -1645,7 +1645,7 @@ export default function Properties() {
               </div>
             </div>
           </div>
-          
+
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsImportDialogOpen(false)}>
               Cancelar
@@ -1667,7 +1667,7 @@ export default function Properties() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-      
+
       {/* Property Management */}
       <div className="bg-white p-6 rounded-lg shadow-sm" style={{ fontFamily: 'Montserrat, sans-serif' }}>
         <div className="flex justify-between items-center mb-6">
@@ -1697,7 +1697,7 @@ export default function Properties() {
             )}
           </div>
         </div>
-        
+
         <div className="p-4 bg-[#F9FAFB] rounded-lg mb-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
@@ -1718,7 +1718,7 @@ export default function Properties() {
                 </SelectContent>
               </Select>
             </div>
-            
+
             <div>
               <Label htmlFor="statusFilter" className="text-sm font-medium text-gray-700 mb-1 block">Status</Label>
               <Select
@@ -1736,7 +1736,7 @@ export default function Properties() {
                 </SelectContent>
               </Select>
             </div>
-            
+
             <div>
               <Label htmlFor="searchQuery" className="text-sm font-medium text-gray-700 mb-1 block">Buscar</Label>
               <div className="relative">
@@ -1753,7 +1753,7 @@ export default function Properties() {
             </div>
           </div>
         </div>
-        
+
         {isLoading ? (
           <div className="flex justify-center py-8">
             <Loader2 className="h-8 w-8 animate-spin text-[#12636C]" />
@@ -1840,8 +1840,7 @@ export default function Properties() {
                           handlePropertySelection(property.id, !!checked);
                         }}
                         onClick={(e) => e.stopPropagation()}
-                        className="mr-2"
-                      />
+                        className="mr-2"                      />
                     </TableCell>
                     <TableCell className="py-3">
                       <div className="flex items-center space-x-3">
