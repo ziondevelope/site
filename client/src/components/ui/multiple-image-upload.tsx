@@ -167,25 +167,30 @@ export const MultipleImageUpload = ({
             return;
           }
 
-          Promise.all(
-            files.map(
-              (file) =>
-                new Promise<GalleryImage>((resolve) => {
-                  const reader = new FileReader();
-                  reader.onloadend = () => {
-                    resolve({
-                      url: reader.result as string,
-                      isFeatured: images.length === 0
-                    });
-                  };
-                  reader.readAsDataURL(file);
-                })
-            )
-          ).then((newImages) => {
-            const updatedImages = [...images, ...newImages];
-            setImages(updatedImages);
-            onChange(updatedImages);
-          });
+          const processImage = async (file: File) => {
+            return new Promise<GalleryImage>((resolve) => {
+              const reader = new FileReader();
+              reader.onloadend = () => {
+                const base64 = reader.result as string;
+                const newImage = {
+                  url: base64,
+                  isFeatured: images.length === 0
+                };
+                resolve(newImage);
+              };
+              reader.readAsDataURL(file);
+            });
+          };
+
+          const promises = Array.from(files).map(processImage);
+          const newImages = await Promise.all(promises);
+          const updatedImages = [...images, ...newImages].map(img => ({
+            url: img.url,
+            isFeatured: img.isFeatured || false
+          }));
+          
+          setImages(updatedImages);
+          onChange(updatedImages);
         }}
         className="hidden"
         disabled={disabled}
