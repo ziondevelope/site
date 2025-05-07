@@ -198,11 +198,43 @@ export const MultipleImageUpload = ({
             });
           };
 
+          const processImage = async (file: File) => {
+            return new Promise<string>((resolve) => {
+              const reader = new FileReader();
+              reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                  const canvas = document.createElement('canvas');
+                  let width = img.width;
+                  let height = img.height;
+                  
+                  // More aggressive resizing for large images
+                  const maxWidth = 800;
+                  if (width > maxWidth) {
+                    height = Math.floor(height * (maxWidth / width));
+                    width = maxWidth;
+                  }
+                  
+                  canvas.width = width;
+                  canvas.height = height;
+                  
+                  const ctx = canvas.getContext('2d');
+                  ctx?.drawImage(img, 0, 0, width, height);
+                  
+                  // Convert to JPEG with lower quality
+                  resolve(canvas.toDataURL('image/jpeg', 0.5));
+                };
+                img.src = e.target?.result as string;
+              };
+              reader.readAsDataURL(file);
+            });
+          };
+
           Promise.all(
             Array.from(files).map(async (file) => {
-              const resizedUrl = await resizeImage(file);
+              const compressedUrl = await processImage(file);
               return {
-                url: resizedUrl,
+                url: compressedUrl,
                 isFeatured: images.length === 0
               };
             })
