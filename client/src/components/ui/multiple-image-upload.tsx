@@ -30,11 +30,11 @@ export const MultipleImageUpload = ({
   // Se maxFiles for fornecido, usar ele no lugar de maxImages
   const maxImagesCount = maxFiles || maxImages;
   const [images, setImages] = useState<GalleryImage[]>(value || []);
-  
+
   const handleAddImage = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    
+
     if (images.length >= maxImagesCount) {
       alert(`Você pode adicionar no máximo ${maxImagesCount} imagens.`);
       return;
@@ -48,7 +48,7 @@ export const MultipleImageUpload = ({
           url: base64,
           isFeatured: images.length === 0 // Se for a primeira imagem, marca como destaque
         };
-        
+
         const newImages = [...images, newImage];
         setImages(newImages);
         onChange(newImages);
@@ -67,12 +67,12 @@ export const MultipleImageUpload = ({
   const handleRemoveImage = (index: number) => {
     const newImages = [...images];
     const removedImage = newImages.splice(index, 1)[0];
-    
+
     // Se a imagem removida era destaque, definir a primeira imagem como destaque (se existir)
     if (removedImage.isFeatured && newImages.length > 0) {
       newImages[0].isFeatured = true;
     }
-    
+
     setImages(newImages);
     onChange(newImages);
   };
@@ -82,7 +82,7 @@ export const MultipleImageUpload = ({
       ...img,
       isFeatured: i === index
     }));
-    
+
     setImages(newImages);
     onChange(newImages);
   };
@@ -90,7 +90,7 @@ export const MultipleImageUpload = ({
   return (
     <div className="space-y-4 w-full">
       {label && <Label className="text-left block">{label}</Label>}
-      
+
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
         {images.map((image, index) => (
           <Card key={index} className="relative overflow-hidden group">
@@ -103,7 +103,7 @@ export const MultipleImageUpload = ({
                   image.isFeatured && "ring-2 ring-yellow-400"
                 )}
               />
-              
+
               {/* Overlay com ações */}
               <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                 <Button
@@ -120,7 +120,7 @@ export const MultipleImageUpload = ({
                     <StarOff className="h-4 w-4" />
                   )}
                 </Button>
-                
+
                 <Button
                   type="button"
                   size="icon"
@@ -132,7 +132,7 @@ export const MultipleImageUpload = ({
                   <Trash2 className="h-4 w-4" />
                 </Button>
               </div>
-              
+
               {/* Badge de destaque */}
               {image.isFeatured && (
                 <div className="absolute top-1 right-1 bg-yellow-400 text-xs text-black px-1.5 py-0.5 rounded-sm">
@@ -142,7 +142,7 @@ export const MultipleImageUpload = ({
             </div>
           </Card>
         ))}
-        
+
         {/* Adicionar nova imagem */}
         {images.length < maxImagesCount && (
           <Card 
@@ -154,7 +154,7 @@ export const MultipleImageUpload = ({
           </Card>
         )}
       </div>
-      
+
       <input
         id="gallery-upload"
         type="file"
@@ -167,37 +167,6 @@ export const MultipleImageUpload = ({
             return;
           }
 
-          const resizeImage = (file: File): Promise<string> => {
-            return new Promise((resolve) => {
-              const reader = new FileReader();
-              reader.onload = (e) => {
-                const img = new Image();
-                img.onload = () => {
-                  const canvas = document.createElement('canvas');
-                  let width = img.width;
-                  let height = img.height;
-                  
-                  // Calculate new dimensions to keep aspect ratio
-                  if (width > 1200) {
-                    height = Math.floor(height * (1200 / width));
-                    width = 1200;
-                  }
-                  
-                  canvas.width = width;
-                  canvas.height = height;
-                  
-                  const ctx = canvas.getContext('2d');
-                  ctx?.drawImage(img, 0, 0, width, height);
-                  
-                  // Convert to JPEG with reduced quality
-                  resolve(canvas.toDataURL('image/jpeg', 0.7));
-                };
-                img.src = e.target?.result as string;
-              };
-              reader.readAsDataURL(file);
-            });
-          };
-
           const processImage = async (file: File) => {
             return new Promise<string>((resolve) => {
               const reader = new FileReader();
@@ -207,22 +176,38 @@ export const MultipleImageUpload = ({
                   const canvas = document.createElement('canvas');
                   let width = img.width;
                   let height = img.height;
-                  
-                  // More aggressive resizing for large images
-                  const maxWidth = 800;
-                  if (width > maxWidth) {
-                    height = Math.floor(height * (maxWidth / width));
-                    width = maxWidth;
+
+                  const maxWidth = 400;
+                  const maxHeight = 400;
+
+                  // Calculate dimensions keeping aspect ratio
+                  if (width > height) {
+                    if (width > maxWidth) {
+                      height = Math.floor(height * (maxWidth / width));
+                      width = maxWidth;
+                    }
+                  } else {
+                    if (height > maxHeight) {
+                      width = Math.floor(width * (maxHeight / height));
+                      height = maxHeight;
+                    }
                   }
-                  
+
                   canvas.width = width;
                   canvas.height = height;
-                  
+
                   const ctx = canvas.getContext('2d');
                   ctx?.drawImage(img, 0, 0, width, height);
-                  
-                  // Convert to JPEG with lower quality
-                  resolve(canvas.toDataURL('image/jpeg', 0.5));
+
+                  // Convert to JPEG with very low quality and downscale to reduce size
+                  const quality = 0.1; // Reduce quality to 10%
+                  const downscaledCanvas = document.createElement('canvas');
+                  downscaledCanvas.width = Math.floor(width * 0.75);
+                  downscaledCanvas.height = Math.floor(height * 0.75);
+                  const downscaledCtx = downscaledCanvas.getContext('2d');
+                  downscaledCtx?.drawImage(canvas, 0, 0, downscaledCanvas.width, downscaledCanvas.height);
+
+                  resolve(downscaledCanvas.toDataURL('image/jpeg', quality));
                 };
                 img.src = e.target?.result as string;
               };
@@ -247,7 +232,7 @@ export const MultipleImageUpload = ({
         className="hidden"
         disabled={disabled}
       />
-      
+
       <p className="text-xs text-gray-500 mt-2">
         {images.length > 0 
           ? `${images.length} de ${maxImagesCount} imagens adicionadas. Clique na estrela para definir a imagem de capa.`
