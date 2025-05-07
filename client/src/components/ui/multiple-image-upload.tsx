@@ -166,21 +166,25 @@ export const MultipleImageUpload = ({
             alert(`Você pode adicionar no máximo ${maxImagesCount} imagens.`);
             return;
           }
-          files.forEach((file) => {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-              const base64 = reader.result as string;
-              const newImage: GalleryImage = {
-                url: base64,
-                isFeatured: images.length === 0 // Se for a primeira imagem, marca como destaque
-              };
-              setImages(prev => {
-                const newImages = [...prev, newImage];
-                onChange(newImages);
-                return newImages;
-              });
-            };
-            reader.readAsDataURL(file);
+
+          Promise.all(
+            files.map(
+              (file) =>
+                new Promise<GalleryImage>((resolve) => {
+                  const reader = new FileReader();
+                  reader.onloadend = () => {
+                    resolve({
+                      url: reader.result as string,
+                      isFeatured: images.length === 0
+                    });
+                  };
+                  reader.readAsDataURL(file);
+                })
+            )
+          ).then((newImages) => {
+            const updatedImages = [...images, ...newImages];
+            setImages(updatedImages);
+            onChange(updatedImages);
           });
         }}
         className="hidden"
