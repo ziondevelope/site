@@ -199,11 +199,11 @@ export const MultipleImageUpload = ({
                   const ctx = canvas.getContext('2d');
                   ctx?.drawImage(img, 0, 0, width, height);
 
-                  // Convert to JPEG with higher quality
-                  const quality = 0.8; // Increase quality to 80%
+                  // Convert to JPEG with high quality
+                  const quality = 1.0; // Maximum quality (100%)
                   const downscaledCanvas = document.createElement('canvas');
-                  downscaledCanvas.width = Math.floor(width * 0.9); // Reduce downscaling
-                  downscaledCanvas.height = Math.floor(height * 0.9);
+                  downscaledCanvas.width = width;
+                  downscaledCanvas.height = height;
                   const downscaledCtx = downscaledCanvas.getContext('2d');
                   downscaledCtx?.drawImage(canvas, 0, 0, downscaledCanvas.width, downscaledCanvas.height);
 
