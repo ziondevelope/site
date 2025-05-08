@@ -55,7 +55,7 @@ export default function Header({ config, isLoadingConfig }: HeaderProps) {
               // Placeholder durante o carregamento - mantém o mesmo tamanho
               <div className={`${scrolled ? 'h-16 w-36' : 'h-20 w-48'} bg-gray-100 rounded animate-pulse transition-all duration-300`}></div>
             ) : config?.logo ? (
-              <NavigationLink href="/" className={`${scrolled ? 'h-16 min-w-[140px]' : 'h-20 min-w-[180px]'} transition-all duration-300 cursor-pointer`}>
+              <NavigationLink href="/" className={`${scrolled ? 'h-12 min-w-[120px]' : 'h-16 min-w-[140px]'} transition-all duration-300 cursor-pointer`}>
                 <img 
                   src={config.logo} 
                   alt="Logo da Imobiliária" 
